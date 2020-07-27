@@ -24,4 +24,4 @@ Builds with the latest features and bugfixes can be found on our [Discord](https
 For general information check out our [wiki](). If you need help or have some suggestions, check out our [Discord](https://discord.gg/jMHgCAY). Please some us all some time and only create avoid creating issues for simple issues.
 
 ## Development
-if you are a modder and intresting in helping with the creation of Server Essentials or looking to extend on the capability's of Server Essentials please refer to our [CONTRIBUTING.md](CONTRIBUTING.md). For additional help check out our [Discord](https://discord.gg/jMHgCAY).
+if you are a modder and intrested in helping with the creation of Server Essentials or looking to extend on the capability's of Server Essentials please refer to our [CONTRIBUTING.md](CONTRIBUTING.md). For additional help check out our [Discord](https://discord.gg/jMHgCAY).
