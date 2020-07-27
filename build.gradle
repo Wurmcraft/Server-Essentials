@@ -1,0 +1,117 @@
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
+}
+
+plugins {
+    id "com.github.johnrengelman.shadow" version "2.0.4"
+    id "com.diffplug.gradle.spotless" version "3.28.1"
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+
+version = '0.1.X-CustomBuild'
+group = 'com.wurmcraft.serveressentials'
+archivesBaseName = 'ServerEssentials'
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+
+minecraft {
+    mappings channel: 'snapshot', version: '20200514-1.16'
+    // makeObfSourceJar = false
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                serveressentials {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                serveressentials {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'serveressentials', '--all', '--output', file('src/generated/resources/')
+
+            mods {
+                serveressentials {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+repositories {
+    maven {
+        url = "https://www.cursemaven.com"
+    }
+}
+
+dependencies {
+    // Minecraft
+    minecraft "net.minecraftforge:forge:1.16.1-${forge_version}"
+    // Libs
+    compile "org.reflections:reflections:${reflections_version}"
+    compile "com.boundary:high-scale-lib:${highscalelib_version}"
+    compile "org.javassist:javassist:${javassist_version}"
+    // Other Mods
+    //compile "curse.maven:ftb-utilities:${ftbutils_version}"
+    //compile "curse.maven:ftb-library:${ftblib_version}"
+}
+
+shadowJar.archiveName = "${archivesBaseName}-${version}.jar"
+shadowJar {
+    dependencies {
+        exclude('dummy*')
+		exclude('ftb*')
+        include(dependency("org.reflections:reflections:${reflections_version}"))
+        include(dependency("com.boundary:high-scale-lib:${highscalelib_version}"))
+        include(dependency("org.javassist:${javassist_version}"))
+    }
+}
+
+
+reobf {
+    shadowJar {}
+}
+
+jar {
+    manifest {
+        attributes([
+            "Specification-Title": "ServerEssentials",
+            "Specification-Vendor": "WurmCraft",
+            "Specification-Version": "1",
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${mod_version}",
+            "Implementation-Vendor" :"Wurmatron",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+jar.finalizedBy('reobfJar')
