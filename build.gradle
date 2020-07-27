@@ -1,0 +1,90 @@
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
+    }
+}
+
+plugins {
+    id "com.github.johnrengelman.shadow" version "2.0.4"
+    id "com.diffplug.gradle.spotless" version "3.28.1"
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+
+version = '0.1.X-CustomBuild'
+group = 'com.wurmcraft.serveressentials' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'ServerEssentials'
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+
+minecraft {
+    mappings channel: 'snapshot', version: '20171003-1.12'
+    // makeObfSourceJar = false
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+
+        server {
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+    }
+}
+
+repositories {
+    maven {
+        url = "https://www.cursemaven.com"
+    }
+}
+
+dependencies {
+    // Minecraft
+    minecraft "net.minecraftforge:forge:1.12.2-${forge_version}"
+    // Libs
+    compile "org.reflections:reflections:${reflections_version}"
+    compile "com.boundary:high-scale-lib:${highscalelib_version}"
+    compile "org.javassist:javassist:${javassist_version}"
+    // Other Mods
+    compile "curse.maven:ftb-utilities:${ftbutils_version}"
+    compile "curse.maven:ftb-library:${ftblib_version}"
+}
+
+shadowJar.archiveName = "${archivesBaseName}-${version}.jar"
+shadowJar {
+    dependencies {
+        exclude('dummy*')
+		exclude('ftb*')
+        include(dependency("org.reflections:reflections:${reflections_version}"))
+        include(dependency("com.boundary:high-scale-lib:${highscalelib_version}"))
+        include(dependency("org.javassist:${javassist_version}"))
+    }
+}
+
+reobf {
+    shadowJar {}
+}
+
+jar {
+    manifest {
+        attributes([
+            "Specification-Title": "ServerEssentials",
+            "Specification-Vendor": "WurmCraft",
+            "Specification-Version": "1",
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${mod_version}",
+            "Implementation-Vendor" :"Wurmatron",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+jar.finalizedBy('reobfJar')
