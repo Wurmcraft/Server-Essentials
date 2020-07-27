@@ -21,7 +21,7 @@ version = '0.1.X-CustomBuild'
 group = 'com.wurmcraft.serveressentials'
 archivesBaseName = 'ServerEssentials'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
     mappings channel: 'snapshot', version: '20200514-1.15.1'
