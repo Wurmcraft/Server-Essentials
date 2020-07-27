@@ -1,0 +1,16 @@
+[
+{
+  "modid": "serveressentials",
+  "name": "Server Essentials",
+  "description": "Server Essentials is a mod designed to be used as a standalone server utility\n mod for server / network owners looking for an all in one solution to\n server administration. Server Essentials or SE for short is created out of\n diffrent \"modules\" which can be enabled / disabled based on the needs of\n the server / network owner.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://www.curseforge.com/minecraft/mc-mods/server-essentials",
+  "updateUrl": "",
+  "authorList": ["Wurmatron"],
+  "credits": "",
+  "logoFile": "se-logo.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]

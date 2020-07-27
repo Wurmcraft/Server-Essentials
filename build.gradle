@@ -18,7 +18,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
 version = '0.1.X-CustomBuild'
-group = 'com.wurmcraft.serveressentials' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = 'com.wurmcraft.serveressentials'
 archivesBaseName = 'ServerEssentials'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
