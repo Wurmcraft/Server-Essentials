@@ -13,6 +13,8 @@ public class ServerEssentialsServer {
 
   public ServerEssentialsServer() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupServer);
+    ModuleLoader.setupModule();
+    CommandLoader.setupCommands();
   }
 
   public void setupServer(FMLCommonSetupEvent e) {
