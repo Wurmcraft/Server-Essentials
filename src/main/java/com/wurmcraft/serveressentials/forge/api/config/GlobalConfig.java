@@ -6,10 +6,18 @@ public class GlobalConfig implements JsonParser {
 
   public String[] modules;
   public boolean debug;
+  public String dataStorageType;
 
-  public GlobalConfig(String[] modules, boolean debug) {
+  public GlobalConfig() {
+    this.modules = new String[0];
+    this.debug = false;
+    this.dataStorageType = "File";
+  }
+
+  public GlobalConfig(String[] modules, boolean debug, String dataStorageType) {
     this.modules = modules;
     this.debug = debug;
+    this.dataStorageType = dataStorageType;
   }
 
   @Override
