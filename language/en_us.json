@@ -1,0 +1,5 @@
+{
+	"key": "en_us",
+	"ANNOUNCEMENT_NEW_PLAYER": "&6Welcome %PLAYER%",
+	"HOVER_PLAYER_NAME": "&a%PLAYER% &d(%UUID%)"
+}

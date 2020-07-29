@@ -2,14 +2,12 @@ package com.wurmcraft.serveressentials.forge.server.data;
 
 import static com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer.GSON;
 
-import com.sun.xml.internal.ws.developer.MemberSubmissionAddressing.Validation;
 import com.wurmcraft.serveressentials.forge.api.SECore;
-import com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank;
 import com.wurmcraft.serveressentials.forge.api.json.basic.CurrencyConversion;
 import com.wurmcraft.serveressentials.forge.api.json.player.GlobalPlayer;
-import com.wurmcraft.serveressentials.forge.api.json.player.Wallet.Currency;
 import com.wurmcraft.serveressentials.forge.api.json.rest.DiscordToken;
 import com.wurmcraft.serveressentials.forge.api.json.rest.GlobalBan;
+import com.wurmcraft.serveressentials.forge.api.json.rest.RestValidate;
 import com.wurmcraft.serveressentials.forge.api.json.rest.ServerChunkData;
 import com.wurmcraft.serveressentials.forge.api.json.rest.ServerStatus;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
@@ -176,8 +174,8 @@ public class RestRequestHandler {
 
   public static class Verify {
 
-    public static Validation get() {
-      return INSTANCE.get("validate", Validation.class);
+    public static RestValidate get() {
+      return INSTANCE.get("validate", RestValidate.class);
     }
   }
 
@@ -262,6 +260,7 @@ public class RestRequestHandler {
   }
 
   public static class Ban {
+
     public static GlobalBan[] getGlobalBans() {
       return INSTANCE.get("ban/", GlobalBan[].class);
     }

@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.config.GlobalConfig;
+import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.data.IDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.BasicDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.FileDataHandler;
 import com.wurmcraft.serveressentials.forge.server.loader.CommandLoader;
 import com.wurmcraft.serveressentials.forge.server.loader.ModuleLoader;
+import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -36,6 +38,7 @@ public class ServerEssentialsServer {
     SECore.config = setGlobalConfig();
     SECore.dataHandler = getDataHandler(SECore.config.dataStorageType);
     ModuleLoader.setupModule();
+    SECore.dataHandler.registerData(DataKey.LANGUAGE, ChatHelper.getDefaultLanguage());
   }
 
   @EventHandler
