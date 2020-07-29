@@ -1,0 +1,38 @@
+    html, body {
+      width: 100%;
+      background-color: black;
+	  overflow-y: visible;   
+      overflow-x: hidden;
+    }
+    table {
+        width: 100%;
+        height: 100%;
+        margin: 0 auto;
+    }
+    .container {
+      position: relative;
+      text-align: center;
+      color: white;
+      width: 100%;
+    }
+    .centered {
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    font{
+      font-size: 150%;
+    }
+    img {
+      width: 50%;
+    }
+    .online {
+      content: url("https://i.imgur.com/T1hMXly.png");
+    }
+    .offline {
+      content: url("https://i.imgur.com/HixqB5t.png");
+    }
+    td {
+      padding-bottom: 2%;
+    }
