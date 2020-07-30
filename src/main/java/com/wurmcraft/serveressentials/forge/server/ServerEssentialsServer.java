@@ -8,12 +8,16 @@ import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.data.IDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.BasicDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.FileDataHandler;
+import com.wurmcraft.serveressentials.forge.server.evens.PlayerDataEvents;
 import com.wurmcraft.serveressentials.forge.server.loader.CommandLoader;
 import com.wurmcraft.serveressentials.forge.server.loader.ModuleLoader;
 import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -29,6 +33,7 @@ public class ServerEssentialsServer {
   public static final Logger LOGGER = LogManager.getLogger(Global.NAME);
   public static final Gson GSON = new GsonBuilder().disableHtmlEscaping().setLenient()
       .setPrettyPrinting().create();
+  public static ScheduledExecutorService EXECUTORS;
 
   public static final File SAVE_DIR = new File(Global.NAME.replaceAll(" ", "-"));
 
@@ -37,6 +42,7 @@ public class ServerEssentialsServer {
     LOGGER.info("Pre-Init has Started");
     SECore.config = setGlobalConfig();
     SECore.dataHandler = getDataHandler(SECore.config.dataStorageType);
+    EXECUTORS = new ScheduledThreadPoolExecutor(SECore.config.supportThreads);
     ModuleLoader.setupModule();
     SECore.dataHandler.registerData(DataKey.LANGUAGE, ChatHelper.getDefaultLanguage());
   }
@@ -45,6 +51,7 @@ public class ServerEssentialsServer {
   public void init(FMLInitializationEvent e) {
     LOGGER.info("Init has Started");
     CommandLoader.setupCommands();
+    MinecraftForge.EVENT_BUS.register(new PlayerDataEvents());
   }
 
   @EventHandler
@@ -58,8 +65,8 @@ public class ServerEssentialsServer {
     } else if (name.equalsIgnoreCase("File")) {
       return new FileDataHandler();
     } else {
-      LOGGER.error("Failed to find '" + name + "' DataHandler!, Defaulting to Basic");
-      return new BasicDataHandler();
+      LOGGER.error("Failed to find '" + name + "' DataHandler!, Defaulting to File!");
+      return new FileDataHandler();
     }
   }
 

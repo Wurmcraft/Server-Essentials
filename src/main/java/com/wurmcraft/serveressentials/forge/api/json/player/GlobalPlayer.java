@@ -12,7 +12,7 @@ import java.time.Instant;
  */
 public class GlobalPlayer implements JsonParser {
 
-  public String uuuid; // Player UUID
+  public String uuid; // Player UUID
   public long firstJoin; // Unit Timestamp
   public long lastSeen; // Unit Timestamp
   public String rank; // User's rank
@@ -25,8 +25,8 @@ public class GlobalPlayer implements JsonParser {
   public String discordID; // ID of the user on discord (If verified)
   public int rewardPoints; // Reward Points (kinda like a secondary currency)
 
-  public GlobalPlayer(String uuuid) {
-    this.uuuid = uuuid;
+  public GlobalPlayer(String uuid) {
+    this.uuid = uuid;
     this.firstJoin = Instant.EPOCH.toEpochMilli();
     this.lastSeen = Instant.EPOCH.toEpochMilli();
     this.rank = "";
@@ -40,12 +40,12 @@ public class GlobalPlayer implements JsonParser {
     this.rewardPoints = 0;
   }
 
-  public GlobalPlayer(String uuuid, long firstJoin, long lastSeen, String rank,
+  public GlobalPlayer(String uuid, long firstJoin, long lastSeen, String rank,
       String language, boolean muted,
       Wallet wallet,
       NetworkTime playtime, String[] perks, String[] extraPerms, String discordID,
       int rewardPoints) {
-    this.uuuid = uuuid;
+    this.uuid = uuid;
     this.firstJoin = firstJoin;
     this.lastSeen = lastSeen;
     this.rank = rank;

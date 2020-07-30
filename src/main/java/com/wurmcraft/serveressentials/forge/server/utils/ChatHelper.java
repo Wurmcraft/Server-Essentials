@@ -19,12 +19,12 @@ public class ChatHelper {
   }
 
   public static void sendMessage(ICommandSender sender, String msg) {
-    sendMessage(sender, new TextComponentString(msg.replaceAll("&", "§")));
+    sendMessage(sender, new TextComponentString(msg.replaceAll("&", "\u00a7")));
   }
 
   public static void sendHoverMessage(ICommandSender sender, String msg, String hover) {
-    TextComponentString text = new TextComponentString(msg);
-    text.getStyle().setHoverEvent(new HoverEvent(Action.SHOW_TEXT,new TextComponentString(hover.replaceAll("&", "§"))));
+    TextComponentString text = new TextComponentString(msg.replaceAll("&", "\u00a7"));
+    text.getStyle().setHoverEvent(new HoverEvent(Action.SHOW_TEXT,new TextComponentString(hover.replaceAll("&", "\u00a7"))));
     sendMessage(sender, text);
   }
 
