@@ -3,12 +3,17 @@ package com.wurmcraft.serveressentials.forge.server;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wurmcraft.serveressentials.forge.api.SECore;
+import com.wurmcraft.serveressentials.forge.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.forge.api.config.GlobalConfig;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.data.IDataHandler;
+import com.wurmcraft.serveressentials.forge.api.json.rest.RestValidate;
+import com.wurmcraft.serveressentials.forge.server.command.SECommand;
 import com.wurmcraft.serveressentials.forge.server.data.BasicDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.FileDataHandler;
-import com.wurmcraft.serveressentials.forge.server.evens.PlayerDataEvents;
+import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
+import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler.Verify;
+import com.wurmcraft.serveressentials.forge.server.events.PlayerDataEvents;
 import com.wurmcraft.serveressentials.forge.server.loader.CommandLoader;
 import com.wurmcraft.serveressentials.forge.server.loader.ModuleLoader;
 import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
@@ -23,6 +28,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
@@ -36,6 +42,7 @@ public class ServerEssentialsServer {
   public static ScheduledExecutorService EXECUTORS;
 
   public static final File SAVE_DIR = new File(Global.NAME.replaceAll(" ", "-"));
+  public static boolean isReloadInProgress = false;
 
   @EventHandler
   public void preInit(FMLPreInitializationEvent e) {
@@ -57,6 +64,19 @@ public class ServerEssentialsServer {
   @EventHandler
   public void postInit(FMLPostInitializationEvent e) {
     LOGGER.info("Post-Init has Started");
+    if(SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+      RestRequestHandler.validate =  RestRequestHandler.Verify.get();
+    }
+  }
+
+  @EventHandler
+  public void onServerStarting(FMLServerStartingEvent e) {
+    for (String command : CommandLoader.commands.keySet()) {
+      Object commandInstance = CommandLoader.commands.get(command);
+      e.registerServerCommand(new SECommand(commandInstance.getClass().getAnnotation(
+          ModuleCommand.class), commandInstance));
+    }
+    // TODO Command Wrapper
   }
 
   public static IDataHandler getDataHandler(String name) {

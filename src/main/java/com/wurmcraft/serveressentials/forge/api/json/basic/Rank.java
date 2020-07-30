@@ -13,6 +13,14 @@ public class Rank implements JsonParser {
   public String[] inheritance; // Lower Ranks / Gets Perms from
   public String[] permission;
 
+  public Rank() {
+    this.name = "Error";
+    this.prefix = "&c[Error]";
+    this.suffix = "&4";
+    this.inheritance = new String[0];
+    this.permission = new String[0];
+  }
+
   public Rank(String name, String prefix, String suffix, String[] inheritance,
       String[] permission) {
     this.name = name;

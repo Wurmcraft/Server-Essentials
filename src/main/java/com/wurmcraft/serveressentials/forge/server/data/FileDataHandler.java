@@ -6,6 +6,7 @@ import static com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.json.JsonParser;
+import com.wurmcraft.serveressentials.forge.modules.rank.RankConfig;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import java.io.File;
 import java.nio.file.Files;
@@ -49,19 +50,39 @@ public class FileDataHandler extends BasicDataHandler {
       return super.getData(key, dataID);
     } catch (NoSuchElementException e) {
       File fileLoc = new File(
-          SAVE_DIR + File.separator + key.getName() + File.separator + dataID + ".json");
-      if (fileLoc.exists()) {
-        try {
-          registerData(key,
-              GSON.fromJson(Strings.join(Files.readAllLines(fileLoc.toPath()), '\n'),
-                  key.getDataType()));
-          JsonParser data = getData(key, dataID);
-          if (data != null) {
-            return data;
+          SAVE_DIR + File.separator + key.getName() + File.separator + dataID
+              + ".json");
+      if (key.getDataType() != null) {
+        if (fileLoc.exists()) {
+          try {
+            registerData(key,
+                GSON.fromJson(Strings.join(Files.readAllLines(fileLoc.toPath()), '\n'),
+                    key.getDataType()));
+            JsonParser data = getData(key, dataID);
+            if (data != null) {
+              return data;
+            }
+          } catch (Exception f) {
+            ServerEssentialsServer.LOGGER
+                .warn("Failed to read '" + fileLoc.getPath() + "' for '" + key + "'");
           }
-        } catch (Exception f) {
-          ServerEssentialsServer.LOGGER
-              .warn("Failed to read '" + fileLoc.getPath() + "' for '" + key + "'");
+        }
+      } else if (key == DataKey.MODULE_CONFIG) {
+        if (fileLoc.exists()) {
+          try {
+            if (dataID.equalsIgnoreCase("Rank")) {
+              registerData(key,
+                  GSON.fromJson(Strings.join(Files.readAllLines(fileLoc.toPath()), '\n'),
+                      RankConfig.class));
+              JsonParser data = getData(key, dataID);
+              if (data != null) {
+                return data;
+              }
+            }
+          } catch (Exception f) {
+            ServerEssentialsServer.LOGGER
+                .warn("Failed to read '" + fileLoc.getPath() + "' for '" + key + "'");
+          }
         }
       }
       throw new NoSuchElementException();
@@ -75,8 +96,8 @@ public class FileDataHandler extends BasicDataHandler {
         SAVE_DIR + File.separator + key.getName() + File.separator + dataToStore.getID()
             + ".json");
     try {
-      if(!file.getParentFile().exists())
-        file.getParentFile().mkdirs();
+      file.getParentFile().mkdirs();
+      file.createNewFile();
       Files.write(file.toPath(), GSON.toJson(dataToStore).getBytes());
     } catch (Exception e) {
       ServerEssentialsServer.LOGGER

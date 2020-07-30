@@ -12,6 +12,16 @@ public class Language implements JsonParser {
   // Hover Info
   public String HOVER_PLAYER_NAME;
 
+  // Command
+  public String COMMAND_USAGE;
+
+  // Core
+  public String CORE_SE_RELOAD;
+  public String CORE_SE_MODULES;
+  public String CORE_SE_VERSION;
+  public String CORE_SE_VERSION_REST;
+  public String CORE_SE_STORAGE;
+
 
   public Language(String key) {
     this.key = key;

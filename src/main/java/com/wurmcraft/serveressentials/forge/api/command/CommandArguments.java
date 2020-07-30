@@ -8,7 +8,8 @@ public enum CommandArguments {
   PERK(true),
   STRING_ARR(true),
   RANK(true),
-  HOME(true);
+  HOME(true),
+  MODULE(true);
 
   public boolean stringable;
 

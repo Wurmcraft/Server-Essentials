@@ -11,7 +11,7 @@ import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.data.Language;
 import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
-import com.wurmcraft.serveressentials.forge.server.evens.PlayerDataEvents;
+import com.wurmcraft.serveressentials.forge.server.events.PlayerDataEvents;
 import java.time.Instant;
 import java.util.*;
 import java.util.NoSuchElementException;

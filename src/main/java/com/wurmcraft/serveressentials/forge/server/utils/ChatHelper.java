@@ -24,6 +24,10 @@ public class ChatHelper {
 
   public static void sendHoverMessage(ICommandSender sender, String msg, String hover) {
     TextComponentString text = new TextComponentString(msg.replaceAll("&", "\u00a7"));
+    sendHoverMessage(sender, text, hover);
+  }
+
+  public static void sendHoverMessage(ICommandSender sender, ITextComponent text, String hover) {
     text.getStyle().setHoverEvent(new HoverEvent(Action.SHOW_TEXT,new TextComponentString(hover.replaceAll("&", "\u00a7"))));
     sendMessage(sender, text);
   }

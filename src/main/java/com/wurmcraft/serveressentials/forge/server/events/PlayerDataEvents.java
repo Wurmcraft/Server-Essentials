@@ -1,4 +1,4 @@
-package com.wurmcraft.serveressentials.forge.server.evens;
+package com.wurmcraft.serveressentials.forge.server.events;
 
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
@@ -97,9 +97,6 @@ public class PlayerDataEvents {
     long lastUpdateTime = playerLoginTime.getOrDefault(uuid, System.currentTimeMillis());
     long amountOfTime = ((System.currentTimeMillis() - lastUpdateTime) / 1000) / 60;
     playerLoginTime.put(uuid, playerLoginTime.get(uuid) + (amountOfTime * (1000 * 60)));
-    ServerEssentialsServer.LOGGER.info(
-        "AMT: " + amountOfTime + " " + (System.currentTimeMillis() - playerLoginTime
-            .get(uuid)));
     return amountOfTime;
   }
 

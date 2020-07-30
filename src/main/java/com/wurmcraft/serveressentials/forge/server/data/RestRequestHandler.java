@@ -26,6 +26,7 @@ public class RestRequestHandler {
   private String baseURL = parseConfigURL(SECore.config.Rest.restAuth) + "api/";
 
   private static RestRequestHandler INSTANCE = new RestRequestHandler();
+  public static RestValidate validate = null;
 
   private boolean isBase64(String data) {
     try {

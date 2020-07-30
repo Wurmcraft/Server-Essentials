@@ -14,6 +14,7 @@ import com.wurmcraft.serveressentials.forge.api.json.rest.ServerChunkData.Player
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler.ChunkLoading;
 import java.util.NoSuchElementException;
+import org.apache.logging.log4j.core.jmx.Server;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 public class RestDataHandler extends FileDataHandler {
@@ -192,7 +193,7 @@ public class RestDataHandler extends FileDataHandler {
   @Override
   public void delData(DataKey key, String dataToRemove, boolean deleteFromDisk)
       throws NoSuchElementException {
-    if (deleteFromDisk) {
+    if (deleteFromDisk && !ServerEssentialsServer.isReloadInProgress) {
       if (key == DataKey.AUTO_RANK) {
         try {
           AutoRank ar = (AutoRank) getData(DataKey.AUTO_RANK, dataToRemove);
