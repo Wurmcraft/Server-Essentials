@@ -76,7 +76,7 @@ public class ModuleLoader {
       } else if (type.equalsIgnoreCase("reload")) {
         method = moduleInstance.getClass().getMethod(module.reloadModule());
       }
-      method.invoke(moduleInstance.getClass().newInstance());
+      method.invoke(moduleInstance);
     } catch (Exception e) {
       ServerEssentialsServer.LOGGER.error("Module '" + module.name()
           + "' has loaded incorrectly, removing from module list");

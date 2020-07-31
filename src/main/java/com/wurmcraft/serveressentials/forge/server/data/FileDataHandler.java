@@ -6,6 +6,7 @@ import static com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.json.JsonParser;
+import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.modules.rank.RankConfig;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import java.io.File;
@@ -19,26 +20,27 @@ public class FileDataHandler extends BasicDataHandler {
   @Override
   public <T extends JsonParser> NonBlockingHashMap<String, T> getDataFromKey(DataKey key,
       T type) {
-    NonBlockingHashMap<String, T> currentlyLoaded = super.getDataFromKey(key, type);
-    if (!currentlyLoaded.isEmpty()) {
-      return currentlyLoaded;
+    try {
+      NonBlockingHashMap<String, T> currentlyLoaded = super.getDataFromKey(key, type);
+      if (!currentlyLoaded.isEmpty()) {
+        return currentlyLoaded;
+      }
+    } catch (NoSuchElementException ignored) {
     }
+    NonBlockingHashMap<String, T> fileData = new NonBlockingHashMap<>();
     File dataDir = new File(SAVE_DIR + File.separator + key.getName());
     if (dataDir.exists() && dataDir.isDirectory()) {
       for (File file : dataDir.listFiles()) {
         try {
-          registerData(key,
-              GSON.fromJson(Strings.join(Files.readAllLines(file.toPath()), '\n'),
-                  key.getDataType()));
+          JsonParser data = getData(key, file.getName().replaceAll(".json",""));
+          fileData.put(data.getID(), (T) data);
         } catch (Exception e) {
+          e.printStackTrace();
           ServerEssentialsServer.LOGGER
               .warn("Failed to read '" + file.getPath() + "' for '" + key + "'");
         }
       }
-      NonBlockingHashMap<String, T> fileData = getDataFromKey(key, type);
-      if (!fileData.isEmpty()) {
-        return fileData;
-      }
+      return fileData;
     }
     ServerEssentialsServer.LOGGER.info("No data for '" + key.getName() + " was found!");
     return new NonBlockingHashMap<>();

@@ -12,17 +12,14 @@ public class BasicDataHandler implements IDataHandler {
 
   protected NonBlockingHashMap<DataKey, NonBlockingHashMap<String, JsonParser>> loadedData = new NonBlockingHashMap<>();
 
-
   @Override
   public <T extends JsonParser> NonBlockingHashMap<String, T> getDataFromKey(DataKey key,
       T type) {
     NonBlockingHashMap<String, T> keyData = new NonBlockingHashMap<>();
-    NonBlockingHashMap<String, JsonParser> storedData = loadedData
-        .get(loadedData.get(key));
     if (loadedData.containsKey(key)) {
-      for (String k : storedData.keySet()) {
+      for (JsonParser k : loadedData.get(key).values()) {
         try {
-          keyData.put(k, (T) storedData.get(k));
+          keyData.put(k.getID(), (T) k);
         } catch (Exception e) {
           if (SECore.config.debug) {
             ServerEssentialsServer.LOGGER

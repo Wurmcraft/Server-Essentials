@@ -42,8 +42,7 @@ public class RankModule {
     }
     NonBlockingHashMap<String, Rank> rankData = new NonBlockingHashMap<>();
     try {
-   rankData = SECore.dataHandler
-        .getDataFromKey(DataKey.RANK, new Rank());
+   rankData = SECore.dataHandler.getDataFromKey(DataKey.RANK, new Rank());
     } catch (Exception e) {}
     if (rankData.isEmpty()) {
       ServerEssentialsServer.LOGGER.info("No Ranks found!, Creating Default Ranks");
@@ -57,10 +56,11 @@ public class RankModule {
 
   public void reloadModule() {
     ServerEssentialsServer.isReloadInProgress = true;
-    for (String rank : SECore.dataHandler.getDataFromKey(DataKey.RANK, new Rank())
-        .keySet()) {
-      SECore.dataHandler.delData(DataKey.RANK, rank, SECore.config.dataStorageType.equalsIgnoreCase("Rest"));
-    }
+    try {
+      for (String rank : SECore.dataHandler.getDataFromKey(DataKey.RANK, new Rank()).keySet()) {
+        SECore.dataHandler.delData(DataKey.RANK, rank, SECore.config.dataStorageType.equalsIgnoreCase("Rest"));
+      }
+    } catch (Exception ignored) {}
     initSetup();
     ServerEssentialsServer.isReloadInProgress = false;
   }
