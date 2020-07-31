@@ -17,10 +17,10 @@ func init() {
 
 func GetChunkLoadingForServerID(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 	serverID := string(p[0].Value)
-	if redisChunkLoadingDB.Exists(serverID).Val() == 1 {
+	if redisChunkLoadingDB.Exists(ctx, serverID).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
 		w.Header().Set("version", version)
-		w.Write([]byte(redisChunkLoadingDB.Get(serverID).Val()))
+		w.Write([]byte(redisChunkLoadingDB.Get(ctx, serverID).Val()))
 	} else {
 		w.WriteHeader(http.StatusNotFound)
 	}
@@ -44,14 +44,14 @@ func UpdateServerID(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	redisChunkLoadingDB.Set(chunkLoadingData.ServerID, output, 0)
+	redisChunkLoadingDB.Set(ctx, chunkLoadingData.ServerID, output, 0)
 }
 
 func GetAllServerChunkLoading(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 	var data []ServerChunkData
-	for entry := range redisChunkLoadingDB.Keys("*").Val() {
+	for entry := range redisChunkLoadingDB.Keys(ctx, "*").Val() {
 		var serverChunkLoading ServerChunkData
-		json.Unmarshal([]byte(redisChunkLoadingDB.Get(redisChunkLoadingDB.Keys("*").Val()[entry]).Val()), &serverChunkLoading)
+		json.Unmarshal([]byte(redisChunkLoadingDB.Get(ctx, redisChunkLoadingDB.Keys(ctx, "*").Val()[entry]).Val()), &serverChunkLoading)
 		data = append(data, serverChunkLoading)
 	}
 	output, err := json.MarshalIndent(data, " ", " ")

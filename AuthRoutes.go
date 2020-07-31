@@ -22,7 +22,7 @@ func AddAuth(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	redisDBAuth.Set(auth.Username, b64.StdEncoding.EncodeToString([]byte(auth.Password)), 0)
+	redisDBAuth.Set(ctx, auth.Username, b64.StdEncoding.EncodeToString([]byte(auth.Password)), 0)
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -39,19 +39,22 @@ func DelAuth(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	redisDBAuth.Del(auth.Username)
+	redisDBAuth.Del(ctx, auth.Username)
 	w.WriteHeader(http.StatusCreated)
 }
 
 func CreateDefaultPassword() string {
-	return rString(rand.Intn(64))
+	return randSeq(16)
 }
 
-func rString(n int) string {
-	var letter = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789")
+
+// https://stackoverflow.com/questions/22892120/how-to-generate-a-random-string-of-a-fixed-length-in-go
+// All credit to Paul Hankin on stackoverflow
+func randSeq(n int) string {
 	b := make([]rune, n)
 	for i := range b {
-		b[i] = letter[rand.Intn(len(letter))]
+		b[i] = letters[rand.Intn(len(letters))]
 	}
 	return string(b)
 }

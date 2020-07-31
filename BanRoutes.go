@@ -17,10 +17,10 @@ func init() {
 
 func GetBan(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 	name := string(p[0].Value)
-	if redisDBBan.Exists(name).Val() == 1 {
+	if redisDBBan.Exists(ctx, name).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
 		w.Header().Set("version", version)
-		w.Write([]byte(redisDBBan.Get(name).Val()))
+		w.Write([]byte(redisDBBan.Get(ctx, name).Val()))
 	} else {
 		w.WriteHeader(http.StatusNotFound)
 	}
@@ -44,15 +44,15 @@ func CreateBan(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	redisDBBan.Set(ban.UUID, output, 0)
+	redisDBBan.Set(ctx, ban.UUID, output, 0)
 	w.WriteHeader(http.StatusCreated)
 }
 
 func GetAllBans(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 	var data []Ban
-	for entry := range redisDBBan.Keys("*").Val() {
+	for entry := range redisDBBan.Keys(ctx, "*").Val() {
 		var ban Ban
-		json.Unmarshal([]byte(redisDBBan.Get(redisDBBan.Keys("*").Val()[entry]).Val()), &ban)
+		json.Unmarshal([]byte(redisDBBan.Get(ctx, redisDBBan.Keys(ctx, "*").Val()[entry]).Val()), &ban)
 		data = append(data, ban)
 	}
 	output, err := json.MarshalIndent(data, " ", " ")
@@ -76,6 +76,6 @@ func DeleteBan(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	redisDBBan.Del(ban.UUID)
+	redisDBBan.Del(ctx, ban.UUID)
 	w.WriteHeader(http.StatusCreated)
 }

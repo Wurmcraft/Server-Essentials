@@ -19,10 +19,10 @@ func init() {
 
 func GetEco(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 	name := string(p[0].Value)
-	if redisDBEco.Exists(name).Val() == 1 {
+	if redisDBEco.Exists(ctx, name).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
 		w.Header().Set("version", version)
-		w.Write([]byte(redisDBEco.Get(name).Val()))
+		w.Write([]byte(redisDBEco.Get(ctx, name).Val()))
 	} else {
 		w.WriteHeader(http.StatusNotFound)
 	}
@@ -46,7 +46,7 @@ func SetEco(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	redisDBEco.Set(currency.Name, output, 0)
+	redisDBEco.Set(ctx, currency.Name, output, 0)
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -63,15 +63,15 @@ func DelEco(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	redisDBEco.Del(currency.Name)
+	redisDBEco.Del(ctx, currency.Name)
 	w.WriteHeader(http.StatusCreated)
 }
 
 func GetAllEco(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 	var data []CurrencyConvert
-	for entry := range redisDBEco.Keys("*").Val() {
+	for entry := range redisDBEco.Keys(ctx, "*").Val() {
 		var eco CurrencyConvert
-		json.Unmarshal([]byte(redisDBEco.Get(redisDBEco.Keys("*").Val()[entry]).Val()), &eco)
+		json.Unmarshal([]byte(redisDBEco.Get(ctx, redisDBEco.Keys(ctx, "*").Val()[entry]).Val()), &eco)
 		data = append(data, eco)
 	}
 	output, err := json.MarshalIndent(data, " ", " ")

@@ -28,9 +28,9 @@ func Validate(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 
 func GetServerStatus(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 	var data []ServerStatus
-	for entry := range redisDBStatus.Keys("*").Val() {
+	for entry := range redisDBStatus.Keys(ctx, "*").Val() {
 		var serverStatus ServerStatus
-		json.Unmarshal([]byte(redisDBStatus.Get(redisDBStatus.Keys("*").Val()[entry]).Val()), &serverStatus)
+		json.Unmarshal([]byte(redisDBStatus.Get(ctx, redisDBStatus.Keys(ctx, "*").Val()[entry]).Val()), &serverStatus)
 		data = append(data, serverStatus)
 	}
 	output, err := json.MarshalIndent(data, " ", " ")
@@ -65,16 +65,16 @@ func PostStatus(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	redisDBStatus.Set(Status.ServerID, output, 600000000000)
+	redisDBStatus.Set(ctx, Status.ServerID, output, 600000000000)
 	w.WriteHeader(http.StatusAccepted)
 }
 
 func GetStatus(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 	fmt.Fprintln(w, "<html>\n<head>\n <meta http-equiv=\"refresh\" content=\"30\">\n  <link rel=\"stylesheet\" type=\"text/css\" href=\"theme.css\">\n</head>\n<body>\n  <table>\n  \t<tbody>\n ")
 	var count = 0
-	for entry := range redisDBStatus.Keys("*").Val() {
+	for entry := range redisDBStatus.Keys(ctx, "*").Val() {
 		var serverStatus ServerStatus
-		json.Unmarshal([]byte(redisDBStatus.Get(redisDBStatus.Keys("*").Val()[entry]).Val()), &serverStatus)
+		json.Unmarshal([]byte(redisDBStatus.Get(ctx, redisDBStatus.Keys(ctx, "*").Val()[entry]).Val()), &serverStatus)
 		if count%3 == 0 {
 			fmt.Fprintln(w, "<tr>\n")
 			if count > 2 {

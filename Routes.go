@@ -322,8 +322,8 @@ func auth(pass mux.Handle) mux.Handle {
 }
 
 func validate(server, authKey string) bool {
-	if redisDBAuth.Exists(server).Val() == 1 {
-		auth, err := b64.StdEncoding.DecodeString(redisDBAuth.Get(server).Val())
+	if redisDBAuth.Exists(ctx, server).Val() == 1 {
+		auth, err := b64.StdEncoding.DecodeString(redisDBAuth.Get(ctx, server).Val())
 		if err != nil {
 			return false
 		}

@@ -36,15 +36,15 @@ func SetToken(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	redisDBdiscord.Set(token.DiscordID, output, 6e+11)
+	redisDBdiscord.Set(ctx, token.DiscordID, output, 6e+11)
 	w.WriteHeader(http.StatusCreated)
 }
 
 func GetAllTokens(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 	var data []Token
-	for entry := range redisDBdiscord.Keys("*").Val() {
+	for entry := range redisDBdiscord.Keys(ctx, "*").Val() {
 		var discordToken Token
-		json.Unmarshal([]byte(redisDBdiscord.Get(redisDBdiscord.Keys("*").Val()[entry]).Val()), &discordToken)
+		json.Unmarshal([]byte(redisDBdiscord.Get(ctx, redisDBdiscord.Keys(ctx, "*").Val()[entry]).Val()), &discordToken)
 		data = append(data, discordToken)
 	}
 	output, err := json.MarshalIndent(data, " ", " ")

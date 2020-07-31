@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	b64 "encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -42,11 +43,12 @@ const redisDatabaseAuth = redisDatabaseBan + 1
 const redisDatabaseChunkLoading = redisDatabaseAuth + 1
 
 var redisDBAuth *redis.Client
+var ctx = context.Background()
 
 func main() {
 	fmt.Println("Loading Rest-API v" + version + " on " + address)
 	router := NewRouter()
-	_, err := newClient(0).Ping().Result()
+	_, err := newClient(0).Ping(ctx).Result()
 	if err != nil {
 		panic("Unable to connect to RedisDB ")
 	}
@@ -78,10 +80,9 @@ func newClient(databaseIndex int) *redis.Client {
 }
 
 func SetupDefaultAuth() {
-	fmt.Println(os.Args)
-	if redisDBAuth.Exists(defaultUser).Val() == 0 || len(os.Args) > 1 && os.Args[1] == "--resetAuth" {
+	if redisDBAuth.Exists(ctx, defaultUser).Val() == 0 || len(os.Args) > 1 && os.Args[2] == "--resetAuth" {
 		pass := CreateDefaultPassword()
-		redisDBAuth.Set(defaultUser, b64.StdEncoding.EncodeToString([]byte(pass)), 0)
+		redisDBAuth.Set(ctx, defaultUser, b64.StdEncoding.EncodeToString([]byte(pass)), 0)
 		fmt.Println("The default login info is: " + defaultUser + ":" + pass)
 		fmt.Println("Make sure to save and place the login in a safe place. start this up with --resetAuth to reset the auth login")
 	}
@@ -102,15 +103,15 @@ func calculateCostPerChunks(amount int) float64 {
 func checkForExpiredChunkLoading() {
 	ticker := time.NewTicker(chunkLoadingUpdate * time.Minute)
 	for range ticker.C {
-		for entry := range redisChunkLoadingDB.Keys("*").Val() {
+		for entry := range redisChunkLoadingDB.Keys(ctx, "*").Val() {
 			var serverChunkLoading ServerChunkData
-			json.Unmarshal([]byte(redisChunkLoadingDB.Get(redisChunkLoadingDB.Keys("*").Val()[entry]).Val()), &serverChunkLoading)
+			json.Unmarshal([]byte(redisChunkLoadingDB.Get(ctx, redisChunkLoadingDB.Keys(ctx, "*").Val()[entry]).Val()), &serverChunkLoading)
 			var validChunks []PlayerChunkData
 			for data := range serverChunkLoading.PlayerChunkData {
 				var d = serverChunkLoading.PlayerChunkData[data]
 				if (d.TimeCreated + chunkLoadingNotSeenTimeOut) <= time.Now().Unix() {
 					var globalUser GlobalUser
-					json.Unmarshal([]byte(redisDBuser.Get(d.UUID).Val()), &globalUser)
+					json.Unmarshal([]byte(redisDBuser.Get(ctx, d.UUID).Val()), &globalUser)
 					if (globalUser.LastSeen + chunkLoadingNotSeenTimeOut) > time.Now().Unix() {
 						d.TimeCreated = time.Now().Unix()
 					} else {
@@ -131,7 +132,7 @@ func checkForExpiredChunkLoading() {
 			if err != nil {
 				return
 			}
-			redisChunkLoadingDB.Set(serverChunkLoading.ServerID, output, 0)
+			redisChunkLoadingDB.Set(ctx, serverChunkLoading.ServerID, output, 0)
 		}
 	}
 }

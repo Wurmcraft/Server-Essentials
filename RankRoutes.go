@@ -17,10 +17,10 @@ func init() {
 
 func GetRank(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 	name := string(p[0].Value)
-	if redisDBRank.Exists(name).Val() == 1 {
+	if redisDBRank.Exists(ctx, name).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
 		w.Header().Set("version", version)
-		w.Write([]byte(redisDBRank.Get(name).Val()))
+		w.Write([]byte(redisDBRank.Get(ctx, name).Val()))
 	} else {
 		w.WriteHeader(http.StatusNotFound)
 	}
@@ -44,7 +44,7 @@ func SetRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	redisDBRank.Set(rank.Name, output, 0)
+	redisDBRank.Set(ctx, rank.Name, output, 0)
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -61,15 +61,15 @@ func DelRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	redisDBRank.Del(rank.Name)
+	redisDBRank.Del(ctx, rank.Name)
 	w.WriteHeader(http.StatusOK)
 }
 
 func GetAllRanks(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 	var data []Rank
-	for entry := range redisDBRank.Keys("*").Val() {
+	for entry := range redisDBRank.Keys(ctx, "*").Val() {
 		var rank Rank
-		json.Unmarshal([]byte(redisDBRank.Get(redisDBRank.Keys("*").Val()[entry]).Val()), &rank)
+		json.Unmarshal([]byte(redisDBRank.Get(ctx, redisDBRank.Keys(ctx, "*").Val()[entry]).Val()), &rank)
 		data = append(data, rank)
 	}
 	output, err := json.MarshalIndent(data, " ", " ")

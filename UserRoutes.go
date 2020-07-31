@@ -17,10 +17,10 @@ func init() {
 
 func GetGlobalUser(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 	uuid := string(p[0].Value)
-	if redisDBuser.Exists(uuid).Val() == 1 {
+	if redisDBuser.Exists(ctx, uuid).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
 		w.Header().Set("version", version)
-		w.Write([]byte(redisDBuser.Get(uuid).Val()))
+		w.Write([]byte(redisDBuser.Get(ctx, uuid).Val()))
 	} else {
 		w.WriteHeader(http.StatusNotFound)
 	}
@@ -47,15 +47,15 @@ func SetGlobalUser(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	redisDBuser.Set(globalUser.UUID, output, 0)
+	redisDBuser.Set(ctx, globalUser.UUID, output, 0)
 	w.WriteHeader(http.StatusCreated)
 }
 
 func GetAllUsers(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 	var data []UserSimple
-	for entry := range redisDBuser.Keys("*").Val() {
+	for entry := range redisDBuser.Keys(ctx, "*").Val() {
 		var globalUser GlobalUser
-		json.Unmarshal([]byte(redisDBuser.Get(redisDBuser.Keys("*").Val()[entry]).Val()), &globalUser)
+		json.Unmarshal([]byte(redisDBuser.Get(ctx, redisDBuser.Keys(ctx, "*").Val()[entry]).Val()), &globalUser)
 		data = append(data, UserSimple{
 			UUID:    globalUser.UUID,
 			Rank:    globalUser.Rank,

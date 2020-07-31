@@ -17,11 +17,11 @@ func init() {
 
 func GetAutoRank(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 	name := string(p[0].Value)
-	fmt.Println(name + " " + string(redisDBAutoRank.Exists(name).Val()))
-	if redisDBAutoRank.Exists(name).Val() == 1 {
+	fmt.Println(name + " " + string(redisDBAutoRank.Exists(ctx, name).Val()))
+	if redisDBAutoRank.Exists(ctx, name).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
 		w.Header().Set("version", version)
-		w.Write([]byte(redisDBAutoRank.Get(name).Val()))
+		w.Write([]byte(redisDBAutoRank.Get(ctx, name).Val()))
 	} else {
 		w.WriteHeader(http.StatusNotFound)
 	}
@@ -45,7 +45,7 @@ func SetAutoRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	redisDBAutoRank.Set(rank.Rank, output, 0)
+	redisDBAutoRank.Set(ctx, rank.Rank, output, 0)
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -62,15 +62,15 @@ func DelAutoRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	redisDBAutoRank.Del(rank.Rank)
+	redisDBAutoRank.Del(ctx, rank.Rank)
 	w.WriteHeader(http.StatusCreated)
 }
 
 func GetAllAutoRanks(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 	var data []AutoRank
-	for entry := range redisDBAutoRank.Keys("*").Val() {
+	for entry := range redisDBAutoRank.Keys(ctx, "*").Val() {
 		var rank AutoRank
-		json.Unmarshal([]byte(redisDBAutoRank.Get(redisDBAutoRank.Keys("*").Val()[entry]).Val()), &rank)
+		json.Unmarshal([]byte(redisDBAutoRank.Get(ctx, redisDBAutoRank.Keys(ctx, "*").Val()[entry]).Val()), &rank)
 		data = append(data, rank)
 	}
 	output, err := json.MarshalIndent(data, " ", " ")
