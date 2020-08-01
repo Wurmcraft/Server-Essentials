@@ -8,6 +8,7 @@ public class Language implements JsonParser {
 
   // Announcements
   public String ANNOUNCEMENT_NEW_PLAYER;
+  public String ANNOUNCEMENT_AUTORANK;
 
   // Hover Info
   public String HOVER_PLAYER_NAME;
@@ -32,6 +33,17 @@ public class Language implements JsonParser {
   public String RANK_PERM_DEL;
   public String RANK_INHERIT_ADD;
   public String RANK_INHERIT_DEL;
+  public String RANK_CREATE;
+  public String RANK_DELETE;
+
+  // AutoRank
+  public String AUTORANK_AR_NEXT;
+  public String AUTORANK_AR_TIME;
+  public String AUTORANK_AR_XP;
+  public String AUTORANK_AR_MONEY;
+  public String AUTORANK_AR_MAX;
+  public String AUTORANK_AR_CREATE;
+  public String AUTORANK_AR_DELETE;
 
   public Language(String key) {
     this.key = key;

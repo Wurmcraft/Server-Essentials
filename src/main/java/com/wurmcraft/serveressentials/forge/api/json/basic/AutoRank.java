@@ -10,6 +10,14 @@ public class AutoRank implements JsonParser {
   public long balance;
   public int exp;
 
+  public AutoRank() {
+    this.rank = "Error";
+    this.nextRank = "";
+    this.playTime = -1;
+    this.balance = 0;
+    this.exp = 0;
+  }
+
   public AutoRank(String rank, String nextRank, int playTime) {
     this.rank = rank;
     this.nextRank = nextRank;

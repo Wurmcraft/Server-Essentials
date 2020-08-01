@@ -3,6 +3,7 @@ package com.wurmcraft.serveressentials.forge.server.data;
 import static com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer.GSON;
 
 import com.wurmcraft.serveressentials.forge.api.SECore;
+import com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank;
 import com.wurmcraft.serveressentials.forge.api.json.basic.CurrencyConversion;
 import com.wurmcraft.serveressentials.forge.api.json.player.GlobalPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.rest.DiscordToken;
@@ -238,25 +239,30 @@ public class RestRequestHandler {
 
     public static com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank[] getAutoRanks() {
       return INSTANCE.get(
-          "autorank",
+          "autoRank",
           com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank[].class);
     }
 
     public static com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank getAutoRank(
         String rank) {
       return INSTANCE.get(
-          "autorank/" + rank,
+          "autoRank/" + rank,
           com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank.class);
     }
 
     public static int addAutoRank(
         com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank rank) {
-      return INSTANCE.post("autorank/add", rank);
+      return INSTANCE.post("autoRank/add", rank);
     }
 
     public static int deleteAutoRank(
         com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank ar) {
-      return INSTANCE.put("autorank/" + ar.getID() + "/del", ar);
+      return INSTANCE.put("autoRank/" + ar.getID() + "/del", ar);
+    }
+
+    public static int overrideAutoRank(
+        com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank rank) {
+      return INSTANCE.post("autoRank/" + rank.getID() + "/override", rank);
     }
   }
 

@@ -91,7 +91,12 @@ public class ModuleLoader {
     Set<Class<?>> moduleClasses = AnnotationUtils.findAnnotation(Module.class);
     for (Class<?> module : moduleClasses) {
       if (module.getAnnotation(Module.class).name().equalsIgnoreCase(name)) {
-        return module;
+        try {
+          return module.newInstance();
+        } catch (Exception e) {
+          e.printStackTrace();
+          return null;
+        }
       }
     }
     return null;
@@ -134,9 +139,6 @@ public class ModuleLoader {
       instance.getClass().getDeclaredMethod(module.reloadModule());
       return true;
     } catch (Exception e) {
-      if (SECore.config.debug) {
-        ServerEssentialsServer.LOGGER.info(e.getMessage());
-      }
       e.printStackTrace();
       return false;
     }
@@ -162,7 +164,6 @@ public class ModuleLoader {
         }
       }
       allowSysOut = true;
-      return false;
     }
     return true;
   }

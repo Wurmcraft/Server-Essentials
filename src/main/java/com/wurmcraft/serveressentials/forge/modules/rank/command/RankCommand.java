@@ -59,7 +59,14 @@ public class RankCommand {
       } else {
         ChatHelper.sendMessage(sender,
             PlayerUtils.getLanguage(sender).COMMAND_USAGE.replaceAll("%COMMAND%", "Rank")
-                .replaceAll("%ARGS%", "<rank> <prefix, suffix> <name>"));
+                .replaceAll("%ARGS%",
+                    "<rank> <permission, inheritance> <add,rem> <node>"));
+        ChatHelper.sendMessage(sender,
+            PlayerUtils.getLanguage(sender).COMMAND_USAGE.replaceAll("%COMMAND%", "Rank")
+                .replaceAll("%ARGS%", "<player> <rank>"));
+        ChatHelper.sendMessage(sender,
+            PlayerUtils.getLanguage(sender).COMMAND_USAGE.replaceAll("%COMMAND%", "Rank")
+                .replaceAll("%ARGS%", "<create, delete> <rank>"));
       }
     } else {
       TextComponentTranslation noPerms = new TextComponentTranslation(
@@ -104,6 +111,14 @@ public class RankCommand {
                   .replaceAll("%COMMAND%", "Rank")
                   .replaceAll("%ARGS%",
                       "<rank> <permission, inheritance> <add,rem> <node>"));
+          ChatHelper.sendMessage(sender,
+              PlayerUtils.getLanguage(sender).COMMAND_USAGE
+                  .replaceAll("%COMMAND%", "Rank")
+                  .replaceAll("%ARGS%", "<player> <rank>"));
+          ChatHelper.sendMessage(sender,
+              PlayerUtils.getLanguage(sender).COMMAND_USAGE
+                  .replaceAll("%COMMAND%", "Rank")
+                  .replaceAll("%ARGS%", "<create, delete> <rank>"));
         }
       } else if (type.equalsIgnoreCase("inheritance") || type.equalsIgnoreCase("inh")
           || type.equalsIgnoreCase("i")) {
@@ -137,6 +152,12 @@ public class RankCommand {
             PlayerUtils.getLanguage(sender).COMMAND_USAGE.replaceAll("%COMMAND%", "Rank")
                 .replaceAll("%ARGS%",
                     "<rank> <permission, inheritance> <add,rem> <node>"));
+        ChatHelper.sendMessage(sender,
+            PlayerUtils.getLanguage(sender).COMMAND_USAGE.replaceAll("%COMMAND%", "Rank")
+                .replaceAll("%ARGS%", "<player> <rank>"));
+        ChatHelper.sendMessage(sender,
+            PlayerUtils.getLanguage(sender).COMMAND_USAGE.replaceAll("%COMMAND%", "Rank")
+                .replaceAll("%ARGS%", "<create, delete> <rank>"));
       }
     } else {
       TextComponentTranslation noPerms = new TextComponentTranslation(
@@ -149,9 +170,13 @@ public class RankCommand {
   @Command(inputArguments = {CommandArguments.STRING}, inputNames = {"List"})
   public void listRanks(ICommandSender sender, String arg) {
     if (arg.equalsIgnoreCase("list")) {
-      ChatHelper.sendSpacerWithMessage(sender,PlayerUtils.getLanguage(sender).COMMAND_SPACER,"Ranks");
-      for(Rank rank : SECore.dataHandler.getDataFromKey(DataKey.RANK, new Rank()).values()) {
-        ChatHelper.sendMessage(sender, rank.prefix + rank.suffix + " (" + rank.name + ")");
+      ChatHelper
+          .sendSpacerWithMessage(sender, PlayerUtils.getLanguage(sender).COMMAND_SPACER,
+              "Ranks");
+      for (Rank rank : SECore.dataHandler.getDataFromKey(DataKey.RANK, new Rank())
+          .values()) {
+        ChatHelper
+            .sendMessage(sender, rank.prefix + rank.suffix + " (" + rank.name + ")");
       }
       ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(sender).COMMAND_SPACER);
     } else {
@@ -161,6 +186,46 @@ public class RankCommand {
       ChatHelper.sendMessage(sender,
           PlayerUtils.getLanguage(sender).COMMAND_USAGE.replaceAll("%COMMAND%", "Rank")
               .replaceAll("%ARGS%", "<player> <rank>"));
+      ChatHelper.sendMessage(sender,
+          PlayerUtils.getLanguage(sender).COMMAND_USAGE.replaceAll("%COMMAND%", "Rank")
+              .replaceAll("%ARGS%", "<create, delete> <rank>"));
+    }
+  }
+
+  @Command(inputArguments = {CommandArguments.STRING, CommandArguments.STRING})
+  public void createOrDelete(ICommandSender sender, String arg, String rank) {
+    if (RankUtils.hasPermission(sender, "rank.change")) {
+      if (arg.equalsIgnoreCase("create") || arg.equalsIgnoreCase("c") || arg
+          .equalsIgnoreCase("add") || arg.equalsIgnoreCase("a")) {
+        Rank newRank = new Rank(rank, "[" + rank + "]", "", new String[]{},
+            new String[]{});
+        SECore.dataHandler.registerData(DataKey.RANK, newRank);
+        ChatHelper.sendMessage(sender,
+            PlayerUtils.getLanguage(sender).RANK_CREATE
+                .replaceAll("%RANK%", newRank.name));
+      } else if (arg.equalsIgnoreCase("delete") || arg.equalsIgnoreCase("del") || arg
+          .equalsIgnoreCase("d") || arg.equalsIgnoreCase("remove") || arg
+          .equalsIgnoreCase("rem") || arg.equalsIgnoreCase("r")) {
+        SECore.dataHandler.delData(DataKey.RANK, rank, true);
+        ChatHelper.sendMessage(sender,
+            PlayerUtils.getLanguage(sender).RANK_DELETE.replaceAll("%RANK%", rank));
+      } else {
+        ChatHelper.sendMessage(sender,
+            PlayerUtils.getLanguage(sender).COMMAND_USAGE.replaceAll("%COMMAND%", "Rank")
+                .replaceAll("%ARGS%",
+                    "<rank> <permission, inheritance> <add,rem> <node>"));
+        ChatHelper.sendMessage(sender,
+            PlayerUtils.getLanguage(sender).COMMAND_USAGE.replaceAll("%COMMAND%", "Rank")
+                .replaceAll("%ARGS%", "<player> <rank>"));
+        ChatHelper.sendMessage(sender,
+            PlayerUtils.getLanguage(sender).COMMAND_USAGE.replaceAll("%COMMAND%", "Rank")
+                .replaceAll("%ARGS%", "<create, delete> <rank>"));
+      }
+    } else {
+      TextComponentTranslation noPerms = new TextComponentTranslation(
+          "commands.generic.permission", new Object[0]);
+      noPerms.getStyle().setColor(TextFormatting.RED);
+      ChatHelper.sendHoverMessage(sender, noPerms, TextFormatting.RED + "rank.change");
     }
   }
 }

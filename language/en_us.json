@@ -16,5 +16,14 @@
 	"RANK_PERM_ADD": "&3%NODE% has been added to rank %RANK%",
 	"RANK_PERM_DEL": "&3%NODE% has been removed from rank %RANK%",
 	"RANK_INHERIT_ADD": "&3%NODE% has been added to rank %RANK%",
-	"RANK_INHERIT_DEL": "&3%NODE% has been removed from rank %RANK%"
+	"RANK_INHERIT_DEL": "&3%NODE% has been removed from rank %RANK%",
+	"RANK_CREATE": "&3%RANK% has been created!",
+	"RANK_DELETE": "&3%RANK% has been deleted",
+	"AUTORANK_AR_NEXT": "&3Next Rank: %RANK%",
+	"AUTORANK_AR_TIME": "&3Time untill rankup: %TIME%",
+	"AUTORANK_AR_XP": "&3Required XP (lvl): %XP%",
+	"AUTORANK_AR_MONEY": "&3Required Balance (%NAME%): %AMOUNT%",
+	"AUTORANK_AR_MAX": "&3You are max rank",
+	"AUTORANK_AR_CREATE":"",
+	"AUTORANK_AR_DELETE": ""
 }

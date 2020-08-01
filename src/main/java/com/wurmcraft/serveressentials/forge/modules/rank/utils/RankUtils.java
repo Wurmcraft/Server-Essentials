@@ -56,7 +56,7 @@ public class RankUtils {
       Rank[] ranks = RestRequestHandler.Rank.getAllRanks();
       Rank[] fileRanks = SECore.dataHandler.getDataFromKey(DataKey.RANK, new Rank())
           .values().toArray(new Rank[0]);
-      if (ranks.length > 0) {
+      if (ranks != null && ranks.length > 0) {
         ServerEssentialsServer.isUpdateInProgress = true;
         for (Rank fileRank : fileRanks) {
           SECore.dataHandler.delData(DataKey.RANK, fileRank.getID(), true);

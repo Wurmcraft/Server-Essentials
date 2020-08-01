@@ -119,4 +119,13 @@ public class PlayerUtils {
     }
     return playerData;
   }
+
+  public static int getTotalPlayTime(EntityPlayer player) {
+    StoredPlayer data = get(player);
+    int time = 0;
+    for(ServerTime t : data.global.playtime.serverTime) {
+      time = (int) (time + t.time);
+    }
+    return time;
+  }
 }

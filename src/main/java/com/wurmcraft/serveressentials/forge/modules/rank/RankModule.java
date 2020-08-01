@@ -13,6 +13,7 @@ import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.NoSuchElementException;
+import java.util.concurrent.TimeUnit;
 import net.minecraftforge.common.MinecraftForge;
 
 @Module(name = "Rank")
@@ -44,6 +45,12 @@ public class RankModule {
 
   public void finalizeModule() {
     MinecraftForge.EVENT_BUS.register(new RankEvents());
+    if (config.restAutoSync) {
+      ServerEssentialsServer.EXECUTORS
+          .scheduleAtFixedRate(RankUtils::checkAndLoadRanks, config.restSyncPeriod,
+              config.restSyncPeriod,
+              TimeUnit.SECONDS);
+    }
   }
 
   public void reloadModule() {
