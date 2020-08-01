@@ -24,6 +24,13 @@
 	"AUTORANK_AR_XP": "&3Required XP (lvl): %XP%",
 	"AUTORANK_AR_MONEY": "&3Required Balance (%NAME%): %AMOUNT%",
 	"AUTORANK_AR_MAX": "&3You are max rank",
-	"AUTORANK_AR_CREATE":"",
-	"AUTORANK_AR_DELETE": ""
+	"AUTORANK_AR_CREATE":"&3AutoRank %NAME% created!",
+	"AUTORANK_AR_DELETE": "&3AutoRank %NAME% deleted!",
+	"GENERAL_SETHOME_CREATED": "&3%HOME% has been created",
+	"GENERAL_SETHOME_UPDATED": "&3%HOME% has been updated",
+	"GENERAL_SETHOME_MAX": "&3Max homes reached (%AMOUNT%)",
+	"GENERAL_SETHOME_INVALID": "&3%NAME% is not a valid home name",
+	"GENERAL_DELHOME_HOME": "&3Home %NAME% deleted",
+	"GENERAL_DELHOME_ALL": "&3All homes deleted",
+	"GENERAL_HOME": "&3You have been sent to your home (%NAME%)"
 }

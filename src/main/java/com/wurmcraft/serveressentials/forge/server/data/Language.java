@@ -45,6 +45,15 @@ public class Language implements JsonParser {
   public String AUTORANK_AR_CREATE;
   public String AUTORANK_AR_DELETE;
 
+  // General
+  public String GENERAL_SETHOME_CREATED;
+  public String GENERAL_SETHOME_UPDATED;
+  public String GENERAL_SETHOME_MAX;
+  public String GENERAL_SETHOME_INVALID;
+  public String GENERAL_DELHOME_HOME;
+  public String GENERAL_DELHOME_ALL;
+  public String GENERAL_HOME;
+
   public Language(String key) {
     this.key = key;
   }
