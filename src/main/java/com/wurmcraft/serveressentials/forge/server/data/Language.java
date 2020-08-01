@@ -14,6 +14,7 @@ public class Language implements JsonParser {
 
   // Command
   public String COMMAND_USAGE;
+  public String COMMAND_SPACER;
 
   // Core
   public String CORE_SE_RELOAD;

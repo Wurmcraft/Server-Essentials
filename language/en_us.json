@@ -3,6 +3,7 @@
 	"ANNOUNCEMENT_NEW_PLAYER": "&6Welcome %PLAYER%",
 	"HOVER_PLAYER_NAME": "&a%PLAYER% &d(%UUID%)",
 	"COMMAND_USAGE": "&5/%COMMAND% &d%ARGS%",
+	"COMMAND_SPACER": "&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=",
 	"CORE_SE_RELOAD": "&3Module '%MODULE%' Reloaded!",
 	"CORE_SE_MODULES": "&3Modules: %MODULES%",
 	"CORE_SE_VERSION": "&3Version: %VERSION%",

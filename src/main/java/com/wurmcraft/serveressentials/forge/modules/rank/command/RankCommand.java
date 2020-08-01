@@ -1,9 +1,11 @@
 package com.wurmcraft.serveressentials.forge.modules.rank.command;
 
 
+import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.command.Command;
 import com.wurmcraft.serveressentials.forge.api.command.CommandArguments;
 import com.wurmcraft.serveressentials.forge.api.command.ModuleCommand;
+import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
@@ -68,8 +70,8 @@ public class RankCommand {
   }
 
   @Command(inputArguments = {CommandArguments.RANK, CommandArguments.STRING,
-      CommandArguments.STRING, CommandArguments.STRING})
-  public void changePerm(ICommandSender sender, Rank rank, String arg, String type,
+      CommandArguments.STRING, CommandArguments.STRING}, inputNames = {"Rank",})
+  public void changePerm(ICommandSender sender, Rank rank, String type, String arg,
       String node) {
     if (RankUtils.hasPermission(sender, "rank.change")) {
       boolean isRemove =
@@ -141,6 +143,24 @@ public class RankCommand {
           "commands.generic.permission", new Object[0]);
       noPerms.getStyle().setColor(TextFormatting.RED);
       ChatHelper.sendHoverMessage(sender, noPerms, TextFormatting.RED + "rank.change");
+    }
+  }
+
+  @Command(inputArguments = {CommandArguments.STRING}, inputNames = {"List"})
+  public void listRanks(ICommandSender sender, String arg) {
+    if (arg.equalsIgnoreCase("list")) {
+      ChatHelper.sendSpacerWithMessage(sender,PlayerUtils.getLanguage(sender).COMMAND_SPACER,"Ranks");
+      for(Rank rank : SECore.dataHandler.getDataFromKey(DataKey.RANK, new Rank()).values()) {
+        ChatHelper.sendMessage(sender, rank.prefix + rank.suffix + " (" + rank.name + ")");
+      }
+      ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(sender).COMMAND_SPACER);
+    } else {
+      ChatHelper.sendMessage(sender,
+          PlayerUtils.getLanguage(sender).COMMAND_USAGE.replaceAll("%COMMAND%", "Rank")
+              .replaceAll("%ARGS%", "<rank> <permission, inheritance> <add,rem> <node>"));
+      ChatHelper.sendMessage(sender,
+          PlayerUtils.getLanguage(sender).COMMAND_USAGE.replaceAll("%COMMAND%", "Rank")
+              .replaceAll("%ARGS%", "<player> <rank>"));
     }
   }
 }

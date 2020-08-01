@@ -20,7 +20,7 @@ public class GlobalConfig implements JsonParser {
     this.dataStorageType = "File";
     this.serverID = "No-Set";
     this.Rest = new Rest();
-    this.langUrlBase = "https://raw.githubusercontent.com/Wurmcraft/Sever-Essentials-2/1.12/Forge/language";
+    this.langUrlBase = "https://raw.githubusercontent.com/Wurmcraft/Server-Essentials-2/1.12/Forge/language";
     this.defaultLang = "en_us";
     this.supportThreads = 2;
     this.playerReloadTimeout = 60;
