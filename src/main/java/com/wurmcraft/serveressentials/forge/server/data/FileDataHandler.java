@@ -25,8 +25,7 @@ public class FileDataHandler extends BasicDataHandler {
       if (!currentlyLoaded.isEmpty()) {
         return currentlyLoaded;
       }
-    } catch (NoSuchElementException ignored) {
-    }
+    } catch (NoSuchElementException ignored) {}
     NonBlockingHashMap<String, T> fileData = new NonBlockingHashMap<>();
     File dataDir = new File(SAVE_DIR + File.separator + key.getName());
     if (dataDir.exists() && dataDir.isDirectory()) {

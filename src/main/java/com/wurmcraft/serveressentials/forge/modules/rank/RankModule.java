@@ -14,7 +14,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.NoSuchElementException;
 import net.minecraftforge.common.MinecraftForge;
-import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 @Module(name = "Rank")
 public class RankModule {
@@ -40,14 +39,7 @@ public class RankModule {
                 + "Rank");
       }
     }
-    NonBlockingHashMap<String, Rank> rankData = new NonBlockingHashMap<>();
-    try {
-   rankData = SECore.dataHandler.getDataFromKey(DataKey.RANK, new Rank());
-    } catch (Exception e) {}
-    if (rankData.isEmpty()) {
-      ServerEssentialsServer.LOGGER.info("No Ranks found!, Creating Default Ranks");
-      RankUtils.createDefaultRanks();
-    }
+    RankUtils.checkAndLoadRanks();
   }
 
   public void finalizeModule() {
@@ -55,13 +47,16 @@ public class RankModule {
   }
 
   public void reloadModule() {
-    ServerEssentialsServer.isReloadInProgress = true;
+    ServerEssentialsServer.isUpdateInProgress = true;
     try {
-      for (String rank : SECore.dataHandler.getDataFromKey(DataKey.RANK, new Rank()).keySet()) {
-        SECore.dataHandler.delData(DataKey.RANK, rank, SECore.config.dataStorageType.equalsIgnoreCase("Rest"));
+      for (String rank : SECore.dataHandler.getDataFromKey(DataKey.RANK, new Rank())
+          .keySet()) {
+        SECore.dataHandler.delData(DataKey.RANK, rank,
+            SECore.config.dataStorageType.equalsIgnoreCase("Rest"));
       }
-    } catch (Exception ignored) {}
+    } catch (Exception ignored) {
+    }
     initSetup();
-    ServerEssentialsServer.isReloadInProgress = false;
+    ServerEssentialsServer.isUpdateInProgress = false;
   }
 }

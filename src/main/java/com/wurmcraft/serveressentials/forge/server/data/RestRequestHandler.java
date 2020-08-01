@@ -23,7 +23,7 @@ public class RestRequestHandler {
   public static final String USER_AGENT = "Mozilla/5.0";
 
   private String auth = createRestAuth(SECore.config.Rest.restAuth);
-  private String baseURL = parseConfigURL(SECore.config.Rest.restAuth) + "api/";
+  private String baseURL = parseConfigURL(SECore.config.Rest.restURL) + "api/";
 
   private static RestRequestHandler INSTANCE = new RestRequestHandler();
   public static RestValidate validate = null;
@@ -80,7 +80,7 @@ public class RestRequestHandler {
       }
       return status;
     } catch (Exception e) {
-      ServerEssentialsServer.LOGGER.warn(e.getLocalizedMessage());
+      e.printStackTrace();
     }
     return 418; //  I'm a teapot
   }
@@ -123,7 +123,7 @@ public class RestRequestHandler {
           return GSON.fromJson(response.toString(), type);
         }
       } catch (Exception e) {
-        ServerEssentialsServer.LOGGER.warn(e.getMessage());
+        e.printStackTrace();
       }
     }
     return null;

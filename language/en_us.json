@@ -7,5 +7,13 @@
 	"CORE_SE_MODULES": "&3Modules: %MODULES%",
 	"CORE_SE_VERSION": "&3Version: %VERSION%",
 	"CORE_SE_VERSION_REST": "&3Rest Version: %VERSION%",
-	"CORE_SE_STORAGE": "&3Storage Type: %TYPE%"
+	"CORE_SE_STORAGE": "&3Storage Type: %TYPE%",
+	"RANK_CHANGE": "&3Your rank has been changed to %RANK%",
+	"RANK_CHANGE_SENDER": "&3%PLAYER%'s rank has been changed to %RANK%",
+	"RANK_PREFIX": "&3%RANK% prefix has been changed to %PREFIX%",
+	"RANK_SUFFIX": "&3%RANK% suffix has been changed to %SUFFIX%",
+	"RANK_PERM_ADD": "&3%NODE% has been added to rank %RANK%",
+	"RANK_PERM_DEL": "&3%NODE% has been removed from rank %RANK%",
+	"RANK_INHERIT_ADD": "&3%NODE% has been added to rank %RANK%",
+	"RANK_INHERIT_DEL": "&3%NODE% has been removed from rank %RANK%"
 }

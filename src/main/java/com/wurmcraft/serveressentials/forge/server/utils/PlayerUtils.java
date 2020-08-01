@@ -60,6 +60,9 @@ public class PlayerUtils {
     MinecraftForge.EVENT_BUS.post(event);
     playerData = event.newData;
     SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
+    if(print && SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+      RestRequestHandler.User.addPlayer(playerData.global);
+    }
     String playerName = UsernameCache.getLastKnownUsername(UUID.fromString(uuid));
     if (print) {
       ServerEssentialsServer.LOGGER.info(

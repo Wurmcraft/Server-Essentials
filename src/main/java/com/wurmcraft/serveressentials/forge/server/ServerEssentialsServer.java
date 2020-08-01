@@ -7,12 +7,11 @@ import com.wurmcraft.serveressentials.forge.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.forge.api.config.GlobalConfig;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.data.IDataHandler;
-import com.wurmcraft.serveressentials.forge.api.json.rest.RestValidate;
 import com.wurmcraft.serveressentials.forge.server.command.SECommand;
 import com.wurmcraft.serveressentials.forge.server.data.BasicDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.FileDataHandler;
+import com.wurmcraft.serveressentials.forge.server.data.RestDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
-import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler.Verify;
 import com.wurmcraft.serveressentials.forge.server.events.PlayerDataEvents;
 import com.wurmcraft.serveressentials.forge.server.loader.CommandLoader;
 import com.wurmcraft.serveressentials.forge.server.loader.ModuleLoader;
@@ -42,7 +41,7 @@ public class ServerEssentialsServer {
   public static ScheduledExecutorService EXECUTORS;
 
   public static final File SAVE_DIR = new File(Global.NAME.replaceAll(" ", "-"));
-  public static boolean isReloadInProgress = false;
+  public static boolean isUpdateInProgress = false;
 
   @EventHandler
   public void preInit(FMLPreInitializationEvent e) {
@@ -64,8 +63,8 @@ public class ServerEssentialsServer {
   @EventHandler
   public void postInit(FMLPostInitializationEvent e) {
     LOGGER.info("Post-Init has Started");
-    if(SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
-      RestRequestHandler.validate =  RestRequestHandler.Verify.get();
+    if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+      RestRequestHandler.validate = RestRequestHandler.Verify.get();
     }
   }
 
@@ -84,6 +83,8 @@ public class ServerEssentialsServer {
       return new BasicDataHandler();
     } else if (name.equalsIgnoreCase("File")) {
       return new FileDataHandler();
+    } else if (name.equalsIgnoreCase("Rest")) {
+      return new RestDataHandler();
     } else {
       LOGGER.error("Failed to find '" + name + "' DataHandler!, Defaulting to File!");
       return new FileDataHandler();

@@ -9,6 +9,7 @@ import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.Home;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.loader.ModuleLoader;
+import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import com.wurmcraft.serveressentials.forge.server.utils.CommandParser;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import java.lang.reflect.InvocationTargetException;
@@ -101,6 +102,9 @@ public class SECommand extends CommandBase {
       } catch (InvocationTargetException e) {
         e.printStackTrace();
       }
+    } else {
+      ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(sender).COMMAND_USAGE
+          .replaceAll("%COMMAND%", command.name()));
     }
   }
 
@@ -192,7 +196,7 @@ public class SECommand extends CommandBase {
       return CommandArguments.PLAYER;
     } else if (isRank(line)) {
       return CommandArguments.RANK;
-    } else if(isModule(line)) {
+    } else if (isModule(line)) {
       return CommandArguments.MODULE;
     } else if (sender.getCommandSenderEntity() instanceof EntityPlayer && isHome(
         (EntityPlayer) sender.getCommandSenderEntity(), line)) {
@@ -241,7 +245,8 @@ public class SECommand extends CommandBase {
           return true;
         }
       }
-    } catch (Exception ignored) {}
+    } catch (Exception ignored) {
+    }
     return false;
   }
 

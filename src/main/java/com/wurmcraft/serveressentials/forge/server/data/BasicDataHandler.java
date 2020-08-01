@@ -58,6 +58,7 @@ public class BasicDataHandler implements IDataHandler {
       throws NoSuchElementException {
     if (loadedData.containsKey(key) && loadedData.get(key).containsKey(dataToRemove)) {
       loadedData.get(key).remove(dataToRemove);
+      return;
     }
     throw new NoSuchElementException();
   }
