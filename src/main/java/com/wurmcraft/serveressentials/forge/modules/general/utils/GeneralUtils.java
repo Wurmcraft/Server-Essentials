@@ -10,6 +10,7 @@ public class GeneralUtils {
   public static int getMaxHomes(EntityPlayer player) {
     StoredPlayer playerData = PlayerUtils.get(player);
     int total = GeneralModule.config.defaultHomeCount;
+
     return total;
   }
 

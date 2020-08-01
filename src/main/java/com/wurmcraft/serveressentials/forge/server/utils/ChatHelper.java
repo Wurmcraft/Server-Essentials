@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.util.text.event.HoverEvent.Action;
 
@@ -26,6 +27,13 @@ public class ChatHelper {
     TextComponentString text = new TextComponentString(msg.replaceAll("&", "\u00a7"));
     sendHoverMessage(sender, text, hover);
   }
+
+  public static void sendHoverAndClickMessage(ICommandSender sender, String msg, String hover, String click) {
+    TextComponentString text = new TextComponentString(msg.replaceAll("&", "\u00a7"));
+    text.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, click));
+    sendHoverMessage(sender, text, hover);
+  }
+
 
   public static void sendHoverMessage(ICommandSender sender, ITextComponent text,
       String hover) {

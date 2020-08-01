@@ -11,11 +11,15 @@ import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.NoSuchElementException;
+import java.util.UUID;
+import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 @Module(name = "General")
 public class GeneralModule {
 
   public static GeneralConfig config;
+
+  public static NonBlockingHashMap<UUID, Object[]> requestingTPA = new NonBlockingHashMap<>();
 
   public void initSetup() {
     try {

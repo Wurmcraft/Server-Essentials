@@ -30,7 +30,9 @@ public class SetHomeCommand {
   public void setHome(ICommandSender sender, String name) {
     for (String invalid : INVALID_HOME_NAMES) {
       if (invalid.equalsIgnoreCase(name)) {
-        ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(sender).GENERAL_SETHOME_INVALID);
+        ChatHelper
+            .sendMessage(sender, PlayerUtils.getLanguage(sender).GENERAL_SETHOME_INVALID
+                .replaceAll("%NAME%", name));
         return;
       }
     }

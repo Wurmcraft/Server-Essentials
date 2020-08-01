@@ -32,5 +32,9 @@
 	"GENERAL_SETHOME_INVALID": "&3%NAME% is not a valid home name",
 	"GENERAL_DELHOME_HOME": "&3Home %NAME% deleted",
 	"GENERAL_DELHOME_ALL": "&3All homes deleted",
-	"GENERAL_HOME": "&3You have been sent to your home (%NAME%)"
+	"GENERAL_HOME": "&3You have been sent to your home (%NAME%)",
+	"GENERAL_TPA_SENT": "&3TPA request sent to %PLAYER%",
+	"GENERAL_TPA_REQUEST": "&3%PLAYER% has request to teleport to your location",
+	"GENERAL_TPACCEPT_NONE": "&3No Active TPA Requests Found!",
+	"GENERAL_TPA": "&3You have been teleported to %NAME%"
 }

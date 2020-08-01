@@ -64,6 +64,7 @@ public class PlayerUtils {
       RestRequestHandler.User.addPlayer(playerData.global);
     }
     String playerName = UsernameCache.getLastKnownUsername(UUID.fromString(uuid));
+
     if (print) {
       ServerEssentialsServer.LOGGER.info(
           playerName + " is new to the server! " + (newToNetwork ? " (New To Network)"

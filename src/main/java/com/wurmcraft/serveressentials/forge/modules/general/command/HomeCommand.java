@@ -22,7 +22,7 @@ public class HomeCommand {
       EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
       TeleportUtils.teleportTo(player, home);
       ChatHelper.sendHoverMessage(sender,
-          PlayerUtils.getLanguage(sender).GENERAL_HOME.replaceAll("%HOME%", home.name),
+          PlayerUtils.getLanguage(sender).GENERAL_HOME.replaceAll("%NAME%", home.name),
           TextFormatting.GOLD + "X: " + Math.round(home.x) + " Y: " + Math.round(home.y)
               + " Z: " + Math
               .round(home.z) + " Dim: " + home.dim);
@@ -90,9 +90,9 @@ public class HomeCommand {
             PlayerUtils.getLanguage(sender).COMMAND_SPACER, "Home");
         StoredPlayer playerData = PlayerUtils.get(player);
         for (Home h : playerData.server.homes) {
-          ChatHelper.sendHoverMessage(sender, TextFormatting.GOLD + h.name,
+          ChatHelper.sendHoverAndClickMessage(sender, TextFormatting.GOLD + h.name,
               TextFormatting.GOLD + "X: " + Math.round(h.x) + " Y: " + Math.round(h.y)
-                  + " Z: " + Math.round(h.z) + " Dim: " + h.dim);
+                  + " Z: " + Math.round(h.z) + " Dim: " + h.dim, "/home " + h.name);
         }
         ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(sender).COMMAND_SPACER);
       } else {
