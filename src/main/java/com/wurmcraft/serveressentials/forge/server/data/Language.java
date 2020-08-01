@@ -57,6 +57,7 @@ public class Language implements JsonParser {
   public String GENERAL_TPA_REQUEST;
   public String GENERAL_TPACCEPT_NONE;
   public String GENERAL_TPA;
+  public String GENERAL_BACK;
 
   public Language(String key) {
     this.key = key;

@@ -6,20 +6,18 @@ import static com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.module.Module;
+import com.wurmcraft.serveressentials.forge.modules.general.event.GeneralEvents;
 import com.wurmcraft.serveressentials.forge.modules.rank.RankConfig;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.NoSuchElementException;
-import java.util.UUID;
-import org.cliffc.high_scale_lib.NonBlockingHashMap;
+import net.minecraftforge.common.MinecraftForge;
 
 @Module(name = "General")
 public class GeneralModule {
 
   public static GeneralConfig config;
-
-  public static NonBlockingHashMap<UUID, Object[]> requestingTPA = new NonBlockingHashMap<>();
 
   public void initSetup() {
     try {
@@ -44,7 +42,7 @@ public class GeneralModule {
   }
 
   public void finalizeModule() {
-
+    MinecraftForge.EVENT_BUS.register(new GeneralEvents());
   }
 
   public void reloadModule() {

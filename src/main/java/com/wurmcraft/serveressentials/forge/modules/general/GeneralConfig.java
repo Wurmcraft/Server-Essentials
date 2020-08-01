@@ -8,15 +8,19 @@ public class GeneralConfig implements JsonParser {
 
   public int defaultHomeCount;
   public String defaultHomeName;
+  public int tpaRequestTimeout;
 
   public GeneralConfig() {
     this.defaultHomeCount = 1;
     this.defaultHomeName = "home";
+    this.tpaRequestTimeout = 150;
   }
 
-  public GeneralConfig(int defaultHomeCount, String defaultHomeName) {
+  public GeneralConfig(int defaultHomeCount, String defaultHomeName,
+      int tpaRequestTimeout) {
     this.defaultHomeCount = defaultHomeCount;
     this.defaultHomeName = defaultHomeName;
+    this.tpaRequestTimeout = tpaRequestTimeout;
   }
 
   @Override

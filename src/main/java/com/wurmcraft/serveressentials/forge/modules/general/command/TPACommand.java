@@ -1,10 +1,11 @@
 package com.wurmcraft.serveressentials.forge.modules.general.command;
 
-import static com.wurmcraft.serveressentials.forge.modules.general.GeneralModule.requestingTPA;
+import static com.wurmcraft.serveressentials.forge.modules.general.utils.GeneralUtils.requestingTPA;
 
 import com.wurmcraft.serveressentials.forge.api.command.Command;
 import com.wurmcraft.serveressentials.forge.api.command.CommandArguments;
 import com.wurmcraft.serveressentials.forge.api.command.ModuleCommand;
+import com.wurmcraft.serveressentials.forge.modules.general.GeneralModule;
 import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import net.minecraft.command.ICommandSender;
@@ -17,12 +18,12 @@ public class TPACommand {
   public void tpaPlayer(ICommandSender sender, EntityPlayer otherPlayer) {
     if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
-      requestingTPA
-          .put(otherPlayer.getGameProfile().getId(), new Object[] {player, System.currentTimeMillis()});
+      requestingTPA.add(new Object[]{(System.currentTimeMillis() + (GeneralModule.config.tpaRequestTimeout * 1000)), otherPlayer, player});
       ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(sender).GENERAL_TPA_SENT
           .replaceAll("%PLAYER%", otherPlayer.getDisplayNameString()));
-      ChatHelper.sendMessage(player, PlayerUtils.getLanguage(player).GENERAL_TPA_REQUEST
-          .replaceAll("%PLAYER%", player.getDisplayNameString()));
+      ChatHelper.sendMessage(otherPlayer,
+          PlayerUtils.getLanguage(otherPlayer).GENERAL_TPA_REQUEST
+              .replaceAll("%PLAYER%", player.getDisplayNameString()));
     }
   }
 }

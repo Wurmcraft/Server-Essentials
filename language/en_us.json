@@ -36,5 +36,6 @@
 	"GENERAL_TPA_SENT": "&3TPA request sent to %PLAYER%",
 	"GENERAL_TPA_REQUEST": "&3%PLAYER% has request to teleport to your location",
 	"GENERAL_TPACCEPT_NONE": "&3No Active TPA Requests Found!",
-	"GENERAL_TPA": "&3You have been teleported to %NAME%"
+	"GENERAL_TPA": "&3You have been teleported to %NAME%",
+	"GENERAL_BACK": "&3You have been sent back to your previous location"
 }

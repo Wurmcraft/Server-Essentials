@@ -34,7 +34,6 @@ public class ChatHelper {
     sendHoverMessage(sender, text, hover);
   }
 
-
   public static void sendHoverMessage(ICommandSender sender, ITextComponent text,
       String hover) {
     text.getStyle().setHoverEvent(new HoverEvent(Action.SHOW_TEXT,
