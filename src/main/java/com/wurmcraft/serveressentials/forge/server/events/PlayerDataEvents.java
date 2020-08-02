@@ -29,7 +29,7 @@ public class PlayerDataEvents {
 
   private static NonBlockingHashMap<UUID, Long> playerLoginTime = new NonBlockingHashMap<>();
 
-  @SubscribeEvent(priority = EventPriority.HIGHEST)
+  @SubscribeEvent(priority = EventPriority.HIGH)
   public void onPlayerLoginEvent(PlayerLoggedInEvent e) {
     playerLoginTime.put(e.player.getGameProfile().getId(), System.currentTimeMillis());
     try {

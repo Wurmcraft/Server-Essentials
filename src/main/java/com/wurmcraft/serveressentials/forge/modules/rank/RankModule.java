@@ -7,6 +7,7 @@ import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.module.Module;
+import com.wurmcraft.serveressentials.forge.modules.language.LanguageConfig;
 import com.wurmcraft.serveressentials.forge.modules.rank.event.RankEvents;
 import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
@@ -22,25 +23,27 @@ public class RankModule {
   public static RankConfig config;
 
   public void initSetup() {
-    try {
-      config = (RankConfig) SECore.dataHandler.getData(DataKey.MODULE_CONFIG, "Rank");
-    } catch (NoSuchElementException e) {
-      File fileLoc = new File(
-          SAVE_DIR + File.separator + DataKey.MODULE_CONFIG.getName() + File.separator
-              + "Rank.json");
-      if (!fileLoc.getParentFile().exists()) {
-        fileLoc.getParentFile().mkdirs();
-      }
       try {
-        fileLoc.createNewFile();
-        Files.write(fileLoc.toPath(), GSON.toJson(new RankConfig()).getBytes());
-      } catch (Exception f) {
-        ServerEssentialsServer.LOGGER.error(
-            "Failed to create default config for " + DataKey.MODULE_CONFIG + ":"
-                + "Rank");
+        config = (RankConfig) SECore.dataHandler
+            .getData(DataKey.MODULE_CONFIG, "Rank");
+      } catch (NoSuchElementException e) {
+        File fileLoc = new File(
+            SAVE_DIR + File.separator + DataKey.MODULE_CONFIG.getName() + File.separator
+                + "Rank.json");
+        if (!fileLoc.getParentFile().exists()) {
+          fileLoc.getParentFile().mkdirs();
+        }
+        try {
+          fileLoc.createNewFile();
+          Files
+              .write(fileLoc.toPath(), GSON.toJson(config = new RankConfig()).getBytes());
+        } catch (Exception f) {
+          ServerEssentialsServer.LOGGER.error(
+              "Failed to create default config for " + DataKey.MODULE_CONFIG + ":"
+                  + "Rank");
+        }
       }
-    }
-    RankUtils.checkAndLoadRanks();
+      RankUtils.checkAndLoadRanks();
   }
 
   public void finalizeModule() {

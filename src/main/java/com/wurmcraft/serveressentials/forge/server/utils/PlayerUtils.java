@@ -16,6 +16,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -63,27 +64,28 @@ public class PlayerUtils {
     if (print && SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
       RestRequestHandler.User.addPlayer(playerData.global);
     }
-    String playerName = UsernameCache.getLastKnownUsername(UUID.fromString(uuid));
-
+    boolean finalNewToNetwork = newToNetwork;
+    ServerEssentialsServer.EXECUTORS.schedule(() -> {
+      String name = UsernameCache.getLastKnownUsername(UUID.fromString(uuid));
     if (print) {
       ServerEssentialsServer.LOGGER.info(
-          playerName + " is new to the server! " + (newToNetwork ? " (New To Network)"
+          name + " is new to the server! " + (finalNewToNetwork ? " (New To Network)"
               : " (Has Played on Another Server)"));
-      if (newToNetwork) {
+      if (finalNewToNetwork) {
         for (EntityPlayer player : FMLCommonHandler.instance()
             .getMinecraftServerInstance()
             .getPlayerList().getPlayers()) {
           ChatHelper.sendHoverMessage(player,
               getLanguage(player).ANNOUNCEMENT_NEW_PLAYER
-                  .replaceAll("%PLAYER%", playerName),
-              getLanguage(player).HOVER_PLAYER_NAME.replaceAll("%PLAYER%", playerName)
+                  .replaceAll("%PLAYER%", name),
+              getLanguage(player).HOVER_PLAYER_NAME.replaceAll("%PLAYER%", name)
                   .replaceAll("%UUID%", uuid));
         }
       }
     } else {
       ServerEssentialsServer.LOGGER
-          .info(playerName + " was errored, but has now been corrected");
-    }
+          .info(name + " was errored, but has now been corrected");
+    }}, 1, TimeUnit.SECONDS);
     return playerData;
   }
 

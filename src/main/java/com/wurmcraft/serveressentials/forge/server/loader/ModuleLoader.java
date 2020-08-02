@@ -17,6 +17,7 @@ public class ModuleLoader {
   private static void loadModules()
       throws IllegalAccessException, InstantiationException {
     Set<Class<?>> moduleClasses = AnnotationUtils.findAnnotation(Module.class);
+    ServerEssentialsServer.LOGGER.info("Modules: " + Arrays.toString(moduleClasses.toArray()));
     for (Class<?> module : moduleClasses) {
       if (canModuleBeLoaded(module.newInstance(), module.getAnnotation(Module.class))) {
         Module moduleAnnotation = module.getAnnotation(Module.class);

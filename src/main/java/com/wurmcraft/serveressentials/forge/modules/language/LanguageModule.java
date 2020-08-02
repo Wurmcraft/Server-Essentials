@@ -13,7 +13,7 @@ import java.nio.file.Files;
 import java.util.NoSuchElementException;
 import net.minecraftforge.common.MinecraftForge;
 
-@Module(name = "Language")
+@Module(name = "Language", moduleDependencies = {"Rank"})
 public class LanguageModule {
 
   public static LanguageConfig config;
@@ -31,7 +31,8 @@ public class LanguageModule {
       }
       try {
         fileLoc.createNewFile();
-        Files.write(fileLoc.toPath(), GSON.toJson(config = new LanguageConfig()).getBytes());
+        Files.write(fileLoc.toPath(),
+            GSON.toJson(config = new LanguageConfig()).getBytes());
       } catch (Exception f) {
         ServerEssentialsServer.LOGGER.error(
             "Failed to create default config for " + DataKey.MODULE_CONFIG + ":"

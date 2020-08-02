@@ -90,9 +90,7 @@ public class AutoRankUtils {
           for (EntityPlayer p : FMLCommonHandler.instance().getMinecraftServerInstance()
               .getPlayerList().getPlayers()) {
             if (!p.getGameProfile().getId().equals(player.getGameProfile().getId())) {
-              ChatHelper.sendMessage(p, PlayerUtils.getLanguage(p).ANNOUNCEMENT_AUTORANK
-                  .replaceAll("%PLAYER%", player.getDisplayNameString())
-                  .replaceAll("%RANK%", nextRank.name));
+              ChatHelper.sendMessage(p, PlayerUtils.getLanguage(p).ANNOUNCEMENT_AUTORANK.replaceAll("%PLAYER%", player.getDisplayNameString()).replaceAll("%RANK%", nextRank.name));
             }
           }
         }

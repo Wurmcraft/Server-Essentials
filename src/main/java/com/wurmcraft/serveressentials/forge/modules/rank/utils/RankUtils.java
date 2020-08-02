@@ -8,6 +8,8 @@ import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
+import java.util.*;
+import java.util.Collections;
 import java.util.NoSuchElementException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +31,10 @@ public class RankUtils {
   }
 
   public static boolean hasPermission(ICommandSender sender, String node) {
+    if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
+      return hasPermission((EntityPlayer) sender.getCommandSenderEntity(),
+          RankUtils.getRank(sender), node);
+    }
     return true;
   }
 
@@ -68,7 +74,6 @@ public class RankUtils {
         }
       } else {
         createDefaultRanks();
-        ;
       }
     } else {
       Rank[] ranks = SECore.dataHandler.getDataFromKey(DataKey.RANK, new Rank()).values()
@@ -90,5 +95,52 @@ public class RankUtils {
       }
     }
     return null;
+  }
+
+  public static boolean hasPermission(EntityPlayer player, Rank rank, String perm) {
+    String[] rankPermissions = getPermissions(player, rank);
+    String[] permShredder = perm.split("\\.");
+    String module = permShredder[0];
+    String command = permShredder[1];
+    String subCommand = "*";
+    if (permShredder.length == 3) {
+      subCommand = permShredder[2];
+    }
+    for (String p : rankPermissions) {
+      if (p.equals("*")) {
+        return true;
+      } else {
+        String[] splitNode = p.split("\\.");
+        String cm = splitNode[0];
+        String ccm = splitNode[1];
+        String csc = "*";
+        boolean quickCheck = module.equalsIgnoreCase(cm) && command.equalsIgnoreCase(ccm);
+        if (splitNode.length == 3) {
+          csc = splitNode[2];
+        }
+        if (!csc.equals("*") && !subCommand.equals("*")) {
+          if (quickCheck && subCommand.equalsIgnoreCase(csc)) {
+            return true;
+          }
+        } else if (quickCheck) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  public static String[] getPermissions(EntityPlayer player, Rank rank) {
+    List<String> permissionNodes = new ArrayList<>();
+    Collections.addAll(permissionNodes, rank.permission);
+    if (rank.inheritance != null && rank.inheritance.length > 0) {
+      for (String ih : rank.inheritance) {
+        Collections.addAll(permissionNodes,
+            getPermissions(player, (Rank) SECore.dataHandler.getData(DataKey.RANK, ih)));
+      }
+    }
+    StoredPlayer playerData = PlayerUtils.get(player);
+    permissionNodes.addAll(Arrays.asList(playerData.global.extraPerms));
+    return permissionNodes.toArray(new String[0]);
   }
 }
