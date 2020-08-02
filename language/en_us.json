@@ -41,5 +41,10 @@
 	"SIGN_NO_ITEM": "&3You must be holding a item, to create this sign",
 	"ECO_MONEY_INSUFFICENT": "&3You need at least %AMOUNT% to purchase this",
 	"SIGN_BUY": "&3You just purchased a item for %AMOUNT%",
-	"SIGN_INVENTORY_FULL": "&3Inventory is full!"
+	"SIGN_INVENTORY_FULL": "&3Inventory is full!",
+	"ECO_BAL": "&3%NAME%: %AMOUNT%",
+	"ECO_PAY_SENT": "&3You have sent %AMOUNT% to %PLAYER%",
+	"ECO_PAY_GIVEN": "&3%PLAYER% has sent you %AMOUNT%",
+	"ECO_ADD": "&3%AMOUNT% has been added to %PLAYER%",
+	"ECO_DEL": "&3%AMOUNT% has been removed from %PLAYER%"
 }

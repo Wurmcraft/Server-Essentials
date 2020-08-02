@@ -64,6 +64,11 @@ public class Language implements JsonParser {
   public String ECO_MONEY_INSUFFICENT;
   public String SIGN_BUY;
   public String SIGN_INVENTORY_FULL;
+  public String ECO_BAL;
+  public String ECO_PAY_SENT;
+  public String ECO_PAY_GIVEN;
+  public String ECO_ADD;
+  public String ECO_DEL;
 
   public Language(String key) {
     this.key = key;

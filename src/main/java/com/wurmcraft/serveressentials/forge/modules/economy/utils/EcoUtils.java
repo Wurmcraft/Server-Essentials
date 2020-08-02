@@ -9,6 +9,7 @@ import com.wurmcraft.serveressentials.forge.modules.economy.EconomyModule;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
 import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
+import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class EcoUtils {
@@ -70,8 +71,7 @@ public class EcoUtils {
   }
 
   public static void consumeCurrency(EntityPlayer player, String name, double cost) {
-    StoredPlayer playerData = (StoredPlayer) SECore.dataHandler
-        .getData(DataKey.PLAYER, player.getGameProfile().getId().toString());
+    StoredPlayer playerData = PlayerUtils.get(player);
     for (Currency coin : playerData.global.wallet.currency) {
       if (coin.name.equalsIgnoreCase(name)) {
         coin.amount = (long) (coin.amount - cost);
@@ -85,5 +85,22 @@ public class EcoUtils {
 
   public static void consumeCurrency(EntityPlayer player, double cost) {
     consumeCurrency(player, EconomyModule.config.defaultCurrency.name, cost);
+  }
+
+  public static void addCurrency(EntityPlayer player, double amount) {
+    addCurrency(player, EconomyModule.config.defaultCurrency.name, amount);
+  }
+
+  public static void addCurrency(EntityPlayer player, String name, double amount) {
+    StoredPlayer playerData = PlayerUtils.get(player);
+    for (Currency coin : playerData.global.wallet.currency) {
+      if (coin.name.equalsIgnoreCase(name)) {
+        coin.amount = (long) (coin.amount + amount);
+      }
+    }
+    SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
+    if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+      RestRequestHandler.User.overridePlayer(playerData.uuid, playerData.global);
+    }
   }
 }
