@@ -76,6 +76,10 @@ public class Language implements JsonParser {
   public String COMMAND_MOVE;
   public String COMMAND_MOVED;
 
+  // Language
+  public String LANGUAGE_MUTED;
+  public String LANGUAGE_SPAM;
+
   public Language(String key) {
     this.key = key;
   }

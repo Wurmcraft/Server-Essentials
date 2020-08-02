@@ -37,11 +37,11 @@ public class EconomyModule {
       }
       try {
         fileLoc.createNewFile();
-        Files.write(fileLoc.toPath(), GSON.toJson(new RankConfig()).getBytes());
+        Files.write(fileLoc.toPath(), GSON.toJson(new EconomyConfig()).getBytes());
       } catch (Exception f) {
         ServerEssentialsServer.LOGGER.error(
             "Failed to create default config for " + DataKey.MODULE_CONFIG + ":"
-                + "Rank");
+                + "Economy");
       }
     }
     EcoUtils.checkAndLoadEconomy();

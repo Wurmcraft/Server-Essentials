@@ -8,6 +8,8 @@ import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.modules.autorank.utils.AutoRankUtils;
+import com.wurmcraft.serveressentials.forge.modules.economy.EconomyConfig;
+import com.wurmcraft.serveressentials.forge.modules.economy.EconomyModule;
 import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
 import com.wurmcraft.serveressentials.forge.server.data.Language;
 import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
@@ -59,13 +61,11 @@ public class AutoRankCommand {
               ChatHelper.sendMessage(sender,
                   senderLanguage.AUTORANK_AR_XP.replaceAll("%XP%", ar.exp + ""));
             }
-//            if (ar.balance > 0) {
-//              ChatHelper.sendMessage(sender,
-//                  senderLanguage.AUTORANK_AR_MONEY.replaceAll("%AMOUNT%", ar.balance + "")
-//                      .replaceAll("%NAME%", ((EconomyConfig) SERegistry
-//                          .getStoredData(DataKey.MODULE_CONFIG,
-//                              "Economy")).defaultServerCurrency.name));
-//            }
+            if (ar.balance > 0) {
+              ChatHelper.sendMessage(sender,
+                  senderLanguage.AUTORANK_AR_MONEY.replaceAll("%AMOUNT%", ar.balance + "")
+                      .replaceAll("%NAME%", EconomyModule.config.defaultCurrency.name));
+            }
             ChatHelper.sendMessage(sender, senderLanguage.COMMAND_SPACER);
             AutoRankUtils.checkAndHandleRankup(player);
           } catch (NoSuchElementException e) {
@@ -118,13 +118,11 @@ public class AutoRankCommand {
               ChatHelper.sendMessage(player,
                   senderLanguage.AUTORANK_AR_XP.replaceAll("%XP%", ar.exp + ""));
             }
-//            if (ar.balance > 0) {
-//              ChatHelper.sendMessage(player,
-//                  senderLanguage.AUTORANK_AR_MONEY.replaceAll("%AMOUNT%", ar.balance + "")
-//                      .replaceAll("%NAME%", ((EconomyConfig) SERegistry
-//                          .getStoredData(DataKey.MODULE_CONFIG,
-//                              "Economy")).defaultServerCurrency.name));
-//            }
+            if (ar.balance > 0) {
+              ChatHelper.sendMessage(player,
+                  senderLanguage.AUTORANK_AR_MONEY.replaceAll("%AMOUNT%", ar.balance + "")
+                      .replaceAll("%NAME%", EconomyModule.config.defaultCurrency.name));
+            }
             ChatHelper.sendMessage(player, senderLanguage.COMMAND_SPACER);
             AutoRankUtils.checkAndHandleRankup(player);
           } catch (NoSuchElementException e) {

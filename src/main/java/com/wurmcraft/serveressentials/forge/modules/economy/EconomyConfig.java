@@ -7,7 +7,6 @@ import com.wurmcraft.serveressentials.forge.api.module.ConfigModule;
 @ConfigModule(moduleName = "Economy")
 public class EconomyConfig implements JsonParser {
 
-
   public Currency defaultCurrency;
 
   public boolean restAutoSync;
