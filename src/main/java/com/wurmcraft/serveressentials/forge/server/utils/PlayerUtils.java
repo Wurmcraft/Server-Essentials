@@ -60,7 +60,7 @@ public class PlayerUtils {
     MinecraftForge.EVENT_BUS.post(event);
     playerData = event.newData;
     SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
-    if(print && SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+    if (print && SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
       RestRequestHandler.User.addPlayer(playerData.global);
     }
     String playerName = UsernameCache.getLastKnownUsername(UUID.fromString(uuid));
@@ -108,14 +108,14 @@ public class PlayerUtils {
     boolean added = false;
     for (ServerTime time : playerData.global.playtime.serverTime) {
       if (time.serverID.equalsIgnoreCase(SECore.config.serverID)) {
-        time.time = time.time +  amount;
+        time.time = time.time + amount;
         added = true;
       }
     }
-    if(!added) {
+    if (!added) {
       List<ServerTime> time = new ArrayList<>();
       Collections.addAll(time, playerData.global.playtime.serverTime);
-      time.add(new ServerTime(SECore.config.serverID,amount));
+      time.add(new ServerTime(SECore.config.serverID, amount));
       playerData.global.playtime = new NetworkTime(time.toArray(new ServerTime[0]));
     }
     return playerData;
@@ -124,9 +124,26 @@ public class PlayerUtils {
   public static int getTotalPlayTime(EntityPlayer player) {
     StoredPlayer data = get(player);
     int time = 0;
-    for(ServerTime t : data.global.playtime.serverTime) {
+    for (ServerTime t : data.global.playtime.serverTime) {
       time = (int) (time + t.time);
     }
     return time;
+  }
+
+  public static long getCommandCooldown(EntityPlayer player, String command) {
+    StoredPlayer playerData = get(player);
+    if (playerData.server.commandUsage != null) {
+      return playerData.server.commandUsage
+          .getOrDefault(command, System.currentTimeMillis());
+    } else {
+      playerData.server.commandUsage = new HashMap<>();
+    }
+    return  System.currentTimeMillis();
+  }
+
+  public static void setCooldown(EntityPlayer player, String command, int amount) {
+    StoredPlayer playerData = get(player);
+    playerData.server.commandUsage.put(command,System.currentTimeMillis() + (amount * 1000));
+    SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
   }
 }

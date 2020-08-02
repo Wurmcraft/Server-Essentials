@@ -15,6 +15,7 @@ public class GlobalConfig implements JsonParser {
   public int supportThreads;
   public int playerReloadTimeout;
   public LocationWrapper spawn;
+  public boolean overrideCommandPerms;
   public Rest Rest;
 
   public GlobalConfig() {
@@ -28,12 +29,13 @@ public class GlobalConfig implements JsonParser {
     this.supportThreads = 2;
     this.playerReloadTimeout = 60;
     this.spawn = null;
+    this.overrideCommandPerms = false;
   }
 
   public GlobalConfig(String[] modules, String serverID, boolean debug,
       String defaultLang, String langUrlBase, String dataStorageType, int supportThreads,
       int playerReloadTimeout,
-      LocationWrapper spawn,
+      LocationWrapper spawn, boolean overrideCommandPerms,
       GlobalConfig.Rest rest) {
     this.modules = modules;
     this.serverID = serverID;
@@ -44,6 +46,7 @@ public class GlobalConfig implements JsonParser {
     this.supportThreads = supportThreads;
     this.playerReloadTimeout = playerReloadTimeout;
     this.spawn = spawn;
+    this.overrideCommandPerms = overrideCommandPerms;
     Rest = rest;
   }
 

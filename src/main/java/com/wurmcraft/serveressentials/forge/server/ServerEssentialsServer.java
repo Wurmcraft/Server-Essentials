@@ -1,5 +1,7 @@
 package com.wurmcraft.serveressentials.forge.server;
 
+import static com.wurmcraft.serveressentials.forge.modules.core.utils.CoreUtils.loadGlobalConfig;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wurmcraft.serveressentials.forge.api.SECore;
@@ -8,6 +10,7 @@ import com.wurmcraft.serveressentials.forge.api.config.GlobalConfig;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.data.IDataHandler;
 import com.wurmcraft.serveressentials.forge.server.command.SECommand;
+import com.wurmcraft.serveressentials.forge.server.command.WrapperCommand;
 import com.wurmcraft.serveressentials.forge.server.data.BasicDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.FileDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.RestDataHandler;
@@ -21,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import net.minecraft.command.CommandBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -75,7 +79,12 @@ public class ServerEssentialsServer {
       e.registerServerCommand(new SECommand(commandInstance.getClass().getAnnotation(
           ModuleCommand.class), commandInstance));
     }
-    // TODO Command Wrapper
+    if (SECore.config.overrideCommandPerms) {
+      for (String name : e.getServer().getCommandManager().getCommands().keySet()) {
+        e.getServer().getCommandManager().getCommands().put(name, new WrapperCommand(
+            e.getServer().getCommandManager().getCommands().get(name)));
+      }
+    }
   }
 
   public static IDataHandler getDataHandler(String name) {
@@ -89,28 +98,5 @@ public class ServerEssentialsServer {
       LOGGER.error("Failed to find '" + name + "' DataHandler!, Defaulting to File!");
       return new FileDataHandler();
     }
-  }
-
-  public static GlobalConfig loadGlobalConfig() {
-    GlobalConfig config;
-    try {
-      config = GSON.fromJson(Strings.join(Files.readAllLines(
-          new File(SAVE_DIR + File.separator + "Global.json").toPath()),
-          '\n'), GlobalConfig.class);
-      return config;
-    } catch (IOException f) {
-      config = new GlobalConfig();
-      try {
-        if (!SAVE_DIR.exists()) {
-          SAVE_DIR.mkdirs();
-        }
-        Files.write(new File(SAVE_DIR + File.separator + "Global.json").toPath(),
-            GSON.toJson(config).getBytes());
-      } catch (Exception g) {
-        ServerEssentialsServer.LOGGER
-            .fatal("Failed to save Global.json, (Using default values)");
-      }
-    }
-    return config;
   }
 }

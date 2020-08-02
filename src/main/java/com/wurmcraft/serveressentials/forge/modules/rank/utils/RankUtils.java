@@ -8,6 +8,7 @@ import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
+import java.util.NoSuchElementException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -66,13 +67,28 @@ public class RankUtils {
           SECore.dataHandler.registerData(DataKey.RANK, r);
         }
       } else {
-        createDefaultRanks();;
+        createDefaultRanks();
+        ;
       }
     } else {
-      Rank[] ranks = SECore.dataHandler.getDataFromKey(DataKey.RANK, new Rank()).values().toArray(new Rank[0]);
-      if(ranks.length <= 0) {
+      Rank[] ranks = SECore.dataHandler.getDataFromKey(DataKey.RANK, new Rank()).values()
+          .toArray(new Rank[0]);
+      if (ranks.length <= 0) {
         createDefaultRanks();
       }
     }
+  }
+
+  public static Rank getRank(ICommandSender sender) {
+    if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
+      StoredPlayer playerData = PlayerUtils
+          .get((EntityPlayer) sender.getCommandSenderEntity());
+      try {
+        return (Rank) SECore.dataHandler.getData(DataKey.RANK, playerData.global.rank);
+      } catch (NoSuchElementException e) {
+        return new Rank();
+      }
+    }
+    return null;
   }
 }

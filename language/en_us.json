@@ -48,5 +48,9 @@
 	"ECO_ADD": "&3%AMOUNT% has been added to %PLAYER%",
 	"ECO_DEL": "&3%AMOUNT% has been removed from %PLAYER%",
 	"GENERAL_SETSPAWN": "&3Spawn set",
-	"GENERAL_SPAWN": "&3You have been teleported to spawn"
+	"GENERAL_SPAWN": "&3You have been teleported to spawn",
+	"GENERAL_SPAWN_NONE": "&3No Spawn Set",
+	"COMMAND_COOLDOWN": "&3You must wait another %AMOUNT% seconds, to run this command",
+	"COMMAND_MOVE": "&3Dont move for %AMOUNT%s",
+	"COMMAND_MOVED": "&3Command Failed"
 }

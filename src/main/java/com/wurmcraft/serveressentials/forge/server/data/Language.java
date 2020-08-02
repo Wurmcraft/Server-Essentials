@@ -16,6 +16,7 @@ public class Language implements JsonParser {
   // Command
   public String COMMAND_USAGE;
   public String COMMAND_SPACER;
+  public String COMMAND_COOLDOWN;
 
   // Core
   public String CORE_SE_RELOAD;
@@ -71,6 +72,9 @@ public class Language implements JsonParser {
   public String ECO_DEL;
   public String GENERAL_SPAWN;
   public String GENERAL_SETSPAWN;
+  public String GENERAL_SPAWN_NONE;
+  public String COMMAND_MOVE;
+  public String COMMAND_MOVED;
 
   public Language(String key) {
     this.key = key;

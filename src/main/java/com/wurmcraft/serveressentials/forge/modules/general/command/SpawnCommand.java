@@ -16,8 +16,12 @@ public class SpawnCommand {
   public void spawn(ICommandSender sender) {
     if(sender.getCommandSenderEntity() instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
-      TeleportUtils.teleportTo(player, SECore.config.spawn);
-      ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(player).GENERAL_SPAWN);
+      if(SECore.config.spawn != null) {
+        TeleportUtils.teleportTo(player, SECore.config.spawn);
+        ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(player).GENERAL_SPAWN);
+      } else {
+        ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(player).GENERAL_SPAWN_NONE);
+      }
     }
   }
 }
