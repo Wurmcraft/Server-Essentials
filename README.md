@@ -3,13 +3,21 @@
 ## Building
 [1]. Install [GoLang](https://golang.org/) 
 
-[2]. Install Dependencies 
+[2]. Download Server Essentials 
 
-    - go get github.com/go-redis/redis
+  - git clone https://github.com/Wurmcraft/Server-Essentials-2/tree/Rest/GoLang
+  
+  - git checkout Rest/GoLang
+     
+     
+[3]. Install Dependencies 
+
+   go get github.com/go-redis/redis
     
-    - go get github.com/julienschmidt/httprouter
+   go get github.com/julienschmidt/httprouter
 
-[3]. Build 'go build -o (name)'
+
+[4]. Build 'go build -o (name)'
 
 
 ## Requirements to run (must be in the same directory as run)
