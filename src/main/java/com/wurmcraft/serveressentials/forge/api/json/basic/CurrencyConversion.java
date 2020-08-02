@@ -10,6 +10,11 @@ public class CurrencyConversion implements JsonParser {
   public String name;
   public double worth;
 
+  public CurrencyConversion() {
+    this.name = "Error";
+    this.worth = 0;
+  }
+
   public CurrencyConversion(String name, double worth) {
     this.name = name;
     this.worth = worth;

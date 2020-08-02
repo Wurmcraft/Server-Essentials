@@ -59,6 +59,12 @@ public class Language implements JsonParser {
   public String GENERAL_TPA;
   public String GENERAL_BACK;
 
+  // Economy
+  public String SIGN_NO_ITEM;
+  public String ECO_MONEY_INSUFFICENT;
+  public String SIGN_BUY;
+  public String SIGN_INVENTORY_FULL;
+
   public Language(String key) {
     this.key = key;
   }
