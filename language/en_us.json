@@ -46,5 +46,7 @@
 	"ECO_PAY_SENT": "&3You have sent %AMOUNT% to %PLAYER%",
 	"ECO_PAY_GIVEN": "&3%PLAYER% has sent you %AMOUNT%",
 	"ECO_ADD": "&3%AMOUNT% has been added to %PLAYER%",
-	"ECO_DEL": "&3%AMOUNT% has been removed from %PLAYER%"
+	"ECO_DEL": "&3%AMOUNT% has been removed from %PLAYER%",
+	"GENERAL_SETSPAWN": "&3Spawn set",
+	"GENERAL_SPAWN": "&3You have been teleported to spawn"
 }

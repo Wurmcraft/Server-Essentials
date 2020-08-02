@@ -46,7 +46,7 @@ public class ServerEssentialsServer {
   @EventHandler
   public void preInit(FMLPreInitializationEvent e) {
     LOGGER.info("Pre-Init has Started");
-    SECore.config = setGlobalConfig();
+    SECore.config = loadGlobalConfig();
     SECore.dataHandler = getDataHandler(SECore.config.dataStorageType);
     EXECUTORS = new ScheduledThreadPoolExecutor(SECore.config.supportThreads);
     ModuleLoader.setupModule();
@@ -91,7 +91,7 @@ public class ServerEssentialsServer {
     }
   }
 
-  public static GlobalConfig setGlobalConfig() {
+  public static GlobalConfig loadGlobalConfig() {
     GlobalConfig config;
     try {
       config = GSON.fromJson(Strings.join(Files.readAllLines(

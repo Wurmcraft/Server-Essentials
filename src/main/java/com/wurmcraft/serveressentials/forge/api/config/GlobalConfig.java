@@ -1,6 +1,8 @@
 package com.wurmcraft.serveressentials.forge.api.config;
 
+import com.wurmcraft.serveressentials.forge.api.config.GlobalConfig.Rest;
 import com.wurmcraft.serveressentials.forge.api.json.JsonParser;
+import com.wurmcraft.serveressentials.forge.api.json.basic.LocationWrapper;
 
 public class GlobalConfig implements JsonParser {
 
@@ -12,6 +14,7 @@ public class GlobalConfig implements JsonParser {
   public String dataStorageType;
   public int supportThreads;
   public int playerReloadTimeout;
+  public LocationWrapper spawn;
   public Rest Rest;
 
   public GlobalConfig() {
@@ -24,11 +27,13 @@ public class GlobalConfig implements JsonParser {
     this.defaultLang = "en_us";
     this.supportThreads = 2;
     this.playerReloadTimeout = 60;
+    this.spawn = null;
   }
 
   public GlobalConfig(String[] modules, String serverID, boolean debug,
       String defaultLang, String langUrlBase, String dataStorageType, int supportThreads,
       int playerReloadTimeout,
+      LocationWrapper spawn,
       GlobalConfig.Rest rest) {
     this.modules = modules;
     this.serverID = serverID;
@@ -38,6 +43,7 @@ public class GlobalConfig implements JsonParser {
     this.dataStorageType = dataStorageType;
     this.supportThreads = supportThreads;
     this.playerReloadTimeout = playerReloadTimeout;
+    this.spawn = spawn;
     Rest = rest;
   }
 

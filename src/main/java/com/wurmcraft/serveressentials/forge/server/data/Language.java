@@ -69,6 +69,8 @@ public class Language implements JsonParser {
   public String ECO_PAY_GIVEN;
   public String ECO_ADD;
   public String ECO_DEL;
+  public String GENERAL_SPAWN;
+  public String GENERAL_SETSPAWN;
 
   public Language(String key) {
     this.key = key;
