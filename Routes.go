@@ -95,8 +95,8 @@ var routes = Routes{
 	Route{
 		"DelRank",
 		"Post",
-		"/rank/del",
-		false,
+		"api/rank/del",
+		true,
 		DelRank,
 	},
 	// AutoRanks
