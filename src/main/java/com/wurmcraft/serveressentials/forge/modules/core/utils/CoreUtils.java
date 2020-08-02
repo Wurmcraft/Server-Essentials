@@ -7,6 +7,7 @@ import com.wurmcraft.serveressentials.forge.api.config.GlobalConfig;
 import com.wurmcraft.serveressentials.forge.modules.core.CoreModule;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.command.json.CommandParams;
+import com.wurmcraft.serveressentials.forge.server.command.json.CommandParams.RankParams;
 import com.wurmcraft.serveressentials.forge.server.command.json.CommandParamsConfig;
 import java.io.File;
 import java.io.IOException;
@@ -20,9 +21,11 @@ public class CoreUtils {
     try {
       config = GSON.fromJson(Strings.join(Files.readAllLines(
           new File(
-              SAVE_DIR + File.separator + "Misc" + File.separator + "CommandConfig.json")
+              SAVE_DIR + File.separator + "Misc" + File.separator
+                  + "CommandSettings.json")
               .toPath()),
           '\n'), CommandParamsConfig.class);
+      forceLowerCase(config);
       return config;
     } catch (IOException f) {
       config = new CommandParamsConfig();
@@ -31,15 +34,29 @@ public class CoreUtils {
         if (!SAVE.exists()) {
           SAVE.mkdirs();
         }
-        Files.write(new File(SAVE + File.separator + "CommandConfig.json")
+        Files.write(new File(SAVE + File.separator + "CommandSettings.json")
                 .toPath(),
             GSON.toJson(config).getBytes());
       } catch (Exception g) {
         ServerEssentialsServer.LOGGER
-            .fatal("Failed to save Global.json, (Using default values)");
+            .fatal("Failed to save CommandSettings.json, (Using default values)");
       }
+      forceLowerCase(config);
     }
     return config;
+  }
+
+  public static void forceLowerCase(CommandParamsConfig config) {
+    for (String commands : config.commands.keySet()) {
+      String[] rankKeys = config.commands.get(commands).ranks.keySet()
+          .toArray(new String[0]);
+      for (int index = 0; index < rankKeys.length; index++) {
+        RankParams params = config.commands.get(commands).ranks.get(rankKeys[index]);
+        String key = rankKeys[index];
+        config.commands.get(commands).ranks.remove(key);
+        config.commands.get(commands).ranks.put(key.toLowerCase(), params);
+      }
+    }
   }
 
   public static GlobalConfig loadGlobalConfig() {

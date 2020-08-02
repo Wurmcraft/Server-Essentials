@@ -89,7 +89,7 @@ public class SECommand extends CommandBase {
 
   @Override
   public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-    return true;
+    return RankUtils.hasPermission(sender, command.moduleName() + "." + command.name());
   }
 
   @Override
@@ -117,7 +117,7 @@ public class SECommand extends CommandBase {
           boolean canRunCommand = true;
           boolean updateMoney = false;
           boolean updateCooldown = false;
-          if (rankParams.cost.amount > 0) {
+          if (rankParams.cost != null && rankParams.cost.amount > 0) {
             if (EcoUtils
                 .hasCurrency(player, rankParams.cost.name, rankParams.cost.amount)) {
               updateMoney = true;
@@ -126,6 +126,7 @@ public class SECommand extends CommandBase {
               ChatHelper.sendMessage(sender,
                   PlayerUtils.getLanguage(sender).ECO_MONEY_INSUFFICENT
                       .replaceAll("%AMOUNT%", "" + rankParams.cost.amount));
+              return;
             }
           }
           if (rankParams.cooldownTime > 0) {
@@ -138,7 +139,8 @@ public class SECommand extends CommandBase {
               ChatHelper.sendMessage(sender,
                   PlayerUtils.getLanguage(player).COMMAND_COOLDOWN
                       .replaceAll("%AMOUNT%",
-                          "" + ((nextRun - System.currentTimeMillis()) / 60)));
+                          "" + ((nextRun - System.currentTimeMillis()) / 1000)));
+              return;
             }
           }
           if (rankParams.windupTime > 0) {
@@ -152,7 +154,7 @@ public class SECommand extends CommandBase {
             boolean finalUpdateMoney = updateMoney;
             RankParams finalRankParams = rankParams;
             boolean finalUpdateCooldown = updateCooldown;
-            ServerEssentialsServer.EXECUTORS.schedule(()-> {
+            ServerEssentialsServer.EXECUTORS.schedule(() -> {
               if (finalCanRunCommand) {
                 if (finalUpdateMoney) {
                   EcoUtils.consumeCurrency(player, finalRankParams.cost.name,
@@ -166,9 +168,10 @@ public class SECommand extends CommandBase {
                       .setCooldown(player, command.moduleName() + "." + command.name(),
                           finalRankParams.cooldownTime);
                 }
+                CoreEvents.moveTracker.remove(player.getGameProfile().getId());
                 runBasicCommand(sender, args);
               }
-            },rankParams.windupTime, TimeUnit.SECONDS);
+            }, rankParams.windupTime, TimeUnit.SECONDS);
           } else {
             if (canRunCommand) {
               if (updateMoney) {
