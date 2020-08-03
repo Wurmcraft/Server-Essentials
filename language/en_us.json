@@ -47,6 +47,8 @@
 	"ECO_PAY_GIVEN": "&3%PLAYER% has sent you %AMOUNT%",
 	"ECO_ADD": "&3%AMOUNT% has been added to %PLAYER%",
 	"ECO_DEL": "&3%AMOUNT% has been removed from %PLAYER%",
+	"SIGN_SELL": "&3You have just sold an item for %AMOUNT%",
+	"SIGN_SELL_EMPTY": "&3You dont have the item to sell",
 	"GENERAL_SETSPAWN": "&3Spawn set",
 	"GENERAL_SPAWN": "&3You have been teleported to spawn",
 	"GENERAL_SPAWN_NONE": "&3No Spawn Set",
@@ -55,5 +57,6 @@
 	"COMMAND_MOVED": "&3Command Failed",
 	"LANGUAGE_MUTED": "&3You are muted!",
 	"LANGUAGE_SPAM": "&3Don't Spam",
-	"DISCORD_VERIFIED": "&3You are now verifiyed!"
+	"DISCORD_VERIFIED": "&3You are now verifiyed!",
+	"DISCORD_INVALID_CODE": "&3Invalid or Expired Code!"
 }

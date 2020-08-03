@@ -24,10 +24,14 @@ public class VerifyCommand {
       if (tokens != null && tokens.length > 0) {
         for (DiscordToken token : tokens) {
           if (token.token.equals(verifyCode)) {
-            GlobalPlayer globalData = RestRequestHandler.User.getPlayer(player.getGameProfile().getId().toString());
+            GlobalPlayer globalData = RestRequestHandler.User
+                .getPlayer(player.getGameProfile().getId().toString());
+            System.out.println("");
             globalData.discordID = token.id;
-            RestRequestHandler.User.overridePlayer(player.getGameProfile().getId().toString(), globalData);
-            ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(sender).DISCORD_VERIFIED);
+            RestRequestHandler.User
+                .overridePlayer(player.getGameProfile().getId().toString(), globalData);
+            ChatHelper
+                .sendMessage(sender, PlayerUtils.getLanguage(sender).DISCORD_VERIFIED);
             for (String code : DiscordModule.config.commandUponVerify) {
               FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager()
                   .executeCommand(
@@ -38,7 +42,8 @@ public class VerifyCommand {
           }
         }
       }
-      ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(sender).DISCORD_VERIFIED);
+      ChatHelper
+          .sendMessage(sender, PlayerUtils.getLanguage(sender).DISCORD_INVALID_CODE);
     }
   }
 }

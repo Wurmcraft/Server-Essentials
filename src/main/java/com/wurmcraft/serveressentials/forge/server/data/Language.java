@@ -75,6 +75,8 @@ public class Language implements JsonParser {
   public String GENERAL_SPAWN_NONE;
   public String COMMAND_MOVE;
   public String COMMAND_MOVED;
+  public String SIGN_SELL;
+  public String SIGN_SELL_EMPTY;
 
   // Language
   public String LANGUAGE_MUTED;
@@ -82,6 +84,7 @@ public class Language implements JsonParser {
 
   // Discord
   public String DISCORD_VERIFIED;
+  public String DISCORD_INVALID_CODE;
 
   public Language(String key) {
     this.key = key;
