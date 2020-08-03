@@ -49,9 +49,10 @@ public class AdminSignCommands {
               .getData(sign.getTileData().getString(NBT_DATA));
           if (hasItemStack(e.getEntityPlayer(), stack)) {
             consumeStack(e.getEntityPlayer(), stack);
-            ChatHelper.sendMessage(e.getEntityPlayer(),
-                PlayerUtils.getLanguage(e.getEntityPlayer()).SIGN_SELL);
             double money = Double.parseDouble(sign.signText[3].getUnformattedText());
+            ChatHelper.sendMessage(e.getEntityPlayer(),
+                PlayerUtils.getLanguage(e.getEntityPlayer()).SIGN_SELL
+                    .replaceAll("%AMOUNT%", "" + money));
             EcoUtils.addCurrency(e.getEntityPlayer(), money);
           } else {
             ChatHelper.sendMessage(e.getEntityPlayer(),
@@ -78,15 +79,17 @@ public class AdminSignCommands {
   private static void consumeStack(EntityPlayer player, ItemStack stack) {
     int leftToRemove = stack.getCount();
     for (int index = 0; index < player.inventory.mainInventory.size(); index++) {
-      ItemStack item = player.inventory.getStackInSlot(index);
-      if (item.isItemEqual(stack)) {
-        if(leftToRemove > item.getCount()) {
-          leftToRemove -= item.getCount();
-          player.inventory.setInventorySlotContents(index, ItemStack.EMPTY);
-        } else {
-          leftToRemove -= item.getCount();
-          item.setCount(item.getCount() - leftToRemove);
-          player.inventory.setInventorySlotContents(index, item);
+      if (leftToRemove > 0) {
+        ItemStack item = player.inventory.getStackInSlot(index);
+        if (item.isItemEqual(stack)) {
+          if (leftToRemove > item.getCount()) {
+            leftToRemove -= item.getCount();
+            player.inventory.setInventorySlotContents(index, ItemStack.EMPTY);
+          } else {
+            item.setCount(item.getCount() - leftToRemove);
+            leftToRemove -= item.getCount();
+            player.inventory.setInventorySlotContents(index, item);
+          }
         }
       }
     }

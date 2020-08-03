@@ -31,7 +31,7 @@ public class StackConverter {
   }
 
   public static int getDataSize(String data) {
-    if (data.contains(".*[0-9]x")) {
+    if (data.matches("<.*[0-9]x.*")) {
       String stackSize = data.substring(data.indexOf('<') + 1, data.indexOf('x'));
       try {
         return Integer.parseInt(stackSize);
@@ -44,7 +44,7 @@ public class StackConverter {
 
   public static DataWrapper getName(String data) {
     if (data.contains("<") && data.contains(">") && data.contains(":")) {
-      boolean hasDedicatedStackSize = data.contains(".*[0-9]x");
+      boolean hasDedicatedStackSize = data.matches("<.*[0-9]x.*");
       String modid =
           data.substring(
               hasDedicatedStackSize ? data.indexOf('x') + 1 : data.indexOf('<') + 1,
