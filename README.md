@@ -5,17 +5,16 @@
 
 [2]. Download Server Essentials 
 
-  - git clone https://github.com/Wurmcraft/Server-Essentials-2/tree/Rest/GoLang
+`git clone https://github.com/Wurmcraft/Server-Essentials-2.git`
   
-  - git checkout Rest/GoLang
+`git checkout Rest/GoLang`
      
      
 [3]. Install Dependencies 
 
-   go get github.com/go-redis/redis
+`go get github.com/go-redis/redis`
     
-   go get github.com/julienschmidt/httprouter
-
+`go get github.com/julienschmidt/httprouter`
 
 [4]. Build 'go build -o (name)'
 
