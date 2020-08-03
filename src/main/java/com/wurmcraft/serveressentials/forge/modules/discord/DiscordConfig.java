@@ -8,6 +8,11 @@ public class DiscordConfig implements JsonParser {
 
   public String[] commandUponVerify;
 
+
+  public DiscordConfig() {
+    this.commandUponVerify = new String[] {"eco %PLAYER% add 100"};
+  }
+
   public DiscordConfig(String[] commandUponVerify) {
     this.commandUponVerify = commandUponVerify;
   }

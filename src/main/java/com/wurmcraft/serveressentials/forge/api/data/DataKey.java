@@ -8,24 +8,25 @@ import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.rest.GlobalBan;
 
 public enum DataKey {
-  PLAYER("Player-Data", StoredPlayer.class),
-  MODULE_CONFIG("Modules", null),
-  LANGUAGE("Language", null),
-  RANK("Rank", Rank.class),
-  TPA("TPA", null),
-  CURRENCY("Economy", CurrencyConversion.class),
-  WARP("Warp", null),
-  CHUNK_LOADING("ChunkLoading", null),
-  BAN("Ban", GlobalBan.class),
-  AUTO_RANK("AutoRank", AutoRank.class);
+  PLAYER("Player-Data", StoredPlayer.class, true),
+  MODULE_CONFIG("Modules", null, false),
+  LANGUAGE("Language", null, true),
+  RANK("Rank", Rank.class, true),
+  CURRENCY("Economy", CurrencyConversion.class, true),
+  WARP("Warp", null, true),
+  CHUNK_LOADING("ChunkLoading", null,true),
+  BAN("Ban", GlobalBan.class, true),
+  AUTO_RANK("AutoRank", AutoRank.class, true);
 
   private String name;
   private Class<? extends JsonParser> dataType;
+  private boolean inStorage;
 
   DataKey(String name,
-      Class<? extends JsonParser> dataType) {
+      Class<? extends JsonParser> dataType, boolean inStorage) {
     this.name = name;
     this.dataType = dataType;
+    this.inStorage = inStorage;
   }
 
   public String getName() {
@@ -34,5 +35,9 @@ public enum DataKey {
 
   public Class<? extends JsonParser> getDataType() {
     return dataType;
+  }
+
+  public boolean isInStorage() {
+    return inStorage;
   }
 }

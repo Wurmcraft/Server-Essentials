@@ -33,7 +33,12 @@ public class FileDataHandler extends BasicDataHandler {
     } catch (NoSuchElementException ignored) {
     }
     NonBlockingHashMap<String, T> fileData = new NonBlockingHashMap<>();
-    File dataDir = new File(SAVE_DIR + File.separator + key.getName());
+    File dataDir;
+    if (key.isInStorage()) {
+      dataDir = new File(SAVE_DIR + File.separator + "Storage" + key.getName());
+    } else {
+      dataDir = new File(SAVE_DIR + File.separator + key.getName());
+    }
     if (dataDir.exists() && dataDir.isDirectory()) {
       for (File file : dataDir.listFiles()) {
         try {
@@ -56,9 +61,17 @@ public class FileDataHandler extends BasicDataHandler {
     try {
       return super.getData(key, dataID);
     } catch (NoSuchElementException e) {
-      File fileLoc = new File(
-          SAVE_DIR + File.separator + key.getName() + File.separator + dataID
-              + ".json");
+      File fileLoc;
+      if (key.isInStorage()) {
+        fileLoc = new File(
+            SAVE_DIR + File.separator + "Storage" + File.separator + key.getName()
+                + File.separator + dataID
+                + ".json");
+      } else {
+        fileLoc = new File(
+            SAVE_DIR + File.separator + key.getName() + File.separator + dataID
+                + ".json");
+      }
       if (key.getDataType() != null) {
         if (fileLoc.exists()) {
           try {
@@ -93,7 +106,7 @@ public class FileDataHandler extends BasicDataHandler {
               if (data != null) {
                 return data;
               }
-            } else if(dataID.equalsIgnoreCase("General")) {
+            } else if (dataID.equalsIgnoreCase("General")) {
               registerData(key,
                   GSON.fromJson(Strings.join(Files.readAllLines(fileLoc.toPath()), '\n'),
                       GeneralConfig.class));
@@ -101,7 +114,7 @@ public class FileDataHandler extends BasicDataHandler {
               if (data != null) {
                 return data;
               }
-            } else if(dataID.equalsIgnoreCase("Economy")) {
+            } else if (dataID.equalsIgnoreCase("Economy")) {
               registerData(key,
                   GSON.fromJson(Strings.join(Files.readAllLines(fileLoc.toPath()), '\n'),
                       EconomyConfig.class));
@@ -109,7 +122,7 @@ public class FileDataHandler extends BasicDataHandler {
               if (data != null) {
                 return data;
               }
-            }else if(dataID.equalsIgnoreCase("Language")) {
+            } else if (dataID.equalsIgnoreCase("Language")) {
               registerData(key,
                   GSON.fromJson(Strings.join(Files.readAllLines(fileLoc.toPath()), '\n'),
                       LanguageConfig.class));
@@ -117,7 +130,7 @@ public class FileDataHandler extends BasicDataHandler {
               if (data != null) {
                 return data;
               }
-            }else if(dataID.equalsIgnoreCase("Discord")) {
+            } else if (dataID.equalsIgnoreCase("Discord")) {
               registerData(key,
                   GSON.fromJson(Strings.join(Files.readAllLines(fileLoc.toPath()), '\n'),
                       DiscordConfig.class));
@@ -139,9 +152,17 @@ public class FileDataHandler extends BasicDataHandler {
   @Override
   public void registerData(DataKey key, JsonParser dataToStore) {
     super.registerData(key, dataToStore);
-    File file = new File(
-        SAVE_DIR + File.separator + key.getName() + File.separator + dataToStore.getID()
-            + ".json");
+    File file;
+    if (key.isInStorage()) {
+      file = new File(
+          SAVE_DIR + File.separator + "Storage" + File.separator + key.getName()
+              + File.separator + dataToStore.getID()
+              + ".json");
+    } else {
+      file = new File(
+          SAVE_DIR + File.separator + key.getName() + File.separator + dataToStore.getID()
+              + ".json");
+    }
     try {
       file.getParentFile().mkdirs();
       file.createNewFile();
@@ -157,9 +178,17 @@ public class FileDataHandler extends BasicDataHandler {
       throws NoSuchElementException {
     super.delData(key, dataToRemove, deleteFromDisk);
     if (deleteFromDisk) {
-      File file = new File(
-          SAVE_DIR + File.separator + key.getName() + File.separator + dataToRemove
-              + ".json");
+      File file;
+      if (key.isInStorage()) {
+        file = new File(
+            SAVE_DIR + File.separator + "Storage" + File.separator + key.getName()
+                + File.separator + dataToRemove
+                + ".json");
+      } else {
+        file = new File(
+            SAVE_DIR + File.separator + key.getName() + File.separator + dataToRemove
+                + ".json");
+      }
       if (file.delete()) {
         if (SECore.config.debug) {
           ServerEssentialsServer.LOGGER

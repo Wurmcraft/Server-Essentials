@@ -9,6 +9,7 @@ import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.command.json.CommandParams;
 import com.wurmcraft.serveressentials.forge.server.command.json.CommandParams.RankParams;
 import com.wurmcraft.serveressentials.forge.server.command.json.CommandParamsConfig;
+import com.wurmcraft.serveressentials.forge.server.json.MessagesConfig;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -90,4 +91,33 @@ public class CoreUtils {
     }
     return null;
   }
+
+  public static MessagesConfig loadMessagesConfig() {
+    MessagesConfig config;
+    try {
+      config = GSON.fromJson(Strings.join(Files.readAllLines(
+          new File(
+              SAVE_DIR + File.separator + "Misc" + File.separator
+                  + "Messages.json")
+              .toPath()),
+          '\n'), MessagesConfig.class);
+      return config;
+    } catch (IOException f) {
+      config = new MessagesConfig();
+      try {
+        File SAVE = new File(SAVE_DIR + File.separator + "Misc");
+        if (!SAVE.exists()) {
+          SAVE.mkdirs();
+        }
+        Files.write(new File(SAVE + File.separator + "Messages.json")
+                .toPath(),
+            GSON.toJson(config).getBytes());
+      } catch (Exception g) {
+        ServerEssentialsServer.LOGGER
+            .fatal("Failed to save Messages.json, (Using default values)");
+      }
+    }
+    return config;
+  }
+
 }

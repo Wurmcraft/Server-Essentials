@@ -6,6 +6,7 @@ import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.GlobalPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
+import com.wurmcraft.serveressentials.forge.server.command.SECommand;
 import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import java.util.*;
@@ -107,6 +108,8 @@ public class RankUtils {
       subCommand = permShredder[2];
     }
     for (String p : rankPermissions) {
+      if(p.isEmpty())
+        continue;
       if (p.equals("*")) {
         return true;
       } else {
@@ -133,11 +136,16 @@ public class RankUtils {
   public static String[] getPermissions(EntityPlayer player, Rank rank) {
     List<String> permissionNodes = new ArrayList<>();
     Collections.addAll(permissionNodes, rank.permission);
-//    if (rank.inheritance != null && rank.inheritance.length > 0) {
-//      for (String ih : rank.inheritance) {
-//        Collections.addAll(permissionNodes, getPermissions(player, (Rank) SECore.dataHandler.getData(DataKey.RANK, ih)));
-//      }
-//    }
+    if (rank.inheritance != null && rank.inheritance.length > 0) {
+      for (String ih : rank.inheritance) {
+       try {
+         Rank inh = (Rank) SECore.dataHandler.getData(DataKey.RANK, ih);
+         Collections.addAll(permissionNodes,getPermissions(player, inh));
+       } catch (NoSuchElementException e) {
+         ServerEssentialsServer.LOGGER.warn("Unable to find rank '" + ih + "'");
+       }
+      }
+    }
     StoredPlayer playerData = PlayerUtils.get(player);
     permissionNodes.addAll(Arrays.asList(playerData.global.extraPerms));
     return permissionNodes.toArray(new String[0]);
