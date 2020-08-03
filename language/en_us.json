@@ -54,5 +54,6 @@
 	"COMMAND_MOVE": "&3Dont move for %AMOUNT%s",
 	"COMMAND_MOVED": "&3Command Failed",
 	"LANGUAGE_MUTED": "&3You are muted!",
-	"LANGUAGE_SPAM": "&3Don't Spam"
+	"LANGUAGE_SPAM": "&3Don't Spam",
+	"DISCORD_VERIFIED": "&3You are now verifiyed!"
 }

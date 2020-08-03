@@ -8,6 +8,7 @@ import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.json.JsonParser;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.modules.autorank.AutoRankConfig;
+import com.wurmcraft.serveressentials.forge.modules.discord.DiscordConfig;
 import com.wurmcraft.serveressentials.forge.modules.economy.EconomyConfig;
 import com.wurmcraft.serveressentials.forge.modules.general.GeneralConfig;
 import com.wurmcraft.serveressentials.forge.modules.language.LanguageConfig;
@@ -112,6 +113,14 @@ public class FileDataHandler extends BasicDataHandler {
               registerData(key,
                   GSON.fromJson(Strings.join(Files.readAllLines(fileLoc.toPath()), '\n'),
                       LanguageConfig.class));
+              JsonParser data = getData(key, dataID);
+              if (data != null) {
+                return data;
+              }
+            }else if(dataID.equalsIgnoreCase("Discord")) {
+              registerData(key,
+                  GSON.fromJson(Strings.join(Files.readAllLines(fileLoc.toPath()), '\n'),
+                      DiscordConfig.class));
               JsonParser data = getData(key, dataID);
               if (data != null) {
                 return data;

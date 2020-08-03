@@ -80,6 +80,9 @@ public class Language implements JsonParser {
   public String LANGUAGE_MUTED;
   public String LANGUAGE_SPAM;
 
+  // Discord
+  public String DISCORD_VERIFIED;
+
   public Language(String key) {
     this.key = key;
   }

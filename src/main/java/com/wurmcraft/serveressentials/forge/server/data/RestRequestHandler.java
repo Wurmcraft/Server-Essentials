@@ -11,6 +11,7 @@ import com.wurmcraft.serveressentials.forge.api.json.rest.GlobalBan;
 import com.wurmcraft.serveressentials.forge.api.json.rest.RestValidate;
 import com.wurmcraft.serveressentials.forge.api.json.rest.ServerChunkData;
 import com.wurmcraft.serveressentials.forge.api.json.rest.ServerStatus;
+import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

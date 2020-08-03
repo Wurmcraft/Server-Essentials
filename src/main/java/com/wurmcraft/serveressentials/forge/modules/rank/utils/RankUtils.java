@@ -133,12 +133,11 @@ public class RankUtils {
   public static String[] getPermissions(EntityPlayer player, Rank rank) {
     List<String> permissionNodes = new ArrayList<>();
     Collections.addAll(permissionNodes, rank.permission);
-    if (rank.inheritance != null && rank.inheritance.length > 0) {
-      for (String ih : rank.inheritance) {
-        Collections.addAll(permissionNodes,
-            getPermissions(player, (Rank) SECore.dataHandler.getData(DataKey.RANK, ih)));
-      }
-    }
+//    if (rank.inheritance != null && rank.inheritance.length > 0) {
+//      for (String ih : rank.inheritance) {
+//        Collections.addAll(permissionNodes, getPermissions(player, (Rank) SECore.dataHandler.getData(DataKey.RANK, ih)));
+//      }
+//    }
     StoredPlayer playerData = PlayerUtils.get(player);
     permissionNodes.addAll(Arrays.asList(playerData.global.extraPerms));
     return permissionNodes.toArray(new String[0]);
