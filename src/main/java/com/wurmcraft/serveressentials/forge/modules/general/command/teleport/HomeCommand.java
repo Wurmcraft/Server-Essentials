@@ -1,4 +1,4 @@
-package com.wurmcraft.serveressentials.forge.modules.general.command;
+package com.wurmcraft.serveressentials.forge.modules.general.command.teleport;
 
 import com.wurmcraft.serveressentials.forge.api.command.Command;
 import com.wurmcraft.serveressentials.forge.api.command.CommandArguments;

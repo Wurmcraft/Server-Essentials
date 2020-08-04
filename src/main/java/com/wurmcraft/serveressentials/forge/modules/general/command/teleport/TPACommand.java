@@ -1,4 +1,4 @@
-package com.wurmcraft.serveressentials.forge.modules.general.command;
+package com.wurmcraft.serveressentials.forge.modules.general.command.teleport;
 
 import static com.wurmcraft.serveressentials.forge.modules.general.utils.GeneralUtils.requestingTPA;
 

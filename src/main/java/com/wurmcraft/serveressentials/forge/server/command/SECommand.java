@@ -35,6 +35,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import org.apache.logging.log4j.util.Strings;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 public class SECommand extends CommandBase {
@@ -89,7 +90,9 @@ public class SECommand extends CommandBase {
 
   @Override
   public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-    return RankUtils.hasPermission(sender, command.moduleName() + "." + command.name());
+    boolean hasPerms = RankUtils
+        .hasPermission(sender, command.moduleName() + "." + command.name().toLowerCase());
+    return hasPerms;
   }
 
   @Override
@@ -101,6 +104,12 @@ public class SECommand extends CommandBase {
   @Override
   public void execute(MinecraftServer server, ICommandSender sender, String[] args)
       throws CommandException {
+    if (SECore.config.logCommandsToConsole) {
+      ServerEssentialsServer.LOGGER.info(
+          sender.getDisplayName().getUnformattedText() + " has run command '/" + command
+              .name() + " " + Strings
+              .join(Arrays.asList(args), ' ') + "'");
+    }
     if (params != null && !params.ranks.isEmpty()
         && ModuleLoader.getLoadedModule("Rank") != null) {
       Rank rank = RankUtils.getRank(sender);

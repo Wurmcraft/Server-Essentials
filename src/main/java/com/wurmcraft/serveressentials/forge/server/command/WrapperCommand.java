@@ -1,5 +1,6 @@
 package com.wurmcraft.serveressentials.forge.server.command;
 
+import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.json.basic.LocationWrapper;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.modules.core.event.CoreEvents;
@@ -12,6 +13,7 @@ import com.wurmcraft.serveressentials.forge.server.command.json.CommandParams.Ra
 import com.wurmcraft.serveressentials.forge.server.loader.ModuleLoader;
 import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.command.CommandBase;
@@ -22,6 +24,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
+import org.apache.logging.log4j.util.Strings;
 
 public class WrapperCommand extends CommandBase {
 
@@ -46,6 +49,11 @@ public class WrapperCommand extends CommandBase {
   @Override
   public void execute(MinecraftServer server, ICommandSender sender, String[] args)
       throws CommandException {
+    if (SECore.config.logCommandsToConsole) {
+      ServerEssentialsServer.LOGGER.info(
+          sender.getDisplayName().getUnformattedText() + " has run command '/" + command.getName() + Strings
+              .join(Arrays.asList(args), ' ') + "'");
+    }
     if (params != null && !params.ranks.isEmpty()
         && ModuleLoader.getLoadedModule("Rank") != null) {
       Rank rank = RankUtils.getRank(sender);

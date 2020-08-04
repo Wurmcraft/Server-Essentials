@@ -64,7 +64,6 @@ public class ServerEssentialsServer {
     }
   }
 
-
   @EventHandler
   public void init(FMLInitializationEvent e) {
     LOGGER.info("Init has Started");
@@ -130,7 +129,6 @@ public class ServerEssentialsServer {
       TrackUtils.sendUpdate(Status.STOPPED);
     }
   }
-
 
   public static IDataHandler getDataHandler(String name) {
     if (name.equalsIgnoreCase("Basic")) {

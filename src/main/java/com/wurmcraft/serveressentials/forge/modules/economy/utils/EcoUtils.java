@@ -4,12 +4,14 @@ import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.json.basic.CurrencyConversion;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
+import com.wurmcraft.serveressentials.forge.api.json.player.Wallet;
 import com.wurmcraft.serveressentials.forge.api.json.player.Wallet.Currency;
 import com.wurmcraft.serveressentials.forge.modules.economy.EconomyModule;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
 import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
+import java.util.*;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class EcoUtils {
@@ -93,10 +95,23 @@ public class EcoUtils {
 
   public static void addCurrency(EntityPlayer player, String name, double amount) {
     StoredPlayer playerData = PlayerUtils.get(player);
-    for (Currency coin : playerData.global.wallet.currency) {
-      if (coin.name.equalsIgnoreCase(name)) {
-        coin.amount = (long) (coin.amount + amount);
+    if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+      playerData.global = RestRequestHandler.User
+          .getPlayer(player.getGameProfile().getId().toString());
+    }
+    if (playerData.global.wallet.currency.length > 0) {
+      for (Currency coin : playerData.global.wallet.currency) {
+        if (coin.name.equalsIgnoreCase(name)) {
+          coin.amount = (long) (coin.amount + amount);
+          return;
+        }
       }
+      List<Currency> curList = new ArrayList<>();
+      Collections.addAll(curList, playerData.global.wallet.currency);
+      curList.add(new Currency(name, amount));
+      playerData.global.wallet = new Wallet(curList.toArray(new Currency[0]));
+    } else {
+      playerData.global.wallet = new Wallet(new Currency[]{new Currency(name, amount)});
     }
     SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
     if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {

@@ -1,9 +1,12 @@
 package com.wurmcraft.serveressentials.forge.modules.discord.command;
 
+import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.command.Command;
 import com.wurmcraft.serveressentials.forge.api.command.CommandArguments;
 import com.wurmcraft.serveressentials.forge.api.command.ModuleCommand;
+import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.json.player.GlobalPlayer;
+import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.rest.DiscordToken;
 import com.wurmcraft.serveressentials.forge.modules.discord.DiscordModule;
 import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
@@ -26,17 +29,22 @@ public class VerifyCommand {
           if (token.token.equals(verifyCode)) {
             GlobalPlayer globalData = RestRequestHandler.User
                 .getPlayer(player.getGameProfile().getId().toString());
-            System.out.println("");
             globalData.discordID = token.id;
             RestRequestHandler.User
                 .overridePlayer(player.getGameProfile().getId().toString(), globalData);
-            ChatHelper
-                .sendMessage(sender, PlayerUtils.getLanguage(sender).DISCORD_VERIFIED);
-            for (String code : DiscordModule.config.commandUponVerify) {
-              FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager()
-                  .executeCommand(
-                      FMLCommonHandler.instance().getMinecraftServerInstance(),
-                      code.replaceAll("%PLAYER%", player.getDisplayNameString()));
+            if (globalData.discordID.isEmpty()) {
+              ChatHelper
+                  .sendMessage(sender, PlayerUtils.getLanguage(sender).DISCORD_VERIFIED);
+              StoredPlayer playerData = PlayerUtils.get(player);
+              playerData.global = globalData;
+              SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
+              for (String code : DiscordModule.config.commandUponVerify) {
+                FMLCommonHandler.instance().getMinecraftServerInstance()
+                    .getCommandManager()
+                    .executeCommand(
+                        FMLCommonHandler.instance().getMinecraftServerInstance(),
+                        code.replaceAll("%PLAYER%", player.getDisplayNameString()));
+              }
             }
             return;
           }

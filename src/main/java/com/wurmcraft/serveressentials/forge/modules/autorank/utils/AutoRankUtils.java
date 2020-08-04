@@ -62,10 +62,12 @@ public class AutoRankUtils {
         .getDataFromKey(DataKey.AUTO_RANK, new AutoRank()).values()
         .toArray(new AutoRank[0]);
     if (rankup.length > 0) {
-      String rank = PlayerUtils.get(player).global.rank;
-      for (AutoRank ar : rankup) {
-        if (ar.rank.equals(rank)) {
-          return ar;
+      if (PlayerUtils.get(player) != null) {
+        String rank = PlayerUtils.get(player).global.rank;
+        for (AutoRank ar : rankup) {
+          if (ar.rank.equals(rank)) {
+            return ar;
+          }
         }
       }
     }

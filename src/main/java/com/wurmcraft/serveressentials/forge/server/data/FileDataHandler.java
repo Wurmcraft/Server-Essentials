@@ -14,6 +14,8 @@ import com.wurmcraft.serveressentials.forge.modules.general.GeneralConfig;
 import com.wurmcraft.serveressentials.forge.modules.language.LanguageConfig;
 import com.wurmcraft.serveressentials.forge.modules.rank.RankConfig;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
+import com.wurmcraft.serveressentials.forge.server.events.PlayerDataEvents;
+import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.NoSuchElementException;
@@ -45,7 +47,6 @@ public class FileDataHandler extends BasicDataHandler {
           JsonParser data = getData(key, file.getName().replaceAll(".json", ""));
           fileData.put(data.getID(), (T) data);
         } catch (Exception e) {
-          e.printStackTrace();
           ServerEssentialsServer.LOGGER
               .warn("Failed to read '" + file.getPath() + "' for '" + key + "'");
         }
@@ -85,6 +86,9 @@ public class FileDataHandler extends BasicDataHandler {
           } catch (Exception f) {
             ServerEssentialsServer.LOGGER
                 .warn("Failed to read '" + fileLoc.getPath() + "' for '" + key + "'");
+            if (fileLoc.isDirectory()) {
+              fileLoc.delete();
+            }
           }
         }
       } else if (key == DataKey.MODULE_CONFIG) {

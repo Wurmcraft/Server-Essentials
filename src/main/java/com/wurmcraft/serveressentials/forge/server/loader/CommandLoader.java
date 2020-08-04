@@ -38,7 +38,6 @@ public class CommandLoader {
       loadCommands();
       for (String cmd : commands.keySet()) {
         Object instance = commands.get(cmd);
-        // TODO Create Wrapper
       }
     } catch (Exception e) {
       ServerEssentialsServer.LOGGER.info(e.getMessage());

@@ -108,8 +108,9 @@ public class RankUtils {
       subCommand = permShredder[2];
     }
     for (String p : rankPermissions) {
-      if(p.isEmpty())
+      if (p.isEmpty()) {
         continue;
+      }
       if (p.equals("*")) {
         return true;
       } else {
@@ -138,12 +139,12 @@ public class RankUtils {
     Collections.addAll(permissionNodes, rank.permission);
     if (rank.inheritance != null && rank.inheritance.length > 0) {
       for (String ih : rank.inheritance) {
-       try {
-         Rank inh = (Rank) SECore.dataHandler.getData(DataKey.RANK, ih);
-         Collections.addAll(permissionNodes,getPermissions(player, inh));
-       } catch (NoSuchElementException e) {
-         ServerEssentialsServer.LOGGER.warn("Unable to find rank '" + ih + "'");
-       }
+        try {
+          Rank inh = (Rank) SECore.dataHandler.getData(DataKey.RANK, ih);
+          Collections.addAll(permissionNodes, getPermissions(player, inh));
+        } catch (NoSuchElementException e) {
+          ServerEssentialsServer.LOGGER.warn("Unable to find rank '" + ih + "'");
+        }
       }
     }
     StoredPlayer playerData = PlayerUtils.get(player);

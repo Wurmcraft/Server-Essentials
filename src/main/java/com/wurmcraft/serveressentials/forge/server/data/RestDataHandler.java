@@ -7,6 +7,7 @@ import com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank;
 import com.wurmcraft.serveressentials.forge.api.json.basic.CurrencyConversion;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.GlobalPlayer;
+import com.wurmcraft.serveressentials.forge.api.json.player.ServerPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.rest.GlobalBan;
 import com.wurmcraft.serveressentials.forge.api.json.rest.ServerChunkData;
@@ -103,9 +104,7 @@ public class RestDataHandler extends FileDataHandler {
         GlobalPlayer player = RestRequestHandler.User.getPlayer(dataID);
         if (player != null) {
           try {
-            StoredPlayer playerData = (StoredPlayer) SECore.dataHandler
-                .getData(DataKey.PLAYER, dataID);
-            playerData.global = player;
+            StoredPlayer playerData = new StoredPlayer(dataID,new ServerPlayer(), player);
             registerData(DataKey.PLAYER, playerData);
           } catch (NoSuchElementException f) {
             throw new NoSuchElementException();

@@ -20,7 +20,7 @@ public class Wallet {
   public static class Currency {
 
     public String name;
-    public long amount;
+    public double amount;
 
     @Deprecated
     public Currency() {
@@ -32,7 +32,7 @@ public class Wallet {
      * @param name Name of the currency
      * @param amount Amount of the currency
      */
-    public Currency(String name, long amount) {
+    public Currency(String name, double amount) {
       this.name = name;
       this.amount = amount;
     }

@@ -67,25 +67,26 @@ public class PlayerUtils {
     boolean finalNewToNetwork = newToNetwork;
     ServerEssentialsServer.EXECUTORS.schedule(() -> {
       String name = UsernameCache.getLastKnownUsername(UUID.fromString(uuid));
-    if (print) {
-      ServerEssentialsServer.LOGGER.info(
-          name + " is new to the server! " + (finalNewToNetwork ? " (New To Network)"
-              : " (Has Played on Another Server)"));
-      if (finalNewToNetwork) {
-        for (EntityPlayer player : FMLCommonHandler.instance()
-            .getMinecraftServerInstance()
-            .getPlayerList().getPlayers()) {
-          ChatHelper.sendHoverMessage(player,
-              getLanguage(player).ANNOUNCEMENT_NEW_PLAYER
-                  .replaceAll("%PLAYER%", name),
-              getLanguage(player).HOVER_PLAYER_NAME.replaceAll("%PLAYER%", name)
-                  .replaceAll("%UUID%", uuid));
+      if (print) {
+        ServerEssentialsServer.LOGGER.info(
+            name + " is new to the server! " + (finalNewToNetwork ? " (New To Network)"
+                : " (Has Played on Another Server)"));
+        if (finalNewToNetwork) {
+          for (EntityPlayer player : FMLCommonHandler.instance()
+              .getMinecraftServerInstance()
+              .getPlayerList().getPlayers()) {
+            ChatHelper.sendHoverMessage(player,
+                getLanguage(player).ANNOUNCEMENT_NEW_PLAYER
+                    .replaceAll("%PLAYER%", name),
+                getLanguage(player).HOVER_PLAYER_NAME.replaceAll("%PLAYER%", name)
+                    .replaceAll("%UUID%", uuid));
+          }
         }
+      } else {
+        ServerEssentialsServer.LOGGER
+            .info(name + " was errored, but has now been corrected");
       }
-    } else {
-      ServerEssentialsServer.LOGGER
-          .info(name + " was errored, but has now been corrected");
-    }}, 1, TimeUnit.SECONDS);
+    }, 1, TimeUnit.SECONDS);
     return playerData;
   }
 
@@ -103,7 +104,14 @@ public class PlayerUtils {
   }
 
   public static StoredPlayer syncPlayTime(UUID uuid) {
-    return addPlaytime(get(uuid), (int) PlayerDataEvents.calculatePlaytime(uuid));
+    if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+      GlobalPlayer globalData = RestRequestHandler.User.getPlayer(uuid.toString());
+      StoredPlayer playerData = PlayerUtils.get(uuid.toString());
+      playerData.global = globalData;
+      return addPlaytime(playerData, (int) PlayerDataEvents.calculatePlaytime(uuid));
+    } else {
+      return addPlaytime(get(uuid), (int) PlayerDataEvents.calculatePlaytime(uuid));
+    }
   }
 
   private static StoredPlayer addPlaytime(StoredPlayer playerData, int amount) {
@@ -140,12 +148,13 @@ public class PlayerUtils {
     } else {
       playerData.server.commandUsage = new HashMap<>();
     }
-    return  System.currentTimeMillis();
+    return System.currentTimeMillis();
   }
 
   public static void setCooldown(EntityPlayer player, String command, int amount) {
     StoredPlayer playerData = get(player);
-    playerData.server.commandUsage.put(command,System.currentTimeMillis() + (amount * 1000));
+    playerData.server.commandUsage
+        .put(command, System.currentTimeMillis() + (amount * 1000));
     SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
   }
 }
