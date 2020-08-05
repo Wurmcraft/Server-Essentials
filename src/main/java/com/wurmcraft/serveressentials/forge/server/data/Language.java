@@ -59,6 +59,15 @@ public class Language implements JsonParser {
   public String GENERAL_TPACCEPT_NONE;
   public String GENERAL_TPA;
   public String GENERAL_BACK;
+  public String GENERAL_GAMEMODE_SURVIVAL;
+  public String GENERAL_GAMEMODE_CREATIVE;
+  public String GENERAL_GAMEMODE_ADVENTURE;
+  public String GENERAL_GAMEMODE_SPECTATOR;
+  public String GENERAL_GAMEMODE_INVAID;
+  public String GENERAL_GAMEMODE_SURVIVAL_OTHER;
+  public String GENERAL_GAMEMODE_CREATIVE_OTHER;
+  public String GENERAL_GAMEMODE_ADVENTURE_OTHER;
+  public String GENERAL_GAMEMODE_SPECTATOR_OTHER;
 
   // Economy
   public String SIGN_NO_ITEM;

@@ -62,13 +62,15 @@ public class AutoRankUtils {
         .getDataFromKey(DataKey.AUTO_RANK, new AutoRank()).values()
         .toArray(new AutoRank[0]);
     if (rankup.length > 0) {
-      if (PlayerUtils.get(player) != null) {
+      if (PlayerUtils.get(player) != null && PlayerUtils.get(player).global != null) {
         String rank = PlayerUtils.get(player).global.rank;
         for (AutoRank ar : rankup) {
           if (ar.rank.equals(rank)) {
             return ar;
           }
         }
+      } else {
+        PlayerUtils.newPlayer(player.getGameProfile().getId().toString(),false);
       }
     }
     return null;
@@ -87,12 +89,15 @@ public class AutoRankUtils {
         Rank nextRank = (Rank) SECore.dataHandler
             .getData(DataKey.RANK, autoRank.nextRank);
         RankUtils.changeRank(player, nextRank);
-        ChatHelper.sendMessage(player, PlayerUtils.getLanguage(player).RANK_CHANGE.replaceAll("%RANK%", nextRank.name));
+        ChatHelper.sendMessage(player, PlayerUtils.getLanguage(player).RANK_CHANGE
+            .replaceAll("%RANK%", nextRank.name));
         if (AutoRankModule.config.announceAutoRank) {
           for (EntityPlayer p : FMLCommonHandler.instance().getMinecraftServerInstance()
               .getPlayerList().getPlayers()) {
             if (!p.getGameProfile().getId().equals(player.getGameProfile().getId())) {
-              ChatHelper.sendMessage(p, PlayerUtils.getLanguage(p).ANNOUNCEMENT_AUTORANK.replaceAll("%PLAYER%", player.getDisplayNameString()).replaceAll("%RANK%", nextRank.name));
+              ChatHelper.sendMessage(p, PlayerUtils.getLanguage(p).ANNOUNCEMENT_AUTORANK
+                  .replaceAll("%PLAYER%", player.getDisplayNameString())
+                  .replaceAll("%RANK%", nextRank.name));
             }
           }
         }

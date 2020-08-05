@@ -7,13 +7,15 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class PlayerSyncEvent extends Event {
 
+  public String uuid;
   public StoredPlayer currentData;
   public GlobalPlayer otherData;
   public StoredPlayer loadedPlayer;
 
-  public PlayerSyncEvent(
+  public PlayerSyncEvent(String uuid,
       StoredPlayer currentData,
       GlobalPlayer otherData) {
+    this.uuid = uuid;
     this.currentData = currentData;
     this.otherData = otherData;
     this.loadedPlayer = null;

@@ -116,17 +116,19 @@ public class PlayerUtils {
 
   private static StoredPlayer addPlaytime(StoredPlayer playerData, int amount) {
     boolean added = false;
-    for (ServerTime time : playerData.global.playtime.serverTime) {
-      if (time.serverID.equalsIgnoreCase(SECore.config.serverID)) {
-        time.time = time.time + amount;
-        added = true;
+    if (playerData.global != null) {
+      for (ServerTime time : playerData.global.playtime.serverTime) {
+        if (time.serverID.equalsIgnoreCase(SECore.config.serverID)) {
+          time.time = time.time + amount;
+          added = true;
+        }
       }
-    }
-    if (!added) {
-      List<ServerTime> time = new ArrayList<>();
-      Collections.addAll(time, playerData.global.playtime.serverTime);
-      time.add(new ServerTime(SECore.config.serverID, amount));
-      playerData.global.playtime = new NetworkTime(time.toArray(new ServerTime[0]));
+      if (!added) {
+        List<ServerTime> time = new ArrayList<>();
+        Collections.addAll(time, playerData.global.playtime.serverTime);
+        time.add(new ServerTime(SECore.config.serverID, amount));
+        playerData.global.playtime = new NetworkTime(time.toArray(new ServerTime[0]));
+      }
     }
     return playerData;
   }

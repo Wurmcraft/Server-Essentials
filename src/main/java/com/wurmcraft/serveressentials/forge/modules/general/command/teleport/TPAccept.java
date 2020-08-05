@@ -20,9 +20,9 @@ public class TPAccept {
       if (GeneralUtils.hasActiveTPARequest(player)) {
         Object[] tpaData = GeneralUtils.getActiveTPARequest(player);
         EntityPlayer otherPlayer = (EntityPlayer) tpaData[1];
-        LocationWrapper playerLocation = new LocationWrapper(otherPlayer.posX,
-            otherPlayer.posY, otherPlayer.posZ, otherPlayer.dimension);
-        TeleportUtils.teleportTo(player, playerLocation);
+        LocationWrapper playerLocation = new LocationWrapper(player.posX,
+            player.posY, player.posZ, player.dimension);
+        TeleportUtils.teleportTo(otherPlayer, playerLocation);
         ChatHelper.sendMessage(otherPlayer, PlayerUtils.getLanguage(otherPlayer).GENERAL_TPA
             .replaceAll("%NAME%", player.getDisplayNameString()));
       } else {

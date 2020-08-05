@@ -80,6 +80,9 @@ public class PlayerDataEvents {
   public void onPlayerSync(PlayerSyncEvent e) {
     if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
       StoredPlayer mergedData = e.currentData;
+      if (mergedData == null) {
+        PlayerUtils.newPlayer(e.uuid, false);
+      }
       mergedData.global.lastSeen = Instant.now().getEpochSecond();
       mergedData.global.playtime = PlayerUtils
           .syncPlayTime(UUID.fromString(e.currentData.uuid)).global.playtime;
@@ -107,7 +110,8 @@ public class PlayerDataEvents {
     if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
       global = RestRequestHandler.User.getPlayer(uuid.toString());
     }
-    PlayerSyncEvent event = new PlayerSyncEvent(PlayerUtils.get(uuid), global);
+    PlayerSyncEvent event = new PlayerSyncEvent(uuid.toString(), PlayerUtils.get(uuid),
+        global);
     MinecraftForge.EVENT_BUS.post(event);
     if (event.loadedPlayer != null) {
       SECore.dataHandler.registerData(DataKey.PLAYER, event.loadedPlayer);
