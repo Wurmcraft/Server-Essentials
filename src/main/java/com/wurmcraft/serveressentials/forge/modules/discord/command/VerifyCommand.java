@@ -23,16 +23,17 @@ public class VerifyCommand {
   public void verifyCode(ICommandSender sender, String verifyCode) {
     if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
+      GlobalPlayer globalData = RestRequestHandler.User
+          .getPlayer(player.getGameProfile().getId().toString());
+      if(globalData.discordID.length() > 0)
+        return;
       DiscordToken[] tokens = RestRequestHandler.Discord.getTokens();
       if (tokens != null && tokens.length > 0) {
         for (DiscordToken token : tokens) {
           if (token.token.equals(verifyCode)) {
-            GlobalPlayer globalData = RestRequestHandler.User
-                .getPlayer(player.getGameProfile().getId().toString());
             globalData.discordID = token.id;
             RestRequestHandler.User
                 .overridePlayer(player.getGameProfile().getId().toString(), globalData);
-            if (globalData.discordID.isEmpty()) {
               ChatHelper
                   .sendMessage(sender, PlayerUtils.getLanguage(sender).DISCORD_VERIFIED);
               StoredPlayer playerData = PlayerUtils.get(player);
@@ -45,7 +46,6 @@ public class VerifyCommand {
                         FMLCommonHandler.instance().getMinecraftServerInstance(),
                         code.replaceAll("%PLAYER%", player.getDisplayNameString()));
               }
-            }
             return;
           }
         }

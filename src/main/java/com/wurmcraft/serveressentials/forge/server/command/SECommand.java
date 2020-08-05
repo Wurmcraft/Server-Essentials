@@ -5,9 +5,11 @@ import com.wurmcraft.serveressentials.forge.api.command.Command;
 import com.wurmcraft.serveressentials.forge.api.command.CommandArguments;
 import com.wurmcraft.serveressentials.forge.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
+import com.wurmcraft.serveressentials.forge.api.json.basic.CurrencyConversion;
 import com.wurmcraft.serveressentials.forge.api.json.basic.LocationWrapper;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.Home;
+import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.modules.core.event.CoreEvents;
 import com.wurmcraft.serveressentials.forge.modules.core.utils.CoreUtils;
 import com.wurmcraft.serveressentials.forge.modules.economy.utils.EcoUtils;
@@ -23,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +34,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
@@ -47,6 +51,7 @@ public class SECommand extends CommandBase {
   private NonBlockingHashMap<CommandArguments[], Method> cache;
   private NonBlockingHashMap<String, CommandArguments> argumentCache;
   private CommandParams params;
+  private StringBuilder usage;
 
   public SECommand(ModuleCommand command, Object commandInstance) {
     this.command = command;
@@ -60,6 +65,23 @@ public class SECommand extends CommandBase {
       }
     }
     params = CoreUtils.getParams(command.moduleName() + "." + command.name());
+    usage = new StringBuilder();
+    for (int index = 0; index < cache.keySet().size(); index++) {
+      Command cm = cache.get(cache.keySet().toArray(new CommandArguments[0][0])[index])
+          .getAnnotation(Command.class);
+      StringBuilder args = new StringBuilder();
+      if (cm.inputNames().length > 0) {
+        for (String arg : cm.inputNames()) {
+          args.append("<").append(arg).append("> ");
+        }
+        usage.append(PlayerUtils.getLanguage(null).COMMAND_USAGE
+            .replaceAll("%COMMAND%", command.name())
+            .replaceAll("%ARGS%", args.toString()));
+        if (index < (cache.keySet().size() - 1)) {
+          usage.append("\n");
+        }
+      }
+    }
   }
 
   @Override
@@ -85,7 +107,7 @@ public class SECommand extends CommandBase {
 
   @Override
   public String getUsage(ICommandSender sender) {
-    return "/" + command.name();
+    return usage.toString().replaceAll("&", "\u00a7");
   }
 
   @Override
@@ -98,7 +120,73 @@ public class SECommand extends CommandBase {
   @Override
   public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender,
       String[] args, @Nullable BlockPos targetPos) {
-    return super.getTabCompletions(server, sender, args, targetPos);
+    int currentIndex = args.length;
+    if (currentIndex > 0) {
+      currentIndex -= 1;
+    }
+    List<String> possibleArgs = generateListOfAllArgs(sender, currentIndex,
+        new ArrayList<>());
+    return autoFillCorrection(possibleArgs, args[args.length - 1]);
+  }
+
+  private List<String> generateListOfAllArgs(ICommandSender sender, int currentIndex,
+      ArrayList<String> possibleArgs) {
+    if (currentIndex > 0) {
+      currentIndex -= 1;
+    }
+    for (CommandArguments[] a : cache.keySet()) {
+      if(a.length <= currentIndex)
+        continue;
+      if (a[currentIndex].equals(CommandArguments.PLAYER)) {
+        for (EntityPlayer player : FMLCommonHandler.instance()
+            .getMinecraftServerInstance().getPlayerList().getPlayers()) {
+          possibleArgs.add(player.getDisplayNameString());
+        }
+      } else if (a[currentIndex].equals(CommandArguments.RANK)) {
+        for (Rank rank : SECore.dataHandler.getDataFromKey(DataKey.RANK, new Rank())
+            .values()) {
+          possibleArgs.add(rank.name);
+        }
+      } else if (a[currentIndex].equals(CommandArguments.HOME)) {
+        if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
+          StoredPlayer playerData = PlayerUtils.get(
+              (EntityPlayer) sender.getCommandSenderEntity());
+          if (playerData.server.homes != null && playerData.server.homes.length > 0) {
+            for (Home home : playerData.server.homes) {
+              possibleArgs.add(home.name);
+            }
+          }
+        }
+      } else if (a[currentIndex].equals(CommandArguments.CURRENCY)) {
+        for (CurrencyConversion bank : SECore.dataHandler
+            .getDataFromKey(DataKey.CURRENCY, new CurrencyConversion())
+            .values()) {
+          possibleArgs.add(bank.name);
+        }
+      } else if (a[currentIndex].equals(CommandArguments.MODULE)) {
+        Collections.addAll(possibleArgs, SECore.config.modules);
+      } else if (a[currentIndex].equals(CommandArguments.STRING)) {
+        Command command = cache.get(a).getDeclaredAnnotation(Command.class);
+        if(command.inputNames().length > currentIndex) {
+          Collections.addAll(possibleArgs,command.inputNames()[currentIndex].split(","));
+        }
+      }else if (a[currentIndex].equals(CommandArguments.INTEGER) || a[currentIndex].equals(CommandArguments.DOUBLE)) {
+        possibleArgs.add(1 + "");
+      } else {
+        possibleArgs.add(a[currentIndex].name());
+      }
+    }
+    return possibleArgs;
+  }
+
+  private List<String> autoFillCorrection(List<String> arg, String current) {
+    List<String> filter = new ArrayList<>();
+    for (String a : arg) {
+      if (a.toLowerCase().startsWith(current.toLowerCase())) {
+        filter.add(TextFormatting.GOLD + a.replaceAll(" ", ""));
+      }
+    }
+    return filter;
   }
 
   @Override
@@ -224,8 +312,7 @@ public class SECommand extends CommandBase {
         e.printStackTrace();
       }
     } else {
-      ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(sender).COMMAND_USAGE
-          .replaceAll("%COMMAND%", command.name()));
+      ChatHelper.sendMessage(sender, getUsage(sender));
     }
   }
 
