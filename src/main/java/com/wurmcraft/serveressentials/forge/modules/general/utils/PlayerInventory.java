@@ -26,7 +26,11 @@ public class PlayerInventory extends InventoryBasic {
     this.owner = owner;
     this.viewer = viewer;
     this.echest = echest;
-    canModify = RankUtils.hasPermission(viewer,"general.invseee.modify");
+    if(echest) {
+      canModify = RankUtils.hasPermission(viewer, "general.echest.modify");
+    } else {
+      canModify = RankUtils.hasPermission(viewer, "general.invseee.modify");
+    }
   }
 
   @Override

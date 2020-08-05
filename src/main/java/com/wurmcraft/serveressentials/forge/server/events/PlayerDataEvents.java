@@ -81,7 +81,7 @@ public class PlayerDataEvents {
     if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
       StoredPlayer mergedData = e.currentData;
       if (mergedData == null) {
-        PlayerUtils.newPlayer(e.uuid, false);
+        mergedData = PlayerUtils.newPlayer(e.uuid, false);
       }
       mergedData.global.lastSeen = Instant.now().getEpochSecond();
       mergedData.global.playtime = PlayerUtils

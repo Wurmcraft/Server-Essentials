@@ -68,6 +68,14 @@ public class Language implements JsonParser {
   public String GENERAL_GAMEMODE_CREATIVE_OTHER;
   public String GENERAL_GAMEMODE_ADVENTURE_OTHER;
   public String GENERAL_GAMEMODE_SPECTATOR_OTHER;
+  public String GENERAL_FEED_OTHER;
+  public String GENERAL_FEED;
+  public String GENERAL_HEAL;
+  public String GENERAL_HEAL_OTHER;
+  public String GENERAL_FLYE_OTHER;
+  public String GENERAL_FLYD_OTHER;
+  public String GENERAL_FLYE;
+  public String GENERAL_FLYD;
 
   // Economy
   public String SIGN_NO_ITEM;
