@@ -14,7 +14,7 @@ import net.minecraft.util.text.TextFormatting;
 @ModuleCommand(moduleName = "General", name = "Feed")
 public class FeedCommand {
 
-  @Command(inputArguments = {CommandArguments.PLAYER})
+  @Command(inputArguments = {CommandArguments.PLAYER}, inputNames = {"Player"})
   public void feedOther(ICommandSender sender, EntityPlayer otherPlayer) {
     if (RankUtils.hasPermission(sender, "general.feed.other")) {
       otherPlayer.getFoodStats().setFoodSaturationLevel(20);
@@ -33,7 +33,7 @@ public class FeedCommand {
   }
 
   @Command(inputArguments = {CommandArguments.PLAYER})
-  public void feedOther(ICommandSender sender) {
+  public void feed(ICommandSender sender) {
     if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
       player.getFoodStats().setFoodSaturationLevel(20);

@@ -76,6 +76,12 @@ public class Language implements JsonParser {
   public String GENERAL_FLYD_OTHER;
   public String GENERAL_FLYE;
   public String GENERAL_FLYD;
+  public String GENERAL_GODE_OTHER;
+  public String GENERAL_GODD_OTHER;
+  public String GENERAL_GODE;
+  public String GENERAL_GODD;
+  public String GENERAL_HAT;
+  public String GENERAL_PING;
 
   // Economy
   public String SIGN_NO_ITEM;

@@ -99,6 +99,14 @@ public class EcoUtils {
       playerData.global = RestRequestHandler.User
           .getPlayer(player.getGameProfile().getId().toString());
     }
+    addBal(player,playerData,name,amount);
+    if(SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+      RestRequestHandler.User.overridePlayer(playerData.uuid, playerData.global);
+    }
+    SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
+  }
+
+  private static void addBal(EntityPlayer player,StoredPlayer playerData, String name, double amount) {
     if (playerData.global.wallet.currency.length > 0) {
       for (Currency coin : playerData.global.wallet.currency) {
         if (coin.name.equalsIgnoreCase(name)) {
@@ -112,10 +120,6 @@ public class EcoUtils {
       playerData.global.wallet = new Wallet(curList.toArray(new Currency[0]));
     } else {
       playerData.global.wallet = new Wallet(new Currency[]{new Currency(name, amount)});
-    }
-    SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
-    if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
-      RestRequestHandler.User.overridePlayer(playerData.uuid, playerData.global);
     }
   }
 }
