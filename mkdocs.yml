@@ -1,0 +1,17 @@
+site_name: Server Essentials Wiki
+
+nav:
+    - Home: 'index.md'
+    - Modules:
+        - '': ''
+    - Home: 'commands.md'
+    - 'Guides / Tutorials':
+        - '': ''
+
+
+theme:
+  name: material
+
+  theme:
+  logo: assets/logo.png
+  favicon: assets/logo.png
