@@ -6,4 +6,4 @@
 
 ## Commands
 
-  For more info see the [Commands List](commands/)
+  For more info see the [Commands List](commands)
