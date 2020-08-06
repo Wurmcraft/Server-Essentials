@@ -4,9 +4,12 @@ import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.event.NewPlayerEvent;
 import com.wurmcraft.serveressentials.forge.api.json.basic.LocationWrapper;
+import com.wurmcraft.serveressentials.forge.api.json.player.Home;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.modules.general.GeneralModule;
+import com.wurmcraft.serveressentials.forge.modules.general.command.admin.VanishCommand;
 import com.wurmcraft.serveressentials.forge.modules.general.command.teleport.SetHomeCommand;
+import com.wurmcraft.serveressentials.forge.modules.general.utils.GeneralUtils;
 import com.wurmcraft.serveressentials.forge.modules.general.utils.PlayerInventory;
 import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
@@ -54,7 +57,8 @@ public class GeneralEvents {
 
   @SubscribeEvent(priority = EventPriority.LOW)
   public void newPlayer(NewPlayerEvent e) {
-    if (e.newData != null && SECore.config.spawn != null && !sentToSpawn.contains(e.newData.uuid)) {
+    if (e.newData != null && SECore.config.spawn != null && !sentToSpawn
+        .contains(e.newData.uuid)) {
       for (EntityPlayer player : FMLCommonHandler.instance().getMinecraftServerInstance()
           .getPlayerList().getPlayers()) {
         if (player.getGameProfile().getId().toString().equals(e.newData.uuid)) {
@@ -78,24 +82,21 @@ public class GeneralEvents {
 
   @SubscribeEvent
   public void onRespawn(PlayerRespawnEvent e) {
-//    if (!vanishedPlayers.isEmpty() && vanishedPlayers.contains(e.player)) {
-//      VanishCommand.updatePlayer(e.player, false);
-//    }
-//    if (UserManager.getHome(e.player, SetHomeCommand.DEFAULT_HOME) != null) {
-//      try {
-//        TeleportUtils.teleportTo(
-//            (EntityPlayerMP) e.player,
-//            Objects.requireNonNull(UserManager.getHome(e.player, SetHomeCommand.DEFAULT_HOME))
-//                .getPos(),
-//            false,
-//            false);
-//      } catch (NullPointerException f) {
-//        TeleportUtils.teleportTo(
-//            (EntityPlayerMP) e.player, SECore.config.spawn);
-//      }
-//    } else if (SECore.config.spawn != null) {
-//      TeleportUtils.teleportTo((EntityPlayerMP) e.player, SECore.config.spawn);
-//    }
+    if (!vanishedPlayers.isEmpty() && vanishedPlayers.contains(e.player)) {
+      GeneralUtils.updateVanish(e.player, false);
+    }
+    StoredPlayer playerData = PlayerUtils.get(e.player);
+    if (playerData.server.homes.length > 0) {
+      for (Home home : playerData.server.homes) {
+        if (home.name.equalsIgnoreCase(GeneralModule.config.defaultHomeName)) {
+          TeleportUtils.teleportTo(e.player, home);
+          return;
+        }
+      }
+    }
+    if (e.player.getBedLocation() == null && SECore.config.spawn != null) {
+      TeleportUtils.teleportTo(e.player, SECore.config.spawn);
+    }
   }
 
   public static void register(PlayerInventory inv) {
@@ -123,15 +124,10 @@ public class GeneralEvents {
   }
 
   private static void setFrozen(UUID uuid, boolean frozen) {
-//    if (ServerEssentialsAPI.storageType.equalsIgnoreCase("File")) {
-//      FileUser data = (FileUser) UserManager.getUserData(uuid)[0];
-//      data.setFrozen(frozen);
-//      DataHelper.save(Storage.USER, data);
-//    } else if (ServerEssentialsAPI.storageType.equalsIgnoreCase("Rest")) {
-//      LocalRestUser local = (LocalRestUser) UserManager.getUserData(uuid)[1];
-//      local.setFrozen(frozen);
-//      DataHelper.save(Storage.LOCAL_USER, local);
-//    }
+    StoredPlayer playerData = (StoredPlayer) SECore.dataHandler
+        .getData(DataKey.PLAYER, uuid.toString());
+    playerData.server.frozen = frozen;
+    SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
   }
 
   public static void toggleFrozen(EntityPlayer player, BlockPos pos) {
@@ -154,15 +150,16 @@ public class GeneralEvents {
     if (frozenPlayers.size() > 0 && frozenPlayers.keySet().contains(e.player)) {
       BlockPos lockedPos = frozenPlayers.get(e.player);
       if (e.player.getPosition() != lockedPos) {
-        e.player.setPositionAndUpdate(lockedPos.getX(), lockedPos.getY(), lockedPos.getZ());
+        e.player
+            .setPositionAndUpdate(lockedPos.getX(), lockedPos.getY(), lockedPos.getZ());
       }
     }
   }
 
   @SubscribeEvent
   public void onDimChange(PlayerChangedDimensionEvent e) {
-//    if (!vanishedPlayers.isEmpty() && vanishedPlayers.contains(e.player)) {
-//      VanishCommand.updatePlayer(e.player, false);
-//    }
+    if (!vanishedPlayers.isEmpty() && vanishedPlayers.contains(e.player)) {
+      GeneralUtils.updateVanish(e.player, false);
+    }
   }
 }

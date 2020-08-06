@@ -17,6 +17,8 @@ public class Language implements JsonParser {
   public String COMMAND_USAGE;
   public String COMMAND_SPACER;
   public String COMMAND_COOLDOWN;
+  public String COMMAND_PLAYER_NONE;
+  public String COMMAND_NUMBER;
 
   // Core
   public String CORE_SE_RELOAD;
@@ -97,6 +99,22 @@ public class Language implements JsonParser {
   public String GENERAL_SPEED_FLY_OTHER;
   public String GENERAL_SPEED_WALK_OTHER;
   public String GENERAL_UUID;
+  public String GENERAL_LASTSEEN;
+  public String GENERAL_VANISH;
+  public String GENERAL_VANISH_UNDO;
+  public String GENERAL_FREEZE;
+  public String  GENERAL_FREEZE_OTHER;
+  public String GENERAL_FREEZE_UNDO;
+  public String GENERAL_FREEZE_UNDO_OTHER;
+  public String GENERAL_DPF;
+  public String GENERAL_BURN_OTHER;
+  public String GENERAL_TPALL;
+  public String GENERAL_TP_CORDS;
+  public String GENERAL_TP_CORDS_OTHER;
+  public String GENERAL_TP_PLAYER_PLAYER;
+  public String GENERAL_TP_PLAYER;
+  public String GENERAL_MOTD_SET;
+  public String GENERAL_RULES_SET;
 
   // Economy
   public String SIGN_NO_ITEM;

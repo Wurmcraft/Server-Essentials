@@ -1,11 +1,21 @@
 package com.wurmcraft.serveressentials.forge.modules.general.utils;
 
+import static com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer.SAVE_DIR;
+
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.modules.general.GeneralModule;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketSpawnPlayer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class GeneralUtils {
 
@@ -49,6 +59,70 @@ public class GeneralUtils {
   public static void handleTimeout(List<Integer> timeout) {
     for (int x : timeout) {
       requestingTPA.remove(x);
+    }
+  }
+
+  public static void updateVanish(EntityPlayer player, boolean track) {
+    if (track) {
+      FMLCommonHandler.instance()
+          .getMinecraftServerInstance()
+          .getWorld(player.dimension)
+          .getEntityTracker()
+          .track(player);
+    } else {
+      FMLCommonHandler.instance()
+          .getMinecraftServerInstance()
+          .getWorld(player.dimension)
+          .getEntityTracker()
+          .untrack(player);
+    }
+    FMLCommonHandler.instance()
+        .getMinecraftServerInstance()
+        .getWorld(player.dimension)
+        .getEntityTracker()
+        .getTrackingPlayers(player)
+        .forEach(
+            tp -> {
+              ((EntityPlayerMP) player).connection.sendPacket(new SPacketSpawnPlayer(tp));
+            });
+  }
+
+  public static String[] load(String configName) {
+    File file = new File(
+        SAVE_DIR + File.separator + "Misc" + File.separator + configName + ".txt");
+    if (file.exists()) {
+      try {
+        return Files.readAllLines(file.toPath()).toArray(new String[0]);
+      } catch (Exception ignored) {
+      }
+    }
+    return new String[0];
+  }
+
+  public static String[] loadAndCreateConfig(String name) {
+    String[] config = GeneralUtils.load(name);
+    if (config.length == 0) {
+      File file = new File(
+          SAVE_DIR + File.separator + "Misc" + File.separator + name + ".txt");
+      try {
+        file.createNewFile();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    return config;
+  }
+
+  public static void setConfig(String config, String[] lines) {
+    File file = new File(
+        SAVE_DIR + File.separator + "Misc" + File.separator + config + ".txt");
+    try {
+      if (!file.exists()) {
+        file.createNewFile();
+      }
+      Files.write(file.toPath(), Arrays.asList(lines), StandardOpenOption.WRITE);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 }

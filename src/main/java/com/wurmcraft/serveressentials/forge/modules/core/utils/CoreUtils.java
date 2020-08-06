@@ -151,17 +151,28 @@ public class CoreUtils {
     if (!baseDir.exists()) {
       baseDir.mkdirs();
     }
-    CustomCommandJson customCommand = new CustomCommandJson("Website",
-        new String[]{"Web", "Site"}, new CommandFunc[]{new CommandFunc(
-        Command.MESSAGE, new String[]{
-        "&3https://www.curseforge.com/minecraft/mc-mods/server-essentials"})});
+    saveCustomCommand(new CustomCommandJson("Website", new String[]{"Site"},
+        new CommandFunc[]{new CommandFunc(Command.MESSAGE, new String[]{
+            "&3https://www.curseforge.com/minecraft/mc-mods/server-essentials"})}));
+    saveCustomCommand(new CustomCommandJson("Web", new String[]{"Site"},
+        new CommandFunc[]{new CommandFunc(Command.COMMAND, new String[]{"Website"})}));
+    saveCustomCommand(new CustomCommandJson("Discord", new String[]{}, new CommandFunc[]{
+        new CommandFunc(Command.MESSAGE, new String[]{"&3https://discord.gg/n6RFDUc"})}));
+  }
+
+  private static void saveCustomCommand(CustomCommandJson json) {
+    File baseDir = new File(
+        SAVE_DIR + File.separator + "Misc" + File.separator + "Custom-Commands");
+    if (!baseDir.exists()) {
+      baseDir.mkdirs();
+    }
     try {
-      File websiteCommand = new File(baseDir + File.separator + "Website.json");
-      if (!websiteCommand.exists()) {
-        websiteCommand.createNewFile();
+      File customCommand = new File(baseDir + File.separator + json.name + ".json");
+      if (!customCommand.exists()) {
+        customCommand.createNewFile();
       }
-      Files.write(websiteCommand.toPath(),
-          GSON.toJson(customCommand).getBytes());
+      Files.write(customCommand.toPath(),
+          GSON.toJson(json).getBytes());
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -176,5 +187,4 @@ public class CoreUtils {
     }
     return commands.toArray(new CustomCommand[0]);
   }
-
 }

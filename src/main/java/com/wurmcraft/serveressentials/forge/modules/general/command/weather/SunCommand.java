@@ -7,11 +7,11 @@ import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-@ModuleCommand(moduleName = "General", name = "Thunder", aliases = {"Storm"})
+@ModuleCommand(moduleName = "General", name = "Sun", aliases = {"NoRain"})
 public class SunCommand {
 
   @Command(inputArguments = {})
-  public void storm(ICommandSender sender) {
+  public void sun(ICommandSender sender) {
     FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(0).getWorldInfo().setRaining(false);
     FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(0).getWorldInfo().setThundering(false);
     FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(0).getWorldInfo().setRainTime(0);

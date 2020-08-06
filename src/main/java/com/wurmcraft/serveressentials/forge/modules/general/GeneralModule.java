@@ -7,6 +7,7 @@ import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.module.Module;
 import com.wurmcraft.serveressentials.forge.modules.general.event.GeneralEvents;
+import com.wurmcraft.serveressentials.forge.modules.general.utils.GeneralUtils;
 import com.wurmcraft.serveressentials.forge.modules.rank.RankConfig;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import java.io.File;
@@ -18,6 +19,8 @@ import net.minecraftforge.common.MinecraftForge;
 public class GeneralModule {
 
   public static GeneralConfig config;
+  public static String[] motd;
+  public static String[] rules;
 
   public void initSetup() {
     try {
@@ -39,6 +42,8 @@ public class GeneralModule {
                 + "General");
       }
     }
+    motd = GeneralUtils.loadAndCreateConfig("motd");
+    rules = GeneralUtils.loadAndCreateConfig("rules");
   }
 
   public void finalizeModule() {

@@ -159,4 +159,19 @@ public class PlayerUtils {
         .put(command, System.currentTimeMillis() + (amount * 1000));
     SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
   }
+
+  public static UUID getPlayer(String playerName) {
+    for (EntityPlayer p : FMLCommonHandler.instance().getMinecraftServerInstance()
+        .getPlayerList().getPlayers()) {
+      if (p.getDisplayNameString().equalsIgnoreCase(playerName)) {
+        return p.getGameProfile().getId();
+      }
+    }
+    for (UUID id : UsernameCache.getMap().keySet()) {
+      if (UsernameCache.getMap().get(id).equalsIgnoreCase(playerName)) {
+        return id;
+      }
+    }
+    return null;
+  }
 }
