@@ -10,8 +10,10 @@ import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.data.IDataHandler;
 import com.wurmcraft.serveressentials.forge.api.json.rest.ServerStatus.Status;
 import com.wurmcraft.serveressentials.forge.modules.core.CoreModule;
+import com.wurmcraft.serveressentials.forge.modules.core.utils.CoreUtils;
 import com.wurmcraft.serveressentials.forge.modules.general.command.teleport.HomeCommand;
 import com.wurmcraft.serveressentials.forge.modules.track.utils.TrackUtils;
+import com.wurmcraft.serveressentials.forge.server.command.CustomCommand;
 import com.wurmcraft.serveressentials.forge.server.command.SECommand;
 import com.wurmcraft.serveressentials.forge.server.command.WrapperCommand;
 import com.wurmcraft.serveressentials.forge.server.data.BasicDataHandler;
@@ -93,6 +95,9 @@ public class ServerEssentialsServer {
         e.getServer().getCommandManager().getCommands().put(name, new WrapperCommand(
             e.getServer().getCommandManager().getCommands().get(name)));
       }
+    }
+    for(CustomCommand cmd : CoreUtils.generateCustomCommands()) {
+      e.registerServerCommand(cmd);
     }
     for (String command : CommandLoader.commands.keySet()) {
       Object commandInstance = CommandLoader.commands.get(command);

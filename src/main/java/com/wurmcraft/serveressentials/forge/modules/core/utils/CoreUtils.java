@@ -6,13 +6,18 @@ import static com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer
 import com.wurmcraft.serveressentials.forge.api.config.GlobalConfig;
 import com.wurmcraft.serveressentials.forge.modules.core.CoreModule;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
+import com.wurmcraft.serveressentials.forge.server.command.CustomCommand;
 import com.wurmcraft.serveressentials.forge.server.command.json.CommandParams;
 import com.wurmcraft.serveressentials.forge.server.command.json.CommandParams.RankParams;
 import com.wurmcraft.serveressentials.forge.server.command.json.CommandParamsConfig;
+import com.wurmcraft.serveressentials.forge.server.command.json.CustomCommandJson;
+import com.wurmcraft.serveressentials.forge.server.command.json.CustomCommandJson.Command;
+import com.wurmcraft.serveressentials.forge.server.command.json.CustomCommandJson.CommandFunc;
 import com.wurmcraft.serveressentials.forge.server.json.MessagesConfig;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.*;
 import org.apache.logging.log4j.util.Strings;
 
 public class CoreUtils {
@@ -118,6 +123,58 @@ public class CoreUtils {
       }
     }
     return config;
+  }
+
+  public static CustomCommandJson[] loadCustomCommands() {
+    List<CustomCommandJson> commandJsons = new ArrayList<>();
+    File baseDir = new File(
+        SAVE_DIR + File.separator + "Misc" + File.separator + "Custom-Commands");
+    if (baseDir.exists()) {
+      for (File file : baseDir.listFiles()) {
+        try {
+          commandJsons.add(GSON.fromJson(Strings.join(Files.readAllLines(file.toPath()),
+              '\n'), CustomCommandJson.class));
+        } catch (Exception e) {
+          ServerEssentialsServer.LOGGER
+              .error("Unable to load Command '" + file.getName() + "'");
+        }
+      }
+    } else {
+      createDefaultCustomCommands();
+    }
+    return commandJsons.toArray(new CustomCommandJson[0]);
+  }
+
+  private static void createDefaultCustomCommands() {
+    File baseDir = new File(
+        SAVE_DIR + File.separator + "Misc" + File.separator + "Custom-Commands");
+    if (!baseDir.exists()) {
+      baseDir.mkdirs();
+    }
+    CustomCommandJson customCommand = new CustomCommandJson("Website",
+        new String[]{"Web", "Site"}, new CommandFunc[]{new CommandFunc(
+        Command.MESSAGE, new String[]{
+        "&3https://www.curseforge.com/minecraft/mc-mods/server-essentials"})});
+    try {
+      File websiteCommand = new File(baseDir + File.separator + "Website.json");
+      if (!websiteCommand.exists()) {
+        websiteCommand.createNewFile();
+      }
+      Files.write(websiteCommand.toPath(),
+          GSON.toJson(customCommand).getBytes());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static CustomCommand[] generateCustomCommands() {
+    List<CustomCommand> commands = new ArrayList<>();
+    if (CoreModule.customCommands.length > 0) {
+      for (CustomCommandJson json : CoreModule.customCommands) {
+        commands.add(new CustomCommand(json));
+      }
+    }
+    return commands.toArray(new CustomCommand[0]);
   }
 
 }

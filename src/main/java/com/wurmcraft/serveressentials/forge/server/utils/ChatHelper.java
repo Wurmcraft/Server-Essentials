@@ -12,6 +12,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.util.text.event.HoverEvent.Action;
+import net.minecraftforge.common.ForgeHooks;
 
 public class ChatHelper {
 
@@ -20,7 +21,7 @@ public class ChatHelper {
   }
 
   public static void sendMessage(ICommandSender sender, String msg) {
-    sendMessage(sender, new TextComponentString(msg.replaceAll("&", "\u00a7")));
+    sendMessage(sender,ForgeHooks.newChatWithLinks(msg.replaceAll("&", "\u00a7")));
   }
 
   public static void sendHoverMessage(ICommandSender sender, String msg, String hover) {

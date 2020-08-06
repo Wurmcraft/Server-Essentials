@@ -82,6 +82,21 @@ public class Language implements JsonParser {
   public String GENERAL_GODD;
   public String GENERAL_HAT;
   public String GENERAL_PING;
+  public String GENERAL_RAIN;
+  public String GENERAL_THUNDER;
+  public String  GENERAL_SUN;
+  public String GENERAL_SUDO;
+  public String GENERAL_RENAME;
+  public String GENERAL_SKULL;
+  public String GENERAL_SMITE;
+  public String GENERAL_SMITE_OTHER;
+  public String GENERAL_SPEED;
+  public String GENERAL_SPEED_WALK;
+  public String GENERAL_SPEED_FLY;
+  public String GENERAL_SPEED_OTHER;
+  public String GENERAL_SPEED_FLY_OTHER;
+  public String GENERAL_SPEED_WALK_OTHER;
+  public String GENERAL_UUID;
 
   // Economy
   public String SIGN_NO_ITEM;

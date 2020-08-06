@@ -19,7 +19,6 @@ public class PingCommand {
       ping = player.ping;
     }
     ChatHelper.sendMessage(sender,
-        PlayerUtils.getLanguage(sender).GENERAL_PING.replaceAll("%PING%", "" + ping));
+        PlayerUtils.getLanguage(sender).GENERAL_PING.replaceAll("%PING%", "" + (ping / 1000)));
   }
-
 }
