@@ -1,6 +1,7 @@
 {
 	"key": "en_us",
 	"ANNOUNCEMENT_NEW_PLAYER": "&6Welcome %PLAYER%",
+	"ANNOUNCEMENT_AUTORANK": "&6%PLAYER% is now a %RANK%",
 	"HOVER_PLAYER_NAME": "&a%PLAYER% &d(%UUID%)",
 	"COMMAND_USAGE": "&5/%COMMAND% &d%ARGS%",
 	"COMMAND_SPACER": "&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=&d-&6=",
@@ -93,6 +94,8 @@
 	"GENERAL_TP_PLAYER_PLAYER": "&3%PLAYER% has been teleported to %PLAYER2%",
 	"GENERAL_TP_PLAYER": "&3You have been teleported to %PLAYER%",
 	"GENERAL_MOTD_SET": "&3MOTD has been updated",
+	"GENERAL_RANDOMMSG_SET": "&3Random Messages has been updated",
+	"GENERAL_ONLINETIME": "&3%PLAYER%'s Online Time: %TIME%",
 	"SIGN_NO_ITEM": "&3You must be holding a item, to create this sign",
 	"ECO_MONEY_INSUFFICENT": "&3You need at least %AMOUNT% to purchase this",
 	"SIGN_BUY": "&3You just purchased a item for %AMOUNT%",
