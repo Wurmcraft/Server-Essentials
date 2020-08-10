@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.ServerStatusResponse;
+import net.minecraft.network.ServerStatusResponse.Version;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;

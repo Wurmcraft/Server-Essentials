@@ -94,6 +94,7 @@ public class AutoRankUtils {
         if (AutoRankModule.config.announceAutoRank) {
           for (EntityPlayer p : FMLCommonHandler.instance().getMinecraftServerInstance()
               .getPlayerList().getPlayers()) {
+            if(p != null)
             if (!p.getGameProfile().getId().equals(player.getGameProfile().getId())) {
               ChatHelper.sendMessage(p, PlayerUtils.getLanguage(p).ANNOUNCEMENT_AUTORANK
                   .replaceAll("%PLAYER%", player.getDisplayNameString())

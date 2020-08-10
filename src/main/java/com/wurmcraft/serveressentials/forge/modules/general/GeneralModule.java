@@ -21,6 +21,7 @@ public class GeneralModule {
   public static GeneralConfig config;
   public static String[] motd;
   public static String[] rules;
+  public static String[] randomMessages;
 
   public void initSetup() {
     try {
@@ -44,6 +45,7 @@ public class GeneralModule {
     }
     motd = GeneralUtils.loadAndCreateConfig("motd");
     rules = GeneralUtils.loadAndCreateConfig("rules");
+    randomMessages = GeneralUtils.loadAndCreateConfig("randomMessages");
   }
 
   public void finalizeModule() {
