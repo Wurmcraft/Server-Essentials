@@ -11,6 +11,7 @@ import com.wurmcraft.serveressentials.forge.api.data.IDataHandler;
 import com.wurmcraft.serveressentials.forge.api.json.rest.ServerStatus.Status;
 import com.wurmcraft.serveressentials.forge.modules.core.CoreModule;
 import com.wurmcraft.serveressentials.forge.modules.core.utils.CoreUtils;
+import com.wurmcraft.serveressentials.forge.modules.general.GeneralModule;
 import com.wurmcraft.serveressentials.forge.modules.general.command.teleport.HomeCommand;
 import com.wurmcraft.serveressentials.forge.modules.track.utils.TrackUtils;
 import com.wurmcraft.serveressentials.forge.server.command.CustomCommand;
@@ -27,6 +28,7 @@ import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import java.io.File;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import net.minecraft.command.ICommand;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
@@ -96,7 +98,7 @@ public class ServerEssentialsServer {
             e.getServer().getCommandManager().getCommands().get(name)));
       }
     }
-    for(CustomCommand cmd : CoreUtils.generateCustomCommands()) {
+    for (CustomCommand cmd : CoreUtils.generateCustomCommands()) {
       e.registerServerCommand(cmd);
     }
     for (String command : CommandLoader.commands.keySet()) {
@@ -114,6 +116,30 @@ public class ServerEssentialsServer {
     if (ModuleLoader.getLoadedModule("Track") != null) {
       TrackUtils.sendUpdate(Status.ONLINE);
     }
+    if (ModuleLoader.getLoadedModule("General") != null) {
+      for (String commandOverride : GeneralModule.config.commandOverride) {
+        SECommand command = findSECommand(commandOverride);
+        if (command != null) {
+          FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager()
+              .getCommands().put(command.getName(), command);
+        } else {
+          LOGGER.info("Unable to override command '" + commandOverride
+              + "' because it was not found!");
+        }
+      }
+    }
+  }
+
+  private static SECommand findSECommand(String name) {
+    for (String command : CommandLoader.commands.keySet()) {
+      if (command.equalsIgnoreCase(name)) {
+        Object commandInstance = CommandLoader.commands.get(command);
+        return new SECommand(
+            commandInstance.getClass().getAnnotation(ModuleCommand.class),
+            commandInstance);
+      }
+    }
+    return null;
   }
 
   @EventHandler

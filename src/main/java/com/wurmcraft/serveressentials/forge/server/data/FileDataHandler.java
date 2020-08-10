@@ -6,17 +6,13 @@ import static com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.json.JsonParser;
-import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.modules.autorank.AutoRankConfig;
 import com.wurmcraft.serveressentials.forge.modules.discord.DiscordConfig;
 import com.wurmcraft.serveressentials.forge.modules.economy.EconomyConfig;
 import com.wurmcraft.serveressentials.forge.modules.general.GeneralConfig;
 import com.wurmcraft.serveressentials.forge.modules.language.LanguageConfig;
-import com.wurmcraft.serveressentials.forge.modules.matterbridge.MatterBridgeConfig;
 import com.wurmcraft.serveressentials.forge.modules.rank.RankConfig;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
-import com.wurmcraft.serveressentials.forge.server.events.PlayerDataEvents;
-import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.NoSuchElementException;
@@ -139,14 +135,6 @@ public class FileDataHandler extends BasicDataHandler {
               registerData(key,
                   GSON.fromJson(Strings.join(Files.readAllLines(fileLoc.toPath()), '\n'),
                       DiscordConfig.class));
-              JsonParser data = getData(key, dataID);
-              if (data != null) {
-                return data;
-              }
-            }else if (dataID.equalsIgnoreCase("MatterBridge")) {
-              registerData(key,
-                  GSON.fromJson(Strings.join(Files.readAllLines(fileLoc.toPath()), '\n'),
-                      MatterBridgeConfig.class));
               JsonParser data = getData(key, dataID);
               if (data != null) {
                 return data;
