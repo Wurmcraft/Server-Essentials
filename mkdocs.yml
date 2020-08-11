@@ -7,7 +7,9 @@ nav:
     - Home: 'commands.md'
     - 'Guides / Tutorials':
         - '': ''
-
+        
+markdown_extensions:
+  - admonition
 
 theme:
   name: material
