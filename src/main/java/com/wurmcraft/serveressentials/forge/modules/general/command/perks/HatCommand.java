@@ -2,16 +2,18 @@ package com.wurmcraft.serveressentials.forge.modules.general.command.perks;
 
 import com.wurmcraft.serveressentials.forge.api.command.Command;
 import com.wurmcraft.serveressentials.forge.api.command.CommandArguments;
+import com.wurmcraft.serveressentials.forge.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
+@ModuleCommand(moduleName = "General", name = "Hat")
 public class HatCommand {
 
   @Command(inputArguments = {CommandArguments.PLAYER}, inputNames = {"Player"})
-  public void heal(ICommandSender sender) {
+  public void hat(ICommandSender sender) {
     if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
       if (!player.getHeldItemMainhand().isEmpty()) {

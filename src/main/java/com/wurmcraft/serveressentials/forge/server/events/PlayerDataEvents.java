@@ -101,7 +101,9 @@ public class PlayerDataEvents {
   public static long calculatePlaytime(UUID uuid) {
     long lastUpdateTime = playerLoginTime.getOrDefault(uuid, System.currentTimeMillis());
     long amountOfTime = ((System.currentTimeMillis() - lastUpdateTime) / 1000) / 60;
-    playerLoginTime.put(uuid, playerLoginTime.get(uuid) + (amountOfTime * (1000 * 60)));
+    if (playerLoginTime.containsKey(uuid)) {
+      playerLoginTime.put(uuid, playerLoginTime.get(uuid) + (amountOfTime * (1000 * 60)));
+    }
     return amountOfTime;
   }
 

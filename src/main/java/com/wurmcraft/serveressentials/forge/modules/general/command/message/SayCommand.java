@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-@ModuleCommand(moduleName = "General", name = "Broadcast", aliases = {"BC"})
+@ModuleCommand(moduleName = "General", name = "Say")
 public class SayCommand {
 
   @Command(inputArguments = {CommandArguments.STRING_ARR}, inputNames = {"MSG"})

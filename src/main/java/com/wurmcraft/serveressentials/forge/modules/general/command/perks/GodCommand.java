@@ -11,7 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
-@ModuleCommand(moduleName = "General", name = "Feed")
+@ModuleCommand(moduleName = "General", name = "God")
 public class GodCommand {
 
   @Command(inputArguments = {CommandArguments.PLAYER}, inputNames = {"Player"})

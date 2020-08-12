@@ -17,11 +17,13 @@ public class ModuleLoader {
   private static void loadModules()
       throws IllegalAccessException, InstantiationException {
     Set<Class<?>> moduleClasses = AnnotationUtils.findAnnotation(Module.class);
-    ServerEssentialsServer.LOGGER.info("Modules: " + Arrays.toString(moduleClasses.toArray()));
+    ServerEssentialsServer.LOGGER
+        .info("Modules: " + Arrays.toString(moduleClasses.toArray()));
     for (Class<?> module : moduleClasses) {
       if (canModuleBeLoaded(module.newInstance(), module.getAnnotation(Module.class))) {
         Module moduleAnnotation = module.getAnnotation(Module.class);
-        ServerEssentialsServer.LOGGER.info("Loading Module '" + moduleAnnotation.name() + "'");
+        ServerEssentialsServer.LOGGER
+            .info("Loading Module '" + moduleAnnotation.name() + "'");
         modules.put(moduleAnnotation.name().toUpperCase(), module.newInstance());
         if (SECore.config.debug) {
           ServerEssentialsServer.LOGGER.trace(
@@ -66,7 +68,7 @@ public class ModuleLoader {
   private static void runModuleMethod(Object moduleInstance, String type) {
     Module module = moduleInstance.getClass().getAnnotation(Module.class);
     if (SECore.config.debug) {
-      ServerEssentialsServer.LOGGER.info( type + " Module '" + module.name() + "'");
+      ServerEssentialsServer.LOGGER.info(type + " Module '" + module.name() + "'");
     }
     try {
       Method method = null;

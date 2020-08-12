@@ -116,7 +116,7 @@ public class ServerEssentialsServer {
     if (ModuleLoader.getLoadedModule("Track") != null) {
       TrackUtils.sendUpdate(Status.ONLINE);
     }
-    if (ModuleLoader.getLoadedModule("General") != null) {
+    if (ModuleLoader.getLoadedModule("General") != null && GeneralModule.config != null && GeneralModule.config.commandOverride.length > 0) {
       for (String commandOverride : GeneralModule.config.commandOverride) {
         SECommand command = findSECommand(commandOverride);
         if (command != null) {

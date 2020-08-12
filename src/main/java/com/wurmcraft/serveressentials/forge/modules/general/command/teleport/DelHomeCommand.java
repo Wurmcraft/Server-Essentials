@@ -50,9 +50,9 @@ public class DelHomeCommand {
             .sendMessage(sender, PlayerUtils.getLanguage(sender).GENERAL_DELHOME_ALL);
       } else {
         ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(sender).COMMAND_USAGE
-            .replaceAll("%COMMAND%", "/DelHome").replaceAll("%ARGS%", "<homeName>"));
+            .replaceAll("%COMMAND%", "DelHome").replaceAll("%ARGS%", "<homeName>"));
         ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(sender).COMMAND_USAGE
-            .replaceAll("%COMMAND%", "/DelHome").replaceAll("%ARGS%", "<all>"));
+            .replaceAll("%COMMAND%", "DelHome").replaceAll("%ARGS%", "<all>"));
       }
     }
   }
@@ -70,9 +70,9 @@ public class DelHomeCommand {
       }
       if (!found) {
         ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(sender).COMMAND_USAGE
-            .replaceAll("%COMMAND%", "/DelHome").replaceAll("%ARGS%", "<homeName>"));
+            .replaceAll("%COMMAND%", "DelHome").replaceAll("%ARGS%", "<homeName>"));
         ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(sender).COMMAND_USAGE
-            .replaceAll("%COMMAND%", "/DelHome").replaceAll("%ARGS%", "<all>"));
+            .replaceAll("%COMMAND%", "DelHome").replaceAll("%ARGS%", "<all>"));
       }
     }
   }

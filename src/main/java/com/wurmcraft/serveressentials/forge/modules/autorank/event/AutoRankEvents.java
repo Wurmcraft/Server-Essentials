@@ -11,11 +11,14 @@ public class AutoRankEvents {
 
   @SubscribeEvent
   public void onWorldTick(WorldTickEvent e) {
-    if (e.side.isServer()
-        && e.world.getWorldTime() % AutoRankModule.config.checkTimer == 0) {
-      for (EntityPlayer player : FMLCommonHandler.instance().getMinecraftServerInstance()
-          .getPlayerList().getPlayers()) {
-        AutoRankUtils.checkAndHandleRankup(player);
+    if (AutoRankModule.config != null && AutoRankModule.config.checkTimer > 0) {
+      if (e.side.isServer()
+          && e.world.getWorldTime() % AutoRankModule.config.checkTimer == 0) {
+        for (EntityPlayer player : FMLCommonHandler.instance()
+            .getMinecraftServerInstance()
+            .getPlayerList().getPlayers()) {
+          AutoRankUtils.checkAndHandleRankup(player);
+        }
       }
     }
   }

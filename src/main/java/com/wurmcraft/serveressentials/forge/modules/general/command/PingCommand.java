@@ -8,7 +8,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-@ModuleCommand(moduleName = "General", name = "Ping", aliases = {""})
+@ModuleCommand(moduleName = "General", name = "Ping")
 public class PingCommand {
 
   @Command(inputArguments = {})

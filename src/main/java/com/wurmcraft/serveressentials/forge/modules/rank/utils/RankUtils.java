@@ -5,9 +5,12 @@ import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.GlobalPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
+import com.wurmcraft.serveressentials.forge.modules.security.SecurityConfig;
+import com.wurmcraft.serveressentials.forge.modules.security.SecurityModule;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.command.SECommand;
 import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
+import com.wurmcraft.serveressentials.forge.server.loader.ModuleLoader;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import java.util.*;
 import java.util.Collections;
@@ -33,6 +36,15 @@ public class RankUtils {
 
   public static boolean hasPermission(ICommandSender sender, String node) {
     if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
+      if (ModuleLoader.getLoadedModule("Security") != null && !SecurityModule.trustedUsers.isEmpty()) {
+        EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
+        String playerUUID = player.getGameProfile().getId().toString();
+        for(String id : SecurityModule.trustedUsers) {
+          if(id.replaceAll("\r", "").equalsIgnoreCase(playerUUID)) {
+            return true;
+          }
+        }
+      }
       return hasPermission((EntityPlayer) sender.getCommandSenderEntity(),
           RankUtils.getRank(sender), node);
     }
