@@ -16,7 +16,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class AdminSignCommands {
+public class AdminSignEvents {
 
   public static String NBT_DATA = "SE-DATA";
 
@@ -95,7 +95,6 @@ public class AdminSignCommands {
     }
   }
 
-
   @SubscribeEvent
   public void onLeftClick(PlayerInteractEvent.LeftClickBlock e) { // Break / Setup-Active
     if (e.getWorld().getBlockState(e.getPos()).getBlock() instanceof BlockSign) {
@@ -103,9 +102,6 @@ public class AdminSignCommands {
       if (!sign.signText[0].getUnformattedText().isEmpty() && SignUtils
           .isValidSign(e.getWorld(), e.getPos())) {
         SignType type = SignUtils.getType(e.getWorld(), e.getPos());
-        if (!e.getEntityPlayer().isSneaking()) {
-          e.setCanceled(true);
-        }
         if (type != null) {
           if (type.equals(SignType.ADMIN_BUY)) {
             handleAdminBuy(e.getEntityPlayer(), sign);
@@ -114,6 +110,9 @@ public class AdminSignCommands {
           }
         }
       }
+    }
+    if (!e.getEntityPlayer().isSneaking()) {
+      e.setCanceled(true);
     }
   }
 

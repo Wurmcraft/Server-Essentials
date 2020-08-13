@@ -3,6 +3,7 @@ package com.wurmcraft.serveressentials.forge.modules.economy.utils;
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.json.basic.CurrencyConversion;
+import com.wurmcraft.serveressentials.forge.api.json.player.GlobalPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.player.Wallet;
 import com.wurmcraft.serveressentials.forge.api.json.player.Wallet.Currency;
@@ -68,6 +69,17 @@ public class EcoUtils {
     return false;
   }
 
+  public static boolean hasCurrency(String uuid, String name, double amount) {
+    StoredPlayer playerData = (StoredPlayer) SECore.dataHandler
+        .getData(DataKey.PLAYER, uuid);
+    for (Currency coin : playerData.global.wallet.currency) {
+      if (coin.name.equalsIgnoreCase(name)) {
+        return (coin.amount - amount) >= 0;
+      }
+    }
+    return false;
+  }
+
   public static boolean hasCurrency(EntityPlayer player, double amount) {
     return hasCurrency(player, EconomyModule.config.defaultCurrency.name, amount);
   }
@@ -99,14 +111,32 @@ public class EcoUtils {
       playerData.global = RestRequestHandler.User
           .getPlayer(player.getGameProfile().getId().toString());
     }
-    addBal(player,playerData,name,amount);
-    if(SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+    addBal(playerData, name, amount);
+    if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
       RestRequestHandler.User.overridePlayer(playerData.uuid, playerData.global);
     }
     SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
   }
 
-  private static void addBal(EntityPlayer player,StoredPlayer playerData, String name, double amount) {
+  public static void addOfflineCurrency(String uuid, String name, double amount) {
+    try {
+      if(SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+        GlobalPlayer globalData = RestRequestHandler.User.getPlayer(uuid);
+        StoredPlayer playerData = PlayerUtils.get(uuid);
+        playerData.global = globalData;
+        addBal(playerData, name, amount);
+        RestRequestHandler.User.overridePlayer(uuid, globalData);
+      } else {
+        StoredPlayer playerData = (StoredPlayer) SECore.dataHandler
+            .getData(DataKey.PLAYER, uuid);
+        addBal(playerData, name, amount);
+      }
+    } catch (NoSuchElementException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private static void addBal(StoredPlayer playerData, String name, double amount) {
     if (playerData.global.wallet.currency.length > 0) {
       for (Currency coin : playerData.global.wallet.currency) {
         if (coin.name.equalsIgnoreCase(name)) {

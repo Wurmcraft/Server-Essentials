@@ -35,6 +35,12 @@ public class ChatHelper {
     sendHoverMessage(sender, text, hover);
   }
 
+  public static void sendClickMessage(ICommandSender sender, String msg, String link) {
+    TextComponentString text = new TextComponentString(msg.replaceAll("&", "\u00a7"));
+    text.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
+    sendMessage(sender, text);
+  }
+
   public static void sendHoverMessage(ICommandSender sender, ITextComponent text,
       String hover) {
     text.getStyle().setHoverEvent(new HoverEvent(Action.SHOW_TEXT,

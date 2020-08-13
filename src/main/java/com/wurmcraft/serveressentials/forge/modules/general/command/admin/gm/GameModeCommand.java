@@ -94,17 +94,19 @@ public class GameModeCommand {
     }
   }
 
-  @Command(inputArguments = {CommandArguments.PLAYER,
-      CommandArguments.INTEGER}, inputNames = {"Player", "Mode"})
+  @Command(inputArguments = {CommandArguments.PLAYER, CommandArguments.INTEGER},
+      inputNames = {"Player", "Mode"})
   public void changeOtherRank(ICommandSender sender, EntityPlayerMP player, int mode) {
     if (RankUtils.hasPermission(sender, "general.gamemode.other")) {
       if (mode == 1) {
+        player.setGameType(GameType.CREATIVE);
         ChatHelper.sendMessage(player,
             PlayerUtils.getLanguage(player).GENERAL_GAMEMODE_CREATIVE);
         ChatHelper.sendMessage(sender,
             PlayerUtils.getLanguage(sender).GENERAL_GAMEMODE_CREATIVE_OTHER
                 .replaceAll("%PLAYER%", player.getDisplayNameString()));
       } else if (mode == 0) {
+        player.setGameType(GameType.SURVIVAL);
         ChatHelper.sendMessage(player,
             PlayerUtils.getLanguage(player).GENERAL_GAMEMODE_SURVIVAL);
         ChatHelper.sendMessage(sender,

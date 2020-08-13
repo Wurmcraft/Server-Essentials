@@ -107,6 +107,7 @@
 	"ECO_DEL": "&3%AMOUNT% has been removed from %PLAYER%",
 	"SIGN_SELL": "&3You have just sold an item for %AMOUNT%",
 	"SIGN_SELL_EMPTY": "&3You dont have the item to sell",
+	"SIGN_EMPTY": "&3This sign is empty",
 	"GENERAL_SETSPAWN": "&3Spawn set",
 	"GENERAL_SPAWN": "&3You have been teleported to spawn",
 	"GENERAL_SPAWN_NONE": "&3No Spawn Set",

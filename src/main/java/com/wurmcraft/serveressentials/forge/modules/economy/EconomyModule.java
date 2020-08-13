@@ -6,12 +6,11 @@ import static com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.json.basic.CurrencyConversion;
-import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.module.Module;
-import com.wurmcraft.serveressentials.forge.modules.economy.event.AdminSignCommands;
+import com.wurmcraft.serveressentials.forge.modules.economy.event.AdminSignEvents;
 import com.wurmcraft.serveressentials.forge.modules.economy.event.EconomyEvents;
+import com.wurmcraft.serveressentials.forge.modules.economy.event.PlayerSignEvents;
 import com.wurmcraft.serveressentials.forge.modules.economy.utils.EcoUtils;
-import com.wurmcraft.serveressentials.forge.modules.rank.RankConfig;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import java.io.File;
 import java.nio.file.Files;
@@ -48,7 +47,8 @@ public class EconomyModule {
   }
 
   public void finalizeModule() {
-    MinecraftForge.EVENT_BUS.register(new AdminSignCommands());
+    MinecraftForge.EVENT_BUS.register(new AdminSignEvents());
+    MinecraftForge.EVENT_BUS.register(new PlayerSignEvents());
     MinecraftForge.EVENT_BUS.register(new EconomyEvents());
     if (config.restAutoSync) {
       ServerEssentialsServer.EXECUTORS

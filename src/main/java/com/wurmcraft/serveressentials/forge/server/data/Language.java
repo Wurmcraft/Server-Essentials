@@ -135,6 +135,7 @@ public class Language implements JsonParser {
   public String COMMAND_MOVED;
   public String SIGN_SELL;
   public String SIGN_SELL_EMPTY;
+  public String SIGN_EMPTY;
 
   // Language
   public String LANGUAGE_MUTED;

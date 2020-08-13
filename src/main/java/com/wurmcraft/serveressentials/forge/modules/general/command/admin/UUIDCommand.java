@@ -22,10 +22,11 @@ public class UUIDCommand {
 
   @Command(inputArguments = {CommandArguments.STRING}, inputNames = {"Player"})
   public void lookupUUID(ICommandSender sender, String player) {
-    ChatHelper.sendMessage(sender,
-        PlayerUtils.getLanguage(sender).GENERAL_UUID.replaceAll("%UUID%",
-            Objects
-                .requireNonNull(
-                    UsernameCache.getLastKnownUsername(UUID.fromString(player)))));
+    String name = Objects
+        .requireNonNull(
+            UsernameCache.getLastKnownUsername(UUID.fromString(player)));
+    ChatHelper.sendClickMessage(sender,
+        PlayerUtils.getLanguage(sender).GENERAL_UUID.replaceAll("%UUID%", name),
+        "https://mcuuid.net/?q=" + name);
   }
 }
