@@ -1,5 +1,7 @@
 package com.wurmcraft.serveressentials.forge.modules.core.event;
 
+import com.wurmcraft.serveressentials.forge.api.SECore;
+import com.wurmcraft.serveressentials.forge.api.config.GlobalConfig;
 import com.wurmcraft.serveressentials.forge.api.json.basic.LocationWrapper;
 import com.wurmcraft.serveressentials.forge.modules.core.CoreModule;
 import com.wurmcraft.serveressentials.forge.server.json.MOTDSettings;
@@ -42,17 +44,19 @@ public class CoreEvents {
 
   @SubscribeEvent
   public void serverTick(TickEvent.ServerTickEvent e) {
-    if (e.phase != TickEvent.Phase.START) {
-      return;
-    }
-    ServerStatusResponse ssr = FMLCommonHandler.instance()
-        .getMinecraftServerInstance().getServerStatusResponse();
-    ssr.setServerDescription(
-        new TextComponentString(
-            motdSettings.onlineMOTD[currentSelection].replaceAll("&", "\u00a7")));
-    if (nextSwap <= System.currentTimeMillis() && motdSettings.onlineMOTD.length > 1) {
-      currentSelection = random.nextInt(motdSettings.onlineMOTD.length);
-      nextSwap = System.currentTimeMillis() + (motdSettings.onlineMOTDswapTime * 1000);
+    if(SECore.config.enableCustomMOTD) {
+      if (e.phase != TickEvent.Phase.START) {
+        return;
+      }
+      ServerStatusResponse ssr = FMLCommonHandler.instance()
+          .getMinecraftServerInstance().getServerStatusResponse();
+      ssr.setServerDescription(
+          new TextComponentString(
+              motdSettings.onlineMOTD[currentSelection].replaceAll("&", "\u00a7")));
+      if (nextSwap <= System.currentTimeMillis() && motdSettings.onlineMOTD.length > 1) {
+        currentSelection = random.nextInt(motdSettings.onlineMOTD.length);
+        nextSwap = System.currentTimeMillis() + (motdSettings.onlineMOTDswapTime * 1000);
+      }
     }
   }
 }

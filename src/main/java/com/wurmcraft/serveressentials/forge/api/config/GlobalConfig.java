@@ -17,6 +17,7 @@ public class GlobalConfig implements JsonParser {
   public LocationWrapper spawn;
   public boolean overrideCommandPerms;
   public boolean logCommandsToConsole;
+  public boolean enableCustomMOTD;
   public Rest Rest;
 
   public GlobalConfig() {
@@ -32,12 +33,14 @@ public class GlobalConfig implements JsonParser {
     this.spawn = null;
     this.overrideCommandPerms = false;
     this.logCommandsToConsole = true;
+    this.enableCustomMOTD = true;
   }
 
   public GlobalConfig(String[] modules, String serverID, boolean debug,
       String defaultLang, String langUrlBase, String dataStorageType, int supportThreads,
       int playerReloadTimeout,
       LocationWrapper spawn, boolean overrideCommandPerms, boolean logCommandsToConsole,
+      boolean enableCustomMOTD,
       GlobalConfig.Rest rest) {
     this.modules = modules;
     this.serverID = serverID;
@@ -50,6 +53,7 @@ public class GlobalConfig implements JsonParser {
     this.spawn = spawn;
     this.overrideCommandPerms = overrideCommandPerms;
     this.logCommandsToConsole = logCommandsToConsole;
+    this.enableCustomMOTD = enableCustomMOTD;
     Rest = rest;
   }
 
