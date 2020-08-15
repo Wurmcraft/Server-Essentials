@@ -22,7 +22,7 @@ if (build_number == null) {
     build_number = "X-CustomBuild"
 }
 
-version = "0.1.${build_number}"
+version = "${mod_version}.${build_number}"
 group = 'com.wurmcraft.serveressentials'
 archivesBaseName = 'ServerEssentials'
 
