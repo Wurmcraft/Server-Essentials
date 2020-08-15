@@ -19,10 +19,12 @@ apply plugin: 'eclipse'
 
 String build_number = System.getenv().BUILD_NUMBER
 if (build_number == null) {
-    build_number = "X-CustomBuild"
+    build_number = "CustomBuild"
+} else {
+    build_number = "Jenkins#-${build_number}"
 }
 
-version = "${mod_version}.${build_number}"
+version = "${mod_version}-${build_number}"
 group = 'com.wurmcraft.serveressentials'
 archivesBaseName = 'ServerEssentials'
 
