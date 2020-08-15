@@ -5,6 +5,7 @@ import static com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer
 
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
+import com.wurmcraft.serveressentials.forge.api.json.basic.Channel;
 import com.wurmcraft.serveressentials.forge.api.module.Module;
 import com.wurmcraft.serveressentials.forge.modules.language.event.ChatEvents;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.NoSuchElementException;
 import net.minecraftforge.common.MinecraftForge;
+import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 @Module(name = "Language", moduleDependencies = {"Rank"})
 public class LanguageModule {
@@ -38,6 +40,11 @@ public class LanguageModule {
             "Failed to create default config for " + DataKey.MODULE_CONFIG + ":"
                 + "Language");
       }
+    }
+    NonBlockingHashMap<String, Channel> channels = SECore.dataHandler.getDataFromKey(DataKey.CHANNEL, new Channel("", ""));
+    if(channels.isEmpty()) {
+      Channel defaultChannel = new Channel("global", "[G]");
+      SECore.dataHandler.registerData(DataKey.CHANNEL, defaultChannel);
     }
   }
 

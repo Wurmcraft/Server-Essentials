@@ -3,6 +3,7 @@ package com.wurmcraft.serveressentials.forge.modules.language.event;
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.event.NewPlayerEvent;
+import com.wurmcraft.serveressentials.forge.api.json.basic.Channel;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.modules.language.LanguageModule;
@@ -12,6 +13,7 @@ import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.ITextComponent;
@@ -81,25 +83,37 @@ public class ChatEvents {
     }
   }
 
-
   public static ITextComponent formatMessage(EntityPlayer player, String displayName,
       Rank rank, String msg) {
+    StoredPlayer playerData = PlayerUtils.get(player);
+    Channel channel;
+    try {
+      channel = (Channel) SECore.dataHandler
+          .getData(DataKey.CHANNEL, playerData.server.channel);
+    } catch (NoSuchElementException e) {
+      channel = (Channel) SECore.dataHandler
+          .getData(DataKey.CHANNEL, LanguageModule.config.defaultChannel);
+    }
     if (ModuleLoader.getLoadedModule("Rank") != null && RankUtils
         .hasPermission(player, "language.chat.color")
         || ModuleLoader.getLoadedModule("Rank") == null) {
       return new TextComponentString(
-          LanguageModule.config.chatFormat.replaceAll("%PREFIX%", rank.prefix.replaceAll("&", "\u00a7"))
-              .replaceAll("%NAME%", displayName).replaceAll("%SUFFIX%", rank.suffix.replaceAll("&", "\u00a7"))
+          LanguageModule.config.chatFormat
+              .replaceAll("%PREFIX%", rank.prefix.replaceAll("&", "\u00a7"))
+              .replaceAll("%NAME%", displayName)
+              .replaceAll("%SUFFIX%", rank.suffix.replaceAll("&", "\u00a7"))
               .replaceAll("%MESSAGE%", msg.replaceAll("&", "\u00a7"))
               .replaceAll("%DIMENSION%", player.dimension + "")
-              .replaceAll("%CHANNEL%", PlayerUtils.get(player).server.channel));
+              .replaceAll("%CHANNEL%", channel.prefix));
     } else {
       return new TextComponentString(
-          LanguageModule.config.chatFormat.replaceAll("%PREFIX%", rank.prefix.replaceAll("&", "\u00a7"))
-              .replaceAll("%NAME%", displayName).replaceAll("%SUFFIX%", rank.suffix.replaceAll("&", "\u00a7"))
+          LanguageModule.config.chatFormat
+              .replaceAll("%PREFIX%", rank.prefix.replaceAll("&", "\u00a7"))
+              .replaceAll("%NAME%", displayName)
+              .replaceAll("%SUFFIX%", rank.suffix.replaceAll("&", "\u00a7"))
               .replaceAll("%MESSAGE%", msg)
               .replaceAll("%DIMENSION%", player.dimension + "")
-              .replaceAll("%CHANNEL%", PlayerUtils.get(player).server.channel));
+              .replaceAll("%CHANNEL%", channel.prefix));
     }
   }
 }

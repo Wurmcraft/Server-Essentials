@@ -136,6 +136,24 @@ public class EcoUtils {
     }
   }
 
+  public static void remOfflineCurrency(String uuid, String name, double amount) {
+    try {
+      if(SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+        GlobalPlayer globalData = RestRequestHandler.User.getPlayer(uuid);
+        StoredPlayer playerData = PlayerUtils.get(uuid);
+        playerData.global = globalData;
+        addBal(playerData, name, -amount);
+        RestRequestHandler.User.overridePlayer(uuid, globalData);
+      } else {
+        StoredPlayer playerData = (StoredPlayer) SECore.dataHandler
+            .getData(DataKey.PLAYER, uuid);
+        addBal(playerData, name, -amount);
+      }
+    } catch (NoSuchElementException e) {
+      e.printStackTrace();
+    }
+  }
+
   private static void addBal(StoredPlayer playerData, String name, double amount) {
     if (playerData.global.wallet.currency.length > 0) {
       for (Currency coin : playerData.global.wallet.currency) {

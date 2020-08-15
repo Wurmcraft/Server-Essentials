@@ -1,16 +1,16 @@
 package com.wurmcraft.serveressentials.forge.modules.economy.event;
 
-import com.wurmcraft.serveressentials.forge.api.json.basic.LocationWrapper;
 import com.wurmcraft.serveressentials.forge.modules.economy.EconomyModule;
 import com.wurmcraft.serveressentials.forge.modules.economy.utils.EcoUtils;
 import com.wurmcraft.serveressentials.forge.modules.economy.utils.SignUtils;
 import com.wurmcraft.serveressentials.forge.modules.economy.utils.SignUtils.SignType;
 import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
+import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import com.wurmcraft.serveressentials.forge.server.utils.StackConverter;
 import java.util.Objects;
-import net.minecraft.block.BlockSign;
+import java.util.concurrent.TimeUnit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -46,7 +46,8 @@ public class PlayerSignEvents {
         if (type.equals(SignType.Buy)) {
           double cost = Double.parseDouble(sign.signText[3].getUnformattedText());
           if (EcoUtils.hasCurrency(e.getEntityPlayer(), cost)) {
-            if (consumeStack(inv, signStack)) {
+            if (consumeStack(inv, signStack, false)) {
+              consumeStack(inv, signStack, true);
               EcoUtils.consumeCurrency(e.getEntityPlayer(), cost);
               ChatHelper.sendMessage(e.getEntityPlayer(),
                   PlayerUtils.getLanguage(e.getEntityPlayer()).SIGN_BUY
@@ -55,7 +56,8 @@ public class PlayerSignEvents {
                   EconomyModule.config.defaultCurrency.name, cost);
               e.getEntityPlayer().inventory.addItemStackToInventory(signStack);
             } else {
-              ChatHelper.sendMessage(e.getEntityPlayer(), PlayerUtils.getLanguage(e.getEntityPlayer()).SIGN_EMPTY);
+              ChatHelper.sendMessage(e.getEntityPlayer(),
+                  PlayerUtils.getLanguage(e.getEntityPlayer()).SIGN_EMPTY);
             }
           } else {
             ChatHelper.sendMessage(e.getEntityPlayer(),
@@ -64,23 +66,75 @@ public class PlayerSignEvents {
           }
         } else if (type.equals(SignType.SELL)) {
           double cost = Double.parseDouble(sign.signText[3].getUnformattedText());
-
+          if (AdminSignEvents.hasItemStack(e.getEntityPlayer(), signStack)) {
+            if (EcoUtils.hasCurrency(sign.getTileData().getString(OWNER_DATA),
+                EconomyModule.config.defaultCurrency.name, cost)) {
+              if (addToInventory(inv, signStack)) {
+                AdminSignEvents.consumeStack(e.getEntityPlayer(), signStack);
+                EcoUtils.addCurrency(e.getEntityPlayer(), cost);
+                ChatHelper.sendMessage(e.getEntityPlayer(),
+                    PlayerUtils.getLanguage(e.getEntityPlayer()).SIGN_SELL
+                        .replaceAll("%AMOUNT%", "" + cost));
+                EcoUtils.remOfflineCurrency(sign.getTileData().getString(OWNER_DATA),
+                    EconomyModule.config.defaultCurrency.name, cost);
+              } else {
+                ChatHelper.sendMessage(e.getEntityPlayer(),
+                    PlayerUtils.getLanguage(e.getEntityPlayer()).SIGN_INVENTORY_FULL);
+              }
+            } else {
+              ChatHelper.sendMessage(e.getEntityPlayer(),
+                  PlayerUtils.getLanguage(e.getEntityPlayer()).SIGN_EMPTY);
+            }
+          } else {
+            ChatHelper.sendMessage(e.getEntityPlayer(),
+                PlayerUtils.getLanguage(e.getEntityPlayer()).SIGN_SELL_EMPTY);
           }
+        }
       }
     }
   }
 
-  private static boolean consumeStack(IInventory inv, ItemStack stack) {
-    int amountLeftToRemove = stack.getCount();
-    for (int index = 0; index < stack.getCount(); index++) {
-      ItemStack slotStack = inv.getStackInSlot(index);
-      if (slotStack.getCount() > amountLeftToRemove) {
-        slotStack.setCount(slotStack.getCount() - amountLeftToRemove);
-        inv.setInventorySlotContents(index, slotStack);
-        return true;
+  private static boolean addToInventory(IInventory inventory, ItemStack stack) {
+    int amountLeftToAdd = stack.getCount();
+    for (int index = 0; index < inventory.getSizeInventory(); index++) {
+      ItemStack slotStack = inventory.getStackInSlot(index);
+      if (slotStack.getCount() + stack.getCount() >= slotStack.getMaxStackSize()
+          && amountLeftToAdd > 0) {
+        amountLeftToAdd -= slotStack.getCount();
+        slotStack.setCount(slotStack.getMaxStackSize());
+        inventory.setInventorySlotContents(index, slotStack);
       } else {
-        amountLeftToRemove -= slotStack.getCount();
-        inv.setInventorySlotContents(index, ItemStack.EMPTY);
+        slotStack.setCount(slotStack.getCount() + stack.getCount());
+        inventory.setInventorySlotContents(index, slotStack);
+        return true;
+      }
+    }
+    return amountLeftToAdd <= 0;
+  }
+
+
+  private static boolean consumeStack(IInventory inv, ItemStack stack,
+      boolean consumeItems) {
+    int amountLeftToRemove = stack.getCount();
+    for (int index = 0; index < inv.getInventoryStackLimit(); index++) {
+      ItemStack slotStack = inv.getStackInSlot(index);
+      if (slotStack.isEmpty()) {
+        continue;
+      }
+      if (stack.isItemEqual(slotStack) && stack.getItemDamage() == slotStack
+          .getItemDamage()) {
+        if (slotStack.getCount() > amountLeftToRemove) {
+          if (consumeItems) {
+            slotStack.setCount(slotStack.getCount() - amountLeftToRemove);
+            inv.setInventorySlotContents(index, slotStack);
+          }
+          return true;
+        } else {
+          amountLeftToRemove = amountLeftToRemove - slotStack.getCount();
+          if (consumeItems) {
+            inv.setInventorySlotContents(index, ItemStack.EMPTY);
+          }
+        }
       }
     }
     return amountLeftToRemove <= 0;
@@ -113,6 +167,9 @@ public class PlayerSignEvents {
         }
         if (!isEmpty) {
           activeSetup.put(e.getEntityPlayer(), e.getPos());
+
+          ChatHelper.sendMessage(e.getEntityPlayer(),
+              "Chest Selected, Now attack a valid sign shop to link!");
         } else {
           ChatHelper.sendMessage(e.getEntityPlayer(), "Empty");
         }
@@ -132,6 +189,7 @@ public class PlayerSignEvents {
             stack = inv.getStackInSlot(index);
           }
         }
+        ChatHelper.sendMessage(player, "Sign Shop Created");
         sign.signText[0].getStyle().setColor(TextFormatting.RED);
         sign.signText[1].getStyle().setColor(TextFormatting.LIGHT_PURPLE);
         sign.signText[2].getStyle().setColor(TextFormatting.LIGHT_PURPLE);
@@ -142,8 +200,6 @@ public class PlayerSignEvents {
         sign.getTileData()
             .setString(OWNER_DATA, player.getGameProfile().getId().toString());
         sign.markDirty();
-      } else {
-
       }
     } else {
       TextComponentTranslation noPerms = new TextComponentTranslation(

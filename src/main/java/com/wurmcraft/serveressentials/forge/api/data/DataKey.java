@@ -2,6 +2,7 @@ package com.wurmcraft.serveressentials.forge.api.data;
 
 import com.wurmcraft.serveressentials.forge.api.json.JsonParser;
 import com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank;
+import com.wurmcraft.serveressentials.forge.api.json.basic.Channel;
 import com.wurmcraft.serveressentials.forge.api.json.basic.CurrencyConversion;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
@@ -16,7 +17,8 @@ public enum DataKey {
   WARP("Warp", null, true),
   CHUNK_LOADING("ChunkLoading", null,true),
   BAN("Ban", GlobalBan.class, true),
-  AUTO_RANK("AutoRank", AutoRank.class, true);
+  AUTO_RANK("AutoRank", AutoRank.class, true),
+  CHANNEL("Channel", Channel.class, true);
 
   private String name;
   private Class<? extends JsonParser> dataType;

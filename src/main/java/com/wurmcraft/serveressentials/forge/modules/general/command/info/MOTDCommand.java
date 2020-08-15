@@ -23,7 +23,7 @@ public class MOTDCommand {
   @Command(inputArguments = {})
   public void displayMOTD(ICommandSender sender) {
     for (String msg : GeneralModule.motd) {
-      ChatHelper.sendMessage(sender, msg);
+      ChatHelper.sendMessage(sender, msg.replaceAll("%PLAYER%", sender.getDisplayName().getFormattedText()));
     }
   }
 

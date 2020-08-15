@@ -8,15 +8,18 @@ public class LanguageConfig implements JsonParser {
 
   public int spamLimit;
   public String chatFormat;
+  public String defaultChannel;
 
   public LanguageConfig() {
     this.spamLimit = 3;
     this.chatFormat = "%PREFIX% %NAME% \u00BB%SUFFIX% %MESSAGE%";
+    this.defaultChannel = "global";
   }
 
-  public LanguageConfig(int spamLimit, String chatFormat) {
+  public LanguageConfig(int spamLimit, String chatFormat, String defaultChannel) {
     this.spamLimit = spamLimit;
     this.chatFormat = chatFormat;
+    this.defaultChannel = defaultChannel;
   }
 
   @Override

@@ -63,10 +63,10 @@ public class AdminSignEvents {
     }
   }
 
-  private static boolean hasItemStack(EntityPlayer player, ItemStack stack) {
+  public static boolean hasItemStack(EntityPlayer player, ItemStack stack) {
     int totalNeeded = stack.getCount();
     for (ItemStack item : player.inventory.mainInventory) {
-      if (item.isItemEqual(stack)) {
+      if (item.isItemEqual(stack) && item.getItemDamage() == stack.getItemDamage()) {
         totalNeeded -= item.getCount();
         if (totalNeeded <= 0) {
           return true;
@@ -76,7 +76,7 @@ public class AdminSignEvents {
     return totalNeeded <= 0;
   }
 
-  private static void consumeStack(EntityPlayer player, ItemStack stack) {
+  public static void consumeStack(EntityPlayer player, ItemStack stack) {
     int leftToRemove = stack.getCount();
     for (int index = 0; index < player.inventory.mainInventory.size(); index++) {
       if (leftToRemove > 0) {
@@ -110,9 +110,9 @@ public class AdminSignEvents {
           }
         }
       }
-    }
-    if (!e.getEntityPlayer().isSneaking()) {
-      e.setCanceled(true);
+      if (!e.getEntityPlayer().isSneaking()) {
+        e.setCanceled(true);
+      }
     }
   }
 
