@@ -17,20 +17,22 @@ public class FtbUtilsUtils {
 
   public static int getMaxClaims(StoredPlayer player, Rank rank) {
     int total = 0;
-    for (String p : rank.permission) {
-      if (p.startsWith("ftbutils.claim.")) {
-        try {
-          total = Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
-        } catch (NumberFormatException ignored) {
+    if(rank != null){
+      for (String p : rank.permission) {
+        if (p.startsWith("ftbutils.claim.")) {
+          try {
+            total = Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
+          } catch (NumberFormatException ignored) {
+          }
         }
       }
-    }
-    if (player.global.perks != null && player.global.perks.length > 0) {
-      for (String p : player.global.perks) {
-        if (p.startsWith("claimblocks.amount.")) {
-          try {
-            total = +Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
-          } catch (NumberFormatException ignored) {
+      if (player.global.perks != null && player.global.perks.length > 0) {
+        for (String p : player.global.perks) {
+          if (p.startsWith("claimblocks.amount.")) {
+            try {
+              total = +Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
+            } catch (NumberFormatException ignored) {
+            }
           }
         }
       }

@@ -151,7 +151,7 @@ public class RestRequestHandler {
 
     public static int deleteRank(
         com.wurmcraft.serveressentials.forge.api.json.basic.Rank rank) {
-      return INSTANCE.post("rank/del", rank);
+      return INSTANCE.post("rank/" + rank.getID() + "/del", rank);
     }
 
     public static com.wurmcraft.serveressentials.forge.api.json.basic.Rank[] getAllRanks() {
