@@ -5,12 +5,10 @@ import com.wurmcraft.serveressentials.forge.modules.economy.utils.EcoUtils;
 import com.wurmcraft.serveressentials.forge.modules.economy.utils.SignUtils;
 import com.wurmcraft.serveressentials.forge.modules.economy.utils.SignUtils.SignType;
 import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
-import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import com.wurmcraft.serveressentials.forge.server.utils.StackConverter;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -112,11 +110,10 @@ public class PlayerSignEvents {
     return amountLeftToAdd <= 0;
   }
 
-
   private static boolean consumeStack(IInventory inv, ItemStack stack,
       boolean consumeItems) {
     int amountLeftToRemove = stack.getCount();
-    for (int index = 0; index < inv.getInventoryStackLimit(); index++) {
+    for (int index = 0; index < inv.getSizeInventory() - 1; index++) {
       ItemStack slotStack = inv.getStackInSlot(index);
       if (slotStack.isEmpty()) {
         continue;
