@@ -2,7 +2,6 @@ package com.wurmcraft.serveressentials.forge.modules.ftbutils.utils;
 
 import static com.feed_the_beast.ftbutilities.ranks.Ranks.*;
 
-import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.modules.ftbutils.FTBUtilsModule;
@@ -17,7 +16,7 @@ public class FtbUtilsUtils {
 
   public static int getMaxClaims(StoredPlayer player, Rank rank) {
     int total = 0;
-    if(rank != null){
+    if(rank != null && rank.permission != null){
       for (String p : rank.permission) {
         if (p.startsWith("ftbutils.claim.")) {
           try {
@@ -42,20 +41,22 @@ public class FtbUtilsUtils {
 
   public static int getMaxChunkLoading(StoredPlayer player, Rank rank) {
     int total = 0;
-    for (String p : rank.permission) {
-      if (p.startsWith("ftbutils.chunkloading.")) {
-        try {
-          total = Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
-        } catch (NumberFormatException ignored) {
+    if(rank != null && rank.permission != null) {
+      for (String p : rank.permission) {
+        if (p.startsWith("ftbutils.chunkloading.")) {
+          try {
+            total = Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
+          } catch (NumberFormatException ignored) {
+          }
         }
       }
-    }
-    if (player.global.perks != null && player.global.perks.length > 0) {
-      for (String p : player.global.perks) {
-        if (p.startsWith("chunkloading.amount.")) {
-          try {
-            total = +Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
-          } catch (NumberFormatException ignored) {
+      if (player.global.perks != null && player.global.perks.length > 0) {
+        for (String p : player.global.perks) {
+          if (p.startsWith("chunkloading.amount.")) {
+            try {
+              total = +Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
+            } catch (NumberFormatException ignored) {
+            }
           }
         }
       }
