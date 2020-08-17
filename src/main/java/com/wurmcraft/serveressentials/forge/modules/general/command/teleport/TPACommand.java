@@ -11,7 +11,7 @@ import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 
-@ModuleCommand(moduleName = "General", name = "Tpa")
+@ModuleCommand(moduleName = "General", name = "tpa")
 public class TPACommand {
 
   @Command(inputArguments = {CommandArguments.PLAYER}, inputNames = {"player"})

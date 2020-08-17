@@ -9,7 +9,7 @@ import com.wurmcraft.serveressentials.forge.server.utils.TeleportUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 
-@ModuleCommand(moduleName = "General", name = "Back")
+@ModuleCommand(moduleName = "General", name = "back")
 public class BackCommand {
 
   @Command(inputArguments = {})

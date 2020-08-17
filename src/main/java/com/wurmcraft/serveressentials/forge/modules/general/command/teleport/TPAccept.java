@@ -10,7 +10,7 @@ import com.wurmcraft.serveressentials.forge.server.utils.TeleportUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 
-@ModuleCommand(moduleName = "General", name = "TPAaccept", aliases = {"TPAccept"})
+@ModuleCommand(moduleName = "General", name = "tpaccept", aliases = {"TPAccept"})
 public class TPAccept {
 
   @Command(inputArguments = {})

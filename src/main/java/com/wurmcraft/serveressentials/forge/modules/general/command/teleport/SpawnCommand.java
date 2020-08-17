@@ -9,7 +9,7 @@ import com.wurmcraft.serveressentials.forge.server.utils.TeleportUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 
-@ModuleCommand(moduleName = "General", name = "Spawn")
+@ModuleCommand(moduleName = "General", name = "spawn")
 public class SpawnCommand {
 
   @Command(inputArguments = {})

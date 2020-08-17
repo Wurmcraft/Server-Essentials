@@ -13,7 +13,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
 
-@ModuleCommand(moduleName = "General", name = "Home", aliases = {"H"})
+@ModuleCommand(moduleName = "General", name = "home", aliases = {"H"})
 public class HomeCommand {
 
   @Command(inputArguments = {CommandArguments.HOME}, inputNames = {"homeName"})
