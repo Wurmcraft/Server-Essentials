@@ -10,11 +10,13 @@ import net.minecraftforge.fml.common.Loader;
 @Module(name = "FtbUtils")
 public class FTBUtilsModule {
 
-  public static File PLAYER_RANKS = new File("local" + File.separator + "ftbutilities" + File.separator + "players.txt");
+  public static File PLAYER_RANKS = new File(
+      "local" + File.separator + "ftbutilities" + File.separator + "players.txt");
 
   public void initSetup() {
     if (!Loader.isModLoaded("ftbutilities")) {
-      ServerEssentialsServer.LOGGER.warn("Unable to load FTBUtils Module, Missing FTBUtils!");
+      ServerEssentialsServer.LOGGER
+          .warn("Unable to load FTBUtils Module, Missing FTBUtils!");
     } else {
       MinecraftForge.EVENT_BUS.register(new FTBUtilsEvents());
     }

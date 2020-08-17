@@ -7,12 +7,13 @@ import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.modules.ftbutils.utils.FtbUtilsUtils;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 public class FTBUtilsEvents {
 
-  @SubscribeEvent
+  @SubscribeEvent(priority = EventPriority.LOW)
   public void newPlayer(NewPlayerEvent e) {
     FtbUtilsUtils.setPlayerClaimBlocks(e.newData.uuid,
         FtbUtilsUtils.getMaxClaims(e.newData, (Rank) SECore.dataHandler.getData(
@@ -21,7 +22,7 @@ public class FTBUtilsEvents {
             DataKey.RANK, e.newData.global.rank)));
   }
 
-  @SubscribeEvent
+  @SubscribeEvent(priority = EventPriority.LOW)
   public void onPlayerLogin(PlayerLoggedInEvent e) {
     StoredPlayer playerData = PlayerUtils
         .get(e.player.getGameProfile().getId().toString());

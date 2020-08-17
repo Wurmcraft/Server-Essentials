@@ -84,8 +84,10 @@ public class PlayerDataEvents {
         mergedData = PlayerUtils.newPlayer(e.uuid, false);
       }
       mergedData.global.lastSeen = Instant.now().getEpochSecond();
-      mergedData.global.playtime = PlayerUtils
-          .syncPlayTime(UUID.fromString(e.currentData.uuid)).global.playtime;
+      if(e.currentData != null) {
+        mergedData.global.playtime = PlayerUtils
+            .syncPlayTime(UUID.fromString(e.currentData.uuid)).global.playtime;
+      }
       mergedData.server.lastSeen = Instant.now().getEpochSecond();
       e.loadedPlayer = mergedData;
       if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {

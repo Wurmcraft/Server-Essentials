@@ -5,6 +5,7 @@ import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.modules.autorank.AutoRankModule;
+import com.wurmcraft.serveressentials.forge.modules.economy.utils.EcoUtils;
 import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
@@ -79,7 +80,7 @@ public class AutoRankUtils {
   public static boolean isReadyToRankup(EntityPlayer player, AutoRank rank) {
     return rank != null && PlayerUtils.get(player).global.rank.equals(rank.rank)
         && rank.exp <= player.experienceLevel && rank.playTime <= PlayerUtils
-        .getTotalPlayTime(player);
+        .getTotalPlayTime(player) && EcoUtils.hasCurrency(player,rank.balance);
   }
 
   public static void checkAndHandleRankup(EntityPlayer player) {
