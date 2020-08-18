@@ -156,6 +156,14 @@ public class Language implements JsonParser {
   public String DISCORD_VERIFIED;
   public String DISCORD_INVALID_CODE;
 
+  // Security
+  public String SECURITY_LOCKDOWN_ENABLED;
+  public String SECURITY_LOCKDOWN_DISABLED;
+  public String SECURITY_TRUSTED;
+  public String SECURITY_ALT;
+  public String SECURITY_BLACKLIST;
+  public String SECURITY_BLACKLIST_CONNECT;
+
   public Language(String key) {
     this.key = key;
   }

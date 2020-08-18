@@ -7,6 +7,9 @@ import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.module.Module;
 import com.wurmcraft.serveressentials.forge.modules.rank.RankConfig;
+import com.wurmcraft.serveressentials.forge.modules.security.command.LockDownCommand;
+import com.wurmcraft.serveressentials.forge.modules.security.event.LockDownEvents;
+import com.wurmcraft.serveressentials.forge.modules.security.event.SecurityEvents;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.utils.URLUtils;
 import java.io.File;
@@ -17,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+import net.minecraftforge.common.MinecraftForge;
 
 @Module(name = "Security")
 public class SecurityModule {
@@ -62,7 +66,8 @@ public class SecurityModule {
   }
 
   public void finalizeModule() {
-
+    MinecraftForge.EVENT_BUS.register(new LockDownEvents());
+    MinecraftForge.EVENT_BUS.register(new SecurityEvents());
   }
 
   public void reloadModule() {

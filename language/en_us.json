@@ -103,6 +103,10 @@
 	"GENERAL_SETWARP": "&3%WARP% has been created",
 	"GENERAL_DELWARP": "&3%WARP% has been deleted",
 	"GENERAL_TOP": "&3You have been teleported up",
+	"GENERAL_JUMP": "&3You have teleported to the location of your cursor",
+	"GENERAL_TPLOCK_ENABLE": "&3TPA Lock has been enabled",
+	"GENERAL_TPLOCK_DISABLE": "&3TPA Lock has been disabled",
+	"GENERAL_TPLOCK_NOTIFY": "&3%PLAYER% has TPA Lock enabled",
 	"SIGN_NO_ITEM": "&3You must be holding a item, to create this sign",
 	"ECO_MONEY_INSUFFICENT": "&3You need at least %AMOUNT% to purchase this",
 	"SIGN_BUY": "&3You just purchased a item for %AMOUNT%",
@@ -124,5 +128,11 @@
 	"LANGUAGE_MUTED": "&3You are muted!",
 	"LANGUAGE_SPAM": "&3Don't Spam",
 	"DISCORD_VERIFIED": "&3You are now verifiyed!",
-	"DISCORD_INVALID_CODE": "&3Invalid or Expired Code!"
+	"DISCORD_INVALID_CODE": "&3Invalid or Expired Code!",
+	"SECURITY_LOCKDOWN_ENABLED": "&cLockdown has been enabled!",
+	"SECURITY_LOCKDOWN_DISABLED": "&cLockdown has been disabled!",
+	"SECURITY_TRUSTED": "&6You are one of my trusted!",
+	"SECURITY_ALT": "&3%PLAYER% has already connected with %PLAYER2%",
+	"SECURITY_BLACKLIST": "&c%MOD% is blacklisted on the server, Remove the mod and try again!",
+	"SECURITY_BLACKLIST_CONNECT": "&3%PLAYER% tried to connect with a blacklisted mod!"
 }
