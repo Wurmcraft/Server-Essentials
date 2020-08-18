@@ -1,6 +1,6 @@
 package com.wurmcraft.serveressentials.forge.modules.ftbutils.utils;
 
-//import static com.feed_the_beast.ftbutilities.ranks.Ranks.*;
+import static com.feed_the_beast.ftbutilities.ranks.Ranks.*;
 
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
@@ -74,7 +74,7 @@ public class FtbUtilsUtils {
     } catch (IOException e) {
       e.printStackTrace();
     }
-//    INSTANCE.reload();
+    INSTANCE.reload();
   }
 
   public static void updatePlayerClaimBlocks(EntityPlayer player, int claimAmount, int loadingAmount) {
