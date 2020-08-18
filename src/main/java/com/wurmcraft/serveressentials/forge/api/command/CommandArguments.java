@@ -10,7 +10,8 @@ public enum CommandArguments {
   RANK(true),
   HOME(true),
   MODULE(true),
-  CURRENCY(true);
+  CURRENCY(true),
+  WARP(true);
 
   public boolean stringable;
 

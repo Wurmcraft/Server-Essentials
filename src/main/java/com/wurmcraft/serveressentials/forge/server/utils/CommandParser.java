@@ -69,6 +69,8 @@ public class CommandParser {
       return line;
     } else if (arg == CommandArguments.RANK) {
       return SECore.dataHandler.getData(DataKey.RANK, line);
+    } else if(arg == CommandArguments.WARP) {
+      return SECore.dataHandler.getData(DataKey.WARP, line);
     } else if(arg == CommandArguments.MODULE) {
       return line;
     } else if (arg == CommandArguments.HOME && sender

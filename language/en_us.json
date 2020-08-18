@@ -98,8 +98,11 @@
 	"GENERAL_ONLINETIME": "&3%PLAYER%'s Online Time: %TIME%",
 	"GENERAL_TPHERE": "&3%PLAYER% has been teleported to your location.",
 	"GENERAL_TPAHERE_REQUEST": "&3%PLAYER% has request you teleport to &cthem&3",
-	"GENERAL_TPAHERE_SENT": "&3You have requested %PLAYER% teleport to your location."
-,	"SIGN_NO_ITEM": "&3You must be holding a item, to create this sign",
+	"GENERAL_TPAHERE_SENT": "&3You have requested %PLAYER% teleport to your location.",
+	"GENERAL_WARP": "&3You have been teleported to %WARP%",
+	"GENERAL_SETWARP": "&3%WARP% has been created",
+	"GENERAL_DELWARP": "&3%WARP% has been deleted",
+	"SIGN_NO_ITEM": "&3You must be holding a item, to create this sign",
 	"ECO_MONEY_INSUFFICENT": "&3You need at least %AMOUNT% to purchase this",
 	"SIGN_BUY": "&3You just purchased a item for %AMOUNT%",
 	"SIGN_INVENTORY_FULL": "&3Inventory is full!",

@@ -120,6 +120,9 @@ public class Language implements JsonParser {
   public String GENERAL_TPHERE;
   public String GENERAL_TPAHERE_REQUEST;
   public String GENERAL_TPAHERE_SENT;
+  public String GENERAL_WARP;
+  public String GENERAL_SETWARP;
+  public String GENERAL_DELWARP;
 
   // Economy
   public String SIGN_NO_ITEM;

@@ -174,15 +174,7 @@ public class WrapperCommand extends CommandBase {
 
   @Override
   public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-    boolean canRun =  RankUtils.hasPermission(sender, "command." + getName());
-    if(!canRun) {
-      TextComponentTranslation noPerms = new TextComponentTranslation(
-          "commands.generic.permission", new Object[0]);
-      noPerms.getStyle().setColor(TextFormatting.RED);
-      ChatHelper.sendHoverMessage(sender, noPerms,
-          TextFormatting.RED + "command." + command.getName());
-    }
-    return canRun;
+    return  RankUtils.hasPermission(sender, "command." + getName());
   }
 
   @Override

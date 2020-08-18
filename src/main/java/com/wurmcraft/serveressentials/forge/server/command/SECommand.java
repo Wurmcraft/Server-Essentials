@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
@@ -135,8 +136,9 @@ public class SECommand extends CommandBase {
       currentIndex -= 1;
     }
     for (CommandArguments[] a : cache.keySet()) {
-      if(a.length <= currentIndex)
+      if (a.length <= currentIndex) {
         continue;
+      }
       if (a[currentIndex].equals(CommandArguments.PLAYER)) {
         for (EntityPlayer player : FMLCommonHandler.instance()
             .getMinecraftServerInstance().getPlayerList().getPlayers()) {
@@ -167,10 +169,11 @@ public class SECommand extends CommandBase {
         Collections.addAll(possibleArgs, SECore.config.modules);
       } else if (a[currentIndex].equals(CommandArguments.STRING)) {
         Command command = cache.get(a).getDeclaredAnnotation(Command.class);
-        if(command.inputNames().length > currentIndex) {
-          Collections.addAll(possibleArgs,command.inputNames()[currentIndex].split(","));
+        if (command.inputNames().length > currentIndex) {
+          Collections.addAll(possibleArgs, command.inputNames()[currentIndex].split(","));
         }
-      }else if (a[currentIndex].equals(CommandArguments.INTEGER) || a[currentIndex].equals(CommandArguments.DOUBLE)) {
+      } else if (a[currentIndex].equals(CommandArguments.INTEGER) || a[currentIndex]
+          .equals(CommandArguments.DOUBLE)) {
         possibleArgs.add(1 + "");
       } else {
         possibleArgs.add(a[currentIndex].name());
@@ -402,6 +405,8 @@ public class SECommand extends CommandBase {
       return CommandArguments.DOUBLE;
     } else if (isPlayerUsername(line)) {
       return CommandArguments.PLAYER;
+    } else if (isWarp(line)) {
+      return CommandArguments.WARP;
     } else if (isRank(line)) {
       return CommandArguments.RANK;
     } else if (isModule(line)) {
@@ -470,6 +475,14 @@ public class SECommand extends CommandBase {
 
   private boolean isModule(String line) {
     return ModuleLoader.getLoadedModule(line) != null;
+  }
+
+  private boolean isWarp(String line) {
+    try {
+      SECore.dataHandler.getData(DataKey.WARP, line);
+    } catch (NoSuchElementException ignored) {
+    }
+    return false;
   }
 
 }
