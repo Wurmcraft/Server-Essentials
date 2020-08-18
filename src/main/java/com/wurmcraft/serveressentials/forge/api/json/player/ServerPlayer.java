@@ -25,6 +25,7 @@ public class ServerPlayer {
   public String channel;
   public String nick;
   public boolean frozen;
+  public boolean tpLock;
 
   public ServerPlayer() {
     this.firstJoin = Instant.EPOCH.toEpochMilli();
@@ -38,13 +39,15 @@ public class ServerPlayer {
     this.nick = "";
     this.commandUsage = new HashMap<>();
     this.frozen = false;
+    this.tpLock = false;
   }
 
   public ServerPlayer(long firstJoin, long lastSeen,
       Home[] homes, Vault[] vaults,
       LocationWrapper lastLocation, long teleportTimer,
       HashMap<String, Long> kitUsage,
-      HashMap<String, Long> commandUsage, String channel, String nick, boolean frozen) {
+      HashMap<String, Long> commandUsage, String channel, String nick, boolean frozen,
+      boolean tpLock) {
     this.firstJoin = firstJoin;
     this.lastSeen = lastSeen;
     this.homes = homes;
@@ -56,5 +59,6 @@ public class ServerPlayer {
     this.channel = channel;
     this.nick = nick;
     this.frozen = frozen;
+    this.tpLock = tpLock;
   }
 }

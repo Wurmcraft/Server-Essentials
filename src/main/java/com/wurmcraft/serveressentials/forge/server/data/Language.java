@@ -125,6 +125,9 @@ public class Language implements JsonParser {
   public String GENERAL_DELWARP;
   public String GENERAL_TOP;
   public String GENERAL_JUMP;
+  public String GENERAL_TPLOCK_ENABLE;
+  public String GENERAL_TPLOCK_DISABLE;
+  public String GENERAL_TPLOCK_NOTIFY;
 
   // Economy
   public String SIGN_NO_ITEM;

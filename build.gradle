@@ -21,7 +21,7 @@ String build_number = System.getenv().BUILD_NUMBER
 if (build_number == null) {
     build_number = "CustomBuild"
 } else {
-    build_number = "Jenkins#-${build_number}"
+    build_number = "Jenkins-${build_number}"
 }
 
 version = "${mod_version}-${build_number}"
@@ -62,8 +62,8 @@ dependencies {
     compile "com.boundary:high-scale-lib:${highscalelib_version}"
     compile "org.javassist:javassist:${javassist_version}"
     // Other Mods
-    compile "curse.maven:ftb-utilities:${ftbutils_version}"
-    compile "curse.maven:ftb-library:${ftblib_version}"
+    //compile "curse.maven:ftb-utilities:${ftbutils_version}"
+    //compile "curse.maven:ftb-library:${ftblib_version}"
 }
 
 shadowJar.archiveName = "${archivesBaseName}-${version}.jar"
