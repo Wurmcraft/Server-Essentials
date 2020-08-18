@@ -102,6 +102,7 @@
 	"GENERAL_WARP": "&3You have been teleported to %WARP%",
 	"GENERAL_SETWARP": "&3%WARP% has been created",
 	"GENERAL_DELWARP": "&3%WARP% has been deleted",
+	"GENERAL_TOP": "&3You have been teleported up",
 	"SIGN_NO_ITEM": "&3You must be holding a item, to create this sign",
 	"ECO_MONEY_INSUFFICENT": "&3You need at least %AMOUNT% to purchase this",
 	"SIGN_BUY": "&3You just purchased a item for %AMOUNT%",

@@ -123,6 +123,8 @@ public class Language implements JsonParser {
   public String GENERAL_WARP;
   public String GENERAL_SETWARP;
   public String GENERAL_DELWARP;
+  public String GENERAL_TOP;
+  public String GENERAL_JUMP;
 
   // Economy
   public String SIGN_NO_ITEM;
