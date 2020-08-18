@@ -96,7 +96,10 @@
 	"GENERAL_MOTD_SET": "&3MOTD has been updated",
 	"GENERAL_RANDOMMSG_SET": "&3Random Messages has been updated",
 	"GENERAL_ONLINETIME": "&3%PLAYER%'s Online Time: %TIME%",
-	"SIGN_NO_ITEM": "&3You must be holding a item, to create this sign",
+	"GENERAL_TPHERE": "&3%PLAYER% has been teleported to your location.",
+	"GENERAL_TPAHERE_REQUEST": "&3%PLAYER% has request you teleport to &cthem&3",
+	"GENERAL_TPAHERE_SENT": "&3You have requested %PLAYER% teleport to your location."
+,	"SIGN_NO_ITEM": "&3You must be holding a item, to create this sign",
 	"ECO_MONEY_INSUFFICENT": "&3You need at least %AMOUNT% to purchase this",
 	"SIGN_BUY": "&3You just purchased a item for %AMOUNT%",
 	"SIGN_INVENTORY_FULL": "&3Inventory is full!",

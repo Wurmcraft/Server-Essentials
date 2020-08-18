@@ -17,7 +17,7 @@ import java.util.List;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 
-@ModuleCommand(moduleName = "General", name = "SetHome", aliases = {"SetH", "Sh"})
+@ModuleCommand(moduleName = "General", name = "sethome", aliases = {"SetH", "Sh"})
 public class SetHomeCommand {
 
   private static List<String> INVALID_HOME_NAMES = new ArrayList<>();

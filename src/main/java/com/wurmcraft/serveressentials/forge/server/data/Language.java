@@ -117,6 +117,9 @@ public class Language implements JsonParser {
   public String GENERAL_RULES_SET;
   public String GENERAL_RANDOMMSG_SET;
   public String GENERAL_ONLINETIME;
+  public String GENERAL_TPHERE;
+  public String GENERAL_TPAHERE_REQUEST;
+  public String GENERAL_TPAHERE_SENT;
 
   // Economy
   public String SIGN_NO_ITEM;

@@ -12,6 +12,7 @@ import com.wurmcraft.serveressentials.forge.modules.economy.EconomyConfig;
 import com.wurmcraft.serveressentials.forge.modules.economy.EconomyModule;
 import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
 import com.wurmcraft.serveressentials.forge.server.data.Language;
+import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler.Economy;
 import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import java.util.NoSuchElementException;
@@ -182,14 +183,12 @@ public class AutoRankCommand {
           ChatHelper.sendMessage(sender,
               senderLanguage.AUTORANK_AR_XP.replaceAll("%XP%", autoRank.exp + ""));
         }
-//        if (autoRank.balance > 0) {
-//          ChatHelper.sendMessage(sender,
-//              senderLanguage.AUTORANK_AR_MONEY
-//                  .replaceAll("%AMOUNT%", autoRank.balance + "")
-//                  .replaceAll("%NAME%", ((EconomyConfig) SERegistry
-//                      .getStoredData(DataKey.MODULE_CONFIG,
-//                          "Economy")).defaultServerCurrency.name));
-//        }
+        if (autoRank.balance > 0) {
+          ChatHelper.sendMessage(sender,
+              senderLanguage.AUTORANK_AR_MONEY
+                  .replaceAll("%AMOUNT%", autoRank.balance + "")
+                  .replaceAll("%NAME%", EconomyModule.config.defaultCurrency.name));
+        }
         ChatHelper.sendMessage(sender, senderLanguage.COMMAND_SPACER);
       } else {
         TextComponentTranslation noPerms = new TextComponentTranslation(
