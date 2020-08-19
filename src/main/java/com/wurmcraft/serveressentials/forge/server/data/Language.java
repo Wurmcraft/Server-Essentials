@@ -167,6 +167,10 @@ public class Language implements JsonParser {
   // Ban
   public String BAN_UNBAN;
 
+  // Language
+  public String LANGUAGE_CHANNEL_NONE;
+  public String LANGUAGE_CHANNEL;
+
   public Language(String key) {
     this.key = key;
   }
