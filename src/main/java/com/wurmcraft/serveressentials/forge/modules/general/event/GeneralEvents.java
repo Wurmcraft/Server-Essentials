@@ -4,22 +4,20 @@ import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.event.NewPlayerEvent;
 import com.wurmcraft.serveressentials.forge.api.json.basic.LocationWrapper;
+import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.Home;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.modules.general.GeneralModule;
-import com.wurmcraft.serveressentials.forge.modules.general.command.admin.VanishCommand;
-import com.wurmcraft.serveressentials.forge.modules.general.command.teleport.SetHomeCommand;
 import com.wurmcraft.serveressentials.forge.modules.general.utils.GeneralUtils;
 import com.wurmcraft.serveressentials.forge.modules.general.utils.PlayerInventory;
+import com.wurmcraft.serveressentials.forge.modules.rank.RankModule;
 import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
+import com.wurmcraft.serveressentials.forge.server.loader.ModuleLoader;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import com.wurmcraft.serveressentials.forge.server.utils.TeleportUtils;
 import java.util.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -28,7 +26,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensio
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.cliffc.high_scale_lib.NonBlockingHashMap;
 import org.cliffc.high_scale_lib.NonBlockingHashSet;
 
 public class GeneralEvents {
@@ -57,17 +54,28 @@ public class GeneralEvents {
 
   @SubscribeEvent(priority = EventPriority.LOW)
   public void newPlayer(NewPlayerEvent e) {
-    if (e.newData != null && SECore.config.spawn != null && !sentToSpawn
+    if (e.newData != null && getNewPlayerSpawn() != null && !sentToSpawn
         .contains(e.newData.uuid)) {
       for (EntityPlayer player : FMLCommonHandler.instance().getMinecraftServerInstance()
           .getPlayerList().getPlayers()) {
         if (player.getGameProfile().getId().toString().equals(e.newData.uuid)) {
           sentToSpawn.add(player.getGameProfile().getId().toString());
-          TeleportUtils.teleportTo(player, SECore.config.spawn);
+          TeleportUtils.teleportTo(player, getNewPlayerSpawn());
           return;
         }
       }
     }
+  }
+
+  private LocationWrapper getNewPlayerSpawn() {
+    if (GeneralModule.config.spawn.spawns.get("firstJoin") != null) {
+      return GeneralModule.config.spawn.spawns.get("firstJoin");
+    } else if(ModuleLoader.getLoadedModule("Rank") != null && GeneralModule.config.spawn.spawns.get(RankModule.config.defaultRank) != null) {
+      return GeneralModule.config.spawn.spawns.get(RankModule.config.defaultRank);
+    } else if (GeneralModule.config.spawn.spawns.get("spawn") != null) {
+      return GeneralModule.config.spawn.spawns.get("spawn");
+    }
+    return null;
   }
 
   @SubscribeEvent
@@ -94,9 +102,18 @@ public class GeneralEvents {
         }
       }
     }
-    if (e.player.getBedLocation() == null && SECore.config.spawn != null) {
-      TeleportUtils.teleportTo(e.player, SECore.config.spawn);
+    if (e.player.getBedLocation() == null && getSpawn(playerData.global.rank) != null) {
+      TeleportUtils.teleportTo(e.player, getSpawn(playerData.global.rank));
     }
+  }
+
+  private LocationWrapper getSpawn(String rank) {
+    if(GeneralModule.config.spawn.spawns.get(rank) != null) {
+      return GeneralModule.config.spawn.spawns.get(rank);
+    } else if(GeneralModule.config.spawn.spawns.get("spawn") != null) {
+      return GeneralModule.config.spawn.spawns.get("spawn");
+    }
+    return null;
   }
 
   public static void register(PlayerInventory inv) {
