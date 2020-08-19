@@ -164,6 +164,9 @@ public class Language implements JsonParser {
   public String SECURITY_BLACKLIST;
   public String SECURITY_BLACKLIST_CONNECT;
 
+  // Ban
+  public String BAN_UNBAN;
+
   public Language(String key) {
     this.key = key;
   }

@@ -134,5 +134,6 @@
 	"SECURITY_TRUSTED": "&6You are one of my trusted!",
 	"SECURITY_ALT": "&3%PLAYER% has already connected with %PLAYER2%",
 	"SECURITY_BLACKLIST": "&c%MOD% is blacklisted on the server, Remove the mod and try again!",
-	"SECURITY_BLACKLIST_CONNECT": "&3%PLAYER% tried to connect with a blacklisted mod!"
+	"SECURITY_BLACKLIST_CONNECT": "&3%PLAYER% tried to connect with a blacklisted mod!",
+	"BAN_UNBAN": "&3%PLAYER% has been unbanned!"
 }
