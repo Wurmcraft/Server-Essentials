@@ -10,7 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 public class BanModule {
 
   public void initSetup() throws NoSuchMethodException {
-    if(!SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+    if (!SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
       ServerEssentialsServer.LOGGER.warn("Ban Module requires `Rest` to function");
       throw new NoSuchMethodException();
     }
