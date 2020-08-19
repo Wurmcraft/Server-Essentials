@@ -135,5 +135,7 @@
 	"SECURITY_ALT": "&3%PLAYER% has already connected with %PLAYER2%",
 	"SECURITY_BLACKLIST": "&c%MOD% is blacklisted on the server, Remove the mod and try again!",
 	"SECURITY_BLACKLIST_CONNECT": "&3%PLAYER% tried to connect with a blacklisted mod!",
-	"BAN_UNBAN": "&3%PLAYER% has been unbanned!"
+	"BAN_UNBAN": "&3%PLAYER% has been unbanned!",
+	"LANGUAGE_CHANNEL_NONE": "&3%CHANNEL% does not exist",
+	"LANGUAGE_CHANNEL": "&3Channel changed to %CHANNEL%"
 }

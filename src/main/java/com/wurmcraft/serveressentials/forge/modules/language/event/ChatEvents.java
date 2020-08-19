@@ -8,6 +8,7 @@ import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.modules.language.LanguageModule;
 import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
+import com.wurmcraft.serveressentials.forge.server.Global;
 import com.wurmcraft.serveressentials.forge.server.loader.ModuleLoader;
 import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
@@ -19,19 +20,23 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.ServerChatEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ChatEvents {
 
   protected static Map<UUID, String[]> lastChat = new HashMap<>();
+  public static final Logger LOGGER = LogManager.getLogger("Chat");
 
   @SubscribeEvent
   public void newPlayer(NewPlayerEvent e) {
     e.newData.global.language = SECore.config.defaultLang;
   }
 
-  @SubscribeEvent(priority = EventPriority.HIGH)
+  @SubscribeEvent(priority = EventPriority.LOWEST)
   public void onChat(ServerChatEvent e) {
     if (PlayerUtils.get(e.getPlayer()).global.muted) {
       ChatHelper.sendMessage(e.getPlayer(),
@@ -39,12 +44,26 @@ public class ChatEvents {
       e.setCanceled(true);
       return;
     }
+    StoredPlayer playerData = PlayerUtils.get(e.getPlayer());
+    if (playerData.server.channel.isEmpty()) {
+      playerData.server.channel = LanguageModule.config.defaultChannel;
+      SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
+    }
     if (canHandleMessage(e.getPlayer().getGameProfile().getId(), e.getMessage())) {
       Rank rank = (Rank) SECore.dataHandler
           .getData(DataKey.RANK, PlayerUtils.get(e.getPlayer()).global.rank);
-      e.setComponent(formatMessage(e.getPlayer(),
+      ITextComponent msg = formatMessage(e.getPlayer(),
           handleUsername(e.getPlayer(), PlayerUtils.get(e.getPlayer())), rank,
-          e.getMessage()));
+          e.getMessage());
+      LOGGER.info(msg.getUnformattedText());
+      for (EntityPlayer player : FMLCommonHandler.instance().getMinecraftServerInstance()
+          .getPlayerList().getPlayers()) {
+        StoredPlayer data = PlayerUtils.get(player);
+        if (data.server.channel.equals(playerData.server.channel)) {
+          ChatHelper.sendMessage(player, msg);
+        }
+      }
+      e.setCanceled(true);
     } else {
       ChatHelper.sendMessage(e.getPlayer(),
           PlayerUtils.getLanguage(e.getPlayer()).LANGUAGE_SPAM);
@@ -104,7 +123,7 @@ public class ChatEvents {
               .replaceAll("%SUFFIX%", rank.suffix.replaceAll("&", "\u00a7"))
               .replaceAll("%MESSAGE%", msg.replaceAll("&", "\u00a7"))
               .replaceAll("%DIMENSION%", player.dimension + "")
-              .replaceAll("%CHANNEL%", channel.prefix));
+              .replaceAll("%CHANNEL%", channel.prefix.replaceAll("&", "\u00a7")));
     } else {
       return new TextComponentString(
           LanguageModule.config.chatFormat
@@ -113,7 +132,7 @@ public class ChatEvents {
               .replaceAll("%SUFFIX%", rank.suffix.replaceAll("&", "\u00a7"))
               .replaceAll("%MESSAGE%", msg)
               .replaceAll("%DIMENSION%", player.dimension + "")
-              .replaceAll("%CHANNEL%", channel.prefix));
+              .replaceAll("%CHANNEL%", channel.prefix.replaceAll("&", "\u00a7")));
     }
   }
 }
