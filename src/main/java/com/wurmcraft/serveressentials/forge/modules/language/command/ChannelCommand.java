@@ -22,7 +22,6 @@ public class ChannelCommand {
   @Command(inputArguments = {CommandArguments.STRING}, inputNames = {"channel"})
   public void setChannel(ICommandSender sender, String channel) {
     if (channel.equalsIgnoreCase("list")) {
-      StringBuilder builder = new StringBuilder();
       ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(sender).COMMAND_SPACER);
       for (Channel ch : SECore.dataHandler
           .getDataFromKey(DataKey.CHANNEL, new Channel(null, null)).values()) {
