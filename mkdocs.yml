@@ -3,11 +3,19 @@ site_name: Server Essentials Wiki
 nav:
     - Home: 'index.md'
     - Modules:
-        - '': ''
-    - Home: 'commands.md'
+        - 'Core': 'modules/core-module'
+        - 'General': 'modules/general-module'
+        - 'Rank': 'modules/rank-module'
+        - 'AutoRank': 'modules/autorank-module'
+        - 'Language': 'modules/language-module'
+        - 'Economy': 'modules/economy-module'
+        - 'Security': 'modules/security-module'
+        - 'Ban': 'modules/ban-module'
+        - 'Discord': 'modules/discord-module'
+    - Home: 'index.md'
     - 'Guides / Tutorials':
         - '': ''
-        
+
 markdown_extensions:
   - admonition
 

@@ -34,21 +34,41 @@ Permission
 
 ---
 
-## Discord Module
+
+## Ban Module
 ---
-**/Verify**
+**/GlobalBan**
 
-Verify a user via the [SE-Bot]()
+Ban a player globally within the network / connected servers
 
-Aliases:  `VerifyCode`
+Aliases:  `GBan`
 
 Usage
 
-  - `/verify "code"` Verify a minecraft account via the code given from the [SE-Bot]()
+  - `/gban "player" "reason""` Bans the given player for the given reason across all servers
+
 
 Permission
 
-  - `discord.verify` Allows a player to verify there IGN with the database
+  - `ban.globalBan` Allows a staff member to ban a player across all connected servers
+
+---
+
+---
+**/GlobalPardon**
+
+Globally Pardon a player from the network
+
+Aliases:  `GPardon`
+
+Usage
+
+  - `/gpardon "player""` Pardons a given player from the network
+
+
+Permission
+
+  - `ban.globalpardon` Allows a staff member to pardon a player across all connected servers
 
 ---
 
@@ -75,6 +95,25 @@ Permission
   - `core.se` Enabled the ability to get information about Server Essentials
 
   - `core.se.reload` Enables the ability to reload a module within Server Essentials
+
+---
+
+
+## Discord Module
+---
+**/Verify**
+
+Verify a user via the [SE-Bot]()
+
+Aliases:  `VerifyCode`
+
+Usage
+
+  - `/verify "code"` Verify a minecraft account via the code given from the [SE-Bot]()
+
+Permission
+
+  - `discord.verify` Allows a player to verify there IGN with the database
 
 ---
 
@@ -185,6 +224,23 @@ Usage
 Permission
 
   - `general.burn` Allows for the management of a players currency
+
+---
+
+---
+**/ChunkLoading**
+
+Gives a list of all the currently chunk-loaded chunks
+
+Aliases:  ``
+
+Usage
+
+  - `/chunkloading` Displays a list of all the chunk-loaded chunks
+
+Permission
+
+  - `general.chunkloading` Allows for the listing of chunk-loaded chunks
 
 ---
 
@@ -565,6 +621,27 @@ Permission
 
 ---
 
+---
+**/Heal**
+
+Set a player's health to max
+
+Aliases:  ``
+
+Usage
+
+  - `/heal` Heals yourself
+
+  - `/heal "player"` Heals the specified player
+
+Permission
+
+  - `general.heal` Allows for healing of themselves
+
+  - `general.heal.other` Allows for healing of others
+
+---
+
 
 ---
 **/Rename**
@@ -683,6 +760,23 @@ Permission
 ---
 
 ---
+**/Jump**
+
+Teleport to the location of your cursor
+
+Aliases:  ``
+
+Usage
+
+  - `/jump` Teleport's you to the location of your cursor
+
+Permission
+
+  - `general.jump` Allows for the teleportation to the cursor location
+
+---
+
+---
 **/SetHome**
 
 Create a new home based on your current location
@@ -710,7 +804,11 @@ Aliases:  ``
 
 Usage
 
-  - `/SetSpawn` Sets the current location of spawn
+  - `/SetSpawn` Sets the current location of spawn for all ranks
+
+  - `/SetSpawn "rank"` Sets the current location of spawn for the given rank
+
+  - `/SetSpawn "firstJoin"` Sets the current location of spawn for new players only
 
 Permission
 
@@ -736,19 +834,36 @@ Permission
 ---
 
 ---
-**/Spawn**
+**/SetWarp**
 
-Teleport to the location of the world's spawn
+Sets your current location as a warp
 
 Aliases:  ``
 
 Usage
 
-  - `/spawn` Teleport to the location of the world's spawn
+  - `/setWarp "name"` Sets the current location of spawn for the specified warp
 
 Permission
 
-  - `general.spawn` Sets the location of spawn
+  - `general.setWarp` Sets the location of a warp
+
+---
+
+---
+**/Warp**
+
+Teleport to the location of a warp
+
+Aliases:  `W`
+
+Usage
+
+  - `/warp "name"` Teleport to a given warp
+
+Permission
+
+  - `general.warp.<name>` Teleport to the given warp, were "name" is the name of a given warp
 
 ---
 
@@ -919,5 +1034,93 @@ Usage
 Permission
 
   - `general.ping` Allows for the player to run the ping command
+
+---
+
+
+## Language Module
+---
+**/Channel**
+
+Change your currently selected channel
+
+Aliases:  `Ch`
+
+Usage
+
+  - `/ch "name"` Change to the specified channel
+
+  - `/ch list` Display a list of all the channels
+
+Permission
+
+  - `language.channel` Allows for basic access to the /ch command
+
+  - `language.channel.<name>` Allows changing to the specified channel, were <name> is replaced with the channel name
+
+---
+
+## Rank Module
+---
+**/Rank**
+
+Allows for the creation, deletion or changing of a rank
+
+Aliases:  ``
+
+Usage
+
+  - `/rank "player" "rank"` Changes the specified player into the given rank
+
+  - `/rank "rank" prefix "prefix"` Changes a given ranks prefix
+
+  - `/rank "rank" suffix "suffix"` Changes a given ranks suffix
+
+  - `/rank "rank" <add, del> <permission, inheritance> <node>` Changes a given ranks permission or inheritance
+
+  - `/rank list` Displays all the current ranks
+
+  - `/rank <create, del> "rank"` Create or Delete's the given rank
+
+Permission
+
+  - `rank.change` Allows changing of a ranks settings
+
+  - `rank.rank` Allows for changing of a given users rank
+
+---
+
+## Security Module
+---
+**/Lockdown**
+
+Disables most interactions and placements while its enabled
+
+Aliases:  ``
+
+Usage
+
+  - `/lockdown"` Toggles the current lockdown status
+
+Permission
+
+  - `security.lockdown` Allows the toggling of the lockdown
+
+---
+
+---
+**/Mods**
+
+Displays a list of all the mods of the current client
+
+Aliases:  ``
+
+Usage
+
+  - `/mods "player""` Displays a list of the player's mods
+
+Permission
+
+  - `security.mods` Allows for checking of a players mods
 
 ---
