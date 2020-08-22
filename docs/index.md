@@ -24,6 +24,8 @@ Welcome to the Server Essentials Wiki
 
 *  [Discord Module](/modules/discord-module/)   |   [Commands](commands#discord-module)
 
+*  [Track Module](/modules/track-module/)
+
 ## Commands
 
   For a full checkout the [Commands List](commands)

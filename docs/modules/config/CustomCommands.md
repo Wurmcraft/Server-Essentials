@@ -2,6 +2,8 @@
 
 ***Location:*** `Server-Essentials/Misc/CustomCommands/"CommandName".json`
 
+ **Permission Node:** `customcommand."name"`, were name is the name of the command
+
 ***Message Format:***
 
     "name": "Command Name",

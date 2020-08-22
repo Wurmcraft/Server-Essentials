@@ -12,6 +12,7 @@ nav:
         - 'Security': 'modules/security-module'
         - 'Ban': 'modules/ban-module'
         - 'Discord': 'modules/discord-module'
+        - 'Track': 'modules/track-module'
     - Home: 'index.md'
     - 'Guides / Tutorials':
         - '': ''
