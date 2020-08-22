@@ -94,8 +94,8 @@ var routes = Routes{
 	},
 	Route{
 		"DelRank",
-		"Post",
-		"api/rank/del",
+		"DELETE",
+		"/api/rank/:name/del",
 		true,
 		DelRank,
 	},
@@ -123,7 +123,7 @@ var routes = Routes{
 	},
 	Route{
 		"DelAutoRank",
-		"PUT",
+		"DELETE",
 		"/api/autoRank/:name/del",
 		true,
 		DelAutoRank,
@@ -159,7 +159,7 @@ var routes = Routes{
 	},
 	Route{
 		"DeleteEco",
-		"PUT",
+		"DELETE",
 		"/api/eco/:name/del",
 		true,
 		DelEco,
@@ -251,7 +251,7 @@ var routes = Routes{
 	},
 	Route{
 		"Unban",
-		"PUT",
+		"DELETE",
 		"/api/ban/:uuid/del",
 		true,
 		DeleteBan,
@@ -265,7 +265,7 @@ var routes = Routes{
 	},
 	Route{
 		"DelAuth",
-		"PUT",
+		"DELETE",
 		"/api/auth/delete",
 		true,
 		AddAuth,
