@@ -6,13 +6,18 @@ import com.google.gson.GsonBuilder;
 import com.wurmcraft.bot.json.api.Player;
 import com.wurmcraft.bot.json.api.Players;
 import com.wurmcraft.bot.json.api.data.Token;
+import com.wurmcraft.bot.json.api.json.CommandQueue.RequestedCommand;
+import com.wurmcraft.bot.json.api.track.TrackingStatus;
+import com.wurmcraft.bot.json.api.track.TrackingStatus.Status;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -35,6 +40,8 @@ public class DiscordBot {
   public static HashMap<Long, String> verifiedUsers = new HashMap<>();
   private static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+  public static Set<Long> deleteQueue = new HashSet<>();
+
   public static void main(String[] args) throws IOException {
     File botConfig = new File("config.json");
     if (botConfig.exists()) {
@@ -51,9 +58,11 @@ public class DiscordBot {
       System.out.println("Bot needs configuration, before it can start!");
     }
     if (config != null) {
-      DiscordApi api = (new DiscordApiBuilder()).setToken(config.discordBotToken).login().join();
+      DiscordApi api = (new DiscordApiBuilder()).setToken(config.discordBotToken).login()
+          .join();
       FallbackLoggerConfiguration.setDebug(true);
       api.addMessageCreateListener(e -> {
+        boolean valid = false;
         // Prevent the same discord ID from being verified multiple times
         if (e.isPrivateMessage() && e.getMessage().getContent()
             .equalsIgnoreCase("!verify")
@@ -64,7 +73,9 @@ public class DiscordBot {
               .equalsIgnoreCase("!verify")) {
             String key = generateKey();
             e.getChannel().sendMessage("Your code is '" + key + "'");
-           System.out.println("HTTP Code: " + RequestGenerator.INSTANCE.post("api/discord/add", new Token("" + e.getMessageAuthor().getId(), key)));
+            System.out.println("HTTP Code: " + RequestGenerator.INSTANCE
+                .post("api/discord/add",
+                    new Token("" + e.getMessageAuthor().getId(), key)));
             e.getChannel().sendMessage(config.verifyCodeMessage);
           }
         }
@@ -73,12 +84,51 @@ public class DiscordBot {
             .equalsIgnoreCase("help")) {
           e.getMessage().getChannel()
               .sendMessage(
-                  "!verify (Gives a code for use in-game to verify your discord account");
+                  "!verify (Gives a code for use in-game to verify your discord account)");
+          e.getMessage().getChannel()
+              .sendMessage(
+                  "!deletePlayerFile (Deletes your playerfile on a given server)");
+        }
+        if (e.isPrivateMessage() && e.getMessage().getContent()
+            .equalsIgnoreCase("!deletePlayerFile")) {
+          if (verifiedUsers.containsKey(e.getMessage().getUserAuthor().get().getId())) {
+            e.getMessage().getChannel()
+                .sendMessage(
+                    "Please specific a serverID from the following: ");
+            deleteQueue.add(e.getMessage().getUserAuthor().get().getId());
+            for (TrackingStatus status : RequestGenerator.Track.getStatus()) {
+              e.getMessage().getChannel().sendMessage(status.serverID);
+            }
+            valid = true;
+          } else {
+            e.getMessage().getChannel()
+                .sendMessage(
+                    "You must be verified to do that!");
+          }
+        }
+        if (e.isPrivateMessage() && deleteQueue
+            .contains(e.getMessage().getUserAuthor().get().getId())) {
+          String id = e.getMessage().getContent();
+          for (TrackingStatus status : RequestGenerator.Track.getStatus()) {
+            if (id.equalsIgnoreCase(status.serverID)) {
+              e.getMessage().getChannel()
+                  .sendMessage(
+                      "The Delete Player File request has been sent, Please allow up to 90 seconds for it to complete!");
+              RequestGenerator.Commands.newCommand(new RequestedCommand(status.serverID,
+                  "dpf " + verifiedUsers
+                      .get(e.getMessage().getUserAuthor().get().getId()), ""));
+              break;
+            }
+          }
+        }
+        if (e.isPrivateMessage() && !valid) {
+          deleteQueue.remove(e.getMessage().getUserAuthor().get().getId());
         }
       });
       api.getThreadPool().getScheduler().scheduleAtFixedRate(() -> {
         System.out.println("Checking for new user's to verify!");
-        Player[] players = (RequestGenerator.INSTANCE.get("/user", Players.class)).players;
+        Player[] players = (RequestGenerator.INSTANCE
+            .get("/user", Players.class)).players;
         verifiedUsers.clear();
         for (Player player : players) {
           if (player.discordID != null && !player.discordID.isEmpty()) {
@@ -109,13 +159,13 @@ public class DiscordBot {
     }
   }
 
-    private static String generateKey () {
-      int lower = 48;
-      int higher = 122;
-      Random random = new Random();
-      return (random.ints(lower, higher + 1)
-          .filter(i -> ((i <= 57 || i >= 65) && (i <= 90 || i >= 97))).limit(keyLength)
-          .collect(StringBuilder::new, StringBuilder::appendCodePoint,
-              StringBuilder::append)).toString();
-    }
+  private static String generateKey() {
+    int lower = 48;
+    int higher = 122;
+    Random random = new Random();
+    return (random.ints(lower, higher + 1)
+        .filter(i -> ((i <= 57 || i >= 65) && (i <= 90 || i >= 97))).limit(keyLength)
+        .collect(StringBuilder::new, StringBuilder::appendCodePoint,
+            StringBuilder::append)).toString();
   }
+}

@@ -3,8 +3,11 @@ package com.wurmcraft.bot;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sun.org.apache.regexp.internal.RE;
 import com.wurmcraft.bot.json.api.data.Token;
 import com.wurmcraft.bot.json.api.eco.Currency;
+import com.wurmcraft.bot.json.api.json.CommandQueue;
+import com.wurmcraft.bot.json.api.json.CommandQueue.RequestedCommand;
 import com.wurmcraft.bot.json.api.json.Validation;
 import com.wurmcraft.bot.json.api.player.GlobalPlayer;
 import com.wurmcraft.bot.json.api.track.TrackingStatus;
@@ -12,8 +15,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Base64;
 import javax.net.ssl.HttpsURLConnection;
+import java.util.*;
 
 public class RequestGenerator {
 
@@ -62,7 +67,7 @@ public class RequestGenerator {
    */
   private int send(String type, String url, Object data) {
     try {
-      URL sendURL = new URL("https://rest.mc-gameover.online:25520/api/discord/add");
+      URL sendURL = new URL(baseURL + url);
       URLConnection connection = sendURL.openConnection();
       HttpsURLConnection https = (HttpsURLConnection) connection;
       https.setRequestMethod(type.toUpperCase());
@@ -225,6 +230,29 @@ public class RequestGenerator {
 
     public static int addAutoRank(com.wurmcraft.bot.json.api.json.rank.AutoRank rank) {
       return INSTANCE.post("autorank/add", rank);
+    }
+  }
+
+  public static class Commands {
+
+    public static CommandQueue[] getCommandQueue() {
+      return INSTANCE.get("commands", CommandQueue[].class);
+    }
+
+    public static int addCommandQueue(CommandQueue queue) {
+      return INSTANCE.post("commands/add", queue);
+    }
+
+    public static void newCommand(RequestedCommand command) {
+      CommandQueue[] queue = getCommandQueue();
+      for (CommandQueue q : queue) {
+        if (q.commands.length > 0 && q.commands[0].serverID.equals(command.serverID)) {
+          addCommandQueue(new CommandQueue(new RequestedCommand[] {command}));
+//          List<RequestedCommand> commands = new ArrayList<>();
+//          commands.add(command);
+//          System.out.println(addCommandQueue(new CommandQueue(commands.toArray(new RequestedCommand[0]))));
+        }
+      }
     }
   }
 }
