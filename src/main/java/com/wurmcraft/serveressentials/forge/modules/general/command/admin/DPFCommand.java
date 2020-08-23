@@ -10,6 +10,8 @@ import java.io.File;
 import java.util.UUID;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -23,6 +25,10 @@ public class DPFCommand {
 
   @Command(inputArguments = {CommandArguments.STRING}, inputNames = {"Player"})
   public void deletePlayerFile(ICommandSender sender, String uuid) {
+   for(EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+     if(player.getGameProfile().getId().toString().equals(uuid))
+       player.connection.disconnect(new TextComponentString(PlayerUtils.getLanguage(player).GENERAL_DPF_DISCONNECT));
+   }
     File playerFile = new File(
         FMLCommonHandler.instance().getMinecraftServerInstance().getDataDirectory(),
         File.separator + FMLCommonHandler.instance().getMinecraftServerInstance()
