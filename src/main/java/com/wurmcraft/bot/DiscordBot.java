@@ -41,6 +41,7 @@ public class DiscordBot {
   private static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
   public static Set<Long> deleteQueue = new HashSet<>();
+  public static Set<Long> sendToSpawnQueue = new HashSet<>();
 
   public static void main(String[] args) throws IOException {
     File botConfig = new File("config.json");
@@ -88,6 +89,9 @@ public class DiscordBot {
           e.getMessage().getChannel()
               .sendMessage(
                   "!deletePlayerFile (Deletes your playerfile on a given server)");
+          e.getMessage().getChannel()
+              .sendMessage(
+                  "!sendToSpawn (Teleport's a player to spawn)");
         }
         if (e.isPrivateMessage() && e.getMessage().getContent()
             .equalsIgnoreCase("!deletePlayerFile")) {
@@ -106,23 +110,49 @@ public class DiscordBot {
                     "You must be verified to do that!");
           }
         }
-        if (e.isPrivateMessage() && deleteQueue
-            .contains(e.getMessage().getUserAuthor().get().getId())) {
+        if (e.isPrivateMessage() && e.getMessage().getContent()
+            .equalsIgnoreCase("!sendToSpawn")) {
+          if (verifiedUsers.containsKey(e.getMessage().getUserAuthor().get().getId())) {
+            e.getMessage().getChannel()
+                .sendMessage(
+                    "Please specific a serverID from the following: ");
+            sendToSpawnQueue.add(e.getMessage().getUserAuthor().get().getId());
+            for (TrackingStatus status : RequestGenerator.Track.getStatus()) {
+              e.getMessage().getChannel().sendMessage(status.serverID);
+            }
+            valid = true;
+          } else {
+            e.getMessage().getChannel()
+                .sendMessage(
+                    "You must be verified to do that!");
+          }
+        }
+        if (e.isPrivateMessage() && deleteQueue.contains(e.getMessage().getUserAuthor().get().getId()) || e.isPrivateMessage() && sendToSpawnQueue.contains(e.getMessage().getUserAuthor().get().getId())) {
           String id = e.getMessage().getContent();
           for (TrackingStatus status : RequestGenerator.Track.getStatus()) {
             if (id.equalsIgnoreCase(status.serverID)) {
-              e.getMessage().getChannel()
-                  .sendMessage(
-                      "The Delete Player File request has been sent, Please allow up to 90 seconds for it to complete!");
-              RequestGenerator.Commands.newCommand(new RequestedCommand(status.serverID,
-                  "dpf " + verifiedUsers
-                      .get(e.getMessage().getUserAuthor().get().getId()), ""));
+              if(deleteQueue.contains(e.getMessage().getUserAuthor().get().getId())) {
+                e.getMessage().getChannel()
+                    .sendMessage(
+                        "The Delete Player File request has been sent, Please allow up to 90 seconds for it to complete!");
+                RequestGenerator.Commands.newCommand(new RequestedCommand(status.serverID,
+                    "dpf " + verifiedUsers
+                        .get(e.getMessage().getUserAuthor().get().getId()), ""));
+              } else if(sendToSpawnQueue.contains(e.getMessage().getUserAuthor().get().getId())) {
+                e.getMessage().getChannel()
+                    .sendMessage(
+                        "You have been sent to spawn");
+                RequestGenerator.Commands.newCommand(new RequestedCommand(status.serverID,
+                    "sendtospawn " + verifiedUsers
+                        .get(e.getMessage().getUserAuthor().get().getId()), ""));
+              }
               break;
             }
           }
         }
         if (e.isPrivateMessage() && !valid) {
           deleteQueue.remove(e.getMessage().getUserAuthor().get().getId());
+          sendToSpawnQueue.remove(e.getMessage().getUserAuthor().get().getId());
         }
       });
       api.getThreadPool().getScheduler().scheduleAtFixedRate(() -> {
