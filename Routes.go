@@ -298,6 +298,20 @@ var routes = Routes{
 		false,
 		GetCSS,
 	},
+	Route{
+		"GetCommands",
+		"GET",
+		"/api/commands",
+		true,
+		GetAllCommands,
+	},
+	Route{
+		"AddCommand",
+		"POST",
+		"/api/commands/add",
+		true,
+		addCommand,
+	},
 }
 
 func Index(w http.ResponseWriter, _ *http.Request, _ mux.Params) {

@@ -133,3 +133,13 @@ type ChunkPos struct {
 	X int `json:"x"`
 	Z int `json:"z"`
 }
+
+type CommandRequest struct {
+	ServerID       string `json:"serverID"`
+	Command        string `json:"command"`
+	RequiredPlayer string `json:"requiredPlayer"`
+}
+
+type CommandQueue struct {
+	Commands []CommandRequest `json:"commands"`
+}
