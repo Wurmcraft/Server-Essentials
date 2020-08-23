@@ -264,6 +264,25 @@ Permission
 ---
 
 ---
+**/SendToSpawn**
+
+Sends the given player to spawn
+
+Aliases:  ``
+
+Usage
+
+  - `/SendToSpawn "player"` If the player is online it will send the given player to spawn
+
+  - `/SendToSpawn "uuid"` If the specified player is offline the uuid is required to send the player to spawn
+
+Permission
+
+  - `general.sendToSpawn` Allows for the teleportation of players to spawn
+
+---
+
+---
 **/Freeze**
 
 Keeps another player from moving
@@ -1057,6 +1076,100 @@ Permission
   - `language.channel` Allows for basic access to the /ch command
 
   - `language.channel.<name>` Allows changing to the specified channel, were <name> is replaced with the channel name
+
+---
+
+---
+**/Lanauge**
+
+Change your currently selected language
+
+Aliases:  `lang`
+
+Usage
+
+  - `/lang "key"` Change the users language to the selected key
+
+Permission
+
+  - `language.language` Allows a user to change there language
+
+---
+
+---
+**/Msg**
+
+Send a DM to another player
+
+Aliases:  ``
+
+Usage
+
+  - `/msg "player" "msg"` Send the given message to another player
+
+Permission
+
+  - `language.msg` Allows the send to send DMs to other players
+
+---
+
+---
+**/Reply**
+
+Reply to a Dm from another player
+
+Aliases:  `r`
+
+Usage
+
+  - `/r "msg"` Send a message to the last person to send your a DM
+
+Permission
+
+  - `language.reply` Allows for easy reply to another player DM's
+
+
+!!! note "Information"
+    The player requires `language.msg` to be able to reply correctly
+
+---
+
+
+---
+**/SocialSpy**
+
+See all DM on the server
+
+Aliases:  ``
+
+Usage
+
+  - `/socialSpy` Toggles socialSpy
+
+Permission
+
+  - `language.SocialSpy` Allows a player to seeing of all DMs from others
+
+---
+
+---
+**/Mute**
+
+Prevent another player from sending a message in chat
+
+Aliases:  ``
+
+Usage
+
+  - `/mute "player"` Toggles a player mute forever
+
+  - `/mute "player" "time" "Sec, Min, Hour, Day"` Mutes a player for the given amount of time
+
+Permission
+
+  - `language.mute.perm` Allows toggling a player mute forever
+
+  - `language.mute` Temporarily mute another player for a given amount of time
 
 ---
 
