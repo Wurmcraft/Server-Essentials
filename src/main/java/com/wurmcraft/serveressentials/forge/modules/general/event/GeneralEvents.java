@@ -68,12 +68,16 @@ public class GeneralEvents {
   }
 
   private LocationWrapper getNewPlayerSpawn() {
-    if (GeneralModule.config.spawn.spawns.get("firstJoin") != null) {
-      return GeneralModule.config.spawn.spawns.get("firstJoin");
-    } else if(ModuleLoader.getLoadedModule("Rank") != null && GeneralModule.config.spawn.spawns.get(RankModule.config.defaultRank) != null) {
-      return GeneralModule.config.spawn.spawns.get(RankModule.config.defaultRank);
-    } else if (GeneralModule.config.spawn.spawns.get("spawn") != null) {
-      return GeneralModule.config.spawn.spawns.get("spawn");
+    if (GeneralModule.config != null && GeneralModule.config.spawn != null) {
+      if (GeneralModule.config.spawn.spawns.get("firstJoin") != null) {
+        return GeneralModule.config.spawn.spawns.get("firstJoin");
+      } else if (ModuleLoader.getLoadedModule("Rank") != null
+          && GeneralModule.config.spawn.spawns.get(RankModule.config.defaultRank)
+          != null) {
+        return GeneralModule.config.spawn.spawns.get(RankModule.config.defaultRank);
+      } else if (GeneralModule.config.spawn.spawns.get("spawn") != null) {
+        return GeneralModule.config.spawn.spawns.get("spawn");
+      }
     }
     return null;
   }
@@ -108,9 +112,9 @@ public class GeneralEvents {
   }
 
   private LocationWrapper getSpawn(String rank) {
-    if(GeneralModule.config.spawn.spawns.get(rank) != null) {
+    if (GeneralModule.config.spawn.spawns.get(rank) != null) {
       return GeneralModule.config.spawn.spawns.get(rank);
-    } else if(GeneralModule.config.spawn.spawns.get("spawn") != null) {
+    } else if (GeneralModule.config.spawn.spawns.get("spawn") != null) {
       return GeneralModule.config.spawn.spawns.get("spawn");
     }
     return null;

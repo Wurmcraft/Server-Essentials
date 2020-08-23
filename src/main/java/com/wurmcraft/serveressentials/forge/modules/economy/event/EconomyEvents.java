@@ -7,10 +7,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class EconomyEvents {
 
-  @SubscribeEvent
+  @SubscribeEvent()
   public void newPlayer(NewPlayerEvent e) {
-    e.newData.global.wallet.currency = new Currency[]{
-        EconomyModule.config.defaultCurrency};
+    try {
+      e.newData.global.wallet.currency = new Currency[]{
+          EconomyModule.config.defaultCurrency};
+    } catch (Exception f) {
+      f.printStackTrace();
+    }
   }
 
 }

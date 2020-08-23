@@ -36,5 +36,4 @@ public class SetWarpCommand {
       ChatHelper.sendMessage(sender, PlayerUtils.getLanguage(sender).GENERAL_SETWARP);
     }
   }
-
 }

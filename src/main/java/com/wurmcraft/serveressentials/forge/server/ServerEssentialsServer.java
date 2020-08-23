@@ -12,7 +12,6 @@ import com.wurmcraft.serveressentials.forge.api.json.rest.ServerStatus.Status;
 import com.wurmcraft.serveressentials.forge.modules.core.CoreModule;
 import com.wurmcraft.serveressentials.forge.modules.core.utils.CoreUtils;
 import com.wurmcraft.serveressentials.forge.modules.general.GeneralModule;
-import com.wurmcraft.serveressentials.forge.modules.general.command.teleport.HomeCommand;
 import com.wurmcraft.serveressentials.forge.modules.track.utils.TrackUtils;
 import com.wurmcraft.serveressentials.forge.server.command.CustomCommand;
 import com.wurmcraft.serveressentials.forge.server.command.SECommand;
@@ -21,6 +20,7 @@ import com.wurmcraft.serveressentials.forge.server.data.BasicDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.FileDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.RestDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
+import com.wurmcraft.serveressentials.forge.server.events.DataBaseCommandPath;
 import com.wurmcraft.serveressentials.forge.server.events.PlayerDataEvents;
 import com.wurmcraft.serveressentials.forge.server.loader.CommandLoader;
 import com.wurmcraft.serveressentials.forge.server.loader.ModuleLoader;
@@ -28,7 +28,6 @@ import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import java.io.File;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import net.minecraft.command.ICommand;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
@@ -113,10 +112,14 @@ public class ServerEssentialsServer {
 
   @EventHandler
   public void serverStarted(FMLServerStartedEvent e) {
+    if(SECore.config.dataStorageType.equalsIgnoreCase("Rest") && SECore.config.Rest.enableDatabaseCommands) {
+      DataBaseCommandPath.startup();
+    }
     if (ModuleLoader.getLoadedModule("Track") != null) {
       TrackUtils.sendUpdate(Status.ONLINE);
     }
-    if (ModuleLoader.getLoadedModule("General") != null && GeneralModule.config != null && GeneralModule.config.commandOverride.length > 0) {
+    if (ModuleLoader.getLoadedModule("General") != null && GeneralModule.config != null
+        && GeneralModule.config.commandOverride.length > 0) {
       for (String commandOverride : GeneralModule.config.commandOverride) {
         SECommand command = findSECommand(commandOverride);
         if (command != null) {

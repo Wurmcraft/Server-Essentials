@@ -58,17 +58,25 @@ public class GlobalConfig implements JsonParser {
     public String restAuth;
     public String restURL;
     public int syncTime;
+    public boolean enableDatabaseCommands;
+    public int commandCheckTime;
 
-    public Rest(String restAuth, String restURL, int syncTime) {
+    public Rest(String restAuth, String restURL, int syncTime,
+        boolean enableDatabaseCommands,
+        int commandCheckTime) {
       this.restAuth = restAuth;
       this.restURL = restURL;
       this.syncTime = syncTime;
+      this.enableDatabaseCommands = enableDatabaseCommands;
+      this.commandCheckTime = commandCheckTime;
     }
 
     public Rest() {
       this.restAuth = "";
       this.restURL = "";
       this.syncTime = 90;
+      this.enableDatabaseCommands = true;
+      this.commandCheckTime = 30;
     }
   }
 

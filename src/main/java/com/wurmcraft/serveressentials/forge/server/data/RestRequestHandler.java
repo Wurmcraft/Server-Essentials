@@ -6,6 +6,7 @@ import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank;
 import com.wurmcraft.serveressentials.forge.api.json.basic.CurrencyConversion;
 import com.wurmcraft.serveressentials.forge.api.json.player.GlobalPlayer;
+import com.wurmcraft.serveressentials.forge.api.json.rest.CommandQueue;
 import com.wurmcraft.serveressentials.forge.api.json.rest.DiscordToken;
 import com.wurmcraft.serveressentials.forge.api.json.rest.GlobalBan;
 import com.wurmcraft.serveressentials.forge.api.json.rest.RestValidate;
@@ -279,6 +280,16 @@ public class RestRequestHandler {
 
     public static int deleteBan(GlobalBan ban) {
       return INSTANCE.put("ban/" + ban.getID() + "/del", ban);
+    }
+  }
+
+  public static class Commands {
+    public static CommandQueue[] getCommandQueue() {
+      return INSTANCE.get("commands", CommandQueue[].class);
+    }
+
+    public static int addCommandQueue(CommandQueue queue) {
+      return INSTANCE.post("commands/add", queue);
     }
   }
 }

@@ -15,7 +15,7 @@ public enum DataKey {
   RANK("Rank", Rank.class, true),
   CURRENCY("Economy", CurrencyConversion.class, true),
   WARP("Warp", null, true),
-  CHUNK_LOADING("ChunkLoading", null,true),
+  CHUNK_LOADING("ChunkLoading", null, true),
   BAN("Ban", GlobalBan.class, true),
   AUTO_RANK("AutoRank", AutoRank.class, true),
   CHANNEL("Channel", Channel.class, true);
