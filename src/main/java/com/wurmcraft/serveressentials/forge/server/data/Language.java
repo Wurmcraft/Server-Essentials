@@ -153,6 +153,8 @@ public class Language implements JsonParser {
   // Language
   public String LANGUAGE_MUTED;
   public String LANGUAGE_SPAM;
+  public String LANGUAGE_MUTE;
+  public String LANGUAGE_MUTE_UNDO;
 
   // Discord
   public String DISCORD_VERIFIED;

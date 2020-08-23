@@ -129,6 +129,10 @@
 	"COMMAND_MOVED": "&3Command Failed",
 	"LANGUAGE_MUTED": "&3You are muted!",
 	"LANGUAGE_SPAM": "&3Don't Spam",
+	"LANGUAGE_CHANNEL_NONE": "&3%CHANNEL% does not exist",
+	"LANGUAGE_CHANNEL": "&3Channel changed to %CHANNEL%",
+	"LANGUAGE_MUTE": "&3%PLAYER% has been muted",
+	"LANGUAGE_MUTE_UNDO": "&3%PLAYER% has been muted",
 	"DISCORD_VERIFIED": "&3You are now verifiyed!",
 	"DISCORD_INVALID_CODE": "&3Invalid or Expired Code!",
 	"SECURITY_LOCKDOWN_ENABLED": "&cLockdown has been enabled!",
@@ -137,7 +141,5 @@
 	"SECURITY_ALT": "&3%PLAYER% has already connected with %PLAYER2%",
 	"SECURITY_BLACKLIST": "&c%MOD% is blacklisted on the server, Remove the mod and try again!",
 	"SECURITY_BLACKLIST_CONNECT": "&3%PLAYER% tried to connect with a blacklisted mod!",
-	"BAN_UNBAN": "&3%PLAYER% has been unbanned!",
-	"LANGUAGE_CHANNEL_NONE": "&3%CHANNEL% does not exist",
-	"LANGUAGE_CHANNEL": "&3Channel changed to %CHANNEL%"
+	"BAN_UNBAN": "&3%PLAYER% has been unbanned!"
 }

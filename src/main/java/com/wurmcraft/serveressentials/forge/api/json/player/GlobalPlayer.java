@@ -18,6 +18,7 @@ public class GlobalPlayer implements JsonParser {
   public String rank; // User's rank
   public String language; // Users language
   public boolean muted; // Can the user talk in chat
+  public double muteExpire;
   public Wallet wallet; // Currency the user currently has
   public NetworkTime playtime; // Playtime across all servers
   public String[] perks;    // Perks the user has gained
@@ -32,6 +33,7 @@ public class GlobalPlayer implements JsonParser {
     this.rank = "";
     this.language = "";
     this.muted = false;
+    this.muteExpire = 0.0;
     this.wallet = new Wallet(new Currency[0]);
     this.playtime = new NetworkTime();
     this.perks = new String[0];
@@ -41,7 +43,7 @@ public class GlobalPlayer implements JsonParser {
   }
 
   public GlobalPlayer(String uuid, long firstJoin, long lastSeen, String rank,
-      String language, boolean muted,
+      String language, boolean muted, double muteExpire,
       Wallet wallet,
       NetworkTime playtime, String[] perks, String[] extraPerms, String discordID,
       int rewardPoints) {
@@ -51,6 +53,7 @@ public class GlobalPlayer implements JsonParser {
     this.rank = rank;
     this.language = language;
     this.muted = muted;
+    this.muteExpire = muteExpire;
     this.wallet = wallet;
     this.playtime = playtime;
     this.perks = perks;

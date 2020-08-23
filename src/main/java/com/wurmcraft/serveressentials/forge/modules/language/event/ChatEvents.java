@@ -9,6 +9,7 @@ import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.modules.language.LanguageModule;
 import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
 import com.wurmcraft.serveressentials.forge.server.Global;
+import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
 import com.wurmcraft.serveressentials.forge.server.loader.ModuleLoader;
 import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
@@ -39,10 +40,20 @@ public class ChatEvents {
   @SubscribeEvent(priority = EventPriority.LOWEST)
   public void onChat(ServerChatEvent e) {
     if (PlayerUtils.get(e.getPlayer()).global.muted) {
-      ChatHelper.sendMessage(e.getPlayer(),
-          PlayerUtils.getLanguage(e.getPlayer()).LANGUAGE_MUTED);
-      e.setCanceled(true);
-      return;
+      if (PlayerUtils.get(e.getPlayer()).global.muteExpire > System.currentTimeMillis()) {
+        ChatHelper.sendMessage(e.getPlayer(),
+            PlayerUtils.getLanguage(e.getPlayer()).LANGUAGE_MUTED);
+        e.setCanceled(true);
+        return;
+      } else {
+        StoredPlayer playerData = PlayerUtils.get(e.getPlayer());
+        playerData.global.muted = false;
+        playerData.global.muteExpire = 0;
+        if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+          RestRequestHandler.User.overridePlayer(playerData.uuid, playerData.global);
+        }
+        SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
+      }
     }
     StoredPlayer playerData = PlayerUtils.get(e.getPlayer());
     if (playerData.server.channel.isEmpty()) {
