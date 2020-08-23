@@ -9,11 +9,13 @@ public class LanguageConfig implements JsonParser {
   public int spamLimit;
   public String chatFormat;
   public String defaultChannel;
+  public String messageFormat;
 
   public LanguageConfig() {
     this.spamLimit = 3;
     this.chatFormat = "%PREFIX% %NAME% \u00BB%SUFFIX% %MESSAGE%";
     this.defaultChannel = "global";
+    this.messageFormat = "[%PLAYER% -> %PLAYER2%] %MESSAGE%";
   }
 
   public LanguageConfig(int spamLimit, String chatFormat, String defaultChannel) {

@@ -155,6 +155,11 @@ public class Language implements JsonParser {
   public String LANGUAGE_SPAM;
   public String LANGUAGE_MUTE;
   public String LANGUAGE_MUTE_UNDO;
+  public String LANGUAGE_REPLY_NONE;
+  public String LANGUAGE_SOCIALSPY_DISABLED;
+  public String LANGUAGE_SOCIALSPY_ENABLED;
+  public String LANGUAGE_CHANGE;
+  public String LANGUAGE_INVALID;
 
   // Discord
   public String DISCORD_VERIFIED;
