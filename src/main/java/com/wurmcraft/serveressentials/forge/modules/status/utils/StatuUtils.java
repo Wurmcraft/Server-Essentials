@@ -1,4 +1,4 @@
-package com.wurmcraft.serveressentials.forge.modules.track.utils;
+package com.wurmcraft.serveressentials.forge.modules.status.utils;
 
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
@@ -12,7 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 
-public class TrackUtils {
+public class StatuUtils {
 
   public static void sendUpdate(Status status) {
     if(status != Status.ONLINE) {

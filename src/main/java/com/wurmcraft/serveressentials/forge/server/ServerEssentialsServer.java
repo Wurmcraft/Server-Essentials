@@ -12,7 +12,7 @@ import com.wurmcraft.serveressentials.forge.api.json.rest.ServerStatus.Status;
 import com.wurmcraft.serveressentials.forge.modules.core.CoreModule;
 import com.wurmcraft.serveressentials.forge.modules.core.utils.CoreUtils;
 import com.wurmcraft.serveressentials.forge.modules.general.GeneralModule;
-import com.wurmcraft.serveressentials.forge.modules.track.utils.TrackUtils;
+import com.wurmcraft.serveressentials.forge.modules.status.utils.StatuUtils;
 import com.wurmcraft.serveressentials.forge.server.command.CustomCommand;
 import com.wurmcraft.serveressentials.forge.server.command.SECommand;
 import com.wurmcraft.serveressentials.forge.server.command.WrapperCommand;
@@ -63,8 +63,8 @@ public class ServerEssentialsServer {
     EXECUTORS = new ScheduledThreadPoolExecutor(SECore.config.supportThreads);
     ModuleLoader.setupModule();
     SECore.dataHandler.registerData(DataKey.LANGUAGE, ChatHelper.getDefaultLanguage());
-    if (ModuleLoader.getLoadedModule("Track") != null) {
-      TrackUtils.sendUpdate(Status.PRE_INIT);
+    if (ModuleLoader.getLoadedModule("Status") != null) {
+      StatuUtils.sendUpdate(Status.PRE_INIT);
     }
   }
 
@@ -73,8 +73,8 @@ public class ServerEssentialsServer {
     LOGGER.info("Init has Started");
     CommandLoader.setupCommands();
     MinecraftForge.EVENT_BUS.register(new PlayerDataEvents());
-    if (ModuleLoader.getLoadedModule("Track") != null) {
-      TrackUtils.sendUpdate(Status.INIT);
+    if (ModuleLoader.getLoadedModule("Status") != null) {
+      StatuUtils.sendUpdate(Status.INIT);
     }
   }
 
@@ -84,8 +84,8 @@ public class ServerEssentialsServer {
     if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
       RestRequestHandler.validate = RestRequestHandler.Verify.get();
     }
-    if (ModuleLoader.getLoadedModule("Track") != null) {
-      TrackUtils.sendUpdate(Status.POST_INIT);
+    if (ModuleLoader.getLoadedModule("Status") != null) {
+      StatuUtils.sendUpdate(Status.POST_INIT);
     }
   }
 
@@ -105,8 +105,8 @@ public class ServerEssentialsServer {
       e.registerServerCommand(new SECommand(commandInstance.getClass().getAnnotation(
           ModuleCommand.class), commandInstance));
     }
-    if (ModuleLoader.getLoadedModule("Track") != null) {
-      TrackUtils.sendUpdate(Status.LOADING);
+    if (ModuleLoader.getLoadedModule("Status") != null) {
+      StatuUtils.sendUpdate(Status.LOADING);
     }
   }
 
@@ -116,8 +116,8 @@ public class ServerEssentialsServer {
         && SECore.config.Rest.enableDatabaseCommands) {
       DataBaseCommandPath.startup();
     }
-    if (ModuleLoader.getLoadedModule("Track") != null) {
-      TrackUtils.sendUpdate(Status.ONLINE);
+    if (ModuleLoader.getLoadedModule("Status") != null) {
+      StatuUtils.sendUpdate(Status.ONLINE);
     }
     if (ModuleLoader.getLoadedModule("General") != null && GeneralModule.config != null
         && GeneralModule.config.commandOverride.length > 0) {
@@ -148,8 +148,8 @@ public class ServerEssentialsServer {
 
   @EventHandler
   public void serverStopping(FMLServerStoppingEvent e) {
-    if (ModuleLoader.getLoadedModule("Track") != null) {
-      TrackUtils.sendUpdate(Status.STOPPING);
+    if (ModuleLoader.getLoadedModule("Status") != null) {
+      StatuUtils.sendUpdate(Status.STOPPING);
     }
     for (EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance()
         .getPlayerList().getPlayers()) {
@@ -161,8 +161,8 @@ public class ServerEssentialsServer {
 
   @EventHandler
   public void serverStopped(FMLServerStoppedEvent e) {
-    if (ModuleLoader.getLoadedModule("Track") != null) {
-      TrackUtils.sendUpdate(Status.STOPPED);
+    if (ModuleLoader.getLoadedModule("Status") != null) {
+      StatuUtils.sendUpdate(Status.STOPPED);
     }
   }
 
