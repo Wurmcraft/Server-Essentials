@@ -11,6 +11,7 @@ import com.wurmcraft.serveressentials.forge.modules.discord.DiscordConfig;
 import com.wurmcraft.serveressentials.forge.modules.economy.EconomyConfig;
 import com.wurmcraft.serveressentials.forge.modules.general.GeneralConfig;
 import com.wurmcraft.serveressentials.forge.modules.language.LanguageConfig;
+import com.wurmcraft.serveressentials.forge.modules.protect.ProtectConfig;
 import com.wurmcraft.serveressentials.forge.modules.rank.RankConfig;
 import com.wurmcraft.serveressentials.forge.modules.security.SecurityConfig;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
@@ -35,7 +36,13 @@ public class FileDataHandler extends BasicDataHandler {
     NonBlockingHashMap<String, T> fileData = new NonBlockingHashMap<>();
     File dataDir;
     if (key.isInStorage()) {
-      dataDir = new File(SAVE_DIR + File.separator + "Storage" + key.getName());
+      if (key == DataKey.CLAIM) {
+        dataDir = new File(
+            SAVE_DIR + File.separator + "Storage" + key.getName() + File.separator
+                + "DIM_0");
+      } else {
+        dataDir = new File(SAVE_DIR + File.separator + "Storage" + key.getName());
+      }
     } else {
       dataDir = new File(SAVE_DIR + File.separator + key.getName());
     }
@@ -62,10 +69,19 @@ public class FileDataHandler extends BasicDataHandler {
     } catch (NoSuchElementException e) {
       File fileLoc;
       if (key.isInStorage()) {
-        fileLoc = new File(
-            SAVE_DIR + File.separator + "Storage" + File.separator + key.getName()
-                + File.separator + dataID
-                + ".json");
+        if (key != DataKey.CLAIM) {
+          fileLoc = new File(
+              SAVE_DIR + File.separator + "Storage" + File.separator + key.getName()
+                  + File.separator + dataID
+                  + ".json");
+        } else {
+          fileLoc = new File(
+              SAVE_DIR + File.separator + "Storage" + File.separator + key.getName()
+                  + File.separator + "DIM_" + dataID.substring(dataID.lastIndexOf("_"))
+                  + File.separator + dataID.substring(0,
+                  dataID.lastIndexOf("_"))
+                  + ".json");
+        }
       } else {
         fileLoc = new File(
             SAVE_DIR + File.separator + key.getName() + File.separator + dataID
@@ -148,6 +164,14 @@ public class FileDataHandler extends BasicDataHandler {
               if (data != null) {
                 return data;
               }
+            } else if(dataID.equalsIgnoreCase("Protect")) {
+              registerData(key,
+                  GSON.fromJson(Strings.join(Files.readAllLines(fileLoc.toPath()), '\n'),
+                      ProtectConfig.class));
+              JsonParser data = getData(key, dataID);
+              if (data != null) {
+                return data;
+              }
             }
           } catch (Exception f) {
             ServerEssentialsServer.LOGGER
@@ -164,10 +188,20 @@ public class FileDataHandler extends BasicDataHandler {
     super.registerData(key, dataToStore);
     File file;
     if (key.isInStorage()) {
-      file = new File(
-          SAVE_DIR + File.separator + "Storage" + File.separator + key.getName()
-              + File.separator + dataToStore.getID()
-              + ".json");
+      if (key == DataKey.CLAIM) {
+        file = new File(
+            SAVE_DIR + File.separator + "Storage" + File.separator + key.getName()
+                + File.separator + "DIM_" + dataToStore.getID()
+                .substring(dataToStore.getID().lastIndexOf("_")) + File.separator
+                + dataToStore.getID().substring(0,
+                dataToStore.getID().lastIndexOf("_"))
+                + ".json");
+      } else {
+        file = new File(
+            SAVE_DIR + File.separator + "Storage" + File.separator + key.getName()
+                + File.separator + dataToStore.getID()
+                + ".json");
+      }
     } else {
       file = new File(
           SAVE_DIR + File.separator + key.getName() + File.separator + dataToStore.getID()
@@ -190,10 +224,20 @@ public class FileDataHandler extends BasicDataHandler {
     if (deleteFromDisk) {
       File file;
       if (key.isInStorage()) {
-        file = new File(
-            SAVE_DIR + File.separator + "Storage" + File.separator + key.getName()
-                + File.separator + dataToRemove
-                + ".json");
+        if (key != DataKey.CLAIM) {
+          file = new File(
+              SAVE_DIR + File.separator + "Storage" + File.separator + key.getName()
+                  + File.separator + dataToRemove
+                  + ".json");
+        } else {
+          file = new File(
+              SAVE_DIR + File.separator + "Storage" + File.separator + key.getName()
+                  + File.separator + "DIM_" + dataToRemove
+                  .substring(dataToRemove.lastIndexOf("_")) + File.separator
+                  + dataToRemove.substring(0,
+                  dataToRemove.lastIndexOf("_"))
+                  + ".json");
+        }
       } else {
         file = new File(
             SAVE_DIR + File.separator + key.getName() + File.separator + dataToRemove

@@ -112,7 +112,8 @@ public class ServerEssentialsServer {
 
   @EventHandler
   public void serverStarted(FMLServerStartedEvent e) {
-    if(SECore.config.dataStorageType.equalsIgnoreCase("Rest") && SECore.config.Rest.enableDatabaseCommands) {
+    if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")
+        && SECore.config.Rest.enableDatabaseCommands) {
       DataBaseCommandPath.startup();
     }
     if (ModuleLoader.getLoadedModule("Track") != null) {

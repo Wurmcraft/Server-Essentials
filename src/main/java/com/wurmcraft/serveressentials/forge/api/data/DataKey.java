@@ -7,6 +7,7 @@ import com.wurmcraft.serveressentials.forge.api.json.basic.CurrencyConversion;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.rest.GlobalBan;
+import com.wurmcraft.serveressentials.forge.modules.protect.data.RegionClaimData;
 
 public enum DataKey {
   PLAYER("Player-Data", StoredPlayer.class, true),
@@ -18,7 +19,8 @@ public enum DataKey {
   CHUNK_LOADING("ChunkLoading", null, true),
   BAN("Ban", GlobalBan.class, true),
   AUTO_RANK("AutoRank", AutoRank.class, true),
-  CHANNEL("Channel", Channel.class, true);
+  CHANNEL("Channel", Channel.class, true),
+  CLAIM("Claims", RegionClaimData.class, true);
 
   private String name;
   private Class<? extends JsonParser> dataType;
