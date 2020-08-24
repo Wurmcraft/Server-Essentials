@@ -2,6 +2,7 @@ package com.wurmcraft.serveressentials.forge.api.json.rest;
 
 import com.wurmcraft.serveressentials.forge.api.json.JsonParser;
 import java.time.Instant;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
 /**
@@ -23,7 +24,7 @@ public class ServerChunkData implements JsonParser {
     this.playerChunks = playerChunks;
   }
 
-  public static class PlayerChunkData {
+  public static class PlayerChunkData implements JsonParser {
 
     public String uuid;
     public ChunkPos chunkPos;
@@ -37,13 +38,25 @@ public class ServerChunkData implements JsonParser {
       this.setupTime = Instant.EPOCH.toEpochMilli();
     }
 
-
     public PlayerChunkData(String uuid, ChunkPos chunkPos, double storedCurrency,
         long setupTime) {
       this.uuid = uuid;
       this.chunkPos = chunkPos;
       this.storedCurrency = storedCurrency;
       this.setupTime = setupTime;
+    }
+
+    public PlayerChunkData() {
+      this.uuid = "";
+      BlockPos blockPos;
+      this.chunkPos = new ChunkPos(0,0);
+      this.storedCurrency = 0;
+      this.setupTime = 0;
+    }
+
+    @Override
+    public String getID() {
+      return uuid;
     }
   }
 
