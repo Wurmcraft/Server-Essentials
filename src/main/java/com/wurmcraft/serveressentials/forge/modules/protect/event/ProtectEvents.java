@@ -11,6 +11,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.BlockEvent.PortalSpawnEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -21,6 +22,7 @@ public class ProtectEvents {
     if (!ProtectionHelper
         .test(Action.BREAK, e.getPos(), e.getPlayer().dimension, e.getPlayer())) {
       e.getPlayer().sendMessage(new TextComponentString("Area is Claimed!"));
+      e.setResult(Result.DENY);
       e.setCanceled(true);
     }
   }
@@ -37,6 +39,7 @@ public class ProtectEvents {
       if (player != null) {
         player.sendMessage(new TextComponentString("Area is Claimed!"));
       }
+      e.setResult(Result.DENY);
       e.setCanceled(true);
     }
   }
@@ -55,6 +58,7 @@ public class ProtectEvents {
     if (!ProtectionHelper
         .test(Action.BREAK, e.getPos(), e.getWorld().provider.getDimension(),
             null)) {
+      e.setResult(Result.DENY);
       e.setCanceled(true);
     }
   }
@@ -64,6 +68,7 @@ public class ProtectEvents {
     if (!ProtectionHelper
         .test(Action.PLACE, e.getPos(), e.getPlayer().dimension, e.getPlayer())) {
       e.getPlayer().sendMessage(new TextComponentString("Area is Claimed!"));
+      e.setResult(Result.DENY);
       e.setCanceled(true);
     }
   }
@@ -71,6 +76,7 @@ public class ProtectEvents {
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public void onFarmlandTrample(BlockEvent.FarmlandTrampleEvent e) {
     if (!ProtectionHelper.test(Action.BREAK, e.getPos(), e.getEntity().dimension, null)) {
+      e.setResult(Result.DENY);
       e.setCanceled(true);
     }
   }
@@ -88,6 +94,7 @@ public class ProtectEvents {
       if (player != null) {
         player.sendMessage(new TextComponentString("Area is Claimed!"));
       }
+      e.setResult(Result.DENY);
       e.setCanceled(true);
       return;
     }
@@ -110,6 +117,7 @@ public class ProtectEvents {
             if (player != null) {
               player.sendMessage(new TextComponentString("Area is Claimed!"));
             }
+            e.setResult(Result.DENY);
             e.setCanceled(true);
             return;
           }
@@ -124,6 +132,7 @@ public class ProtectEvents {
         .test(Action.LEFT_CLICK, e.getPos(), e.getEntityPlayer().dimension,
             e.getEntityPlayer())) {
       e.getEntityPlayer().sendMessage(new TextComponentString("Area is Claimed!"));
+      e.setResult(Result.DENY);
       e.setCanceled(true);
     }
   }
@@ -134,6 +143,7 @@ public class ProtectEvents {
         .test(Action.LEFT_CLICK_EMPTY, e.getPos(), e.getEntityPlayer().dimension,
             e.getEntityPlayer())) {
       e.getEntityPlayer().sendMessage(new TextComponentString("Area is Claimed!"));
+      e.setResult(Result.DENY);
       e.setCanceled(true);
     }
   }
@@ -144,6 +154,7 @@ public class ProtectEvents {
         .test(Action.RIGHT_CLICK, e.getPos(), e.getEntityPlayer().dimension,
             e.getEntityPlayer())) {
       e.getEntityPlayer().sendMessage(new TextComponentString("Area is Claimed!"));
+      e.setResult(Result.DENY);
       e.setCanceled(true);
     }
   }
@@ -154,6 +165,7 @@ public class ProtectEvents {
         .test(Action.RIGHT_CLICK, e.getPos(), e.getEntityPlayer().dimension,
             e.getEntityPlayer())) {
       e.getEntityPlayer().sendMessage(new TextComponentString("Area is Claimed!"));
+      e.setResult(Result.DENY);
       e.setCanceled(true);
     }
   }
@@ -164,6 +176,7 @@ public class ProtectEvents {
         .test(Action.RIGHT_CLICK_EMPTY, e.getPos(), e.getEntityPlayer().dimension,
             e.getEntityPlayer())) {
       e.getEntityPlayer().sendMessage(new TextComponentString("Area is Claimed!"));
+      e.setResult(Result.DENY);
       e.setCanceled(true);
     }
   }
