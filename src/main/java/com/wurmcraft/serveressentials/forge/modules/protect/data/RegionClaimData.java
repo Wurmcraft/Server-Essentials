@@ -17,21 +17,21 @@ public class RegionClaimData implements JsonParser {
   public static class RegionPos {
 
     public long x;
-    public long z;
     public long y;
+    public long z;
     public int dim;
 
-    public RegionPos(long x, long z, long y) {
+    public RegionPos(long x, long y, long z) {
       this.x = x;
-      this.z = z;
       this.y = y;
+      this.z = z;
       this.dim = 0;
     }
 
-    public RegionPos(long x, long z, long y, int dim) {
+    public RegionPos(long x, long y, long z, int dim) {
       this.x = x;
-      this.z = z;
       this.y = y;
+      this.z = z;
       this.dim = dim;
     }
   }

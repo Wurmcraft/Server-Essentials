@@ -36,13 +36,15 @@ public class ProtectionHelper {
   }
 
   public static boolean isWithin(ClaimData claim, BlockPos pos) {
-    return (claim.lowerPos.x <= pos.getX() && claim.higherPos.x >= pos.getX()) &&
+    return (claim.lowerPos.x <= pos.getX() &&
+        claim.higherPos.x >= pos.getX()) &&
         (claim.lowerPos.y <= pos.getY() && claim.higherPos.y >= pos.getZ()) &&
-        (claim.lowerPos.z <= pos.getZ() && claim.higherPos.z >= pos.getZ());
+        (claim.lowerPos.z <= pos.getZ() &&
+            claim.higherPos.z >= pos.getZ());
   }
 
   public enum Action {
-    BREAK, PLACE, LEFT_CLICK, LEFT_CLICK_EMPTY, RIGHT_CLICK, RIGHT_CLICK_EMPTY, EXPLOSION;
+    BREAK, PLACE, LEFT_CLICK, LEFT_CLICK_EMPTY, RIGHT_CLICK, RIGHT_CLICK_EMPTY, EXPLOSION
   }
 
 

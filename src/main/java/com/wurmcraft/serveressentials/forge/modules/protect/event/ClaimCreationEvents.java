@@ -33,16 +33,10 @@ public class ClaimCreationEvents {
       if (previousPos.containsKey(e.getEntityPlayer().getGameProfile().getId())) {
         if (getClaimSize(previousPos.get(e.getEntityPlayer().getGameProfile().getId()),
             e.getPos()) >= ProtectModule.config.minimumClaimAmount) {
-          BlockPos lowerPos = null;
-          BlockPos higherPos = null;
-          if (isHigher(e.getPos(),
-              previousPos.get(e.getEntityPlayer().getGameProfile().getId()))) {
-            higherPos = e.getPos();
-            lowerPos = previousPos.get(e.getEntityPlayer().getGameProfile().getId());
-          } else {
-            lowerPos = e.getPos();
-            higherPos = previousPos.get(e.getEntityPlayer().getGameProfile().getId());
-          }
+          BlockPos[] sortedPos = sortPos(e.getPos(),
+              previousPos.get(e.getEntityPlayer().getGameProfile().getId()));
+          BlockPos lowerPos = sortedPos[0];
+          BlockPos higherPos = sortedPos[1];
           previousPos.remove(e.getEntityPlayer().getGameProfile().getId());
           ClaimData data = new ClaimData(
               e.getEntityPlayer().getGameProfile().getId().toString(), new String[0],
@@ -52,24 +46,14 @@ public class ClaimCreationEvents {
           String regionIDB = RegionHelper
               .getIDForRegion(higherPos, e.getEntityPlayer().dimension);
           if (regionIDA.equals(regionIDB)) {
-            try {
-              RegionClaimData claimData = (RegionClaimData) SECore.dataHandler
-                  .getData(DataKey.CLAIM, regionIDA);
-              List<ClaimData> regionData = new ArrayList<>();
-              Collections.addAll(regionData,claimData.claims);
-              regionData.add(data);
-              claimData.claims = regionData.toArray(new ClaimData[0]);
-              SECore.dataHandler.registerData(DataKey.CLAIM, claimData);
-            } catch (NoSuchElementException f) {
-              RegionClaimData claimData = new RegionClaimData(
-                  RegionHelper.getRegionPos(lowerPos, e.getEntityPlayer().dimension),
-                  new ClaimData[]{data});
-              SECore.dataHandler.registerData(DataKey.CLAIM, claimData);
-            }
-            ChatHelper.sendMessage(e.getEntityPlayer(), PlayerUtils.getLanguage(e.getEntityPlayer()).PROTECT_CREATED);
+            addClaim(data, regionIDA, e.getEntityPlayer(),
+                RegionHelper.getRegionPos(lowerPos, e.getEntityPlayer().dimension), true);
           } else {
-            ChatHelper.sendMessage(e.getEntityPlayer(),
-                "Multi Region Claims Currently Unsupported!");
+            addClaim(data, regionIDA, e.getEntityPlayer(),
+                RegionHelper.getRegionPos(lowerPos, e.getEntityPlayer().dimension), true);
+            addClaim(data, regionIDB, e.getEntityPlayer(),
+                RegionHelper.getRegionPos(higherPos, e.getEntityPlayer().dimension),
+                false);
           }
         } else {
           ChatHelper.sendMessage(e.getEntityPlayer(),
@@ -84,6 +68,25 @@ public class ClaimCreationEvents {
     }
   }
 
+  private void addClaim(ClaimData data, String regionID, EntityPlayer player,
+      RegionPos regionPos, boolean print) {
+    try {
+      RegionClaimData claimData = (RegionClaimData) SECore.dataHandler
+          .getData(DataKey.CLAIM, regionID);
+      List<ClaimData> regionData = new ArrayList<>();
+      Collections.addAll(regionData, claimData.claims);
+      regionData.add(data);
+      claimData.claims = regionData.toArray(new ClaimData[0]);
+      SECore.dataHandler.registerData(DataKey.CLAIM, claimData);
+    } catch (NoSuchElementException f) {
+      RegionClaimData claimData = new RegionClaimData(regionPos, new ClaimData[]{data});
+      SECore.dataHandler.registerData(DataKey.CLAIM, claimData);
+    }
+    if (print) {
+      ChatHelper.sendMessage(player, PlayerUtils.getLanguage(player).PROTECT_CREATED);
+    }
+  }
+
   private static int getClaimSize(BlockPos pos1, BlockPos pos2) {
     if (ProtectModule.config.claimType.equalsIgnoreCase("2D")) {
       return Math.abs(pos2.getX() - pos1.getX()) * Math.abs(pos2.getZ() - pos1.getZ());
@@ -94,12 +97,27 @@ public class ClaimCreationEvents {
     return 0;
   }
 
-  private static boolean isHigher(BlockPos pos1, BlockPos pos2) {
-    if (pos1.getX() > pos2.getX() && pos1.getZ() > pos2.getZ() && pos1.getY() > pos2
-        .getY()) {
-      return true;
+  private static BlockPos[] sortPos(BlockPos pos1, BlockPos pos2) {
+    if (ProtectModule.config.claimType.equalsIgnoreCase("2D")) {
+      return new BlockPos[]{new BlockPos(
+          Math.min(pos1.getX(), pos2.getX())
+          , 0
+          , Math.min(pos1.getZ(), pos2.getZ())),
+          new BlockPos(
+              Math.max(pos1.getX(), pos2.getX())
+              , 255
+              , Math.max(pos1.getZ(), pos2.getZ())),};
     }
-    return false;
+    return new BlockPos[]{
+        new BlockPos(
+            Math.min(pos1.getX(), pos2.getX())
+            , Math.min(pos1.getY(), pos2.getY())
+            , Math.min(pos1.getZ(), pos2.getZ())),
+        new BlockPos(
+            Math.max(pos1.getX(), pos2.getX())
+            , Math.max(pos1.getY(), pos2.getY())
+            , Math.max(pos1.getZ(), pos2.getZ()))};
+
   }
 
   @SubscribeEvent

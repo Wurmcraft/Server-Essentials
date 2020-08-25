@@ -58,18 +58,14 @@ public class ClaimData {
 
   public static class Settings {
 
-    public Map<Action, String> actions;
+    public String[] actions;
 
-    public Settings(
-        Map<Action, String> actions) {
+    public Settings(String[] actions) {
       this.actions = actions;
     }
 
     public Settings() {
-      this.actions = new HashMap<>();
-      for (Action a : Action.values()) {
-        actions.put(a, "true");
-      }
+      this.actions = new String[0];
     }
   }
 
