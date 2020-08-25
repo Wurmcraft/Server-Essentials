@@ -6,7 +6,7 @@ import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.module.Module;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 
-@Module(name = "Core")
+@Module(name = "Core", shouldAllaysBeLoaded = true)
 public class CoreModule {
 
   public void initSetup() {

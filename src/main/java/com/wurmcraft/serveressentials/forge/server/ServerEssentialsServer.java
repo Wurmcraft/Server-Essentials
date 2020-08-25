@@ -9,7 +9,9 @@ import com.wurmcraft.serveressentials.forge.api.data.IDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.BasicDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.FileDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.RestDataHandler;
+import com.wurmcraft.serveressentials.forge.server.loader.CommandLoader;
 import com.wurmcraft.serveressentials.forge.server.loader.ModuleLoader;
+import com.wurmcraft.serveressentials.forge.server.wrapper.SECommand;
 import java.io.File;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -47,16 +49,17 @@ public class ServerEssentialsServer {
     SECore.config = loadGlobalConfig();
     SECore.dataHandler = getDataHandler(SECore.config.dataStorageType);
     EXECUTORS = new ScheduledThreadPoolExecutor(SECore.config.supportThreads);
-    ModuleLoader.setupModule();
   }
 
   public void setupServer(FMLCommonSetupEvent e) {
     LOGGER.info("has begun loading");
+    ModuleLoader.setupModule();
+    CommandLoader.setupCommands();
   }
 
   @SubscribeEvent
   public static void starting(FMLServerStartingEvent e) {
-    SECommand.build(e.getCommandDispatcher());
+    SECommand.register(e.getCommandDispatcher());
   }
 
   public static IDataHandler getDataHandler(String name) {
