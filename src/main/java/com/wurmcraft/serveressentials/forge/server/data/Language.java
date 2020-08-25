@@ -160,6 +160,8 @@ public class Language implements JsonParser {
   public String LANGUAGE_SOCIALSPY_ENABLED;
   public String LANGUAGE_CHANGE;
   public String LANGUAGE_INVALID;
+  public String LANGUAGE_CHANNEL_NONE;
+  public String LANGUAGE_CHANNEL;
 
   // Discord
   public String DISCORD_VERIFIED;
@@ -176,9 +178,11 @@ public class Language implements JsonParser {
   // Ban
   public String BAN_UNBAN;
 
-  // Language
-  public String LANGUAGE_CHANNEL_NONE;
-  public String LANGUAGE_CHANNEL;
+  // Protect
+  public String PROTECT_STOP;
+  public String PROTECT_START;
+  public String PROTECT_TOO_SMALL;
+  public String PROTECT_CREATED;
 
   public Language(String key) {
     this.key = key;

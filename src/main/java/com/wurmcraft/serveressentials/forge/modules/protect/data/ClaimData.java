@@ -1,36 +1,79 @@
 package com.wurmcraft.serveressentials.forge.modules.protect.data;
 
+import com.wurmcraft.serveressentials.forge.modules.protect.utils.ProtectionHelper.Action;
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.util.math.BlockPos;
 
 public class ClaimData {
 
   public String owner;
+  public String[] trusted;
+  public Pos lowerPos;
+  public Pos higherPos;
+  public Settings settings;
+  public ClaimType claimType;
 
-  public long startX;
-  public long endX;
-  public long startY;
-  public long endY;
-  public long startZ;
-  public long endZ;
-
-  public ClaimData(String uuid, long startX, long endX, long startY, long endY,
-      long startZ, long endZ) {
-    this.owner = uuid;
-    this.startX = startX;
-    this.endX = endX;
-    this.startY = startY;
-    this.endY = endY;
-    this.startZ = startZ;
-    this.endZ = endZ;
+  public ClaimData(String owner, String[] trusted,
+      Pos startX,
+      Pos endX,
+      Settings settings) {
+    this.owner = owner;
+    this.trusted = trusted;
+    this.lowerPos = startX;
+    this.higherPos = endX;
+    this.settings = settings;
+    this.claimType = ClaimType.NORMAL;
   }
 
-  public ClaimData(String uuid, BlockPos startPos, BlockPos endPos) {
-    this.owner = uuid;
-    this.startX = startPos.getX();
-    this.endX = endPos.getX();
-    this.startY = startPos.getY();
-    this.endY = endPos.getY();
-    this.startZ = startPos.getZ();
-    this.endZ = endPos.getZ();
+  public ClaimData(String owner, String[] trusted,
+      BlockPos startX,
+      BlockPos endX, Settings settings) {
+    this.owner = owner;
+    this.trusted = trusted;
+    this.lowerPos = new Pos(startX);
+    this.higherPos = new Pos(endX);
+    this.settings = settings;
+    this.claimType = ClaimType.NORMAL;
+  }
+
+  public static class Pos {
+
+    public long x;
+    public long y;
+    public long z;
+
+    public Pos(long x, long y, long z) {
+      this.x = x;
+      this.y = y;
+      this.z = z;
+    }
+
+    public Pos(BlockPos pos) {
+      this.x = pos.getX();
+      this.y = pos.getY();
+      this.z = pos.getZ();
+    }
+  }
+
+  public static class Settings {
+
+    public Map<Action, String> actions;
+
+    public Settings(
+        Map<Action, String> actions) {
+      this.actions = actions;
+    }
+
+    public Settings() {
+      this.actions = new HashMap<>();
+      for (Action a : Action.values()) {
+        actions.put(a, "true");
+      }
+    }
+  }
+
+  public enum ClaimType {
+    NORMAL, RENT
   }
 }

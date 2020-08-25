@@ -1,5 +1,6 @@
 package com.wurmcraft.serveressentials.forge.modules.protect.utils;
 
+import com.wurmcraft.serveressentials.forge.modules.protect.data.RegionClaimData.RegionPos;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
@@ -31,6 +32,10 @@ public class RegionHelper {
         (pos.getZ() >> 4) / 32);
     cacheBlockPos.put(pos, regionID);
     return regionID + "_" + dim;
+  }
+
+  public static RegionPos getRegionPos(BlockPos pos, int dimension) {
+    return new RegionPos(((pos.getX() >> 4) / 32), ((pos.getY() >> 4) / 32),((pos.getZ() >> 4) / 32), dimension);
   }
 
 }

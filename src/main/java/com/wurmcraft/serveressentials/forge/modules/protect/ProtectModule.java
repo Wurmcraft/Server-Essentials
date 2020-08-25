@@ -6,9 +6,9 @@ import static com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.module.Module;
+import com.wurmcraft.serveressentials.forge.modules.protect.event.ClaimCreationEvents;
 import com.wurmcraft.serveressentials.forge.modules.protect.event.ProtectEvents;
 import com.wurmcraft.serveressentials.forge.modules.protect.event.ProtectLoadEvents;
-import com.wurmcraft.serveressentials.forge.modules.security.SecurityConfig;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import java.io.File;
 import java.nio.file.Files;
@@ -45,6 +45,7 @@ public class ProtectModule {
   public void finalizeModule() {
     MinecraftForge.EVENT_BUS.register(new ProtectLoadEvents());
     MinecraftForge.EVENT_BUS.register(new ProtectEvents());
+    MinecraftForge.EVENT_BUS.register(new ClaimCreationEvents());
   }
 
   public void reloadModule() {
