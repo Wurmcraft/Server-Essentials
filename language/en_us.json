@@ -150,5 +150,7 @@
 	"PROTECT_STOP": "&3Claiming Mode Disabled",
 	"PROTECT_START": "&3First point set. Select another point!",
 	"PROTECT_TOO_SMALL": "&3Selected area too small Must be at least %AMOUNT% blocks!",
-	"PROTECT_CREATED": "&3Claim Created"
+	"PROTECT_CREATED": "&3Claim Created",
+	"PROTECT_TRUST_FAIL": "&3You must be starting in the claim to trust someone!",
+	"PROTECT_TRUST": "&3You have trusted %PLAYER%"
 }

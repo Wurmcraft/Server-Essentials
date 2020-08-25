@@ -45,7 +45,9 @@ public class ProtectModule {
   public void finalizeModule() {
     MinecraftForge.EVENT_BUS.register(new ProtectLoadEvents());
     MinecraftForge.EVENT_BUS.register(new ProtectEvents());
-    MinecraftForge.EVENT_BUS.register(new ClaimCreationEvents());
+    if (config.defaultClaimingStyle.equalsIgnoreCase("Item")) {
+      MinecraftForge.EVENT_BUS.register(new ClaimCreationEvents());
+    }
   }
 
   public void reloadModule() {

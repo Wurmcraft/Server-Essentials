@@ -1,8 +1,5 @@
 package com.wurmcraft.serveressentials.forge.modules.protect.data;
 
-import com.wurmcraft.serveressentials.forge.modules.protect.utils.ProtectionHelper.Action;
-import java.util.HashMap;
-import java.util.Map;
 import net.minecraft.util.math.BlockPos;
 
 public class ClaimData {
@@ -13,6 +10,7 @@ public class ClaimData {
   public Pos higherPos;
   public Settings settings;
   public ClaimType claimType;
+  public String claimTypeData;
 
   public ClaimData(String owner, String[] trusted,
       Pos startX,
@@ -24,6 +22,7 @@ public class ClaimData {
     this.higherPos = endX;
     this.settings = settings;
     this.claimType = ClaimType.NORMAL;
+    this.claimTypeData = "";
   }
 
   public ClaimData(String owner, String[] trusted,
@@ -35,6 +34,7 @@ public class ClaimData {
     this.higherPos = new Pos(endX);
     this.settings = settings;
     this.claimType = ClaimType.NORMAL;
+    this.claimTypeData = "";
   }
 
   public static class Pos {
@@ -54,18 +54,30 @@ public class ClaimData {
       this.y = pos.getY();
       this.z = pos.getZ();
     }
+
+    public BlockPos toBlockPos() {
+      return new BlockPos(x, y, z);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (obj instanceof Pos) {
+        return ((Pos) obj).x == x && ((Pos) obj).y == y && ((Pos) obj).z == z;
+      }
+      return false;
+    }
   }
 
   public static class Settings {
 
-    public String[] actions;
+    public String[] allowedActions;
 
     public Settings(String[] actions) {
-      this.actions = actions;
+      this.allowedActions = actions;
     }
 
     public Settings() {
-      this.actions = new String[0];
+      this.allowedActions = new String[0];
     }
   }
 

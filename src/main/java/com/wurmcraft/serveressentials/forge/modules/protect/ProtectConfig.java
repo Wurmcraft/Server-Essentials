@@ -16,7 +16,7 @@ public class ProtectConfig implements JsonParser {
     this.explosionCheckResolution = 4;
     this.explosionExpandedRadius = 64;
     this.minimumClaimAmount = 144;
-    this.defaultClaimingStyle = "Shovel";
+    this.defaultClaimingStyle = "Item";
     this.claimType = "2D";
   }
 

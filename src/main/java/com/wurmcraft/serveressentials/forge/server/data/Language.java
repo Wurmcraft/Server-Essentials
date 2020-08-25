@@ -183,6 +183,8 @@ public class Language implements JsonParser {
   public String PROTECT_START;
   public String PROTECT_TOO_SMALL;
   public String PROTECT_CREATED;
+  public String PROTECT_TRUST_FAIL;
+  public String PROTECT_TRUST;
 
   public Language(String key) {
     this.key = key;

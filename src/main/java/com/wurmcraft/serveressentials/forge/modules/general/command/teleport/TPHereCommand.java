@@ -17,7 +17,7 @@ public class TPHereCommand {
   public void tpHere(ICommandSender sender, EntityPlayer toOther) {
     if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
-      TeleportUtils.teleportTo(player,
+      TeleportUtils.teleportTo(toOther,
           new LocationWrapper(player.posX, player.posY, player.posZ, player.dimension));
       ChatHelper.sendMessage(toOther, PlayerUtils.getLanguage(toOther).GENERAL_TP_PLAYER
           .replaceAll("%PLAYER%", player.getDisplayNameString()));
