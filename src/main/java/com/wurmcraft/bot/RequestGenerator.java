@@ -3,22 +3,19 @@ package com.wurmcraft.bot;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sun.org.apache.regexp.internal.RE;
 import com.wurmcraft.bot.json.api.data.Token;
 import com.wurmcraft.bot.json.api.eco.Currency;
 import com.wurmcraft.bot.json.api.json.CommandQueue;
 import com.wurmcraft.bot.json.api.json.CommandQueue.RequestedCommand;
 import com.wurmcraft.bot.json.api.json.Validation;
 import com.wurmcraft.bot.json.api.player.GlobalPlayer;
-import com.wurmcraft.bot.json.api.track.TrackingStatus;
+import com.wurmcraft.bot.json.api.status.TrackingStatus;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Base64;
 import javax.net.ssl.HttpsURLConnection;
-import java.util.*;
 
 public class RequestGenerator {
 

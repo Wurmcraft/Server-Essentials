@@ -1,4 +1,4 @@
-package com.wurmcraft.bot.json.api.track;
+package com.wurmcraft.bot.json.api.status;
 
 public class TrackingStatus {
 

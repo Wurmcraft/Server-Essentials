@@ -2,7 +2,7 @@ package com.wurmcraft.bot.json.api.player;
 
 
 import com.wurmcraft.bot.json.api.json.JsonParser;
-import com.wurmcraft.bot.json.api.track.NetworkTime;
+import com.wurmcraft.bot.json.api.status.NetworkTime;
 
 public class GlobalPlayer implements JsonParser {
 
