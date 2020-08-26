@@ -14,11 +14,12 @@ public class CommandParamsConfig {
     // TPA
     Map<String, RankParams> tpa = new HashMap<>();
     tpa.put("Default", new RankParams(null, 5, 20));
+    tpa.put("Member", new RankParams(null, 2, 10));
     commands.put("general.back", new CommandParams(tpa));
     // Help
     Map<String, RankParams> help = new HashMap<>();
     help.put("*", new RankParams(new Currency("Default", 20), 0, 0));
-    commands.put("command.help", new CommandParams(help));
+    commands.put("economy.pay", new CommandParams(help));
   }
 
   public CommandParamsConfig(

@@ -84,7 +84,7 @@ public class GeneralEvents {
 
   @SubscribeEvent
   public void onPlayerJoin(PlayerLoggedInEvent e) {
-    if (GeneralModule.config.displayMOTDOnJoin) {
+    if (GeneralModule.config != null && GeneralModule.config.displayMOTDOnJoin) {
       FMLCommonHandler.instance()
           .getMinecraftServerInstance()
           .getCommandManager()

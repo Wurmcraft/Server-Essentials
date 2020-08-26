@@ -36,7 +36,7 @@ public class AutoRankModule {
         }
         try {
           fileLoc.createNewFile();
-          Files.write(fileLoc.toPath(), GSON.toJson(new RankConfig()).getBytes());
+          Files.write(fileLoc.toPath(), GSON.toJson(new AutoRankConfig()).getBytes());
         } catch (Exception f) {
           ServerEssentialsServer.LOGGER.error(
               "Failed to create default config for " + DataKey.MODULE_CONFIG + ":"

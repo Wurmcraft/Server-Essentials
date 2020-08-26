@@ -43,8 +43,10 @@ public class LanguageModule {
     }
     NonBlockingHashMap<String, Channel> channels = SECore.dataHandler.getDataFromKey(DataKey.CHANNEL, new Channel("", ""));
     if(channels.isEmpty()) {
-      Channel defaultChannel = new Channel("global", "&3[G]");
+      Channel defaultChannel = new Channel("global", "&b[&3G&b]");
+      Channel localChannel = new Channel("local", "&b[&eL&b]");
       SECore.dataHandler.registerData(DataKey.CHANNEL, defaultChannel);
+      SECore.dataHandler.registerData(DataKey.CHANNEL, localChannel);
     }
   }
 

@@ -20,7 +20,7 @@ public class GlobalConfig implements JsonParser {
   public Rest Rest;
 
   public GlobalConfig() {
-    this.modules = new String[0];
+    this.modules = new String[] {"General", "Language", "Rank", "AutoRank", "Economy"};
     this.debug = false;
     this.dataStorageType = "File";
     this.serverID = "No-Set";
@@ -31,7 +31,7 @@ public class GlobalConfig implements JsonParser {
     this.playerReloadTimeout = 60;
     this.overrideCommandPerms = false;
     this.logCommandsToConsole = true;
-    this.enableCustomMOTD = true;
+    this.enableCustomMOTD = false;
   }
 
   public GlobalConfig(String[] modules, String serverID, boolean debug,

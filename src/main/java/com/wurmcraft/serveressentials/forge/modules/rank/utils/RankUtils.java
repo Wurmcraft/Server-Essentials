@@ -21,26 +21,65 @@ import net.minecraft.entity.player.EntityPlayer;
 public class RankUtils {
 
   public static void createDefaultRanks() {
-    Rank defaultRank = new Rank("Default", "&7[Default]", "&7", new String[0],
-        new String[]{"command.help", "general.tpa", "general.tpaccept", "general.home",
-            "general.sethome", "general.delhome", "general.spawn", "economy.pay",
-            "economy.balance", "language.lang", "command.rtp", "autorank.ar"});
-    Rank memberRank = new Rank("Member", "&7[&6Member&7]", "&7", new String[]{"Default"},
-        new String[]{""});
-    Rank adminRank = new Rank("Admin", "&c[&4Admin&c]", "&6", new String[]{"Member"},
-        new String[]{"*"});
+    Rank defaultRank = new Rank("Default", "&8[&eDefault&8]&e", "&7", new String[0],
+        new String[]{
+            "autorank.ar",
+            "autorank.check",
+            "core.se",
+            "general.uuid",
+            "general.list",
+            "general.motd",
+            "general.rules",
+            "general.seen",
+            "general.onlineTime",
+            "general.back",
+            "general.delHome",
+            "general.home",
+            "general.setHome",
+            "general.spawn",
+            "general.warp",
+            "general.tpaAccept",
+            "general.tpa",
+            "general.ping",
+            "language.channel",
+            "language.channel.global",
+            "language.channel.local",
+            "discord.verify",
+            "economy.balance",
+            "economy.balance.other",
+            "economy.pay",
+            "economy.sign.buy_create",
+            "economy.sign.sell_create",
+            "ftbutils.claim.25",
+            "ftbutils.chunkloading.5"
+        });
     SECore.dataHandler.registerData(DataKey.RANK, defaultRank);
+    Rank memberRank = new Rank("Member", "&8[&6Member&8]&6", "&e", new String[]{"Default"},
+        new String[]{
+            "general.echest",
+            "general.hat",
+            "general.skull",
+            "ftbutils.claim.50",
+            "ftbutils.chunkloading.10"
+        });
     SECore.dataHandler.registerData(DataKey.RANK, memberRank);
+    Rank adminRank = new Rank("Admin", "&4[&cAdmin&4]&c", "&d", new String[]{"Member"},
+        new String[]{
+            "*",
+            "ftbutils.claim.1000",
+            "ftbutils.chunkloading.100"
+        });
     SECore.dataHandler.registerData(DataKey.RANK, adminRank);
   }
 
   public static boolean hasPermission(ICommandSender sender, String node) {
     if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
-      if (ModuleLoader.getLoadedModule("Security") != null && !SecurityModule.trustedUsers.isEmpty()) {
+      if (ModuleLoader.getLoadedModule("Security") != null && !SecurityModule.trustedUsers
+          .isEmpty()) {
         EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
         String playerUUID = player.getGameProfile().getId().toString();
-        for(String id : SecurityModule.trustedUsers) {
-          if(id.replaceAll("\r", "").equalsIgnoreCase(playerUUID)) {
+        for (String id : SecurityModule.trustedUsers) {
+          if (id.replaceAll("\r", "").equalsIgnoreCase(playerUUID)) {
             return true;
           }
         }

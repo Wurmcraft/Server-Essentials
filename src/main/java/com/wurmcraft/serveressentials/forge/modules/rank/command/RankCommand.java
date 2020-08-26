@@ -9,6 +9,7 @@ import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
+import com.wurmcraft.serveressentials.forge.server.command.SECommand;
 import com.wurmcraft.serveressentials.forge.server.utils.ChatHelper;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import java.util.*;

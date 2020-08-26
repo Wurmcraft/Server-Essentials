@@ -3,7 +3,10 @@ package com.wurmcraft.serveressentials.forge.server.utils;
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.command.CommandArguments;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
+import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.Home;
+import com.wurmcraft.serveressentials.forge.server.data.FileDataHandler;
+import java.util.NoSuchElementException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -68,7 +71,15 @@ public class CommandParser {
     } else if (arg == CommandArguments.STRING || arg == CommandArguments.STRING_ARR) {
       return line;
     } else if (arg == CommandArguments.RANK) {
-      return SECore.dataHandler.getData(DataKey.RANK, line);
+      try {
+        return SECore.dataHandler.getData(DataKey.RANK, line);
+      } catch (NoSuchElementException e) {
+        for(Rank rank : SECore.dataHandler.getDataFromKey(DataKey.RANK, new Rank()).values()) {
+          if(rank.getID().equalsIgnoreCase(line))
+            return rank;
+        }
+      }
+      return null;
     } else if(arg == CommandArguments.WARP) {
       return SECore.dataHandler.getData(DataKey.WARP, line);
     } else if(arg == CommandArguments.MODULE) {

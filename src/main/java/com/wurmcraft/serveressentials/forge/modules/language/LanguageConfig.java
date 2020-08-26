@@ -13,7 +13,7 @@ public class LanguageConfig implements JsonParser {
 
   public LanguageConfig() {
     this.spamLimit = 3;
-    this.chatFormat = "%PREFIX% %NAME% \u00BB%SUFFIX% %MESSAGE%";
+    this.chatFormat = "%CHANNEL% %PREFIX% %NAME% \u00BB%SUFFIX% %MESSAGE%";
     this.defaultChannel = "global";
     this.messageFormat = "[%PLAYER% -> %PLAYER2%] %MESSAGE%";
   }
