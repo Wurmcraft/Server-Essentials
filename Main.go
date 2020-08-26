@@ -5,23 +5,26 @@ import (
 	b64 "encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/fsnotify/fsnotify"
 	"github.com/go-redis/redis"
 	mux "github.com/julienschmidt/httprouter"
+	"github.com/spf13/viper"
 	"log"
 	"net/http"
 	"os"
 	"time"
 )
 
-// Rest Config
-const version string = "0.2.1"
-const address string = ":5050"
-const httpsCert string = "fullchain.pem"
-const httpsKey string = "privkey.pem"
+const version string = "0.2.2"
 const defaultUser string = "admin"
-const chunkLoadingUpdate = 30
-const costPerDay = 50
-const costPerExtraChunk = 1.2
+
+// Loaded From Config
+var address string
+var httpsCert string
+var httpsKey string
+var chunkLoadingUpdate int64
+var costPerDay float64
+var costPerExtraChunk float64
 
 var chunkLoadingNotSeenTimeOut = 3 * (time.Hour.Milliseconds() * 24)
 
@@ -47,6 +50,7 @@ var redisDBAuth *redis.Client
 var ctx = context.Background()
 
 func main() {
+	loadAndSetupConfig()
 	fmt.Println("Loading Rest-API v" + version + " on " + address)
 	router := NewRouter()
 	_, err := newClient(0).Ping(ctx).Result()
@@ -57,7 +61,42 @@ func main() {
 	redisDBAuth = newClient(redisDatabaseAuth)
 	SetupDefaultAuth()
 	go checkForExpiredChunkLoading()
-	log.Fatal(http.ListenAndServeTLS(address, httpsCert, httpsKey, router))
+	log.Fatal(http.ListenAndServeTLS(":"+address, httpsCert, httpsKey, router))
+}
+
+func loadAndSetupConfig() {
+	viper.SetConfigName("config")
+	viper.SetConfigType("toml")
+	viper.AddConfigPath(".")
+	addDefaults()
+	err := viper.ReadInConfig()
+	if err != nil {
+		_ = viper.SafeWriteConfig()
+	}
+	copySettings()
+	viper.WatchConfig()
+	viper.OnConfigChange(func(e fsnotify.Event) {
+		fmt.Println("Config file changed!, Reloading Config")
+		copySettings()
+	})
+}
+
+func addDefaults() {
+	viper.SetDefault("address", "5050")
+	viper.SetDefault("sslCert", "fullchain.pem")
+	viper.SetDefault("sslKey", "privkey.pem")
+	viper.SetDefault("chunkLoadingUpdateTime", 30)
+	viper.SetDefault("costPerDay", 50)
+	viper.SetDefault("costPerExtraChunk", 1.2)
+}
+
+func copySettings() {
+	address = viper.GetString("Address")
+	httpsCert = viper.GetString("sslCert")
+	httpsKey = viper.GetString("sslKey")
+	chunkLoadingUpdate = viper.GetInt64("chunkLoadingUpdateTime")
+	costPerDay = viper.GetFloat64("costPerDay")
+	costPerExtraChunk = viper.GetFloat64("costPerExtraChunk")
 }
 
 func NewRouter() *mux.Router {
@@ -81,7 +120,7 @@ func newClient(databaseIndex int) *redis.Client {
 }
 
 func SetupDefaultAuth() {
-	if redisDBAuth.Exists(ctx, defaultUser).Val() == 0 || len(os.Args) > 1 && os.Args[2] == "--resetAuth" {
+	if redisDBAuth.Exists(ctx, defaultUser).Val() == 0 || len(os.Args) >= 2 && os.Args[2] == "--resetAuth" {
 		pass := CreateDefaultPassword()
 		redisDBAuth.Set(ctx, defaultUser, b64.StdEncoding.EncodeToString([]byte(pass)), 0)
 		fmt.Println("The default login info is: " + defaultUser + ":" + pass)
@@ -102,7 +141,7 @@ func calculateCostPerChunks(amount int) float64 {
 }
 
 func checkForExpiredChunkLoading() {
-	ticker := time.NewTicker(chunkLoadingUpdate * time.Minute)
+	ticker := time.NewTicker(time.Duration(chunkLoadingUpdate) * time.Minute)
 	for range ticker.C {
 		for entry := range redisChunkLoadingDB.Keys(ctx, "*").Val() {
 			var serverChunkLoading ServerChunkData

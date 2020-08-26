@@ -17,6 +17,8 @@
     
 `go get github.com/julienschmidt/httprouter`
 
+`go get github.com/spf13/viper`
+
 [4]. Build
 
 `go build -o (name)'
