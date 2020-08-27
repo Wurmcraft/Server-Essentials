@@ -186,9 +186,11 @@ public class DiscordBot {
                 System.out.println(
                     "User '" + user.getName() + "' has been verified with '" + player.uuid
                         + "'");
-                Role verifyDiscord = api.getRoleById(verifyRole).get();
-                verifyDiscord.addUser(user);
-                user.sendMessage(config.userVerified);
+                if (api.getRoleById(verifyRole).isPresent()) {
+                  Role verifyDiscord = api.getRoleById(verifyRole).get();
+                  verifyDiscord.addUser(user);
+                  user.sendMessage(config.userVerified);
+                }
               }
               verifiedUsers.put(user.getId(), player.uuid);
             } catch (Exception e) {
