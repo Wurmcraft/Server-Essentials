@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.*;
 import java.util.Base64;
 import javax.net.ssl.HttpsURLConnection;
 
@@ -242,13 +243,15 @@ public class RequestGenerator {
 
     public static void newCommand(RequestedCommand command) {
       CommandQueue[] queue = getCommandQueue();
-      for (CommandQueue q : queue) {
-        if (q.commands.length > 0 && q.commands[0].serverID.equals(command.serverID)) {
-          addCommandQueue(new CommandQueue(new RequestedCommand[] {command}));
-//          List<RequestedCommand> commands = new ArrayList<>();
-//          commands.add(command);
-//          System.out.println(addCommandQueue(new CommandQueue(commands.toArray(new RequestedCommand[0]))));
+      if (queue != null) {
+        for (CommandQueue q : queue) {
+          if (q.commands.length > 0 && q.commands[0].serverID.equals(command.serverID)) {
+            List<RequestedCommand> commands = Arrays.asList(q.commands);
+            addCommandQueue(new CommandQueue(commands.toArray(new RequestedCommand[0])));
+          }
         }
+      } else {
+        addCommandQueue(new CommandQueue(new RequestedCommand[]{command}));
       }
     }
   }

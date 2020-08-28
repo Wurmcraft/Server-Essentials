@@ -41,6 +41,7 @@ public class DiscordBot {
 
   public static Set<Long> deleteQueue = new HashSet<>();
   public static Set<Long> sendToSpawnQueue = new HashSet<>();
+  public static Set<Long> kickQueue = new HashSet<>();
 
   public static void main(String[] args) throws IOException {
     File botConfig = new File("config.json");
@@ -91,6 +92,9 @@ public class DiscordBot {
           e.getMessage().getChannel()
               .sendMessage(
                   "!sendToSpawn (Teleport's a player to spawn)");
+          e.getMessage().getChannel()
+              .sendMessage(
+                  "!kick (Kicks you from the given server)");
         }
         if (e.isPrivateMessage() && e.getMessage().getContent()
             .equalsIgnoreCase("!deletePlayerFile")) {
@@ -134,9 +138,35 @@ public class DiscordBot {
                     "You must be verified to do that!");
           }
         }
+        if (e.isPrivateMessage() && e.getMessage().getContent()
+            .equalsIgnoreCase("!kick")) {
+          if (verifiedUsers.containsKey(e.getMessage().getUserAuthor().get().getId())) {
+            e.getMessage().getChannel()
+                .sendMessage(
+                    "Please specific a serverID from the following: ");
+            kickQueue.add(e.getMessage().getUserAuthor().get().getId());
+            TrackingStatus[] statuss = RequestGenerator.Track.getStatus();
+            if (statuss.length > 0) {
+              for (TrackingStatus status : statuss) {
+                e.getMessage().getChannel().sendMessage(status.serverID);
+              }
+            } else {
+              e.getMessage().getChannel()
+                  .sendMessage(
+                      "No Server's currently have the Status module enabled, Contact a server admin!");
+            }
+            valid = true;
+
+          } else {
+            e.getMessage().getChannel()
+                .sendMessage(
+                    "You must be verified to do that!");
+          }
+        }
         if (e.isPrivateMessage() && deleteQueue
             .contains(e.getMessage().getUserAuthor().get().getId())
             || e.isPrivateMessage() && sendToSpawnQueue
+            .contains(e.getMessage().getUserAuthor().get().getId()) || e.isPrivateMessage() && kickQueue
             .contains(e.getMessage().getUserAuthor().get().getId())) {
           String id = e.getMessage().getContent();
           for (TrackingStatus status : RequestGenerator.Track.getStatus()) {
@@ -156,6 +186,15 @@ public class DiscordBot {
                 RequestGenerator.Commands.newCommand(new RequestedCommand(status.serverID,
                     "sendtospawn " + verifiedUsers
                         .get(e.getMessage().getUserAuthor().get().getId()), ""));
+              } else if (kickQueue
+                  .contains(e.getMessage().getUserAuthor().get().getId())) {
+                e.getMessage().getChannel()
+                    .sendMessage(
+                        "You you have been queued to be kicked");
+                RequestGenerator.Commands.newCommand(new RequestedCommand(status.serverID,
+                    "kick " + verifiedUsers
+                        .get(e.getMessage().getUserAuthor().get().getId()), verifiedUsers
+                    .get(e.getMessage().getUserAuthor().get().getId())));
               }
               break;
             }
@@ -164,6 +203,7 @@ public class DiscordBot {
         if (e.isPrivateMessage() && !valid) {
           deleteQueue.remove(e.getMessage().getUserAuthor().get().getId());
           sendToSpawnQueue.remove(e.getMessage().getUserAuthor().get().getId());
+          kickQueue.remove(e.getMessage().getUserAuthor().get().getId());
         }
       });
       api.getThreadPool().getScheduler().scheduleAtFixedRate(() -> {
