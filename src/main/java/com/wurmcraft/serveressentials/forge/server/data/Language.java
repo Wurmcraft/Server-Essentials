@@ -130,6 +130,7 @@ public class Language implements JsonParser {
   public String GENERAL_TPLOCK_NOTIFY;
   public String GENERAL_SENDTOSPAWN;
   public String GENERAL_DPF_DISCONNECT;
+  public String GENERAL_KICK;
 
   // Economy
   public String SIGN_NO_ITEM;

@@ -109,6 +109,7 @@
 	"GENERAL_TPLOCK_NOTIFY": "&3%PLAYER% has TPA Lock enabled",
 	"GENERAL_SENDTOSPAWN": "&3%PLAYER% has been sent to spawn!",
 	"GENERAL_DPF_DISCONNECT": "&cYour player file has been deleted",
+	"GENERAL_KICK": "&3%PLAYER% has been kicked!",
 	"SIGN_NO_ITEM": "&3You must be holding a item, to create this sign",
 	"ECO_MONEY_INSUFFICENT": "&3You need at least %AMOUNT% to purchase this",
 	"SIGN_BUY": "&3You just purchased a item for %AMOUNT%",
