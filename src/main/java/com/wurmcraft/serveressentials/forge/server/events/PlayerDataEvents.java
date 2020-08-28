@@ -83,8 +83,14 @@ public class PlayerDataEvents {
       if (mergedData == null) {
         mergedData = PlayerUtils.newPlayer(e.uuid, false);
       }
+      if (mergedData.global == null) {
+        mergedData.global = RestRequestHandler.User.getPlayer(e.uuid);
+        if (mergedData.global == null) {
+          mergedData = PlayerUtils.newPlayer(e.uuid, false);
+        }
+      }
       mergedData.global.lastSeen = Instant.now().getEpochSecond();
-      if(e.currentData != null) {
+      if (e.currentData != null) {
         mergedData.global.playtime = PlayerUtils
             .syncPlayTime(UUID.fromString(e.currentData.uuid)).global.playtime;
       }
