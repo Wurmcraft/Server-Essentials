@@ -22,7 +22,7 @@ public class OnlineTimeCommand {
     seen(sender, player.getGameProfile().getId().toString());
   }
 
-  @Command(inputArguments = {CommandArguments.PLAYER}, inputNames = {"Player"})
+  @Command(inputArguments = {CommandArguments.STRING}, inputNames = {"Player"})
   public void seen(ICommandSender sender, String player) {
     try {
       StoredPlayer playerData = PlayerUtils
