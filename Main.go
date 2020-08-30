@@ -61,6 +61,9 @@ func main() {
 		panic("Unable to connect to RedisDB ")
 	}
 	fmt.Println("Connected to redis at " + redisAddress + " starting on DataBase " + string(redisDatabase))
+	if redisDatabase > 0 {
+		fmt.Println("Database is shifted '" + string(redisDatabase))
+	}
 	redisDBAuth = newClient(redisDatabaseAuth)
 	SetupDefaultAuth()
 	go checkForExpiredChunkLoading()
@@ -109,7 +112,7 @@ func copySettings() {
 	rediDBShift = viper.GetInt("redisDBShift")
 	// Update Database ID's
 	redisDatabase = rediDBShift
-	redisDatabaseUser = redisDatabase
+	redisDatabaseUser = rediDBShift
 	redisDatabaseRank = redisDatabaseUser + 1
 	redisDatabaseAutoRank = redisDatabaseRank + 1
 	redisDatabaseTeam = redisDatabaseAutoRank + 1
