@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-const version string = "0.2.2"
+const version string = "0.2.3"
 const defaultUser string = "admin"
 
 // Loaded From Config
@@ -25,26 +25,29 @@ var httpsKey string
 var chunkLoadingUpdate int64
 var costPerDay float64
 var costPerExtraChunk float64
-
-var chunkLoadingNotSeenTimeOut = 3 * (time.Hour.Milliseconds() * 24)
+var rediDBShift int
+var chunkLoadingTimeout int64
 
 // Redis Config
-const redisAddress string = "localhost:6379"
-const redisPass string = ""
-const redisDatabase int = 0
-const redisDatabaseUser = redisDatabase
-const redisDatabaseRank = redisDatabaseUser + 1
-const redisDatabaseAutoRank = redisDatabaseRank + 1
-const redisDatabaseTeam = redisDatabaseAutoRank + 1
-const redisDatabaseEco = redisDatabaseTeam + 1
-const redisDatabaseStatus = redisDatabaseEco + 1
-const redisDatabaseTransfer = redisDatabaseStatus + 1
-const redisDatabaseDiscord = redisDatabaseTransfer + 1
-const redisDatabaseLookup = redisDatabaseDiscord + 1
-const redisDatabaseBan = redisDatabaseLookup + 1
-const redisDatabaseAuth = redisDatabaseBan + 1
-const redisDatabaseChunkLoading = redisDatabaseAuth + 1
-const redisCommandStorage = redisDatabaseChunkLoading + 1
+var redisAddress string
+var redisPass string
+
+// Dynamic based on config
+var redisDatabase int
+var redisDatabaseUser = redisDatabase
+var redisDatabaseRank = redisDatabaseUser + 1
+var redisDatabaseAutoRank = redisDatabaseRank + 1
+var redisDatabaseTeam = redisDatabaseAutoRank + 1
+var redisDatabaseEco = redisDatabaseTeam + 1
+var redisDatabaseStatus = redisDatabaseEco + 1
+var redisDatabaseTransfer = redisDatabaseStatus + 1
+var redisDatabaseDiscord = redisDatabaseTransfer + 1
+var redisDatabaseLookup = redisDatabaseDiscord + 1
+var redisDatabaseBan = redisDatabaseLookup + 1
+var redisDatabaseAuth = redisDatabaseBan + 1
+var redisDatabaseChunkLoading = redisDatabaseAuth + 1
+var redisCommandStorage = redisDatabaseChunkLoading + 1
+var chunkLoadingNotSeenTimeOut int64
 
 var redisDBAuth *redis.Client
 var ctx = context.Background()
@@ -88,6 +91,10 @@ func addDefaults() {
 	viper.SetDefault("chunkLoadingUpdateTime", 30)
 	viper.SetDefault("costPerDay", 50)
 	viper.SetDefault("costPerExtraChunk", 1.2)
+	viper.SetDefault("redisDBShift", 0)
+	viper.SetDefault("redisAddress", "localhost:6379")
+	viper.SetDefault("redisPassword", "")
+	viper.SetDefault("chunkLoadingTimeout", 3)
 }
 
 func copySettings() {
@@ -97,6 +104,26 @@ func copySettings() {
 	chunkLoadingUpdate = viper.GetInt64("chunkLoadingUpdateTime")
 	costPerDay = viper.GetFloat64("costPerDay")
 	costPerExtraChunk = viper.GetFloat64("costPerExtraChunk")
+	redisAddress = viper.GetString("redisAddress")
+	redisPass = viper.GetString("redisPass")
+	rediDBShift = viper.GetInt("redisDBShift")
+	// Update Database ID's
+	redisDatabase = rediDBShift
+	redisDatabaseUser = redisDatabase
+	redisDatabaseRank = redisDatabaseUser + 1
+	redisDatabaseAutoRank = redisDatabaseRank + 1
+	redisDatabaseTeam = redisDatabaseAutoRank + 1
+	redisDatabaseEco = redisDatabaseTeam + 1
+	redisDatabaseStatus = redisDatabaseEco + 1
+	redisDatabaseTransfer = redisDatabaseStatus + 1
+	redisDatabaseDiscord = redisDatabaseTransfer + 1
+	redisDatabaseLookup = redisDatabaseDiscord + 1
+	redisDatabaseBan = redisDatabaseLookup + 1
+	redisDatabaseAuth = redisDatabaseBan + 1
+	redisDatabaseChunkLoading = redisDatabaseAuth + 1
+	redisCommandStorage = redisDatabaseChunkLoading + 1
+	chunkLoadingTimeout = viper.GetInt64("chunkLoadingTimeout")
+	chunkLoadingNotSeenTimeOut = chunkLoadingTimeout * (time.Hour.Milliseconds() * 24)
 }
 
 func NewRouter() *mux.Router {
