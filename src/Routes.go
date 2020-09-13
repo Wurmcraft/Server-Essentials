@@ -1,12 +1,11 @@
 package main
 
 import (
-	"encoding/base64"
-	b64 "encoding/base64"
+	"encoding/json"
 	"fmt"
 	mux "github.com/julienschmidt/httprouter"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
-	"strings"
 )
 
 type Route struct {
@@ -259,16 +258,23 @@ var routes = Routes{
 	Route{
 		"AddAuth",
 		"POST",
-		"/api/auth/add",
+		"/api/auth",
 		true,
 		AddAuth,
 	},
 	Route{
 		"DelAuth",
 		"DELETE",
-		"/api/auth/delete",
+		"/api/auth",
 		true,
-		AddAuth,
+		DelAuth,
+	},
+	Route{
+		"DelAuth",
+		"DELETE",
+		"/api/auth",
+		true,
+		UpdateAuth,
 	},
 	Route{
 		"AddChunkLoading",
@@ -320,14 +326,12 @@ func Index(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 
 func auth(pass mux.Handle) mux.Handle {
 	return func(w http.ResponseWriter, r *http.Request, m mux.Params) {
-		auth := strings.SplitN(r.Header.Get("Authorization"), " ", 2)
-		if len(auth) != 2 || auth[0] != "Basic" {
+		auth := r.Header.Get("token")
+		if len(auth) == 0 {
 			http.Error(w, "Failed to Authorize", http.StatusUnauthorized)
 			return
 		}
-		payload, _ := base64.StdEncoding.DecodeString(auth[1])
-		pair := strings.SplitN(string(payload), ":", 2)
-		if len(pair) != 2 || !validate(pair[0], pair[1]) {
+		if !validate(auth) {
 			http.Error(w, "Failed to Authorize", http.StatusUnauthorized)
 			return
 		}
@@ -335,13 +339,14 @@ func auth(pass mux.Handle) mux.Handle {
 	}
 }
 
-func validate(server, authKey string) bool {
-	if redisDBAuth.Exists(ctx, server).Val() == 1 {
-		auth, err := b64.StdEncoding.DecodeString(redisDBAuth.Get(ctx, server).Val())
-		if err != nil {
-			return false
+func validate(token string) bool {
+	for entry := range redisDBAuth.Keys(ctx, "*").Val() {
+		var authStorage AuthStorage
+		json.Unmarshal([]byte(redisDBAuth.Get(ctx, redisDBAuth.Keys(ctx, "*").Val()[entry]).Val()), &authStorage)
+		err := bcrypt.CompareHashAndPassword([]byte(authStorage.AuthToken), []byte(token))
+		if err == nil {
+			return true
 		}
-		return string(auth) == authKey
 	}
 	return false
 }

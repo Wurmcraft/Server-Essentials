@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v8"
 	mux "github.com/julienschmidt/httprouter"
 	"io/ioutil"
 	"math"
