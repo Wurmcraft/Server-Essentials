@@ -13,8 +13,9 @@ import (
 	"time"
 )
 
-const version string = "0.2.3"
+const version string = "0.3.0"
 const defaultUser string = "admin"
+const sslEnabled = true
 
 var redisDBAuth *redis.Client
 var ctx = context.Background()
@@ -34,7 +35,11 @@ func main() {
 	redisDBAuth = newClient(redisDatabaseAuth)
 	SetupDefaultAuth()
 	go checkForExpiredChunkLoading()
-	log.Fatal(http.ListenAndServeTLS(":"+address, httpsCert, httpsKey, router))
+	if sslEnabled {
+		log.Fatal(http.ListenAndServeTLS(":"+address, httpsCert, httpsKey, router))
+	} else {
+		log.Fatal(http.ListenAndServe(":"+address, router))
+	}
 }
 
 func NewRouter() *mux.Router {
