@@ -6,6 +6,7 @@ import (
 	mux "github.com/julienschmidt/httprouter"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"strings"
 )
 
 type Route struct {
@@ -340,11 +341,27 @@ func auth(pass mux.Handle) mux.Handle {
 }
 
 func validate(token string) bool {
+	if len(GetPermission(token).Permission) > 0 {
+		return true
+	}
+	return false
+}
+
+func GetPermission(token string) AuthStorage {
 	for entry := range redisDBAuth.Keys(ctx, "*").Val() {
 		var authStorage AuthStorage
 		json.Unmarshal([]byte(redisDBAuth.Get(ctx, redisDBAuth.Keys(ctx, "*").Val()[entry]).Val()), &authStorage)
 		err := bcrypt.CompareHashAndPassword([]byte(authStorage.AuthToken), []byte(token))
 		if err == nil {
+			return authStorage
+		}
+	}
+	return AuthStorage{}
+}
+
+func hasPermission(user AuthStorage, typ string) bool {
+	for _, b := range user.Permission {
+		if strings.Compare(b, typ) == 0 {
 			return true
 		}
 	}

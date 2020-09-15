@@ -11,11 +11,17 @@ import (
 
 var redisDBdiscord *redis.Client
 
+const permDiscord = "discord"
+
 func init() {
 	redisDBdiscord = newClient(redisDatabaseDiscord)
 }
 
 func SetToken(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+	if hasPermission(GetPermission(r.Header.Get("token")), permDiscord) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {

@@ -11,6 +11,8 @@ import (
 
 var redisChunkLoadingDB *redis.Client
 
+const permChunkLoading = "chunkloading"
+
 func init() {
 	redisChunkLoadingDB = newClient(redisDatabaseChunkLoading)
 }
@@ -27,6 +29,10 @@ func GetChunkLoadingForServerID(w http.ResponseWriter, _ *http.Request, p mux.Pa
 }
 
 func UpdateServerID(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+	if hasPermission(GetPermission(r.Header.Get("token")), permChunkLoading) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	c, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {

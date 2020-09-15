@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	b64 "encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis/v8"
@@ -65,7 +64,12 @@ func newClient(databaseIndex int) *redis.Client {
 func SetupDefaultAuth() {
 	if redisDBAuth.Exists(ctx, defaultUser).Val() == 0 || len(os.Args) >= 2 && os.Args[2] == "--resetAuth" {
 		pass := randomAuthKey()
-		redisDBAuth.Set(ctx, defaultUser, b64.StdEncoding.EncodeToString([]byte(pass)), 0)
+		defaultA := AuthStorage{}
+		defaultA.UserId = defaultUser
+		defaultA.AuthToken = hashCode(pass)
+		defaultA.Permission = []string{permAutoRank, permBan, permChunkLoading, permCommands, permDiscord, permEco, permStatus, permRank, permAuth, permTransfer, permUser}
+		a, _ := json.Marshal(defaultA)
+		redisDBAuth.Set(ctx, defaultA.UserId, a, 0)
 		fmt.Println("The default login token is: " + pass + " under user '" + defaultUser + "'")
 		fmt.Println("Make sure to save and place the login in a safe place. start this up with --resetAuth to reset the auth login")
 	}

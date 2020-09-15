@@ -11,6 +11,8 @@ import (
 
 var redisDBCommand *redis.Client
 
+const permCommands = "commands"
+
 func init() {
 	redisDBCommand = newClient(redisCommandStorage)
 }
@@ -31,6 +33,10 @@ func GetAllCommands(w http.ResponseWriter, _ *http.Request, m mux.Params) {
 }
 
 func addCommand(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+	if hasPermission(GetPermission(r.Header.Get("token")), permCommands) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {

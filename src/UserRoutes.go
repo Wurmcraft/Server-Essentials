@@ -11,6 +11,8 @@ import (
 
 var redisDBuser *redis.Client
 
+const permUser = "users"
+
 func init() {
 	redisDBuser = newClient(redisDatabaseUser)
 }
@@ -27,6 +29,10 @@ func GetGlobalUser(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 }
 
 func SetGlobalUser(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+	if hasPermission(GetPermission(r.Header.Get("token")), permUser) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -51,17 +57,28 @@ func SetGlobalUser(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func GetAllUsers(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
+func GetAllUsers(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	var data []UserSimple
-	for entry := range redisDBuser.Keys(ctx, "*").Val() {
-		var globalUser GlobalUser
-		json.Unmarshal([]byte(redisDBuser.Get(ctx, redisDBuser.Keys(ctx, "*").Val()[entry]).Val()), &globalUser)
-		data = append(data, UserSimple{
-			UUID:    globalUser.UUID,
-			Rank:    globalUser.Rank,
-			Discord: globalUser.DiscordID,
-			Wallet:  globalUser.Wallet,
-		})
+	if hasPermission(GetPermission(r.Header.Get("token")), permUser) {
+		for entry := range redisDBuser.Keys(ctx, "*").Val() {
+			var globalUser GlobalUser
+			json.Unmarshal([]byte(redisDBuser.Get(ctx, redisDBuser.Keys(ctx, "*").Val()[entry]).Val()), &globalUser)
+			data = append(data, UserSimple{
+				UUID:    globalUser.UUID,
+				Rank:    globalUser.Rank,
+				Discord: globalUser.DiscordID,
+				Wallet:  globalUser.Wallet,
+			})
+		}
+	} else {
+		for entry := range redisDBuser.Keys(ctx, "*").Val() {
+			var globalUser GlobalUser
+			json.Unmarshal([]byte(redisDBuser.Get(ctx, redisDBuser.Keys(ctx, "*").Val()[entry]).Val()), &globalUser)
+			data = append(data, UserSimple{
+				UUID: globalUser.UUID,
+				Rank: globalUser.Rank,
+			})
+		}
 	}
 	playerData := AllPlayers{Players: data}
 	output, err := json.MarshalIndent(playerData, " ", " ")

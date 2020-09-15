@@ -13,6 +13,8 @@ import (
 
 var redisDBStatus *redis.Client
 
+const permStatus = "status"
+
 func init() {
 	redisDBStatus = newClient(redisDatabaseStatus)
 }
@@ -48,6 +50,10 @@ func GetServerStatus(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 }
 
 func PostStatus(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+	if hasPermission(GetPermission(r.Header.Get("token")), permStatus) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {

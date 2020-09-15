@@ -11,6 +11,8 @@ import (
 
 var redisDBBan *redis.Client
 
+const permBan = "ban"
+
 func init() {
 	redisDBBan = newClient(redisDatabaseBan)
 }
@@ -27,6 +29,10 @@ func GetBan(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 }
 
 func CreateBan(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+	if hasPermission(GetPermission(r.Header.Get("token")), permBan) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -64,6 +70,10 @@ func GetAllBans(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 }
 
 func DeleteBan(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+	if hasPermission(GetPermission(r.Header.Get("token")), permBan) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {

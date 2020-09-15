@@ -12,6 +12,8 @@ import (
 var redisDBEco *redis.Client
 var redisDBclient *redis.Client
 
+const permEco = "economy"
+
 func init() {
 	redisDBEco = newClient(redisDatabaseEco)
 	redisDBclient = newClient(redisDatabaseUser)
@@ -29,6 +31,10 @@ func GetEco(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 }
 
 func SetEco(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+	if hasPermission(GetPermission(r.Header.Get("token")), permEco) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -51,6 +57,10 @@ func SetEco(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 }
 
 func DelEco(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+	if hasPermission(GetPermission(r.Header.Get("token")), permEco) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {

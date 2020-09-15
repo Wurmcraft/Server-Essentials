@@ -11,13 +11,14 @@ import (
 
 var redisDBAutoRank *redis.Client
 
+const permAutoRank = "autorank"
+
 func init() {
 	redisDBAutoRank = newClient(redisDatabaseAutoRank)
 }
 
-func GetAutoRank(w http.ResponseWriter, _ *http.Request, p mux.Params) {
+func GetAutoRank(w http.ResponseWriter, r *http.Request, p mux.Params) {
 	name := string(p[0].Value)
-	fmt.Println(name + " " + string(redisDBAutoRank.Exists(ctx, name).Val()))
 	if redisDBAutoRank.Exists(ctx, name).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
 		w.Header().Set("version", version)
@@ -28,6 +29,10 @@ func GetAutoRank(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 }
 
 func SetAutoRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+	if hasPermission(GetPermission(r.Header.Get("token")), permAutoRank) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -50,6 +55,10 @@ func SetAutoRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 }
 
 func DelAutoRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+	if hasPermission(GetPermission(r.Header.Get("token")), permAutoRank) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {

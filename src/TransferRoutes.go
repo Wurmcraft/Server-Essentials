@@ -11,11 +11,17 @@ import (
 
 var redisDBtransfer *redis.Client
 
+const permTransfer = "transfer"
+
 func init() {
 	redisDBtransfer = newClient(redisDatabaseTransfer)
 }
 
-func GetTransferData(w http.ResponseWriter, _ *http.Request, p mux.Params) {
+func GetTransferData(w http.ResponseWriter, r *http.Request, p mux.Params) {
+	if hasPermission(GetPermission(r.Header.Get("token")), permTransfer) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	uuid := string(p[0].Value)
 	if redisDBtransfer.Exists(ctx, uuid).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
@@ -27,6 +33,10 @@ func GetTransferData(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 }
 
 func SetTransferData(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+	if hasPermission(GetPermission(r.Header.Get("token")), permTransfer) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {

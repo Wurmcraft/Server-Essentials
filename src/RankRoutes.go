@@ -11,6 +11,8 @@ import (
 
 var redisDBRank *redis.Client
 
+const permRank = "rank"
+
 func init() {
 	redisDBRank = newClient(redisDatabaseRank)
 }
@@ -27,6 +29,10 @@ func GetRank(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 }
 
 func SetRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+	if hasPermission(GetPermission(r.Header.Get("token")), permRank) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -49,6 +55,10 @@ func SetRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 }
 
 func DelRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+	if hasPermission(GetPermission(r.Header.Get("token")), permRank) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
