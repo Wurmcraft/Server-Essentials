@@ -14,7 +14,7 @@ import (
 
 const version string = "0.3.0"
 const defaultUser string = "admin"
-const sslEnabled = false
+const sslEnabled = true
 
 var redisDBAuth *redis.Client
 var ctx = context.Background()

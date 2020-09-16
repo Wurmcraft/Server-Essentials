@@ -15,7 +15,7 @@ type GlobalUser struct {
 	Perks        []string    `json:"perks"`
 	Language     string      `json:"language"`
 	Muted        bool        `json:"muted"`
-	MuteTime     int64       `json:"muteExpire"`
+	MuteTime     float64     `json:"muteExpire"`
 	Wallet       Wallet      `json:"wallet"`
 	NetworkTime  NetworkTime `json:"playtime"`
 	DiscordID    string      `json:"discordID"`
