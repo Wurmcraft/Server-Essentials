@@ -17,7 +17,7 @@ var authTokenLength = 64
 const permAuth = "auth"
 
 func AddAuth(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permAuth) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permAuth) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}
@@ -46,7 +46,7 @@ func AddAuth(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 }
 
 func UpdateAuth(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permAuth) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permAuth) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}
@@ -75,7 +75,7 @@ func UpdateAuth(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 }
 
 func DelAuth(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permAuth) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permAuth) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}

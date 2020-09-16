@@ -50,7 +50,7 @@ func GetServerStatus(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 }
 
 func PostStatus(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permStatus) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permStatus) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}

@@ -29,7 +29,7 @@ func GetChunkLoadingForServerID(w http.ResponseWriter, _ *http.Request, p mux.Pa
 }
 
 func UpdateServerID(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permChunkLoading) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permChunkLoading) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}

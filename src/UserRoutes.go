@@ -29,7 +29,7 @@ func GetGlobalUser(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 }
 
 func SetGlobalUser(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permUser) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permUser) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}
@@ -59,7 +59,7 @@ func SetGlobalUser(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	var data []UserSimple
-	if hasPermission(GetPermission(r.Header.Get("token")), permUser) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permUser) {
 		for entry := range redisDBuser.Keys(ctx, "*").Val() {
 			var globalUser GlobalUser
 			json.Unmarshal([]byte(redisDBuser.Get(ctx, redisDBuser.Keys(ctx, "*").Val()[entry]).Val()), &globalUser)

@@ -18,7 +18,7 @@ func init() {
 }
 
 func GetTransferData(w http.ResponseWriter, r *http.Request, p mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permTransfer) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permTransfer) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}
@@ -33,7 +33,7 @@ func GetTransferData(w http.ResponseWriter, r *http.Request, p mux.Params) {
 }
 
 func SetTransferData(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permTransfer) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permTransfer) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}

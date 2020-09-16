@@ -33,7 +33,7 @@ func GetAllCommands(w http.ResponseWriter, _ *http.Request, m mux.Params) {
 }
 
 func addCommand(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permCommands) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permCommands) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}

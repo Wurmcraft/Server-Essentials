@@ -29,7 +29,7 @@ func GetBan(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 }
 
 func CreateBan(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permBan) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permBan) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}
@@ -70,7 +70,7 @@ func GetAllBans(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 }
 
 func DeleteBan(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permBan) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permBan) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}

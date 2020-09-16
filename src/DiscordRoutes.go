@@ -18,7 +18,7 @@ func init() {
 }
 
 func SetToken(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permDiscord) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permDiscord) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}

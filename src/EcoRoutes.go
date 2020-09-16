@@ -31,7 +31,7 @@ func GetEco(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 }
 
 func SetEco(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permEco) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permEco) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}
@@ -57,7 +57,7 @@ func SetEco(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 }
 
 func DelEco(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permEco) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permEco) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}

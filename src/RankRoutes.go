@@ -29,7 +29,7 @@ func GetRank(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 }
 
 func SetRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permRank) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permRank) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}
@@ -55,7 +55,7 @@ func SetRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 }
 
 func DelRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	if hasPermission(GetPermission(r.Header.Get("token")), permRank) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permRank) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}
