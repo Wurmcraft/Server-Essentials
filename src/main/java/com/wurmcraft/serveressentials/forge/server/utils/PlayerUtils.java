@@ -10,6 +10,7 @@ import com.wurmcraft.serveressentials.forge.api.json.player.ServerPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.data.Language;
+import com.wurmcraft.serveressentials.forge.server.data.RestDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
 import com.wurmcraft.serveressentials.forge.server.events.PlayerDataEvents;
 import java.time.Instant;
@@ -61,8 +62,12 @@ public class PlayerUtils {
     MinecraftForge.EVENT_BUS.post(event);
     playerData = event.newData;
     SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
-    if (print && SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
-      RestRequestHandler.User.addPlayer(playerData.global);
+    if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+      int code = RestRequestHandler.User.addPlayer(playerData.global);
+      if (code != 201) {
+        ServerEssentialsServer.LOGGER
+            .warn(playerData.uuid + " has failed to save! (" + code + ")");
+      }
     }
     boolean finalNewToNetwork = newToNetwork;
     ServerEssentialsServer.EXECUTORS.schedule(() -> {
@@ -106,6 +111,16 @@ public class PlayerUtils {
   public static StoredPlayer syncPlayTime(UUID uuid) {
     if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
       GlobalPlayer globalData = RestRequestHandler.User.getPlayer(uuid.toString());
+      StoredPlayer playerData = PlayerUtils.get(uuid.toString());
+      playerData.global = globalData;
+      return addPlaytime(playerData, (int) PlayerDataEvents.calculatePlaytime(uuid));
+    } else {
+      return addPlaytime(get(uuid), (int) PlayerDataEvents.calculatePlaytime(uuid));
+    }
+  }
+
+  public static StoredPlayer syncPlayTime(UUID uuid, GlobalPlayer globalData) {
+    if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
       StoredPlayer playerData = PlayerUtils.get(uuid.toString());
       playerData.global = globalData;
       return addPlaytime(playerData, (int) PlayerDataEvents.calculatePlaytime(uuid));

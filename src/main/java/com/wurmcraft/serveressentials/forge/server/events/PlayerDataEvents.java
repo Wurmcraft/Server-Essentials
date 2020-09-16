@@ -92,12 +92,13 @@ public class PlayerDataEvents {
       mergedData.global.lastSeen = Instant.now().getEpochSecond();
       if (e.currentData != null) {
         mergedData.global.playtime = PlayerUtils
-            .syncPlayTime(UUID.fromString(e.currentData.uuid)).global.playtime;
+            .syncPlayTime(UUID.fromString(e.currentData.uuid),
+                mergedData.global).global.playtime;
       }
       mergedData.server.lastSeen = Instant.now().getEpochSecond();
       e.loadedPlayer = mergedData;
       if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
-        RestRequestHandler.User.overridePlayer(e.otherData.uuid, mergedData.global);
+        RestRequestHandler.User.overridePlayer(e.currentData.uuid, mergedData.global);
       }
       if (SECore.config.debug) {
         ServerEssentialsServer.LOGGER.info("Syncing Player '" + UsernameCache

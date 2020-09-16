@@ -14,6 +14,7 @@ import com.wurmcraft.serveressentials.forge.api.json.rest.ServerChunkData;
 import com.wurmcraft.serveressentials.forge.api.json.rest.ServerChunkData.PlayerChunkData;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler.ChunkLoading;
+import com.wurmcraft.serveressentials.forge.server.events.PlayerDataEvents;
 import java.util.NoSuchElementException;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 

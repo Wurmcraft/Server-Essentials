@@ -25,28 +25,10 @@ public class RestRequestHandler {
 
   public static final String USER_AGENT = "Mozilla/5.0";
 
-  private String auth = createRestAuth(SECore.config.Rest.restAuth);
   private String baseURL = parseConfigURL(SECore.config.Rest.restURL) + "api/";
 
   private static RestRequestHandler INSTANCE = new RestRequestHandler();
   public static RestValidate validate = null;
-
-  private boolean isBase64(String data) {
-    try {
-      Base64.getDecoder().decode(data.getBytes());
-      return true;
-    } catch (IllegalArgumentException e) {
-      return false;
-    }
-  }
-
-  private String createRestAuth(String auth) {
-    if (isBase64(auth)) {
-      return "Basic " + auth.getBytes();
-    } else {
-      return "Basic " + Base64.getEncoder().encodeToString(auth.getBytes());
-    }
-  }
 
   public static String parseConfigURL(String url) {
     if (url.endsWith("/")) {
@@ -73,7 +55,7 @@ public class RestRequestHandler {
       https.setRequestMethod(type.toUpperCase());
       https.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
       https.setDoOutput(true);
-      https.setRequestProperty("Authorization", auth);
+      https.setRequestProperty("token", SECore.config.Rest.restAuth);
       String json = GSON.toJson(data).replaceAll("\n", "");
       connection.setRequestProperty("Content-Length", String.valueOf(json.length()));
       connection.getOutputStream().write(json.getBytes());
@@ -110,7 +92,7 @@ public class RestRequestHandler {
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("User-Agent", USER_AGENT);
-        con.setRequestProperty("Authorization", auth);
+        con.setRequestProperty("token", SECore.config.Rest.restAuth);
         con.setReadTimeout(300000);
         int responseCode = con.getResponseCode();
         if (responseCode == HttpsURLConnection.HTTP_OK
@@ -137,42 +119,42 @@ public class RestRequestHandler {
     public static com.wurmcraft.serveressentials.forge.api.json.basic.Rank getRank(
         String name) {
       return INSTANCE.get(
-          "rank/" + name, com.wurmcraft.serveressentials.forge.api.json.basic.Rank.class);
+          "ranks/" + name, com.wurmcraft.serveressentials.forge.api.json.basic.Rank.class);
     }
 
     public static int addRank(
         com.wurmcraft.serveressentials.forge.api.json.basic.Rank rank) {
-      return INSTANCE.post("rank/add", rank);
+      return INSTANCE.post("ranks/add", rank);
     }
 
     public static int overrideRank(
         com.wurmcraft.serveressentials.forge.api.json.basic.Rank rank) {
-      return INSTANCE.post("rank/" + rank.getID() + "/override", rank);
+      return INSTANCE.post("ranks/" + rank.getID() + "/override", rank);
     }
 
     public static int deleteRank(
         com.wurmcraft.serveressentials.forge.api.json.basic.Rank rank) {
-      return INSTANCE.post("rank/" + rank.getID() + "/del", rank);
+      return INSTANCE.post("ranks/" + rank.getID() + "/del", rank);
     }
 
     public static com.wurmcraft.serveressentials.forge.api.json.basic.Rank[] getAllRanks() {
       return INSTANCE
-          .get("rank/", com.wurmcraft.serveressentials.forge.api.json.basic.Rank[].class);
+          .get("ranks/", com.wurmcraft.serveressentials.forge.api.json.basic.Rank[].class);
     }
   }
 
   public static class User {
 
     public static GlobalPlayer getPlayer(String uuid) {
-      return INSTANCE.get("user/" + uuid, GlobalPlayer.class);
+      return INSTANCE.get("users/" + uuid, GlobalPlayer.class);
     }
 
     public static int addPlayer(GlobalPlayer player) {
-      return INSTANCE.post("user/add", player);
+      return INSTANCE.post("users/add", player);
     }
 
     public static int overridePlayer(String uuid, GlobalPlayer player) {
-      return INSTANCE.put("user/" + uuid + "/override", player);
+      return INSTANCE.put("users/" + uuid + "/override", player);
     }
   }
 
@@ -186,8 +168,7 @@ public class RestRequestHandler {
   public static class Track {
 
     public static int updateTrack(ServerStatus status) {
-      return INSTANCE.post("stat"
-          + "us", status);
+      return INSTANCE.post("status", status);
     }
 
     public static ServerStatus[] getStatus() {
@@ -217,11 +198,11 @@ public class RestRequestHandler {
     }
 
     public static int overrideCurrency(CurrencyConversion currency) {
-      return INSTANCE.put("/eco" + currency.name + "/override", currency);
+      return INSTANCE.put("/currency" + currency.name + "/override", currency);
     }
 
     public static int delCurrency(CurrencyConversion currency) {
-      return INSTANCE.put("/eco" + currency.name + "/del", currency);
+      return INSTANCE.put("/currency" + currency.name + "/del", currency);
     }
   }
 
@@ -241,30 +222,30 @@ public class RestRequestHandler {
 
     public static com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank[] getAutoRanks() {
       return INSTANCE.get(
-          "autoRank",
+          "autoRanks",
           com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank[].class);
     }
 
     public static com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank getAutoRank(
         String rank) {
       return INSTANCE.get(
-          "autoRank/" + rank,
+          "autoRanks/" + rank,
           com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank.class);
     }
 
     public static int addAutoRank(
         com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank rank) {
-      return INSTANCE.post("autoRank/add", rank);
+      return INSTANCE.post("autoRanks/add", rank);
     }
 
     public static int deleteAutoRank(
         com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank ar) {
-      return INSTANCE.put("autoRank/" + ar.getID() + "/del", ar);
+      return INSTANCE.put("autoRanks/" + ar.getID() + "/del", ar);
     }
 
     public static int overrideAutoRank(
         com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank rank) {
-      return INSTANCE.post("autoRank/" + rank.getID() + "/override", rank);
+      return INSTANCE.post("autoRanks/" + rank.getID() + "/override", rank);
     }
   }
 
@@ -275,11 +256,11 @@ public class RestRequestHandler {
     }
 
     public static int addGlobalBans(GlobalBan ban) {
-      return INSTANCE.post("ban/add", ban);
+      return INSTANCE.post("bans/add", ban);
     }
 
     public static int deleteBan(GlobalBan ban) {
-      return INSTANCE.put("ban/" + ban.getID() + "/del", ban);
+      return INSTANCE.put("bans/" + ban.getID() + "/del", ban);
     }
   }
 
