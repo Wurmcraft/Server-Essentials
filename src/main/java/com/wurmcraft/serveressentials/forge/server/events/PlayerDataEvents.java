@@ -90,7 +90,7 @@ public class PlayerDataEvents {
         }
       }
       mergedData.global.lastSeen = Instant.now().getEpochSecond();
-      if (e.currentData != null) {
+      if (e.currentData != null && mergedData.global != null && e.currentData.uuid != null && !e.currentData.uuid.isEmpty()) {
         mergedData.global.playtime = PlayerUtils
             .syncPlayTime(UUID.fromString(e.currentData.uuid),
                 mergedData.global).global.playtime;
@@ -100,7 +100,7 @@ public class PlayerDataEvents {
       if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
         RestRequestHandler.User.overridePlayer(e.currentData.uuid, mergedData.global);
       }
-      if (SECore.config.debug) {
+      if (SECore.config != null && SECore.config.debug) {
         ServerEssentialsServer.LOGGER.info("Syncing Player '" + UsernameCache
             .getLastKnownUsername(UUID.fromString(e.currentData.uuid)) + "'");
       }
