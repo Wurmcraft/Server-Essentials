@@ -38,7 +38,7 @@ var routes = Routes{
 	Route{
 		"GetUsers",
 		"GET",
-		"/api/user/:uuid",
+		"/api/users/:uuid",
 		false,
 		GetGlobalUser,
 	},

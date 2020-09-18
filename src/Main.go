@@ -14,7 +14,7 @@ import (
 
 const version string = "0.3.0"
 const defaultUser string = "admin"
-const sslEnabled = true
+const sslEnabled = false
 
 var redisDBAuth *redis.Client
 var ctx = context.Background()
@@ -34,6 +34,7 @@ func main() {
 	redisDBAuth = newClient(redisDatabaseAuth)
 	SetupDefaultAuth()
 	go checkForExpiredChunkLoading()
+	go startupBot()
 	if sslEnabled {
 		log.Fatal(http.ListenAndServeTLS(":"+address, httpsCert, httpsKey, router))
 	} else {
@@ -63,7 +64,7 @@ func newClient(databaseIndex int) *redis.Client {
 
 func SetupDefaultAuth() {
 	if redisDBAuth.Exists(ctx, defaultUser).Val() == 0 || len(os.Args) >= 2 && os.Args[2] == "--resetAuth" {
-		pass := randomAuthKey()
+		pass := randomAuthKey(96)
 		defaultA := AuthStorage{}
 		defaultA.UserId = defaultUser
 		defaultA.AuthToken = hashCode(pass)

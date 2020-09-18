@@ -16,6 +16,10 @@ var costPerDay float64
 var costPerExtraChunk float64
 var rediDBShift int
 var chunkLoadingTimeout int64
+var discordToken string
+var discordAuthTokenSize int
+var discordRoleID string
+var discordServerID string
 
 // Redis Config
 var redisAddress string
@@ -66,6 +70,10 @@ func addDefaults() {
 	viper.SetDefault("redisAddress", "localhost:6379")
 	viper.SetDefault("redisPassword", "")
 	viper.SetDefault("chunkLoadingTimeout", 3)
+	viper.SetDefault("discordToken", "bot-token-here")
+	viper.SetDefault("discordAuthTokenSize", 12)
+	viper.SetDefault("discordRoleID", "")
+	viper.SetDefault("discordServerID", "")
 }
 
 func copySettings() {
@@ -78,6 +86,10 @@ func copySettings() {
 	redisAddress = viper.GetString("redisAddress")
 	redisPass = viper.GetString("redisPass")
 	rediDBShift = viper.GetInt("redisDBShift")
+	discordToken = viper.GetString("discordToken")
+	discordAuthTokenSize = viper.GetInt("discordAuthTokenSize")
+	discordRoleID = viper.GetString("discordRoleID")
+	discordServerID = viper.GetString("discordServerID")
 	// Update Database ID's
 	redisDatabase = rediDBShift
 	redisDatabaseUser = rediDBShift

@@ -33,7 +33,7 @@ func AddAuth(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	code := randomAuthKey()
+	code := randomAuthKey(64)
 	auth.AuthToken = hashCode(code)
 	a, err := json.Marshal(auth)
 	if err != nil {
@@ -104,13 +104,13 @@ func hashCode(code string) string {
 	return string(hash)
 }
 
-func randomAuthKey() string {
+func randomAuthKey(size int) string {
 	rand.Seed(time.Now().UnixNano())
 	chars := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
 		"abcdefghijklmnopqrstuvwxyz" +
 		"0123456789")
 	var b strings.Builder
-	for i := 0; i < authTokenLength; i++ {
+	for i := 0; i < size; i++ {
 		b.WriteRune(chars[rand.Intn(len(chars))])
 	}
 	return b.String()

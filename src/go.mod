@@ -3,7 +3,7 @@ module ServerEssentials
 go 1.14
 
 require (
-	github.com/bwmarrin/discordgo v0.22.0 // indirect
+	github.com/bwmarrin/discordgo v0.22.0
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-redis/redis/v8 v8.0.0-beta.12
