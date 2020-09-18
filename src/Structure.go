@@ -51,6 +51,15 @@ type UserSimple struct {
 	Wallet  Wallet `json:"wallet"`
 }
 
+type UserBasic struct {
+	UUID string `json:"uuid"`
+	Rank string `json:"rank"`
+}
+
+type AllPlayersBasic struct {
+	Players []UserBasic `json:"players"`
+}
+
 type UserLookup struct {
 	UUID string `json:"uuid"`
 	Name string `json:"name"`

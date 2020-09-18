@@ -58,8 +58,8 @@ func SetGlobalUser(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 }
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request, _ mux.Params) {
-	var data []UserSimple
 	if !hasPermission(GetPermission(r.Header.Get("token")), permUser) {
+		var data []UserSimple
 		for entry := range redisDBuser.Keys(ctx, "*").Val() {
 			var globalUser GlobalUser
 			json.Unmarshal([]byte(redisDBuser.Get(ctx, redisDBuser.Keys(ctx, "*").Val()[entry]).Val()), &globalUser)
@@ -70,21 +70,29 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 				Wallet:  globalUser.Wallet,
 			})
 		}
+		playerData := AllPlayers{Players: data}
+		output, err := json.MarshalIndent(playerData, " ", " ")
+		if err != nil {
+			fmt.Fprintln(w, "{}")
+			return
+		}
+		fmt.Fprintln(w, string(output))
 	} else {
+		var data []UserBasic
 		for entry := range redisDBuser.Keys(ctx, "*").Val() {
 			var globalUser GlobalUser
 			json.Unmarshal([]byte(redisDBuser.Get(ctx, redisDBuser.Keys(ctx, "*").Val()[entry]).Val()), &globalUser)
-			data = append(data, UserSimple{
+			data = append(data, UserBasic{
 				UUID: globalUser.UUID,
 				Rank: globalUser.Rank,
 			})
 		}
+		playerData := AllPlayersBasic{Players: data}
+		output, err := json.MarshalIndent(playerData, " ", " ")
+		if err != nil {
+			fmt.Fprintln(w, "{}")
+			return
+		}
+		fmt.Fprintln(w, string(output))
 	}
-	playerData := AllPlayers{Players: data}
-	output, err := json.MarshalIndent(playerData, " ", " ")
-	if err != nil {
-		fmt.Fprintln(w, "{}")
-		return
-	}
-	fmt.Fprintln(w, string(output))
 }
