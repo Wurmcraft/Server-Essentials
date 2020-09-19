@@ -39,16 +39,19 @@ func startupBot() {
 }
 
 func verifyUsers(s *discordgo.Session) {
+	verifiedUsers = map[string]string{}
 	for range time.Tick(time.Minute * 5) {
 		populateVerifiedList()
 		for a := range verifiedUsers {
-			member, _ := s.State.Member(discordServerID, a)
-			role, _ := s.State.Role(discordServerID, discordRoleID)
-			if !contains(member.Roles, role.Name) {
-				s.GuildMemberRoleAdd(discordServerID, a, discordRoleID)
-				dmChannel, _ := s.UserChannelCreate(member.User.ID)
-				s.ChannelMessageSend(dmChannel.ID, "You have been verified")
-				s.ChannelMessageSend(discordLogChannelID, member.User.Username+" has been verified with '"+verifiedUsers[a])
+			if len(a) > 0 {
+				member, _ := s.State.Member(discordServerID, a)
+				role, _ := s.State.Role(discordServerID, discordRoleID)
+				if !contains(member.Roles, role.Name) {
+					s.GuildMemberRoleAdd(discordServerID, a, discordRoleID)
+					dmChannel, _ := s.UserChannelCreate(member.User.ID)
+					s.ChannelMessageSend(dmChannel.ID, "You have been verified")
+					s.ChannelMessageSend(discordLogChannelID, member.User.Username+" has been verified with '"+verifiedUsers[a])
+				}
 			}
 		}
 	}
