@@ -132,7 +132,7 @@ func handleServerInputCommands(s *discordgo.Session, m *discordgo.MessageCreate)
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
-	if isVerified(m.Author.ID) {
+	if isVerified(m.Author.ID) && !strings.HasPrefix("!", m.Content) {
 		if contains(getServerList(), m.Content) {
 			uuid := getVerifiedUUID(m.Author.ID)
 			if contains(playerFileQueue, m.Author.ID) {
@@ -236,15 +236,23 @@ func sendCommand(serverID string, command string, player string, s *discordgo.Se
 		Command:        command,
 		RequiredPlayer: player,
 	}
-	for entry := range redisDBCommand.Keys(ctx, "*").Val() {
-		var serverCommandQueue CommandQueue
-		json.Unmarshal([]byte(redisDBCommand.Get(ctx, redisDBCommand.Keys(ctx, "*").Val()[entry]).Val()), &serverCommandQueue)
-		if len(serverCommandQueue.Commands) < 0 && strings.EqualFold(serverCommandQueue.Commands[0].ServerID, serverID) {
-			serverCommandQueue.Commands = append(serverCommandQueue.Commands, newCommand)
-			output, _ := json.MarshalIndent(serverCommandQueue, "", " ")
-			redisDBCommand.Set(ctx, serverCommandQueue.Commands[0].ServerID, output, 6e+11)
-			s.ChannelMessageSend(discordLogChannelID, player+" has requested '"+serverID+"' run "+command)
-			return
+	if len(redisDBCommand.Keys(ctx, "*").Val()) == 0 {
+		serverCommandQueue := CommandQueue{
+			Commands: []CommandRequest{newCommand},
+		}
+		output, _ := json.MarshalIndent(serverCommandQueue, "", " ")
+		redisDBCommand.Set(ctx, serverCommandQueue.Commands[0].ServerID, output, 6e+11)
+	} else {
+		for entry := range redisDBCommand.Keys(ctx, "*").Val() {
+			var serverCommandQueue CommandQueue
+			json.Unmarshal([]byte(redisDBCommand.Get(ctx, redisDBCommand.Keys(ctx, "*").Val()[entry]).Val()), &serverCommandQueue)
+			if len(serverCommandQueue.Commands) < 0 && strings.EqualFold(serverCommandQueue.Commands[0].ServerID, serverID) {
+				serverCommandQueue.Commands = append(serverCommandQueue.Commands, newCommand)
+				output, _ := json.MarshalIndent(serverCommandQueue, "", " ")
+				redisDBCommand.Set(ctx, serverCommandQueue.Commands[0].ServerID, output, 6e+11)
+				s.ChannelMessageSend(discordLogChannelID, player+" has requested '"+serverID+"' run "+command)
+				return
+			}
 		}
 	}
 }
