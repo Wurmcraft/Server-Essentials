@@ -48,6 +48,7 @@ func verifyUsers(s *discordgo.Session) {
 				s.GuildMemberRoleAdd(discordServerID, a, discordRoleID)
 				dmChannel, _ := s.UserChannelCreate(member.User.ID)
 				s.ChannelMessageSend(dmChannel.ID, "You have been verified")
+				s.ChannelMessageSend(discordLogChannelID, member.User.Username+" has been verified with '"+verifiedUsers[a])
 			}
 		}
 	}
@@ -119,16 +120,16 @@ func handleServerInputCommands(s *discordgo.Session, m *discordgo.MessageCreate)
 			uuid := getVerifiedUUID(m.Author.ID)
 			if contains(playerFileQueue, m.Author.ID) {
 				playerFileQueue = remove(playerFileQueue, m.Author.ID)
-				sendCommand(m.Content, "deletePlayerFile "+uuid, uuid)
+				sendCommand(m.Content, "deletePlayerFile "+uuid, uuid, s)
 				s.ChannelMessageSend(m.Message.ChannelID, "Your Player-File has been queued to be deleted!\n Please allow up to 90s for this action to take place.")
 
 			} else if contains(spawnQueue, m.Author.ID) {
 				spawnQueue = remove(spawnQueue, m.Author.ID)
-				sendCommand(m.Content, "sendToSpawn "+uuid, uuid)
+				sendCommand(m.Content, "sendToSpawn "+uuid, uuid, s)
 				s.ChannelMessageSend(m.Message.ChannelID, "You will be sent to spawn!\n Please allow up to 90s for this action to take place.")
 			} else if contains(kickQueue, m.Author.ID) {
 				kickQueue = remove(kickQueue, m.Author.ID)
-				sendCommand(m.Content, "kick "+uuid, uuid)
+				sendCommand(m.Content, "kick "+uuid, uuid, s)
 				s.ChannelMessageSend(m.Message.ChannelID, "Your will be kicked!\n Please allow up to 90s for this action to take place.")
 			}
 		} else {
@@ -211,7 +212,7 @@ func verifyDiscord(discord string, key string) {
 	redisDBdiscord.Set(ctx, token.DiscordID, output, 6e+11)
 }
 
-func sendCommand(serverID string, command string, player string) {
+func sendCommand(serverID string, command string, player string, s *discordgo.Session) {
 	newCommand := CommandRequest{
 		ServerID:       serverID,
 		Command:        command,
@@ -224,6 +225,7 @@ func sendCommand(serverID string, command string, player string) {
 			serverCommandQueue.Commands = append(serverCommandQueue.Commands, newCommand)
 			output, _ := json.MarshalIndent(serverCommandQueue, "", " ")
 			redisDBCommand.Set(ctx, serverCommandQueue.Commands[0].ServerID, output, 6e+11)
+			s.ChannelMessageSend(discordLogChannelID, player+" has requested '"+serverID+"' run "+command)
 			return
 		}
 	}
