@@ -30,7 +30,7 @@ func startupBot() {
 
 	fmt.Println("Discord Bot is now running.")
 
-	go verifyUsers(discord)
+	verifyUsers(discord)
 	fmt.Println("Checking for user's to verify!")
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
