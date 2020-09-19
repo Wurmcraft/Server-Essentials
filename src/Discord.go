@@ -30,7 +30,7 @@ func startupBot() {
 
 	fmt.Println("Discord Bot is now running.")
 
-	verifyUsers(discord)
+	go verifyUsers(discord)
 	fmt.Println("Checking for user's to verify!")
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
@@ -44,17 +44,23 @@ func verifyUsers(s *discordgo.Session) {
 		populateVerifiedList()
 		for a := range verifiedUsers {
 			if len(a) > 0 {
-				member, err := s.State.Member(discordServerID, a)
-				role, err2 := s.State.Role(discordServerID, discordRoleID)
+				member, err := s.GuildMember(discordServerID, a)
+				roles, err2 := s.GuildRoles(discordServerID)
+				var verifiedRoleName string
+				for _, role := range roles {
+					if role.ID == discordRoleID {
+						verifiedRoleName = role.Name
+					}
+				}
 				if err != nil {
 					fmt.Println(err.Error())
 					continue
 				}
 				if err2 != nil {
-					fmt.Println(err2.Error())
+					fmt.Println(err.Error())
 					continue
 				}
-				if !contains(member.Roles, role.Name) {
+				if len(verifiedRoleName) > 0 && !contains(member.Roles, verifiedRoleName) {
 					s.GuildMemberRoleAdd(discordServerID, a, discordRoleID)
 					dmChannel, _ := s.UserChannelCreate(member.User.ID)
 					s.ChannelMessageSend(dmChannel.ID, "You have been verified")
