@@ -246,7 +246,13 @@ func sendCommand(serverID string, command string, player string, s *discordgo.Se
 		test := redisDBCommand.Keys(ctx, "*").Val()[0]
 		var serverCommandQueue CommandQueue
 		json.Unmarshal([]byte(test), &serverCommandQueue)
-		if len(serverCommandQueue.Commands[0].Command) == 0 {
+		if len(serverCommandQueue.Commands) > 0 && len(serverCommandQueue.Commands[0].Command) == 0 {
+			serverCommandQueue := CommandQueue{
+				Commands: []CommandRequest{newCommand},
+			}
+			output, _ := json.MarshalIndent(serverCommandQueue, "", " ")
+			redisDBCommand.Set(ctx, serverCommandQueue.Commands[0].ServerID, output, 6e+11)
+		} else if len(serverCommandQueue.Commands) == 0 {
 			serverCommandQueue := CommandQueue{
 				Commands: []CommandRequest{newCommand},
 			}
