@@ -44,8 +44,16 @@ func verifyUsers(s *discordgo.Session) {
 		populateVerifiedList()
 		for a := range verifiedUsers {
 			if len(a) > 0 {
-				member, _ := s.State.Member(discordServerID, a)
-				role, _ := s.State.Role(discordServerID, discordRoleID)
+				member, err := s.State.Member(discordServerID, a)
+				role, err2 := s.State.Role(discordServerID, discordRoleID)
+				if err != nil {
+					fmt.Println(err.Error())
+					continue
+				}
+				if err2 != nil {
+					fmt.Println(err2.Error())
+					continue
+				}
 				if !contains(member.Roles, role.Name) {
 					s.GuildMemberRoleAdd(discordServerID, a, discordRoleID)
 					dmChannel, _ := s.UserChannelCreate(member.User.ID)
