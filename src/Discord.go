@@ -171,6 +171,7 @@ func remove(s []string, key string) []string {
 }
 
 func populateVerifiedList() {
+	verifiedUsers = map[string]string{}
 	for entry := range redisDBuser.Keys(ctx, "*").Val() {
 		var globalUser GlobalUser
 		json.Unmarshal([]byte(redisDBuser.Get(ctx, redisDBuser.Keys(ctx, "*").Val()[entry]).Val()), &globalUser)
