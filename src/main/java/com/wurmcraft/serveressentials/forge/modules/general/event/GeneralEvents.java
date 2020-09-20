@@ -4,18 +4,23 @@ import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.event.NewPlayerEvent;
 import com.wurmcraft.serveressentials.forge.api.json.basic.LocationWrapper;
-import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.Home;
+import com.wurmcraft.serveressentials.forge.api.json.player.NameLookup;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.modules.general.GeneralModule;
 import com.wurmcraft.serveressentials.forge.modules.general.utils.GeneralUtils;
 import com.wurmcraft.serveressentials.forge.modules.general.utils.PlayerInventory;
 import com.wurmcraft.serveressentials.forge.modules.rank.RankModule;
 import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
+import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
+import com.wurmcraft.serveressentials.forge.server.events.DataBaseCommandPath;
 import com.wurmcraft.serveressentials.forge.server.loader.ModuleLoader;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import com.wurmcraft.serveressentials.forge.server.utils.TeleportUtils;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -89,6 +94,10 @@ public class GeneralEvents {
           .getMinecraftServerInstance()
           .getCommandManager()
           .executeCommand(e.player, "/motd");
+    }
+    if(SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+      DataBaseCommandPath.check();
+      RestRequestHandler.NameLookup.setLookup(new NameLookup(e.player.getDisplayNameString(),e.player.getGameProfile().getId().toString()));
     }
   }
 

@@ -3,7 +3,6 @@ package com.wurmcraft.serveressentials.forge.server.data;
 import static com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer.GSON;
 
 import com.wurmcraft.serveressentials.forge.api.SECore;
-import com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank;
 import com.wurmcraft.serveressentials.forge.api.json.basic.CurrencyConversion;
 import com.wurmcraft.serveressentials.forge.api.json.player.GlobalPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.rest.CommandQueue;
@@ -12,13 +11,11 @@ import com.wurmcraft.serveressentials.forge.api.json.rest.GlobalBan;
 import com.wurmcraft.serveressentials.forge.api.json.rest.RestValidate;
 import com.wurmcraft.serveressentials.forge.api.json.rest.ServerChunkData;
 import com.wurmcraft.serveressentials.forge.api.json.rest.ServerStatus;
-import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Base64;
 import javax.net.ssl.HttpsURLConnection;
 
 public class RestRequestHandler {
@@ -119,7 +116,8 @@ public class RestRequestHandler {
     public static com.wurmcraft.serveressentials.forge.api.json.basic.Rank getRank(
         String name) {
       return INSTANCE.get(
-          "ranks/" + name, com.wurmcraft.serveressentials.forge.api.json.basic.Rank.class);
+          "ranks/" + name,
+          com.wurmcraft.serveressentials.forge.api.json.basic.Rank.class);
     }
 
     public static int addRank(
@@ -139,7 +137,8 @@ public class RestRequestHandler {
 
     public static com.wurmcraft.serveressentials.forge.api.json.basic.Rank[] getAllRanks() {
       return INSTANCE
-          .get("ranks/", com.wurmcraft.serveressentials.forge.api.json.basic.Rank[].class);
+          .get("ranks/",
+              com.wurmcraft.serveressentials.forge.api.json.basic.Rank[].class);
     }
   }
 
@@ -265,12 +264,21 @@ public class RestRequestHandler {
   }
 
   public static class Commands {
+
     public static CommandQueue[] getCommandQueue() {
       return INSTANCE.get("commands", CommandQueue[].class);
     }
 
     public static int addCommandQueue(CommandQueue queue) {
       return INSTANCE.post("commands/add", queue);
+    }
+  }
+
+  public static class NameLookup {
+
+    public static int setLookup(
+        com.wurmcraft.serveressentials.forge.api.json.player.NameLookup name) {
+      return INSTANCE.post("lookup/add", name);
     }
   }
 }

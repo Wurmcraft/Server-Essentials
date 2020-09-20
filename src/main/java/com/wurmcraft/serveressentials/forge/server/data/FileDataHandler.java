@@ -164,7 +164,7 @@ public class FileDataHandler extends BasicDataHandler {
               if (data != null) {
                 return data;
               }
-            } else if(dataID.equalsIgnoreCase("Protect")) {
+            } else if (dataID.equalsIgnoreCase("Protect")) {
               registerData(key,
                   GSON.fromJson(Strings.join(Files.readAllLines(fileLoc.toPath()), '\n'),
                       ProtectConfig.class));

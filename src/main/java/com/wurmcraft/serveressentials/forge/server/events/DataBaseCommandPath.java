@@ -13,40 +13,8 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 public class DataBaseCommandPath {
 
   public static void startup() {
-    ServerEssentialsServer.EXECUTORS.scheduleAtFixedRate(() -> {
-          CommandQueue[] queue = RestRequestHandler.Commands.getCommandQueue();
-          List<RequestedCommand> failedToRunCommands = new ArrayList<>();
-          for (CommandQueue q : queue) {
-            if (q.commands.length > 0 && q.commands[0].serverID
-                .equalsIgnoreCase(SECore.config.serverID)) {
-              for (RequestedCommand command : q.commands) {
-                if (command.command.isEmpty()) {
-                  continue;
-                }
-                if (command.requiredPlayer.isEmpty() || isPlayerOnline(
-                    command.requiredPlayer)) {
-                  if (SECore.config.debug) {
-                    ServerEssentialsServer.LOGGER.info(
-                        "Database has requested to run Command '" + command.command);
-                  }
-                  FMLCommonHandler.instance().getMinecraftServerInstance()
-                      .getCommandManager()
-                      .executeCommand(
-                          FMLCommonHandler.instance().getMinecraftServerInstance(),
-                          command.command);
-                } else {
-                  failedToRunCommands.add(command);
-                }
-              }
-              if (failedToRunCommands.size() == 0) {
-                failedToRunCommands.add(new RequestedCommand(SECore.config.serverID, "", ""));
-              }
-              RestRequestHandler.Commands.addCommandQueue(
-                  new CommandQueue(failedToRunCommands.toArray(new RequestedCommand[0])));
-              break;
-            }
-          }
-        }, SECore.config.Rest.commandCheckTime, SECore.config.Rest.commandCheckTime,
+    ServerEssentialsServer.EXECUTORS.scheduleAtFixedRate(DataBaseCommandPath::check,
+        SECore.config.Rest.commandCheckTime, SECore.config.Rest.commandCheckTime,
         TimeUnit.SECONDS);
   }
 
@@ -54,6 +22,44 @@ public class DataBaseCommandPath {
     return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
         .getPlayers().stream()
         .anyMatch(player -> player.getGameProfile().getId().toString().equals(uuid));
+  }
+
+  public static void check() {
+    CommandQueue[] queue = RestRequestHandler.Commands.getCommandQueue();
+    if (queue == null || queue.length == 0) {
+      return;
+    }
+    List<RequestedCommand> failedToRunCommands = new ArrayList<>();
+    for (CommandQueue q : queue) {
+      if (q.commands.length > 0 && q.commands[0].serverID
+          .equalsIgnoreCase(SECore.config.serverID)) {
+        for (RequestedCommand command : q.commands) {
+          if (command.command.isEmpty()) {
+            continue;
+          }
+          if (command.requiredPlayer.isEmpty() || isPlayerOnline(
+              command.requiredPlayer)) {
+            if (SECore.config.debug) {
+              ServerEssentialsServer.LOGGER.info(
+                  "Database has requested to run Command '" + command.command);
+            }
+            FMLCommonHandler.instance().getMinecraftServerInstance()
+                .getCommandManager()
+                .executeCommand(
+                    FMLCommonHandler.instance().getMinecraftServerInstance(),
+                    command.command);
+          } else {
+            failedToRunCommands.add(command);
+          }
+        }
+        if (failedToRunCommands.size() == 0) {
+          failedToRunCommands.add(new RequestedCommand(SECore.config.serverID, "", ""));
+        }
+        RestRequestHandler.Commands.addCommandQueue(
+            new CommandQueue(failedToRunCommands.toArray(new RequestedCommand[0])));
+        break;
+      }
+    }
   }
 
 }
