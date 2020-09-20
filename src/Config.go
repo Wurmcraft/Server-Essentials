@@ -41,6 +41,7 @@ var redisDatabaseBan = redisDatabaseLookup + 1
 var redisDatabaseAuth = redisDatabaseBan + 1
 var redisDatabaseChunkLoading = redisDatabaseAuth + 1
 var redisCommandStorage = redisDatabaseChunkLoading + 1
+var redisDatabaseUUID = redisCommandStorage + 1
 var chunkLoadingNotSeenTimeOut int64
 
 func loadAndSetupConfig() {
@@ -108,6 +109,7 @@ func copySettings() {
 	redisDatabaseAuth = redisDatabaseBan + 1
 	redisDatabaseChunkLoading = redisDatabaseAuth + 1
 	redisCommandStorage = redisDatabaseChunkLoading + 1
+	redisDatabaseUUID = redisCommandStorage + 1
 	chunkLoadingTimeout = viper.GetInt64("chunkLoadingTimeout")
 	chunkLoadingNotSeenTimeOut = chunkLoadingTimeout * (time.Hour.Milliseconds() * 24)
 }

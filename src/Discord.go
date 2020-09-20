@@ -148,7 +148,7 @@ func handleServerInputCommands(s *discordgo.Session, m *discordgo.MessageCreate)
 				sendCommand(m.Content, "kick "+uuid, uuid, s)
 				s.ChannelMessageSend(m.Message.ChannelID, "Your will be kicked!\n Please allow up to 90s for this action to take place.")
 			}
-		} else {
+		} else if contains(playerFileQueue, m.Author.ID) || contains(spawnQueue, m.Author.ID) || contains(kickQueue, m.Author.ID) {
 			s.ChannelMessageSend(m.Message.ChannelID, m.Message.Content+" is not a valid server!")
 		}
 	}

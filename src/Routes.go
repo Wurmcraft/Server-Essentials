@@ -319,6 +319,27 @@ var routes = Routes{
 		true,
 		addCommand,
 	},
+	Route{
+		"AddUUID",
+		"POST",
+		"/api/lookup/add",
+		true,
+		SetUUID,
+	},
+	Route{
+		"LookupName",
+		"GET",
+		"/api/lookup/",
+		false,
+		GetAllNames,
+	},
+	Route{
+		"GetName",
+		"GET",
+		"/api/lookup/:name",
+		false,
+		GetUserUUID,
+	},
 }
 
 func Index(w http.ResponseWriter, _ *http.Request, _ mux.Params) {

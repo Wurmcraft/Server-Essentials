@@ -153,3 +153,8 @@ type CommandRequest struct {
 type CommandQueue struct {
 	Commands []CommandRequest `json:"commands"`
 }
+
+type NameLookup struct {
+	Name string `json:"username"`
+	UUID string `json:"uuid"`
+}
