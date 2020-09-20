@@ -137,9 +137,8 @@ func handleServerInputCommands(s *discordgo.Session, m *discordgo.MessageCreate)
 			uuid := getVerifiedUUID(m.Author.ID)
 			if contains(playerFileQueue, m.Author.ID) {
 				playerFileQueue = remove(playerFileQueue, m.Author.ID)
-				sendCommand(m.Content, "deletePlayerFile "+uuid, uuid, s)
+				sendCommand(m.Content, "DPF "+uuid, uuid, s)
 				s.ChannelMessageSend(m.Message.ChannelID, "Your Player-File has been queued to be deleted!\n Please allow up to 90s for this action to take place.")
-
 			} else if contains(spawnQueue, m.Author.ID) {
 				spawnQueue = remove(spawnQueue, m.Author.ID)
 				sendCommand(m.Content, "sendToSpawn "+uuid, uuid, s)
@@ -242,6 +241,7 @@ func sendCommand(serverID string, command string, player string, s *discordgo.Se
 		}
 		output, _ := json.MarshalIndent(serverCommandQueue, "", " ")
 		redisDBCommand.Set(ctx, serverCommandQueue.Commands[0].ServerID, output, 6e+11)
+		s.ChannelMessageSend(discordLogChannelID, player+" has requested '"+serverID+"' run "+command)
 	} else if len(redisDBCommand.Keys(ctx, "*").Val()) == 1 {
 		test := redisDBCommand.Keys(ctx, "*").Val()[0]
 		var serverCommandQueue CommandQueue
@@ -252,12 +252,14 @@ func sendCommand(serverID string, command string, player string, s *discordgo.Se
 			}
 			output, _ := json.MarshalIndent(serverCommandQueue, "", " ")
 			redisDBCommand.Set(ctx, serverCommandQueue.Commands[0].ServerID, output, 6e+11)
+			s.ChannelMessageSend(discordLogChannelID, player+" has requested '"+serverID+"' run "+command)
 		} else if len(serverCommandQueue.Commands) == 0 {
 			serverCommandQueue := CommandQueue{
 				Commands: []CommandRequest{newCommand},
 			}
 			output, _ := json.MarshalIndent(serverCommandQueue, "", " ")
 			redisDBCommand.Set(ctx, serverCommandQueue.Commands[0].ServerID, output, 6e+11)
+			s.ChannelMessageSend(discordLogChannelID, player+" has requested '"+serverID+"' run "+command)
 		}
 	} else {
 		for entry := range redisDBCommand.Keys(ctx, "*").Val() {
@@ -268,7 +270,6 @@ func sendCommand(serverID string, command string, player string, s *discordgo.Se
 				output, _ := json.MarshalIndent(serverCommandQueue, "", " ")
 				redisDBCommand.Set(ctx, serverCommandQueue.Commands[0].ServerID, output, 6e+11)
 				s.ChannelMessageSend(discordLogChannelID, player+" has requested '"+serverID+"' run "+command)
-
 			}
 		}
 	}
