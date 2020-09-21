@@ -8,7 +8,6 @@ import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.module.Module;
 import com.wurmcraft.serveressentials.forge.modules.general.event.GeneralEvents;
 import com.wurmcraft.serveressentials.forge.modules.general.utils.GeneralUtils;
-import com.wurmcraft.serveressentials.forge.modules.rank.RankConfig;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import java.io.File;
 import java.nio.file.Files;

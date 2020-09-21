@@ -11,6 +11,7 @@ import com.wurmcraft.serveressentials.forge.api.json.rest.GlobalBan;
 import com.wurmcraft.serveressentials.forge.api.json.rest.RestValidate;
 import com.wurmcraft.serveressentials.forge.api.json.rest.ServerChunkData;
 import com.wurmcraft.serveressentials.forge.api.json.rest.ServerStatus;
+import com.wurmcraft.serveressentials.forge.modules.chatbridge.json.BridgeMessage;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -279,6 +280,17 @@ public class RestRequestHandler {
     public static int setLookup(
         com.wurmcraft.serveressentials.forge.api.json.player.NameLookup name) {
       return INSTANCE.post("lookup/add", name);
+    }
+  }
+
+  public static class Bridge {
+
+    public static int addMessage(BridgeMessage msg) {
+      return INSTANCE.post("messages", msg);
+    }
+
+    public static BridgeMessage[] getMessages() {
+      return INSTANCE.get("messages/" + SECore.config.serverID, BridgeMessage[].class);
     }
   }
 }

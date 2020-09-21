@@ -41,7 +41,7 @@ public class FileDataHandler extends BasicDataHandler {
             SAVE_DIR + File.separator + "Storage" + key.getName() + File.separator
                 + "DIM_0");
       } else {
-        dataDir = new File(SAVE_DIR + File.separator + "Storage" + key.getName());
+        dataDir = new File(SAVE_DIR + File.separator + "Storage" + File.separator+  key.getName());
       }
     } else {
       dataDir = new File(SAVE_DIR + File.separator + key.getName());
