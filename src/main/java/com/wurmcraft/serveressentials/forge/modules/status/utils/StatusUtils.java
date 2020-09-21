@@ -12,7 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 
-public class StatuUtils {
+public class StatusUtils {
 
   public static void sendUpdate(Status status) {
     if(status != Status.ONLINE) {

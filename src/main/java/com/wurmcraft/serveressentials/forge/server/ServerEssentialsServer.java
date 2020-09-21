@@ -12,7 +12,7 @@ import com.wurmcraft.serveressentials.forge.api.json.rest.ServerStatus.Status;
 import com.wurmcraft.serveressentials.forge.modules.core.CoreModule;
 import com.wurmcraft.serveressentials.forge.modules.core.utils.CoreUtils;
 import com.wurmcraft.serveressentials.forge.modules.general.GeneralModule;
-import com.wurmcraft.serveressentials.forge.modules.status.utils.StatuUtils;
+import com.wurmcraft.serveressentials.forge.modules.status.utils.StatusUtils;
 import com.wurmcraft.serveressentials.forge.server.command.CustomCommand;
 import com.wurmcraft.serveressentials.forge.server.command.SECommand;
 import com.wurmcraft.serveressentials.forge.server.command.WrapperCommand;
@@ -60,11 +60,23 @@ public class ServerEssentialsServer {
     LOGGER.info("Pre-Init has Started");
     SECore.config = loadGlobalConfig();
     SECore.dataHandler = getDataHandler(SECore.config.dataStorageType);
+    if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")
+        && SECore.config.Rest.restAuth.length() > 64) {
+      ServerEssentialsServer.LOGGER.fatal("Master Auth Token Detected!");
+      ServerEssentialsServer.LOGGER
+          .fatal("Server's running using the master Auth Token!");
+      ServerEssentialsServer.LOGGER.fatal("Please create a token for this serer!");
+      ServerEssentialsServer.LOGGER
+          .fatal("Server will still run however its security is highly diminished!");
+    }
     EXECUTORS = new ScheduledThreadPoolExecutor(SECore.config.supportThreads);
     ModuleLoader.setupModule();
     SECore.dataHandler.registerData(DataKey.LANGUAGE, ChatHelper.getDefaultLanguage());
     if (ModuleLoader.getLoadedModule("Status") != null) {
-      StatuUtils.sendUpdate(Status.PRE_INIT);
+      StatusUtils.sendUpdate(Status.PRE_INIT);
+    }
+    if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+      RestRequestHandler.Auth.renew();
     }
   }
 
@@ -74,7 +86,7 @@ public class ServerEssentialsServer {
     CommandLoader.setupCommands();
     MinecraftForge.EVENT_BUS.register(new PlayerDataEvents());
     if (ModuleLoader.getLoadedModule("Status") != null) {
-      StatuUtils.sendUpdate(Status.INIT);
+      StatusUtils.sendUpdate(Status.INIT);
     }
   }
 
@@ -85,7 +97,7 @@ public class ServerEssentialsServer {
       RestRequestHandler.validate = RestRequestHandler.Verify.get();
     }
     if (ModuleLoader.getLoadedModule("Status") != null) {
-      StatuUtils.sendUpdate(Status.POST_INIT);
+      StatusUtils.sendUpdate(Status.POST_INIT);
     }
   }
 
@@ -106,7 +118,7 @@ public class ServerEssentialsServer {
           ModuleCommand.class), commandInstance));
     }
     if (ModuleLoader.getLoadedModule("Status") != null) {
-      StatuUtils.sendUpdate(Status.LOADING);
+      StatusUtils.sendUpdate(Status.LOADING);
     }
   }
 
@@ -117,7 +129,7 @@ public class ServerEssentialsServer {
       DataBaseCommandPath.startup();
     }
     if (ModuleLoader.getLoadedModule("Status") != null) {
-      StatuUtils.sendUpdate(Status.ONLINE);
+      StatusUtils.sendUpdate(Status.ONLINE);
     }
     if (ModuleLoader.getLoadedModule("General") != null && GeneralModule.config != null
         && GeneralModule.config.commandOverride.length > 0) {
@@ -149,7 +161,7 @@ public class ServerEssentialsServer {
   @EventHandler
   public void serverStopping(FMLServerStoppingEvent e) {
     if (ModuleLoader.getLoadedModule("Status") != null) {
-      StatuUtils.sendUpdate(Status.STOPPING);
+      StatusUtils.sendUpdate(Status.STOPPING);
     }
     for (EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance()
         .getPlayerList().getPlayers()) {
@@ -162,7 +174,10 @@ public class ServerEssentialsServer {
   @EventHandler
   public void serverStopped(FMLServerStoppedEvent e) {
     if (ModuleLoader.getLoadedModule("Status") != null) {
-      StatuUtils.sendUpdate(Status.STOPPED);
+      StatusUtils.sendUpdate(Status.STOPPED);
+    }
+    if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+      RestRequestHandler.Auth.renew();
     }
   }
 

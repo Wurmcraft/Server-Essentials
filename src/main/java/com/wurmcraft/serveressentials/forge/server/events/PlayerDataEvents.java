@@ -40,6 +40,11 @@ public class PlayerDataEvents {
       PlayerUtils.newPlayer(e.player.getGameProfile().getId().toString(), true);
       scheduleFixedUpdate(e);
     }
+    ServerEssentialsServer.EXECUTORS.schedule(() -> {
+      if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+        RestRequestHandler.Auth.renew();
+      }
+    }, 0, TimeUnit.SECONDS);
   }
 
   private void scheduleFixedUpdate(PlayerLoggedInEvent e) {
@@ -90,7 +95,8 @@ public class PlayerDataEvents {
         }
       }
       mergedData.global.lastSeen = Instant.now().getEpochSecond();
-      if (e.currentData != null && mergedData.global != null && e.currentData.uuid != null && !e.currentData.uuid.isEmpty()) {
+      if (e.currentData != null && mergedData.global != null && e.currentData.uuid != null
+          && !e.currentData.uuid.isEmpty()) {
         mergedData.global.playtime = PlayerUtils
             .syncPlayTime(UUID.fromString(e.currentData.uuid),
                 mergedData.global).global.playtime;

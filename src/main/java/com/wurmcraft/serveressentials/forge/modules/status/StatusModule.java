@@ -4,7 +4,7 @@ import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.json.rest.ServerStatus.Status;
 import com.wurmcraft.serveressentials.forge.api.module.Module;
 import com.wurmcraft.serveressentials.forge.modules.status.event.StatusEvents;
-import com.wurmcraft.serveressentials.forge.modules.status.utils.StatuUtils;
+import com.wurmcraft.serveressentials.forge.modules.status.utils.StatusUtils;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import java.util.concurrent.TimeUnit;
 import net.minecraftforge.common.MinecraftForge;
@@ -19,7 +19,7 @@ public class StatusModule {
   public void finalizeModule() {
     MinecraftForge.EVENT_BUS.register(new StatusEvents());
     ServerEssentialsServer.EXECUTORS
-        .scheduleAtFixedRate(() -> StatuUtils.sendUpdate(Status.ONLINE),
+        .scheduleAtFixedRate(() -> StatusUtils.sendUpdate(Status.ONLINE),
             SECore.config.Rest.syncTime, SECore.config.Rest.syncTime, TimeUnit.SECONDS);
   }
 

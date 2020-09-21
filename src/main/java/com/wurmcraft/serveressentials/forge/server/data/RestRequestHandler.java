@@ -293,4 +293,11 @@ public class RestRequestHandler {
       return INSTANCE.get("messages/" + SECore.config.serverID, BridgeMessage[].class);
     }
   }
+
+  public static class Auth {
+
+    public static int renew() {
+      return INSTANCE.post("auth/renew", "");
+    }
+  }
 }
