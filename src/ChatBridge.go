@@ -79,15 +79,40 @@ func AppendMessage(message BridgeMessage) {
 		}
 		msg := ""
 		if message.FormattingStyle == 0 {
-			msg = "**[" + message.ID + "] " + message.DisplayName + "** " + message.Message
+			msg = "**[" + message.ID + "] " + removeFormatting(message.DisplayName) + "** " + message.Message
 		} else if message.FormattingStyle == 1 {
-			msg = "**" + message.DisplayName + "** " + message.Message
+			msg = "**" + removeFormatting(message.DisplayName) + "** " + message.Message
 		}
 		_, err := discord.ChannelMessageSend(message.DiscordChannelID, msg)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
 	}
+}
+
+var replacer = strings.NewReplacer(
+	"&0", "",
+	"&1", "",
+	"&2", "",
+	"&3", "",
+	"&4", "",
+	"&5", "",
+	"&6", "",
+	"&7", "",
+	"&8", "",
+	"&9", "",
+	"&a", "",
+	"&b", "",
+	"&c", "",
+	"&d", "",
+	"&e", "",
+	"&f", "")
+
+func removeFormatting(format string) string {
+	if strings.Contains(format, "&") {
+		return replacer.Replace(format)
+	}
+	return format
 }
 
 func handleChannelMessages(s *discordgo.Session, m *discordgo.MessageCreate) {
