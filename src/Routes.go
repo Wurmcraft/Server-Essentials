@@ -278,6 +278,13 @@ var routes = Routes{
 		UpdateAuth,
 	},
 	Route{
+		"REAuth",
+		"POST",
+		"/api/auth/renew",
+		true,
+		ReAuth,
+	},
+	Route{
 		"AddChunkLoading",
 		"POST",
 		"/api/chunkloading/add",
@@ -339,6 +346,20 @@ var routes = Routes{
 		"/api/lookup/:name",
 		false,
 		GetUserUUID,
+	},
+	Route{
+		"AddMessage",
+		"POST",
+		"/api/messages",
+		true,
+		AddMessage,
+	},
+	Route{
+		"GetMessages",
+		"GET",
+		"/api/messages/:id",
+		true,
+		GetMessages,
 	},
 }
 

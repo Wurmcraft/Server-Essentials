@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	mux "github.com/julienschmidt/httprouter"
 	"golang.org/x/crypto/bcrypt"
 	"io/ioutil"
@@ -15,6 +16,7 @@ import (
 var authTokenLength = 64
 
 const permAuth = "auth"
+const permAuthRenew = "authRenew"
 
 func AddAuth(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permAuth) {
@@ -72,6 +74,19 @@ func UpdateAuth(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	redisDBAuth.Set(ctx, auth.UserId, a, 24*time.Hour)
 	log.Println("Auth Token for '" + auth.UserId + "' updated with [" + strings.Join(auth.Permission, ", ") + "]")
 	w.WriteHeader(http.StatusOK)
+}
+
+func ReAuth(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permAuthRenew) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
+	auth := GetPermission(r.Header.Get("token"))
+	a, err := json.Marshal(auth)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	redisDBAuth.Set(ctx, auth.UserId, a, 24*time.Hour)
 }
 
 func DelAuth(w http.ResponseWriter, r *http.Request, _ mux.Params) {

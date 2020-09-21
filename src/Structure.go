@@ -158,3 +158,13 @@ type NameLookup struct {
 	Name string `json:"username"`
 	UUID string `json:"uuid"`
 }
+
+type BridgeMessage struct {
+	Message          string `json:"message"`
+	ID               string `json:"id"`
+	UserID           string `json:"userID"`
+	DisplayName      string `json:"displayName"`
+	Channel          string `json:"channel"`
+	DiscordChannelID string `json:"discordChannelID"`
+	FormattingStyle  int    `json:"formattingStyle"`
+}

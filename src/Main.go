@@ -68,7 +68,7 @@ func SetupDefaultAuth() {
 		defaultA := AuthStorage{}
 		defaultA.UserId = defaultUser
 		defaultA.AuthToken = hashCode(pass)
-		defaultA.Permission = []string{permAutoRank, permBan, permChunkLoading, permCommands, permDiscord, permEco, permStatus, permRank, permAuth, permTransfer, permUser}
+		defaultA.Permission = []string{permAutoRank, permBan, permChunkLoading, permCommands, permDiscord, permEco, permStatus, permRank, permAuth, permTransfer, permUser, permUUID, permChat, permAuthRenew}
 		a, _ := json.Marshal(defaultA)
 		redisDBAuth.Set(ctx, defaultA.UserId, a, 0)
 		fmt.Println("The default login token is: " + pass + " under user '" + defaultUser + "'")

@@ -21,6 +21,7 @@ var discordAuthTokenSize int
 var discordRoleID string
 var discordServerID string
 var discordLogChannelID string
+var discordChannelMap map[string]string
 
 // Redis Config
 var redisAddress string
@@ -77,6 +78,10 @@ func addDefaults() {
 	viper.SetDefault("discordRoleID", "")
 	viper.SetDefault("discordServerID", "")
 	viper.SetDefault("discordLogChannelID", "")
+	discordChannelMap = make(map[string]string)
+	discordChannelMap["discordChannelID"] = "global"
+	discordChannelMap["discordChannelID2"] = "local"
+	viper.SetDefault("discordChannelMap", discordChannelMap)
 }
 
 func copySettings() {
@@ -94,6 +99,7 @@ func copySettings() {
 	discordRoleID = viper.GetString("discordRoleID")
 	discordServerID = viper.GetString("discordServerID")
 	discordLogChannelID = viper.GetString("discordLogChannelID")
+	discordChannelMap = viper.GetStringMapString("discordChannelMap")
 	// Update Database ID's
 	redisDatabase = rediDBShift
 	redisDatabaseUser = rediDBShift

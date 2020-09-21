@@ -12,6 +12,7 @@ import (
 )
 
 var verifiedUsers map[string]string
+var discord *discordgo.Session
 
 func startupBot() {
 	discord, err := discordgo.New("Bot " + discordToken)
@@ -27,6 +28,9 @@ func startupBot() {
 	discord.AddHandler(handleVerifyDMs)
 	discord.AddHandler(handleCommands)
 	discord.AddHandler(handleServerInputCommands)
+	if len(discordChannelMap) > 0 {
+		discord.AddHandler(handleChannelMessages)
+	}
 
 	fmt.Println("Discord Bot is now running.")
 
