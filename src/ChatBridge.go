@@ -52,7 +52,7 @@ func GetMessages(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 		w.Write(output)
 		storedMessages[serverID] = []BridgeMessage{}
 	} else {
-		w.Write([]byte("{}"))
+		w.Write([]byte("[]"))
 	}
 }
 
