@@ -2,8 +2,11 @@ package com.wurmcraft.serveressentials.forge.modules.protect.utils;
 
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
+import com.wurmcraft.serveressentials.forge.modules.protect.command.RentCommand;
 import com.wurmcraft.serveressentials.forge.modules.protect.data.ClaimData;
+import com.wurmcraft.serveressentials.forge.modules.protect.data.ClaimData.ClaimType;
 import com.wurmcraft.serveressentials.forge.modules.protect.data.RegionClaimData;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +16,7 @@ public class ProtectionHelper {
 
   public static Action[] getActionList(BlockPos pos, int dim, EntityPlayer player) {
     ClaimData claim = getClaim(pos, dim);
-    if (claim == null ||  isTrusted(claim, player)) {
+    if (claim == null || isTrusted(claim, player)) {
       return Action.values();
     }
     return new Action[0];
@@ -26,6 +29,7 @@ public class ProtectionHelper {
           .getData(DataKey.CLAIM, regionID);
       for (ClaimData claim : data.claims) {
         if (isWithin(claim, pos)) {
+          saveClaimData(claim = checkRent(claim), dim);
           return claim;
         }
       }
@@ -55,11 +59,13 @@ public class ProtectionHelper {
     if (player == null) {
       return false;
     }
-    if( data.owner.equals(player.getGameProfile().getId().toString()) )
+    if (data.owner.equals(player.getGameProfile().getId().toString())) {
       return true;
-    for(String uuid : data.trusted) {
-      if(uuid.equalsIgnoreCase(player.getGameProfile().getId().toString()))
+    }
+    for (String uuid : data.trusted) {
+      if (uuid.equalsIgnoreCase(player.getGameProfile().getId().toString())) {
         return true;
+      }
     }
     return false;
   }
@@ -79,6 +85,22 @@ public class ProtectionHelper {
         (claim.lowerPos.z <= pos.getZ() &&
             claim.higherPos.z >= pos.getZ());
   }
+
+  public static ClaimData checkRent(ClaimData data) {
+    if (data.claimType == ClaimType.RENT) {
+      double[] rentData = RentCommand.getRentData(data);
+      if (rentData[3] < Instant.now().getEpochSecond()) {
+        if (rentData[0] > rentData[2]) {
+          data = RentCommand.handleRentDay(data, rentData[2]);
+        } else {
+          data.trusted = new String[]{};
+        }
+
+      }
+    }
+    return data;
+  }
+
 
   public enum Action {
     BREAK, PLACE, LEFT_CLICK, LEFT_CLICK_EMPTY, RIGHT_CLICK, RIGHT_CLICK_EMPTY, EXPLOSION
