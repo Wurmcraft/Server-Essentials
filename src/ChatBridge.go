@@ -82,6 +82,10 @@ func AppendMessage(message BridgeMessage) {
 			msg = "**[" + message.ID + "] " + removeFormatting(message.DisplayName) + "** " + message.Message
 		} else if message.FormattingStyle == 1 {
 			msg = "**" + removeFormatting(message.DisplayName) + "** " + message.Message
+		} else if message.FormattingStyle == 2 {
+			msg = "**" + removeFormatting(message.Message) + "**"
+		} else if message.FormattingStyle == 3 {
+			msg = removeFormatting(message.Message)
 		}
 		_, err := discord.ChannelMessageSend(message.DiscordChannelID, msg)
 		if err != nil {
