@@ -3,16 +3,21 @@ package com.wurmcraft.serveressentials.forge.server.utils;
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.event.NewPlayerEvent;
+import com.wurmcraft.serveressentials.forge.api.json.basic.Channel;
 import com.wurmcraft.serveressentials.forge.api.json.player.GlobalPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.player.NetworkTime;
 import com.wurmcraft.serveressentials.forge.api.json.player.NetworkTime.ServerTime;
 import com.wurmcraft.serveressentials.forge.api.json.player.ServerPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
+import com.wurmcraft.serveressentials.forge.modules.chatbridge.json.BridgeMessage;
+import com.wurmcraft.serveressentials.forge.modules.language.LanguageModule;
+import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import com.wurmcraft.serveressentials.forge.server.data.Language;
 import com.wurmcraft.serveressentials.forge.server.data.RestDataHandler;
 import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
 import com.wurmcraft.serveressentials.forge.server.events.PlayerDataEvents;
+import com.wurmcraft.serveressentials.forge.server.loader.ModuleLoader;
 import java.time.Instant;
 import java.util.*;
 import java.util.NoSuchElementException;
@@ -86,6 +91,17 @@ public class PlayerUtils {
                 getLanguage(player).HOVER_PLAYER_NAME.replaceAll("%PLAYER%", name)
                     .replaceAll("%UUID%", uuid));
           }
+        }
+        if (ModuleLoader.getLoadedModule("ChatBridge") != null
+            && ModuleLoader.getLoadedModule("Language") != null) {
+          ServerEssentialsServer.EXECUTORS.schedule(() -> {
+            Channel ch = (Channel) SECore.dataHandler
+                .getData(DataKey.CHANNEL, LanguageModule.config.defaultChannel);
+            RestRequestHandler.Bridge.addMessage(
+                new BridgeMessage(getLanguage(null).ANNOUNCEMENT_NEW_PLAYER
+                    .replaceAll("%PLAYER%", name), SECore.config.serverID,
+                    uuid, "", ch.getID(), ch.discordChannelID,finalNewToNetwork ? 2 : 3));
+          }, 0, TimeUnit.SECONDS);
         }
       } else {
         ServerEssentialsServer.LOGGER

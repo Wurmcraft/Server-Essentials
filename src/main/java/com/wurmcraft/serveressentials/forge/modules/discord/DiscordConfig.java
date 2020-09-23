@@ -7,14 +7,18 @@ import com.wurmcraft.serveressentials.forge.api.module.ConfigModule;
 public class DiscordConfig implements JsonParser {
 
   public String[] commandUponVerify;
+  public String playerLoginNotificationChannel;
 
 
   public DiscordConfig() {
     this.commandUponVerify = new String[] {"eco %PLAYER% add 100"};
+    playerLoginNotificationChannel = "global";
   }
 
-  public DiscordConfig(String[] commandUponVerify) {
+  public DiscordConfig(String[] commandUponVerify,
+      String playerLoginOutNotificationChannel) {
     this.commandUponVerify = commandUponVerify;
+    this.playerLoginNotificationChannel = playerLoginOutNotificationChannel;
   }
 
   @Override
