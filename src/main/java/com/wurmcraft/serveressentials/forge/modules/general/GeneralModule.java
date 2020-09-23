@@ -5,6 +5,8 @@ import static com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer
 
 import com.wurmcraft.serveressentials.forge.api.SECore;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
+import com.wurmcraft.serveressentials.forge.api.json.basic.Kit;
+import com.wurmcraft.serveressentials.forge.api.json.basic.Kit.KitInvenntory;
 import com.wurmcraft.serveressentials.forge.api.module.Module;
 import com.wurmcraft.serveressentials.forge.modules.general.event.GeneralEvents;
 import com.wurmcraft.serveressentials.forge.modules.general.utils.GeneralUtils;
@@ -45,6 +47,7 @@ public class GeneralModule {
     motd = GeneralUtils.loadAndCreateConfig("motd");
     rules = GeneralUtils.loadAndCreateConfig("rules");
     randomMessages = GeneralUtils.loadAndCreateConfig("randomMessages");
+    SECore.dataHandler.getDataFromKey(DataKey.KIT,new Kit("",0, (KitInvenntory) null));
   }
 
   public void finalizeModule() {

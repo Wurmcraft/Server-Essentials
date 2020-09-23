@@ -11,6 +11,7 @@ public class GeneralConfig implements JsonParser {
   public String defaultHomeName;
   public int tpaRequestTimeout;
   public boolean displayMOTDOnJoin;
+  public String defaultKit;
   public String[] commandOverride;
   public SpawnLocation spawn;
 
@@ -19,18 +20,20 @@ public class GeneralConfig implements JsonParser {
     this.defaultHomeName = "home";
     this.tpaRequestTimeout = 150;
     this.displayMOTDOnJoin = true;
+    this.defaultKit = "";
     this.commandOverride = new String[] {"home"};
     this.spawn = new SpawnLocation();
   }
 
   public GeneralConfig(int defaultHomeCount, String defaultHomeName,
       int tpaRequestTimeout,
-      boolean displayMOTDOnJoin, String[] commandOverride,
+      boolean displayMOTDOnJoin, String defaultKit, String[] commandOverride,
       SpawnLocation spawn) {
     this.defaultHomeCount = defaultHomeCount;
     this.defaultHomeName = defaultHomeName;
     this.tpaRequestTimeout = tpaRequestTimeout;
     this.displayMOTDOnJoin = displayMOTDOnJoin;
+    this.defaultKit = defaultKit;
     this.commandOverride = commandOverride;
     this.spawn = spawn;
   }

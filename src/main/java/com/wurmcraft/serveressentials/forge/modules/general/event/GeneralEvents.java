@@ -66,6 +66,10 @@ public class GeneralEvents {
         if (player.getGameProfile().getId().toString().equals(e.newData.uuid)) {
           sentToSpawn.add(player.getGameProfile().getId().toString());
           TeleportUtils.teleportTo(player, getNewPlayerSpawn());
+          if (!GeneralModule.config.defaultKit.isEmpty()) {
+            FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager()
+                .executeCommand(player, "/kit " + GeneralModule.config.defaultKit);
+          }
           return;
         }
       }
@@ -95,9 +99,11 @@ public class GeneralEvents {
           .getCommandManager()
           .executeCommand(e.player, "/motd");
     }
-    if(SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+    if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
       DataBaseCommandPath.check();
-      RestRequestHandler.NameLookup.setLookup(new NameLookup(e.player.getDisplayNameString(),e.player.getGameProfile().getId().toString()));
+      RestRequestHandler.NameLookup.setLookup(
+          new NameLookup(e.player.getDisplayNameString(),
+              e.player.getGameProfile().getId().toString()));
     }
   }
 

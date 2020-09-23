@@ -4,6 +4,7 @@ import com.wurmcraft.serveressentials.forge.api.json.JsonParser;
 import com.wurmcraft.serveressentials.forge.api.json.basic.AutoRank;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Channel;
 import com.wurmcraft.serveressentials.forge.api.json.basic.CurrencyConversion;
+import com.wurmcraft.serveressentials.forge.api.json.basic.Kit;
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.rest.GlobalBan;
@@ -20,7 +21,8 @@ public enum DataKey {
   BAN("Ban", GlobalBan.class, true),
   AUTO_RANK("AutoRank", AutoRank.class, true),
   CHANNEL("Channel", Channel.class, true),
-  CLAIM("Claims", RegionClaimData.class, true);
+  CLAIM("Claims", RegionClaimData.class, true),
+  KIT("Kit", Kit.class, true);
 
   private String name;
   private Class<? extends JsonParser> dataType;

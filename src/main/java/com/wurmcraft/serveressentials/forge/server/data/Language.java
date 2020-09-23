@@ -131,6 +131,9 @@ public class Language implements JsonParser {
   public String GENERAL_SENDTOSPAWN;
   public String GENERAL_DPF_DISCONNECT;
   public String GENERAL_KICK;
+  public String GENERAL_KIT_CREATED;
+  public String GENERAL_KIT_NONE;
+  public String GENERAL_KIT;
 
   // Economy
   public String SIGN_NO_ITEM;
