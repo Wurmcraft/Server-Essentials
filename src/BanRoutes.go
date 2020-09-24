@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis/v8"
-	mux "github.com/julienschmidt/httprouter"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
 )
@@ -17,8 +17,9 @@ func init() {
 	redisDBBan = newClient(redisDatabaseBan)
 }
 
-func GetBan(w http.ResponseWriter, _ *http.Request, p mux.Params) {
-	name := string(p[0].Value)
+func GetBan(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	name := vars["uuid"]
 	if redisDBBan.Exists(ctx, name).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
 		w.Header().Set("version", version)
@@ -28,7 +29,7 @@ func GetBan(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 	}
 }
 
-func CreateBan(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func CreateBan(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permBan) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
@@ -54,7 +55,7 @@ func CreateBan(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func GetAllBans(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
+func GetAllBans(w http.ResponseWriter, _ *http.Request) {
 	var data []Ban
 	for entry := range redisDBBan.Keys(ctx, "*").Val() {
 		var ban Ban
@@ -69,7 +70,7 @@ func GetAllBans(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 	fmt.Fprintln(w, string(output))
 }
 
-func DeleteBan(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func DeleteBan(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permBan) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis/v8"
-	mux "github.com/julienschmidt/httprouter"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
 )
@@ -17,8 +17,9 @@ func init() {
 	redisDBuser = newClient(redisDatabaseUser)
 }
 
-func GetGlobalUser(w http.ResponseWriter, _ *http.Request, p mux.Params) {
-	uuid := string(p[0].Value)
+func GetGlobalUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	uuid := vars["uuid"]
 	if redisDBuser.Exists(ctx, uuid).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
 		w.Header().Set("version", version)
@@ -28,7 +29,7 @@ func GetGlobalUser(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 	}
 }
 
-func SetGlobalUser(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func SetGlobalUser(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permUser) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
@@ -57,7 +58,7 @@ func SetGlobalUser(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func GetAllUsers(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permUser) {
 		var data []UserSimple
 		for entry := range redisDBuser.Keys(ctx, "*").Val() {

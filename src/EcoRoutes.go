@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis/v8"
-	mux "github.com/julienschmidt/httprouter"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
 )
@@ -19,8 +19,9 @@ func init() {
 	redisDBclient = newClient(redisDatabaseUser)
 }
 
-func GetEco(w http.ResponseWriter, _ *http.Request, p mux.Params) {
-	name := string(p[0].Value)
+func GetEco(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	name := vars["name"]
 	if redisDBEco.Exists(ctx, name).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
 		w.Header().Set("version", version)
@@ -30,7 +31,7 @@ func GetEco(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 	}
 }
 
-func SetEco(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func SetEco(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permEco) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
@@ -56,7 +57,7 @@ func SetEco(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func DelEco(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func DelEco(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permEco) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
@@ -77,7 +78,7 @@ func DelEco(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func GetAllEco(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
+func GetAllEco(w http.ResponseWriter, _ *http.Request) {
 	var data []CurrencyConvert
 	for entry := range redisDBEco.Keys(ctx, "*").Val() {
 		var eco CurrencyConvert

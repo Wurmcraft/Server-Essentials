@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis/v8"
-	mux "github.com/julienschmidt/httprouter"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"os"
@@ -14,7 +14,7 @@ import (
 
 const version string = "0.3.1"
 const defaultUser string = "admin"
-const sslEnabled = true
+const sslEnabled = false
 
 var redisDBAuth *redis.Client
 var ctx = context.Background()
@@ -35,6 +35,7 @@ func main() {
 	SetupDefaultAuth()
 	go checkForExpiredChunkLoading()
 	go startupBot()
+	go handleMessages()
 	if sslEnabled {
 		log.Fatal(http.ListenAndServeTLS(":"+address, httpsCert, httpsKey, router))
 	} else {
@@ -43,17 +44,17 @@ func main() {
 }
 
 func NewRouter() *mux.Router {
-	router := mux.New()
+	router := mux.NewRouter()
 	for _, route := range routes {
 		if route.RequireAuth {
-			router.Handle(route.Method, route.Pattern, auth(route.Handle))
+			router.HandleFunc(route.Pattern, auth(route.Handle)).Methods(route.Method)
 		} else {
-			router.Handle(route.Method, route.Pattern, route.Handle)
+			router.HandleFunc(route.Pattern, route.Handle).Methods(route.Method)
 		}
 	}
+	router.HandleFunc("/api/chat", MessageSocket)
 	return router
 }
-
 func newClient(databaseIndex int) *redis.Client {
 	return redis.NewClient(&redis.Options{
 		Addr:     redisAddress,

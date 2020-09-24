@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis/v8"
-	mux "github.com/julienschmidt/httprouter"
 	"io/ioutil"
 	"net/http"
 )
@@ -17,7 +16,7 @@ func init() {
 	redisDBCommand = newClient(redisCommandStorage)
 }
 
-func GetAllCommands(w http.ResponseWriter, _ *http.Request, m mux.Params) {
+func GetAllCommands(w http.ResponseWriter, _ *http.Request) {
 	var data []CommandQueue
 	for entry := range redisDBCommand.Keys(ctx, "*").Val() {
 		var serverCommandQueue CommandQueue
@@ -32,7 +31,7 @@ func GetAllCommands(w http.ResponseWriter, _ *http.Request, m mux.Params) {
 	fmt.Fprintln(w, string(output))
 }
 
-func addCommand(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func addCommand(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permCommands) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return

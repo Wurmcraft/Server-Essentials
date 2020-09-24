@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	mux "github.com/julienschmidt/httprouter"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"strings"
@@ -14,7 +13,7 @@ type Route struct {
 	Method      string
 	Pattern     string
 	RequireAuth bool
-	Handle      mux.Handle
+	Handle      func(http.ResponseWriter, *http.Request)
 }
 
 type Routes []Route
@@ -38,7 +37,7 @@ var routes = Routes{
 	Route{
 		"GetUsers",
 		"GET",
-		"/api/users/:uuid",
+		"/api/users/{uuid}",
 		false,
 		GetGlobalUser,
 	},
@@ -52,7 +51,7 @@ var routes = Routes{
 	Route{
 		"OverrideUser",
 		"PUT",
-		"/api/users/:uuid/override",
+		"/api/users/{uuid}/override",
 		true,
 		SetGlobalUser,
 	},
@@ -67,7 +66,7 @@ var routes = Routes{
 	Route{
 		"GetRank",
 		"GET",
-		"/api/ranks/:name",
+		"/api/ranks/{name}",
 		false,
 		GetRank,
 	},
@@ -81,7 +80,7 @@ var routes = Routes{
 	Route{
 		"OverrideRank",
 		"PUT",
-		"/api/ranks/:name/override",
+		"/api/ranks/{name}/override",
 		true,
 		SetRank,
 	},
@@ -95,7 +94,7 @@ var routes = Routes{
 	Route{
 		"DelRank",
 		"DELETE",
-		"/api/ranks/:name/del",
+		"/api/ranks/{name}/del",
 		true,
 		DelRank,
 	},
@@ -103,7 +102,7 @@ var routes = Routes{
 	Route{
 		"GetAutoRank",
 		"GET",
-		"/api/autoRanks/:name",
+		"/api/autoRanks/{name}",
 		false,
 		GetAutoRank,
 	},
@@ -117,14 +116,14 @@ var routes = Routes{
 	Route{
 		"OverrideAutoRank",
 		"PUT",
-		"/api/autoRanks/:name/override",
+		"/api/autoRanks/{name}/override",
 		true,
 		SetAutoRank,
 	},
 	Route{
 		"DelAutoRank",
 		"DELETE",
-		"/api/autoRanks/:name/del",
+		"/api/autoRanks/{name}/del",
 		true,
 		DelAutoRank,
 	},
@@ -139,7 +138,7 @@ var routes = Routes{
 	Route{
 		"GetCurrency",
 		"GET",
-		"/api/currency/:name",
+		"/api/currency/{name}",
 		false,
 		GetEco,
 	},
@@ -153,14 +152,14 @@ var routes = Routes{
 	Route{
 		"OverrideCurrency",
 		"PUT",
-		"/api/currency/:name/override",
+		"/api/currency/{name}/override",
 		true,
 		SetEco,
 	},
 	Route{
 		"DeleteEco",
 		"DELETE",
-		"/api/currency/:name/del",
+		"/api/currency/{name}/del",
 		true,
 		DelEco,
 	},
@@ -196,7 +195,7 @@ var routes = Routes{
 	Route{
 		"GetTransfer",
 		"GET",
-		"/api/transfer/:uuid",
+		"/api/transfer/{uuid}",
 		false,
 		GetTransferData,
 	},
@@ -210,7 +209,7 @@ var routes = Routes{
 	Route{
 		"OverrideTransfer",
 		"PUT",
-		"/api/transfer/:uuid/override",
+		"/api/transfer/{uuid}/override",
 		true,
 		SetTransferData,
 	},
@@ -231,7 +230,7 @@ var routes = Routes{
 	Route{
 		"GetBan",
 		"GET",
-		"/api/ban/:uuid",
+		"/api/ban/{uuid}",
 		false,
 		GetBan,
 	},
@@ -252,7 +251,7 @@ var routes = Routes{
 	Route{
 		"Unban",
 		"DELETE",
-		"/api/bans/:uuid/del",
+		"/api/bans/{uuid}/del",
 		true,
 		DeleteBan,
 	},
@@ -294,7 +293,7 @@ var routes = Routes{
 	Route{
 		"GetChunkLoading",
 		"GET",
-		"/api/chunkloading/:serverID",
+		"/api/chunkloading/{serverID}",
 		false,
 		GetChunkLoadingForServerID,
 	},
@@ -343,7 +342,7 @@ var routes = Routes{
 	Route{
 		"GetName",
 		"GET",
-		"/api/lookup/:name",
+		"/api/lookup/{uuid}",
 		false,
 		GetUserUUID,
 	},
@@ -357,18 +356,18 @@ var routes = Routes{
 	Route{
 		"GetMessages",
 		"GET",
-		"/api/messages/:id",
+		"/api/messages/{serverID}",
 		true,
 		GetMessages,
 	},
 }
 
-func Index(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
+func Index(w http.ResponseWriter, r *http.Request) {
 	_, _ = fmt.Fprintf(w, "Welcome to the Server-Essentials Rest API v"+version)
 }
 
-func auth(pass mux.Handle) mux.Handle {
-	return func(w http.ResponseWriter, r *http.Request, m mux.Params) {
+func auth(f http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
 		auth := r.Header.Get("token")
 		if len(auth) == 0 {
 			http.Error(w, "Failed to Authorize", http.StatusUnauthorized)
@@ -378,7 +377,7 @@ func auth(pass mux.Handle) mux.Handle {
 			http.Error(w, "Failed to Authorize", http.StatusUnauthorized)
 			return
 		}
-		pass(w, r, m)
+		f(w, r)
 	}
 }
 

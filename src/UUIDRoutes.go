@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis/v8"
-	mux "github.com/julienschmidt/httprouter"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
 )
@@ -17,7 +17,7 @@ func init() {
 	redisDBUUID = newClient(redisDatabaseUUID)
 }
 
-func SetUUID(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func SetUUID(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permUUID) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
@@ -46,8 +46,9 @@ func SetUUID(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func GetUserUUID(w http.ResponseWriter, _ *http.Request, p mux.Params) {
-	uuid := string(p[0].Value)
+func GetUserUUID(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	uuid := vars["uuid"]
 	if redisDBuser.Exists(ctx, uuid).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
 		w.Header().Set("version", version)
@@ -57,7 +58,7 @@ func GetUserUUID(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 	}
 }
 
-func GetAllNames(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func GetAllNames(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permUUID) {
 		var data []NameLookup
 		for entry := range redisDBUUID.Keys(ctx, "*").Val() {

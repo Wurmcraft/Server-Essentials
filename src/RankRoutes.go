@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis/v8"
-	mux "github.com/julienschmidt/httprouter"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
 )
@@ -17,8 +17,9 @@ func init() {
 	redisDBRank = newClient(redisDatabaseRank)
 }
 
-func GetRank(w http.ResponseWriter, _ *http.Request, p mux.Params) {
-	name := string(p[0].Value)
+func GetRank(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	name := vars["uuid"]
 	if redisDBRank.Exists(ctx, name).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
 		w.Header().Set("version", version)
@@ -28,7 +29,7 @@ func GetRank(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 	}
 }
 
-func SetRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func SetRank(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permRank) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
@@ -54,7 +55,7 @@ func SetRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func DelRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func DelRank(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permRank) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
@@ -75,7 +76,7 @@ func DelRank(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func GetAllRanks(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
+func GetAllRanks(w http.ResponseWriter, _ *http.Request) {
 	var data []Rank
 	for entry := range redisDBRank.Keys(ctx, "*").Val() {
 		var rank Rank

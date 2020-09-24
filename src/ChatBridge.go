@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
-	mux "github.com/julienschmidt/httprouter"
+	"github.com/gorilla/mux"
+	"github.com/gorilla/websocket"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -14,7 +16,7 @@ var storedMessages = make(map[string][]BridgeMessage)
 
 const permChat = "chat"
 
-func AddMessage(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func AddMessage(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permRank) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
@@ -39,8 +41,9 @@ func AddMessage(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func GetMessages(w http.ResponseWriter, _ *http.Request, p mux.Params) {
-	serverID := string(p[0].Value)
+func GetMessages(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	serverID := vars["serverID"]
 	if storedMessages[serverID] != nil {
 		output, err := json.MarshalIndent(storedMessages[serverID], " ", " ")
 		if err != nil {
@@ -57,41 +60,45 @@ func GetMessages(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 }
 
 func AppendMessage(message BridgeMessage) {
-	//for entry := range redisDBStatus.Keys(ctx, "*").Val() {
-	//	var serverStatus ServerStatus
-	//	json.Unmarshal([]byte(redisDBStatus.Get(ctx, redisDBStatus.Keys(ctx, "*").Val()[entry]).Val()), &serverStatus)
-	//	if strings.EqualFold(serverStatus.ServerID, message.ID) {
-	//		continue
-	//	}
-	//	if storedMessages[serverStatus.ServerID] != nil {
-	//		storedMessages[serverStatus.ServerID] = append(storedMessages[serverStatus.ServerID], message)
-	//	} else {
-	//		storedMessages[serverStatus.ServerID] = []BridgeMessage{message}
-	//	}
-	//}
-	//if !strings.EqualFold("discord", message.ID) {
-	//	if discord == nil {
-	//		dis, err := discordgo.New("Bot " + discordToken)
-	//		if err != nil {
-	//			fmt.Println(err.Error())
-	//		}
-	//		discord = dis
-	//	}
-	//	msg := ""
-	//	if message.FormattingStyle == 0 {
-	//		msg = "**[" + message.ID + "] " + removeFormatting(message.DisplayName) + "** " + message.Message
-	//	} else if message.FormattingStyle == 1 {
-	//		msg = "**" + removeFormatting(message.DisplayName) + "** " + message.Message
-	//	} else if message.FormattingStyle == 2 {
-	//		msg = "**" + removeFormatting(message.Message) + "**"
-	//	} else if message.FormattingStyle == 3 {
-	//		msg = removeFormatting(message.Message)
-	//	}
-	//	_, err := discord.ChannelMessageSend(message.DiscordChannelID, msg)
-	//	if err != nil {
-	//		fmt.Println(err.Error())
-	//	}
-	//}
+	for entry := range redisDBStatus.Keys(ctx, "*").Val() {
+		var serverStatus ServerStatus
+		json.Unmarshal([]byte(redisDBStatus.Get(ctx, redisDBStatus.Keys(ctx, "*").Val()[entry]).Val()), &serverStatus)
+		if strings.EqualFold(serverStatus.ServerID, message.ID) {
+			continue
+		}
+		if storedMessages[serverStatus.ServerID] != nil {
+			storedMessages[serverStatus.ServerID] = append(storedMessages[serverStatus.ServerID], message)
+		} else {
+			storedMessages[serverStatus.ServerID] = []BridgeMessage{message}
+		}
+	}
+	handleDiscord(message)
+}
+
+func handleDiscord(message BridgeMessage) {
+	if !strings.EqualFold("discord", message.ID) {
+		if discord == nil {
+			dis, err := discordgo.New("Bot " + discordToken)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+			discord = dis
+		}
+		msg := ""
+		if message.FormattingStyle == 0 {
+			msg = "**[" + message.ID + "] " + removeFormatting(message.DisplayName) + "** " + message.Message
+		} else if message.FormattingStyle == 1 {
+			msg = "**" + removeFormatting(message.DisplayName) + "** " + message.Message
+		} else if message.FormattingStyle == 2 {
+			msg = "**" + removeFormatting(message.Message) + "**"
+		} else if message.FormattingStyle == 3 {
+			msg = removeFormatting(message.Message)
+		}
+		_, err := discord.ChannelMessageSend(message.DiscordChannelID, msg)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+	}
 }
 
 var replacer = strings.NewReplacer(
@@ -135,5 +142,46 @@ func handleChannelMessages(s *discordgo.Session, m *discordgo.MessageCreate) {
 				FormattingStyle:  0,
 			})
 		}
+	}
+}
+
+var clients = make(map[*websocket.Conn]bool)
+var broadcast = make(chan BridgeMessage)
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
+
+func MessageSocket(w http.ResponseWriter, r *http.Request) {
+	ws, err := upgrader.Upgrade(w, r, nil)
+	clients[ws] = true
+	if err != nil {
+		fmt.Println("Failed to update GET request to -> WebSocket")
+	}
+	for {
+		var msg BridgeMessage
+		err := ws.ReadJSON(&msg)
+		if err != nil {
+			log.Printf("error: %v", err)
+			delete(clients, ws)
+			break
+		}
+		broadcast <- msg
+	}
+	defer ws.Close()
+}
+
+func handleMessages() {
+	for {
+		msg := <-broadcast
+		for client := range clients {
+			err := client.WriteJSON(msg)
+			if err != nil {
+				log.Printf("error: %v", err)
+				client.Close()
+				delete(clients, client)
+			}
+		}
+		handleDiscord(msg)
 	}
 }

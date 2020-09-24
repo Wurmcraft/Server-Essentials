@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis/v8"
-	mux "github.com/julienschmidt/httprouter"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
 )
@@ -17,8 +17,9 @@ func init() {
 	redisChunkLoadingDB = newClient(redisDatabaseChunkLoading)
 }
 
-func GetChunkLoadingForServerID(w http.ResponseWriter, _ *http.Request, p mux.Params) {
-	serverID := string(p[0].Value)
+func GetChunkLoadingForServerID(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	serverID := vars["uuid"]
 	if redisChunkLoadingDB.Exists(ctx, serverID).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
 		w.Header().Set("version", version)
@@ -28,7 +29,7 @@ func GetChunkLoadingForServerID(w http.ResponseWriter, _ *http.Request, p mux.Pa
 	}
 }
 
-func UpdateServerID(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func UpdateServerID(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permChunkLoading) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
@@ -53,7 +54,7 @@ func UpdateServerID(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	redisChunkLoadingDB.Set(ctx, chunkLoadingData.ServerID, output, 0)
 }
 
-func GetAllServerChunkLoading(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
+func GetAllServerChunkLoading(w http.ResponseWriter, _ *http.Request) {
 	var data []ServerChunkData
 	for entry := range redisChunkLoadingDB.Keys(ctx, "*").Val() {
 		var serverChunkLoading ServerChunkData

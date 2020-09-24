@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis/v8"
-	mux "github.com/julienschmidt/httprouter"
 	"io/ioutil"
 	"net/http"
 )
@@ -17,7 +16,7 @@ func init() {
 	redisDBdiscord = newClient(redisDatabaseDiscord)
 }
 
-func SetToken(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func SetToken(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permDiscord) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
@@ -46,7 +45,7 @@ func SetToken(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func GetAllTokens(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
+func GetAllTokens(w http.ResponseWriter, _ *http.Request) {
 	var data []Token
 	for entry := range redisDBdiscord.Keys(ctx, "*").Val() {
 		var discordToken Token

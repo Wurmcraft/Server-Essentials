@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis/v8"
-	mux "github.com/julienschmidt/httprouter"
 	"io/ioutil"
 	"math"
 	"net/http"
@@ -19,7 +18,7 @@ func init() {
 	redisDBStatus = newClient(redisDatabaseStatus)
 }
 
-func Validate(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
+func Validate(w http.ResponseWriter, _ *http.Request) {
 	validatedJson, err := json.Marshal(&ValidateResponse{Version: version})
 	if err == nil {
 		w.Header().Set("Content-Type", "application/json")
@@ -28,7 +27,7 @@ func Validate(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 	}
 }
 
-func GetServerStatus(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
+func GetServerStatus(w http.ResponseWriter, _ *http.Request) {
 	var data []ServerStatus
 	for entry := range redisDBStatus.Keys(ctx, "*").Val() {
 		var serverStatus ServerStatus
@@ -49,7 +48,7 @@ func GetServerStatus(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 	}
 }
 
-func PostStatus(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func PostStatus(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permStatus) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
@@ -75,7 +74,7 @@ func PostStatus(w http.ResponseWriter, r *http.Request, _ mux.Params) {
 	w.WriteHeader(http.StatusAccepted)
 }
 
-func GetStatus(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
+func GetStatus(w http.ResponseWriter, _ *http.Request) {
 	fmt.Fprintln(w, "<html>\n<head>\n <meta http-equiv=\"refresh\" content=\"30\">\n  <link rel=\"stylesheet\" type=\"text/css\" href=\"theme.css\">\n</head>\n<body>\n  <table>\n  \t<tbody>\n ")
 	var count = 0
 	for entry := range redisDBStatus.Keys(ctx, "*").Val() {
@@ -108,7 +107,7 @@ func GetStatus(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
 	fmt.Fprintln(w, "  \t</tbody>\n  </table>\n</body>\n</html>")
 }
 
-func GetCSS(w http.ResponseWriter, _ *http.Request, _ mux.Params) {
+func GetCSS(w http.ResponseWriter, _ *http.Request) {
 	data, err := ioutil.ReadFile("theme.css")
 	if err != nil {
 		fmt.Println("File reading error", err)

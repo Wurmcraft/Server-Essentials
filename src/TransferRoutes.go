@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis/v8"
-	mux "github.com/julienschmidt/httprouter"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
 )
@@ -17,12 +17,13 @@ func init() {
 	redisDBtransfer = newClient(redisDatabaseTransfer)
 }
 
-func GetTransferData(w http.ResponseWriter, r *http.Request, p mux.Params) {
+func GetTransferData(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permTransfer) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}
-	uuid := string(p[0].Value)
+	vars := mux.Vars(r)
+	uuid := vars["uuid"]
 	if redisDBtransfer.Exists(ctx, uuid).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
 		w.Header().Set("version", version)
@@ -32,7 +33,7 @@ func GetTransferData(w http.ResponseWriter, r *http.Request, p mux.Params) {
 	}
 }
 
-func SetTransferData(w http.ResponseWriter, r *http.Request, _ mux.Params) {
+func SetTransferData(w http.ResponseWriter, r *http.Request) {
 	if !hasPermission(GetPermission(r.Header.Get("token")), permTransfer) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
