@@ -33,7 +33,7 @@ func main() {
 	}
 	redisDBAuth = newClient(redisDatabaseAuth)
 	SetupDefaultAuth()
-	//go checkForExpiredChunkLoading()
+	go checkForExpiredChunkLoading()
 	//go startupBot()
 	if sslEnabled {
 		log.Fatal(http.ListenAndServeTLS(":"+address, httpsCert, httpsKey, router))
