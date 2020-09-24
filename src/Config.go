@@ -44,6 +44,7 @@ var redisDatabaseChunkLoading = redisDatabaseAuth + 1
 var redisCommandStorage = redisDatabaseChunkLoading + 1
 var redisDatabaseUUID = redisCommandStorage + 1
 var chunkLoadingNotSeenTimeOut int64
+var sslEnabled bool
 
 func loadAndSetupConfig() {
 	viper.SetConfigName("config")
@@ -82,6 +83,7 @@ func addDefaults() {
 	discordChannelMap["discordChannelID"] = "global"
 	discordChannelMap["discordChannelID2"] = "local"
 	viper.SetDefault("discordChannelMap", discordChannelMap)
+	viper.SetDefault("sslEnabled", true)
 }
 
 func copySettings() {
@@ -100,6 +102,7 @@ func copySettings() {
 	discordServerID = viper.GetString("discordServerID")
 	discordLogChannelID = viper.GetString("discordLogChannelID")
 	discordChannelMap = viper.GetStringMapString("discordChannelMap")
+	sslEnabled = viper.GetBool("sslEnabled")
 	// Update Database ID's
 	redisDatabase = rediDBShift
 	redisDatabaseUser = rediDBShift
