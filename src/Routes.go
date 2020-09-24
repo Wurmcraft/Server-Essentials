@@ -347,20 +347,20 @@ var routes = Routes{
 		false,
 		GetUserUUID,
 	},
-	//Route{
-	//	"AddMessage",
-	//	"POST",
-	//	"/api/messages",
-	//	true,
-	//	AddMessage,
-	//},
-	//Route{
-	//	"GetMessages",
-	//	"GET",
-	//	"/api/messages/:id",
-	//	true,
-	//	GetMessages,
-	//},
+	Route{
+		"AddMessage",
+		"POST",
+		"/api/messages",
+		true,
+		AddMessage,
+	},
+	Route{
+		"GetMessages",
+		"GET",
+		"/api/messages/:id",
+		true,
+		GetMessages,
+	},
 }
 
 func Index(w http.ResponseWriter, _ *http.Request, _ mux.Params) {

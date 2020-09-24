@@ -57,41 +57,41 @@ func GetMessages(w http.ResponseWriter, _ *http.Request, p mux.Params) {
 }
 
 func AppendMessage(message BridgeMessage) {
-	for entry := range redisDBStatus.Keys(ctx, "*").Val() {
-		var serverStatus ServerStatus
-		json.Unmarshal([]byte(redisDBStatus.Get(ctx, redisDBStatus.Keys(ctx, "*").Val()[entry]).Val()), &serverStatus)
-		if strings.EqualFold(serverStatus.ServerID, message.ID) {
-			continue
-		}
-		if storedMessages[serverStatus.ServerID] != nil {
-			storedMessages[serverStatus.ServerID] = append(storedMessages[serverStatus.ServerID], message)
-		} else {
-			storedMessages[serverStatus.ServerID] = []BridgeMessage{message}
-		}
-	}
-	if !strings.EqualFold("discord", message.ID) {
-		if discord == nil {
-			dis, err := discordgo.New("Bot " + discordToken)
-			if err != nil {
-				fmt.Println(err.Error())
-			}
-			discord = dis
-		}
-		msg := ""
-		if message.FormattingStyle == 0 {
-			msg = "**[" + message.ID + "] " + removeFormatting(message.DisplayName) + "** " + message.Message
-		} else if message.FormattingStyle == 1 {
-			msg = "**" + removeFormatting(message.DisplayName) + "** " + message.Message
-		} else if message.FormattingStyle == 2 {
-			msg = "**" + removeFormatting(message.Message) + "**"
-		} else if message.FormattingStyle == 3 {
-			msg = removeFormatting(message.Message)
-		}
-		_, err := discord.ChannelMessageSend(message.DiscordChannelID, msg)
-		if err != nil {
-			fmt.Println(err.Error())
-		}
-	}
+	//for entry := range redisDBStatus.Keys(ctx, "*").Val() {
+	//	var serverStatus ServerStatus
+	//	json.Unmarshal([]byte(redisDBStatus.Get(ctx, redisDBStatus.Keys(ctx, "*").Val()[entry]).Val()), &serverStatus)
+	//	if strings.EqualFold(serverStatus.ServerID, message.ID) {
+	//		continue
+	//	}
+	//	if storedMessages[serverStatus.ServerID] != nil {
+	//		storedMessages[serverStatus.ServerID] = append(storedMessages[serverStatus.ServerID], message)
+	//	} else {
+	//		storedMessages[serverStatus.ServerID] = []BridgeMessage{message}
+	//	}
+	//}
+	//if !strings.EqualFold("discord", message.ID) {
+	//	if discord == nil {
+	//		dis, err := discordgo.New("Bot " + discordToken)
+	//		if err != nil {
+	//			fmt.Println(err.Error())
+	//		}
+	//		discord = dis
+	//	}
+	//	msg := ""
+	//	if message.FormattingStyle == 0 {
+	//		msg = "**[" + message.ID + "] " + removeFormatting(message.DisplayName) + "** " + message.Message
+	//	} else if message.FormattingStyle == 1 {
+	//		msg = "**" + removeFormatting(message.DisplayName) + "** " + message.Message
+	//	} else if message.FormattingStyle == 2 {
+	//		msg = "**" + removeFormatting(message.Message) + "**"
+	//	} else if message.FormattingStyle == 3 {
+	//		msg = removeFormatting(message.Message)
+	//	}
+	//	_, err := discord.ChannelMessageSend(message.DiscordChannelID, msg)
+	//	if err != nil {
+	//		fmt.Println(err.Error())
+	//	}
+	//}
 }
 
 var replacer = strings.NewReplacer(
