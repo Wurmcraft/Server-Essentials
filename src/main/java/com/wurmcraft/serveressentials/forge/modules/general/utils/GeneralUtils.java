@@ -2,8 +2,12 @@ package com.wurmcraft.serveressentials.forge.modules.general.utils;
 
 import static com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer.SAVE_DIR;
 
+import com.wurmcraft.serveressentials.forge.api.SECore;
+import com.wurmcraft.serveressentials.forge.api.data.DataKey;
+import com.wurmcraft.serveressentials.forge.api.json.player.GlobalPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
 import com.wurmcraft.serveressentials.forge.modules.general.GeneralModule;
+import com.wurmcraft.serveressentials.forge.server.data.RestRequestHandler;
 import com.wurmcraft.serveressentials.forge.server.utils.PlayerUtils;
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +15,9 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketSpawnPlayer;
@@ -25,6 +31,53 @@ public class GeneralUtils {
     StoredPlayer playerData = PlayerUtils.get(player);
     int total = GeneralModule.config.defaultHomeCount;
     return total;
+  }
+
+  public static int getPerkLevel(EntityPlayer player, String perkName) {
+    StoredPlayer playerData = PlayerUtils.get(player);
+    for (String p : playerData.global.perks) {
+      if (p.startsWith(perkName.toLowerCase())) {
+        try {
+          return Integer.parseInt(p.substring(p.lastIndexOf(".")+1));
+        } catch (NoSuchElementException e) {
+          return 0;
+        }
+      }
+    }
+    return 0;
+  }
+
+  public static void setPerk(EntityPlayer player, String name, int level) {
+    StoredPlayer playerData = PlayerUtils.get(player);
+    int currentLevel = getPerkLevel(player, name);
+    List<String> currentPerks = new ArrayList<>();
+    if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+      GlobalPlayer global = RestRequestHandler.User
+          .getPlayer(player.getGameProfile().getId().toString());
+      Collections.addAll(currentPerks, global.perks);
+    } else {
+      Collections.addAll(currentPerks, playerData.global.perks);
+    }
+    if (currentLevel == 0) {
+      currentPerks.add(name.toLowerCase() + ".amount." + level);
+    } else {
+      boolean found = false;
+      for (int index = 0; index < currentPerks.size(); index++) {
+        if (currentPerks.get(index).startsWith(name.toLowerCase())) {
+          found = true;
+          currentPerks.set(index, name.toLowerCase() + ".amount." + level);
+        }
+      }
+      if (!found) {
+        currentPerks.add(name.toLowerCase() + ".amount." + level);
+      }
+    }
+    playerData.global.perks = currentPerks.toArray(new String[0]);
+    SECore.dataHandler.registerData(DataKey.PLAYER, playerData);
+    if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+      RestRequestHandler.User
+          .overridePlayer(player.getGameProfile().getId().toString(), playerData.global);
+    }
   }
 
   public static boolean hasActiveTPARequest(EntityPlayer player) {

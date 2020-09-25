@@ -145,6 +145,8 @@ public class Language implements JsonParser {
   public String ECO_PAY_GIVEN;
   public String ECO_ADD;
   public String ECO_DEL;
+  public String ECO_PERK_NONE;
+  public String ECO_PERK_BUY;
   public String GENERAL_SPAWN;
   public String GENERAL_SETSPAWN;
   public String GENERAL_SPAWN_NONE;

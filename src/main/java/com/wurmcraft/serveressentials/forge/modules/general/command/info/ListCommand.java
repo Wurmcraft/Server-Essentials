@@ -11,7 +11,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-@ModuleCommand(moduleName = "General", name = "List", aliases = {"OnlinePlayers",
+@ModuleCommand(moduleName = "General", name = "list", aliases = {"OnlinePlayers",
     "Players"})
 public class ListCommand {
 

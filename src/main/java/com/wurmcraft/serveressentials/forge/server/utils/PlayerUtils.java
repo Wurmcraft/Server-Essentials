@@ -9,6 +9,7 @@ import com.wurmcraft.serveressentials.forge.api.json.player.NetworkTime;
 import com.wurmcraft.serveressentials.forge.api.json.player.NetworkTime.ServerTime;
 import com.wurmcraft.serveressentials.forge.api.json.player.ServerPlayer;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
+import com.wurmcraft.serveressentials.forge.modules.chatbridge.event.ChatSocketEvents;
 import com.wurmcraft.serveressentials.forge.modules.chatbridge.json.BridgeMessage;
 import com.wurmcraft.serveressentials.forge.modules.language.LanguageModule;
 import com.wurmcraft.serveressentials.forge.modules.rank.utils.RankUtils;
@@ -97,10 +98,10 @@ public class PlayerUtils {
           ServerEssentialsServer.EXECUTORS.schedule(() -> {
             Channel ch = (Channel) SECore.dataHandler
                 .getData(DataKey.CHANNEL, LanguageModule.config.defaultChannel);
-            RestRequestHandler.Bridge.addMessage(
+            ChatSocketEvents.socket.sendText(ServerEssentialsServer.GSON.toJson(
                 new BridgeMessage(getLanguage(null).ANNOUNCEMENT_NEW_PLAYER
                     .replaceAll("%PLAYER%", name), SECore.config.serverID,
-                    uuid, "", ch.getID(), ch.discordChannelID,finalNewToNetwork ? 2 : 3));
+                    uuid, "", ch.getID(), ch.discordChannelID,finalNewToNetwork ? 2 : 3)));
           }, 0, TimeUnit.SECONDS);
         }
       } else {
