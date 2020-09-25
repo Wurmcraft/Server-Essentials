@@ -81,6 +81,7 @@ public class ModuleLoader {
       }
       method.invoke(moduleInstance);
     } catch (Exception e) {
+      ServerEssentialsServer.LOGGER.error(e.getMessage());
       ServerEssentialsServer.LOGGER.error("Module '" + module.name()
           + "' has loaded incorrectly, removing from module list");
       modules.remove(module.name().toUpperCase());

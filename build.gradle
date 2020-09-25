@@ -61,6 +61,7 @@ dependencies {
     compile "org.reflections:reflections:${reflections_version}"
     compile "com.boundary:high-scale-lib:${highscalelib_version}"
     compile "org.javassist:javassist:${javassist_version}"
+    compile 'com.neovisionaries:nv-websocket-client:2.10'
     // Other Mods
     compile "curse.maven:ftb-utilities:${ftbutils_version}"
     compile "curse.maven:ftb-library:${ftblib_version}"
@@ -74,6 +75,7 @@ shadowJar {
         include(dependency("org.reflections:reflections:${reflections_version}"))
         include(dependency("com.boundary:high-scale-lib:${highscalelib_version}"))
         include(dependency('org.javassist:javassist::3.12.1.GA'))
+        include(dependency('com.neovisionaries:nv-websocket-client:2.10'))
     }
 }
 

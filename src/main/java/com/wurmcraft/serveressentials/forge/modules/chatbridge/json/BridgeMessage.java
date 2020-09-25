@@ -20,4 +20,13 @@ public class BridgeMessage {
     this.discordChannelID = discordChannelID;
     this.formattingStyle = formattingStyle;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof BridgeMessage) {
+      BridgeMessage test = (BridgeMessage) obj;
+      return message.equals(test.message) && id.equals(test.id);
+    }
+    return false;
+  }
 }

@@ -18,6 +18,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.ServerChatEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -25,65 +26,8 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 
-public class ChatEvents {
+public class ChatPollEvents {
 
-  @SubscribeEvent
-  public void onPlayerChat(ServerChatEvent e) {
-    ServerEssentialsServer.EXECUTORS.schedule(() -> {
-      Channel ch = null;
-      try {
-        ch = (Channel) SECore.dataHandler
-            .getData(DataKey.CHANNEL, PlayerUtils.get(e.getPlayer()).server.channel);
-      } catch (NoSuchElementException f) {
-        ch = (Channel) SECore.dataHandler
-            .getData(DataKey.CHANNEL, LanguageModule.config.defaultChannel);
-      }
-      RestRequestHandler.Bridge.addMessage(
-          new BridgeMessage(e.getMessage(), SECore.config.serverID,
-              e.getPlayer().getGameProfile().getId().toString(),
-              Objects.requireNonNull(RankUtils.getRank(e.getPlayer())).prefix + " " + e
-                  .getUsername(), ch.getID(), ch.discordChannelID,
-              LanguageModule.config.defaultChannel.equals(ch.getID()) ? 0 : 1));
-    }, 0, TimeUnit.SECONDS);
-  }
-
-  @SubscribeEvent
-  public void checkBridge(ServerTickEvent e) {
-    if (e.phase == Phase.END) {
-      ServerEssentialsServer.EXECUTORS.schedule(() -> {
-        BridgeMessage[] msgs = RestRequestHandler.Bridge.getMessages();
-        if (msgs.length > 0) {
-          for (BridgeMessage msg : msgs) {
-            handleMessage(msg);
-          }
-        }
-      }, 0, TimeUnit.SECONDS);
-    }
-  }
-
-  @SubscribeEvent(priority = EventPriority.HIGH)
-  public void onPlayerLeave(PlayerLoggedOutEvent e) {
-    try {
-      Channel ch = (Channel) SECore.dataHandler
-          .getData(DataKey.CHANNEL, DiscordModule.config.playerLoginNotificationChannel);
-      sendMessage(new BridgeMessage("[-] " + e.player.getDisplayNameString(),
-          SECore.config.serverID, e.player.getGameProfile().getId().toString(),
-          e.player.getDisplayNameString(), ch.getID(), ch.discordChannelID, 3));
-    } catch (NoSuchElementException ignored) {
-    }
-  }
-
-  @SubscribeEvent(priority = EventPriority.HIGH)
-  public void onPlayerLeave(PlayerLoggedInEvent e) {
-    try {
-      Channel ch = (Channel) SECore.dataHandler
-          .getData(DataKey.CHANNEL, DiscordModule.config.playerLoginNotificationChannel);
-      sendMessage(new BridgeMessage("[+] " + e.player.getDisplayNameString(),
-          SECore.config.serverID, e.player.getGameProfile().getId().toString(),
-          e.player.getDisplayNameString(), ch.getID(), ch.discordChannelID, 3));
-    } catch (NoSuchElementException ignored) {
-    }
-  }
 
   public static void handleMessage(BridgeMessage msg) {
     try {

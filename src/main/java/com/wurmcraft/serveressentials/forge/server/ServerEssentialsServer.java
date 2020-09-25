@@ -9,6 +9,7 @@ import com.wurmcraft.serveressentials.forge.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.forge.api.data.DataKey;
 import com.wurmcraft.serveressentials.forge.api.data.IDataHandler;
 import com.wurmcraft.serveressentials.forge.api.json.rest.ServerStatus.Status;
+import com.wurmcraft.serveressentials.forge.modules.chatbridge.event.ChatSocketEvents;
 import com.wurmcraft.serveressentials.forge.modules.core.CoreModule;
 import com.wurmcraft.serveressentials.forge.modules.core.utils.CoreUtils;
 import com.wurmcraft.serveressentials.forge.modules.general.GeneralModule;
@@ -120,6 +121,20 @@ public class ServerEssentialsServer {
     if (ModuleLoader.getLoadedModule("Status") != null) {
       StatusUtils.sendUpdate(Status.LOADING);
     }
+
+    try {
+      if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
+//      MinecraftForge.EVENT_BUS.register(new ChatPollEvents());
+        MinecraftForge.EVENT_BUS.register(new ChatSocketEvents());
+        ChatSocketEvents.setup();
+      } else {
+        ServerEssentialsServer.LOGGER
+            .error("Unable to start up ChatBridge (Requires Rest)");
+      }
+    } catch (Exception f) {
+      ServerEssentialsServer.LOGGER.info("ChatBridge Fail");
+      f.printStackTrace();
+    }
   }
 
   @EventHandler
@@ -178,6 +193,9 @@ public class ServerEssentialsServer {
     }
     if (SECore.config.dataStorageType.equalsIgnoreCase("Rest")) {
       RestRequestHandler.Auth.renew();
+    }
+    if (ChatSocketEvents.socket != null) {
+      ChatSocketEvents.socket.sendClose();
     }
   }
 

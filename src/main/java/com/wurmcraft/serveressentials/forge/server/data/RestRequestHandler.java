@@ -23,7 +23,7 @@ public class RestRequestHandler {
 
   public static final String USER_AGENT = "Mozilla/5.0";
 
-  private String baseURL = parseConfigURL(SECore.config.Rest.restURL) + "api/";
+  public static String BASE_URL = parseConfigURL(SECore.config.Rest.restURL) + "api/";
 
   private static RestRequestHandler INSTANCE = new RestRequestHandler();
   public static RestValidate validate = null;
@@ -47,7 +47,7 @@ public class RestRequestHandler {
    */
   private int send(String type, String url, Object data) {
     try {
-      URL sendURL = new URL(baseURL + url);
+      URL sendURL = new URL(BASE_URL + url);
       URLConnection connection = sendURL.openConnection();
       HttpsURLConnection https = (HttpsURLConnection) connection;
       https.setRequestMethod(type.toUpperCase());
@@ -86,7 +86,7 @@ public class RestRequestHandler {
   public <T extends Object> T get(String data, Class<T> type) {
     if (!data.isEmpty()) {
       try {
-        URL obj = new URL(baseURL + data);
+        URL obj = new URL(BASE_URL + data);
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("User-Agent", USER_AGENT);
@@ -280,17 +280,6 @@ public class RestRequestHandler {
     public static int setLookup(
         com.wurmcraft.serveressentials.forge.api.json.player.NameLookup name) {
       return INSTANCE.post("lookup/add", name);
-    }
-  }
-
-  public static class Bridge {
-
-    public static int addMessage(BridgeMessage msg) {
-      return INSTANCE.post("messages", msg);
-    }
-
-    public static BridgeMessage[] getMessages() {
-      return INSTANCE.get("messages/" + SECore.config.serverID, BridgeMessage[].class);
     }
   }
 
