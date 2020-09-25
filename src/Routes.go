@@ -346,20 +346,6 @@ var routes = Routes{
 		false,
 		GetUserUUID,
 	},
-	Route{
-		"AddMessage",
-		"POST",
-		"/api/messages",
-		true,
-		AddMessage,
-	},
-	Route{
-		"GetMessages",
-		"GET",
-		"/api/messages/{serverID}",
-		true,
-		GetMessages,
-	},
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {

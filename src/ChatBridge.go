@@ -1,79 +1,15 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
-	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
 )
 
-var storedMessages = make(map[string][]BridgeMessage)
-
 const permChat = "chat"
-
-func AddMessage(w http.ResponseWriter, r *http.Request) {
-	if !hasPermission(GetPermission(r.Header.Get("token")), permRank) {
-		http.Error(w, "Forbidden", http.StatusForbidden)
-		return
-	}
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-	var message BridgeMessage
-	err = json.Unmarshal(b, &message)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-	AppendMessage(message)
-	w.WriteHeader(http.StatusOK)
-}
-
-func GetMessages(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	serverID := vars["serverID"]
-	if storedMessages[serverID] != nil {
-		output, err := json.MarshalIndent(storedMessages[serverID], " ", " ")
-		if err != nil {
-			fmt.Fprintln(w, "{}")
-			return
-		}
-		w.Header().Set("content-type", "application/json")
-		w.Header().Set("version", version)
-		w.Write(output)
-		storedMessages[serverID] = []BridgeMessage{}
-	} else {
-		w.Write([]byte("[]"))
-	}
-}
-
-func AppendMessage(message BridgeMessage) {
-	for entry := range redisDBStatus.Keys(ctx, "*").Val() {
-		var serverStatus ServerStatus
-		json.Unmarshal([]byte(redisDBStatus.Get(ctx, redisDBStatus.Keys(ctx, "*").Val()[entry]).Val()), &serverStatus)
-		if strings.EqualFold(serverStatus.ServerID, message.ID) {
-			continue
-		}
-		if storedMessages[serverStatus.ServerID] != nil {
-			storedMessages[serverStatus.ServerID] = append(storedMessages[serverStatus.ServerID], message)
-		} else {
-			storedMessages[serverStatus.ServerID] = []BridgeMessage{message}
-		}
-	}
-	handleDiscord(message)
-}
 
 func handleDiscord(message BridgeMessage) {
 	if !strings.EqualFold("discord", message.ID) {
@@ -132,7 +68,7 @@ func handleChannelMessages(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 	for channelID, channel := range discordChannelMap {
 		if strings.EqualFold(channelID, m.ChannelID) {
-			AppendMessage(BridgeMessage{
+			broadcast <- BridgeMessage{
 				Message:          m.Content,
 				ID:               "discord",
 				UserID:           m.Author.ID,
@@ -140,12 +76,12 @@ func handleChannelMessages(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Channel:          channel,
 				DiscordChannelID: m.ChannelID,
 				FormattingStyle:  0,
-			})
+			}
 		}
 	}
 }
 
-var clients = make(map[*websocket.Conn]bool)
+var clients = make(map[*websocket.Conn]string)
 var broadcast = make(chan BridgeMessage)
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -153,8 +89,12 @@ var upgrader = websocket.Upgrader{
 }
 
 func MessageSocket(w http.ResponseWriter, r *http.Request) {
+	if !hasPermission(GetPermission(r.Header.Get("token")), permChat) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
 	ws, err := upgrader.Upgrade(w, r, nil)
-	clients[ws] = true
+	clients[ws] = w.Header().Get("serverID")
 	if err != nil {
 		fmt.Println("Failed to update GET request to -> WebSocket")
 	}
@@ -175,13 +115,17 @@ func handleMessages() {
 	for {
 		msg := <-broadcast
 		for client := range clients {
-			err := client.WriteJSON(msg)
-			if err != nil {
-				log.Printf("error: %v", err)
-				client.Close()
-				delete(clients, client)
+			if clients[client] != msg.ID {
+				err := client.WriteJSON(msg)
+				if err != nil {
+					log.Printf("error: %v", err)
+					client.Close()
+					delete(clients, client)
+				}
 			}
 		}
-		handleDiscord(msg)
+		if msg.ID != "discord" {
+			handleDiscord(msg)
+		}
 	}
 }
