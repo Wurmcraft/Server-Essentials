@@ -1,6 +1,6 @@
 package com.wurmcraft.serveressentials.forge.modules.ftbutils.utils;
 
-//import static com.feed_the_beast.ftbutilities.ranks.Ranks.*;
+import static com.feed_the_beast.ftbutilities.ranks.Ranks.INSTANCE;
 
 import com.wurmcraft.serveressentials.forge.api.json.basic.Rank;
 import com.wurmcraft.serveressentials.forge.api.json.player.StoredPlayer;
@@ -9,14 +9,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
-import java.util.*;
 
 public class FtbUtilsUtils {
 
   public static int getMaxClaims(StoredPlayer player, Rank rank) {
     int total = 0;
-    if(rank != null && rank.permission != null){
+    if (rank != null && rank.permission != null) {
       for (String p : rank.permission) {
         if (p.startsWith("ftbutils.claim.")) {
           try {
@@ -41,7 +41,7 @@ public class FtbUtilsUtils {
 
   public static int getMaxChunkLoading(StoredPlayer player, Rank rank) {
     int total = 0;
-    if(rank != null && rank.permission != null) {
+    if (rank != null && rank.permission != null) {
       for (String p : rank.permission) {
         if (p.startsWith("ftbutils.chunkloading.")) {
           try {
@@ -64,22 +64,25 @@ public class FtbUtilsUtils {
     return total;
   }
 
-  public static void setPlayerClaimBlocks(String uuid, int claimAmount, int loadingAmount) {
+  public static void setPlayerClaimBlocks(String uuid, int claimAmount,
+      int loadingAmount) {
     try {
       FileWriter writer = new FileWriter(FTBUtilsModule.PLAYER_RANKS, true);
       writer.append("[" + uuid + "]" + "\n"
           + "ftbutilities.claims.max_chunks: " + claimAmount + "\n"
-          + "ftbutilities.chunkloader.max_chunks: " + loadingAmount +  "\n");
+          + "ftbutilities.chunkloader.max_chunks: " + loadingAmount + "\n");
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
-//    INSTANCE.reload();
+    INSTANCE.reload();
   }
 
-  public static void updatePlayerClaimBlocks(EntityPlayer player, int claimAmount, int loadingAmount) {
+  public static void updatePlayerClaimBlocks(EntityPlayer player, int claimAmount,
+      int loadingAmount) {
     deletePlayerClaimBlocks(player);
-    setPlayerClaimBlocks(player.getGameProfile().getId().toString(), claimAmount, loadingAmount);
+    setPlayerClaimBlocks(player.getGameProfile().getId().toString(), claimAmount,
+        loadingAmount);
   }
 
   private static void deletePlayerClaimBlocks(EntityPlayer player) {
