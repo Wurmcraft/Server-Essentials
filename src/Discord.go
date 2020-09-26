@@ -101,7 +101,9 @@ func handleVerifyDMs(s *discordgo.Session, m *discordgo.MessageCreate) {
 			verifyDiscord(m.Author.ID, verifyToken)
 			s.ChannelMessageSend(dmChannel.ID, "Your Code is: '"+verifyToken+"'\nIn-game type /verify <code>")
 			err := s.MessageReactionAdd(m.Message.ChannelID, m.Message.ID, "🔑")
-			fmt.Println(err.Error())
+			if err != nil {
+				fmt.Println(err.Error())
+			}
 		}
 	}
 }
