@@ -14,6 +14,7 @@ import com.wurmcraft.serveressentials.forge.modules.language.LanguageConfig;
 import com.wurmcraft.serveressentials.forge.modules.protect.ProtectConfig;
 import com.wurmcraft.serveressentials.forge.modules.rank.RankConfig;
 import com.wurmcraft.serveressentials.forge.modules.security.SecurityConfig;
+import com.wurmcraft.serveressentials.forge.modules.status.StatusConfig;
 import com.wurmcraft.serveressentials.forge.server.ServerEssentialsServer;
 import java.io.File;
 import java.nio.file.Files;
@@ -168,6 +169,14 @@ public class FileDataHandler extends BasicDataHandler {
               registerData(key,
                   GSON.fromJson(Strings.join(Files.readAllLines(fileLoc.toPath()), '\n'),
                       ProtectConfig.class));
+              JsonParser data = getData(key, dataID);
+              if (data != null) {
+                return data;
+              }
+            }else if (dataID.equalsIgnoreCase("Status")) {
+              registerData(key,
+                  GSON.fromJson(Strings.join(Files.readAllLines(fileLoc.toPath()), '\n'),
+                      StatusConfig.class));
               JsonParser data = getData(key, dataID);
               if (data != null) {
                 return data;
