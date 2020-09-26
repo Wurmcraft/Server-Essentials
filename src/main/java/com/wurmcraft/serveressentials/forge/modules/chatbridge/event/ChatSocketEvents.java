@@ -55,7 +55,7 @@ public class ChatSocketEvents {
             e.getPlayer().getGameProfile().getId().toString(),
             Objects.requireNonNull(RankUtils.getRank(e.getPlayer())).prefix + " " + e
                 .getUsername(), ch.getID(), ch.discordChannelID,
-            LanguageModule.config.defaultChannel.equals(ch.getID()) ? 0 : 1)));
+            LanguageModule.config.defaultChannel.equals(ch.getID()) ? 1 : 0)));
   }
 
   @SubscribeEvent(priority = EventPriority.HIGH)
