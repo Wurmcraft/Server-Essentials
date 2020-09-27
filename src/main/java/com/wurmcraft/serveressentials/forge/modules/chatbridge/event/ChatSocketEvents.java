@@ -40,6 +40,16 @@ public class ChatSocketEvents {
     }
   }
 
+  private static void handleConnection() {
+    if (!socket.isOpen()) {
+      try {
+       socket = connect();
+      } catch (Exception f) {
+        ServerEssentialsServer.LOGGER.error("Failed to connect to chat bridge!");
+      }
+    }
+  }
+
   @SubscribeEvent
   public void onChat(ServerChatEvent e) {
     Channel ch = null;
@@ -50,6 +60,7 @@ public class ChatSocketEvents {
       ch = (Channel) SECore.dataHandler
           .getData(DataKey.CHANNEL, LanguageModule.config.defaultChannel);
     }
+    handleConnection();
     socket.sendText(ServerEssentialsServer.GSON.toJson(
         new BridgeMessage(e.getMessage(), SECore.config.serverID,
             e.getPlayer().getGameProfile().getId().toString(),
@@ -63,6 +74,7 @@ public class ChatSocketEvents {
     try {
       Channel ch = (Channel) SECore.dataHandler
           .getData(DataKey.CHANNEL, DiscordModule.config.playerLoginNotificationChannel);
+      handleConnection();
       socket.sendText(ServerEssentialsServer.GSON
           .toJson(new BridgeMessage("[-] " + e.player.getDisplayNameString(),
               SECore.config.serverID, e.player.getGameProfile().getId().toString(),
@@ -76,6 +88,7 @@ public class ChatSocketEvents {
     try {
       Channel ch = (Channel) SECore.dataHandler
           .getData(DataKey.CHANNEL, DiscordModule.config.playerLoginNotificationChannel);
+      handleConnection();
       socket.sendText(ServerEssentialsServer.GSON
           .toJson((new BridgeMessage("[+] " + e.player.getDisplayNameString(),
               SECore.config.serverID, e.player.getGameProfile().getId().toString(),

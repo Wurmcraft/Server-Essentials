@@ -43,10 +43,10 @@ public class PerkCommand {
           int currentLevel = GeneralUtils.getPerkLevel(player, "Home");
           double cost = 0;
           if (currentLevel > 0) {
-            cost = (currentLevel * EconomyModule.config.homeCostMultier
+            cost = ((currentLevel + 1) * EconomyModule.config.homeCostMultier
                 * EconomyModule.config.homeCostMultier);
           } else {
-            cost = (currentLevel * EconomyModule.config.homeCostMultier);
+            cost = ((currentLevel + 1) * EconomyModule.config.homeCostMultier);
           }
           if (EcoUtils.hasCurrency(player, cost)) {
             EcoUtils.consumeCurrency(player, cost);
@@ -62,12 +62,13 @@ public class PerkCommand {
         } else if (perk.equalsIgnoreCase("Claim") || perk
             .equalsIgnoreCase("ClaimBlocks")) {
           int currentLevel = GeneralUtils.getPerkLevel(player, "claimblocks");
-          double cost = currentLevel * EconomyModule.config.claimBlockCost;
+          double cost = EconomyModule.config.claimBlockCost;
           if (EcoUtils.hasCurrency(player, cost)) {
             EcoUtils.consumeCurrency(player, cost);
             GeneralUtils.setPerk(player, "claimblocks", currentLevel + 1);
             ChatHelper.sendMessage(sender,
-                PlayerUtils.getLanguage(sender).ECO_PERK_BUY.replaceAll("%NAME%", "Home")
+                PlayerUtils.getLanguage(sender).ECO_PERK_BUY
+                    .replaceAll("%NAME%", "ClaimBlocks")
                     .replaceAll("%AMOUNT%", "" + cost));
           } else {
             ChatHelper.sendMessage(sender,
