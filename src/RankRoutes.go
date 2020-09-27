@@ -19,7 +19,7 @@ func init() {
 
 func GetRank(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	name := vars["uuid"]
+	name := vars["name"]
 	if redisDBRank.Exists(ctx, name).Val() == 1 {
 		w.Header().Set("content-type", "application/json")
 		w.Header().Set("version", version)
