@@ -123,6 +123,7 @@
 	"ECO_ADD": "&3%AMOUNT% has been added to %PLAYER%",
 	"ECO_DEL": "&3%AMOUNT% has been removed from %PLAYER%",
 	"ECO_PERK_NONE": "&3Perk %NAME% does not exist!",
+	"ECO_PERK_BUY": "&3You have purchased another %NAME% for %AMOUNT%",
 	"SIGN_SELL": "&3You have just sold an item for %AMOUNT%",
 	"SIGN_SELL_EMPTY": "&3You dont have the item to sell",
 	"SIGN_EMPTY": "&3This sign is empty",

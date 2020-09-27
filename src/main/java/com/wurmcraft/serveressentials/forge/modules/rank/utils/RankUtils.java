@@ -38,9 +38,10 @@ public class RankUtils {
             "general.setHome",
             "general.spawn",
             "general.warp",
-            "general.tpaAccept",
+            "general.tpaccept",
             "general.tpa",
             "general.ping",
+            "economy.perk",
             "language.channel",
             "language.channel.global",
             "language.channel.local",
@@ -50,8 +51,10 @@ public class RankUtils {
             "economy.pay",
             "economy.sign.buy_create",
             "economy.sign.sell_create",
-            "ftbutils.claim.25",
-            "ftbutils.chunkloading.5"
+            "ftbutils.claim.50",
+            "ftbutils.chunkloading.5",
+            "command.rtp",
+            "command.help"
         });
     SECore.dataHandler.registerData(DataKey.RANK, defaultRank);
     Rank memberRank = new Rank("Member", "&8[&6Member&8]&6", "&e", new String[]{"Default"},
@@ -59,7 +62,7 @@ public class RankUtils {
             "general.echest",
             "general.hat",
             "general.skull",
-            "ftbutils.claim.50",
+            "ftbutils.claim.100",
             "ftbutils.chunkloading.10"
         });
     SECore.dataHandler.registerData(DataKey.RANK, memberRank);

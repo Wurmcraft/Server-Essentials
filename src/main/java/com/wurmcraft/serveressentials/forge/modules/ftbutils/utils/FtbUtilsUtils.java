@@ -20,7 +20,7 @@ public class FtbUtilsUtils {
       for (String p : rank.permission) {
         if (p.startsWith("ftbutils.claim.")) {
           try {
-            total = Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
+            total += Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
           } catch (NumberFormatException ignored) {
           }
         }
@@ -29,7 +29,7 @@ public class FtbUtilsUtils {
         for (String p : player.global.perks) {
           if (p.startsWith("claimblocks.amount.")) {
             try {
-              total = +Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
+              total += Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
             } catch (NumberFormatException ignored) {
             }
           }
@@ -45,7 +45,7 @@ public class FtbUtilsUtils {
       for (String p : rank.permission) {
         if (p.startsWith("ftbutils.chunkloading.")) {
           try {
-            total = Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
+            total += Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
           } catch (NumberFormatException ignored) {
           }
         }
@@ -54,7 +54,7 @@ public class FtbUtilsUtils {
         for (String p : player.global.perks) {
           if (p.startsWith("chunkloading.amount.")) {
             try {
-              total = +Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
+              total +=Integer.parseInt(p.substring(p.lastIndexOf(".") + 1));
             } catch (NumberFormatException ignored) {
             }
           }
