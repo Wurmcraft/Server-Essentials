@@ -49,22 +49,20 @@ minecraft {
 }
 
 repositories {
-    maven {
-        url = "https://www.cursemaven.com"
-    }
+    maven {url = "https://www.cursemaven.com"}
 }
 
 dependencies {
     // Minecraft
     minecraft "net.minecraftforge:forge:1.12.2-${forge_version}"
     // Libs
-    compile "org.reflections:reflections:${reflections_version}"
-    compile "com.boundary:high-scale-lib:${highscalelib_version}"
-    compile "org.javassist:javassist:${javassist_version}"
-    compile 'com.neovisionaries:nv-websocket-client:2.10'
+    implementation "org.reflections:reflections:${reflections_version}"
+    implementation "com.boundary:high-scale-lib:${highscalelib_version}"
+    implementation "org.javassist:javassist:${javassist_version}"
+    implementation 'com.neovisionaries:nv-websocket-client:2.10'
     // Other Mods
-    compile "curse.maven:ftb-utilities:${ftbutils_version}"
-    compile "curse.maven:ftb-library:${ftblib_version}"
+    implementation "curse.maven:ftb-utilities-237102:3157548"
+    implementation "curse.maven:ftb-library-237167:2985811"
 }
 
 shadowJar.archiveName = "${archivesBaseName}-${version}.jar"
