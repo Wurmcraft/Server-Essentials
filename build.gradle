@@ -44,10 +44,6 @@ spotless {
     }
 }
 
-shadowJar {
-  minimize()
-}
-
 shadowJar.archiveName = "${archivesBaseName}-${version}.jar"
 jar {
     manifest {
