@@ -5,17 +5,20 @@ public class RestConfig implements Config{
     public String host;
     public int port;
     public Database database;
+    public boolean debug;
 
     public RestConfig() {
         this.host = "localhost";
         this.port = 8760;
         this.database = new Database("localhost","3306","serveressentials","","server-essentials");
+        this.debug  = false;
     }
 
-    public RestConfig(String host, int port, Database database) {
+    public RestConfig(String host, int port, Database database, boolean debug) {
         this.host = host;
         this.port = port;
         this.database = database;
+        this.debug = debug;
     }
 
     public class Database {

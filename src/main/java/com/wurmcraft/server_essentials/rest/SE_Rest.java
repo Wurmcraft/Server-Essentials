@@ -33,9 +33,11 @@ public class SE_Rest {
     public static void main(String[] args) {
         config = ConfigLoader.loadSafe(new File("."), new RestConfig());
         // Setup Swagger
-        javalin = Javalin.create(config -> {
-            config.registerPlugin(new OpenApiPlugin(new OpenApiOptions(new Info().version("0.0.0").description("Server Essentials Rest API")).path("/swagger-docs").swagger(new SwaggerOptions("/swagger").title("Server Essentials Swagger"))));
-            config.registerPlugin(new RedirectToLowercasePathPlugin());
+        javalin = Javalin.create(conf -> {
+            if (config.debug) {
+                conf.registerPlugin(new OpenApiPlugin(new OpenApiOptions(new Info().version("0.0.0").description("Server Essentials Rest API")).path("/swagger-docs").swagger(new SwaggerOptions("/swagger").title("Server Essentials Swagger"))));
+            }
+            conf.registerPlugin(new RedirectToLowercasePathPlugin());
         });
         javalin.config.precompressStaticFiles = true;
         javalin.config.showJavalinBanner = false;
