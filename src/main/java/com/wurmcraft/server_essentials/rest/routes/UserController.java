@@ -22,6 +22,7 @@ public class UserController {
     public static String[] USERS_TABLE_COLUMS = {"uuid", "username", "rank"};
 
     @OpenApi(
+            description = "Create a new user",
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = NetworkUser.class)),
             responses = {
                     @OpenApiResponse(status = "201", description = "New User Created, Added to DB"),
@@ -65,6 +66,7 @@ public class UserController {
     };
 
     @OpenApi(
+            description = "Get a given user by UUID",
             responses = {
                     @OpenApiResponse(status = "200", description = "Get requested user data", content = @OpenApiContent(from = NetworkUser.class)),
                     @OpenApiResponse(status = "400", description = "Invalid UUID"),
@@ -93,6 +95,7 @@ public class UserController {
     };
 
     @OpenApi(
+            description = "Get a given user by Username",
             responses = {
                     @OpenApiResponse(status = "200", description = "Get requested user data", content = @OpenApiContent(from = NetworkUser.class)),
                     @OpenApiResponse(status = "400", description = "Invalid Username"),
@@ -184,6 +187,41 @@ public class UserController {
 
     public static Handler getUsers = ctx -> {
     };
+
+    @OpenApi(
+            description = "Delete the given user by UUID",
+            responses = {
+                    @OpenApiResponse(status = "200", description = "User has been removed from the DB"),
+                    @OpenApiResponse(status = "404", description = "User does not exist"),
+                    @OpenApiResponse(status = "401", description = "Unauthorized, Invalid Auth Key"),
+                    @OpenApiResponse(status = "422", description = "Invalid UUID"),
+                    @OpenApiResponse(status = "518", description = "Basically 418, but with a 5, Something terrible has happened!"),
+            }
+    )
     public static Handler deleteUser = ctx -> {
+        try {
+            String uuid = ParamChecker.sanitizeUUID(ctx.pathParam("uuid"));
+            if (!uuid.isEmpty()) {
+                NetworkUser user = SQLCommands.getUserByUUID(uuid);
+                if (user != null) {
+                    String query = "DELETE FROM `users` WHERE `uuid`='" + uuid + "';";
+                    try {
+                        Statement statement = SE_Rest.connector.getConnection().createStatement();
+                        statement.execute(query);
+                        ctx.status(200).result("{}");
+                    } catch (SQLException e) {
+                        LOG.error("user#deleteUser: " + ctx.body() + " => " + e.getLocalizedMessage());
+                        ctx.status(518).result("{\"title\": \"My tea got overcooked!\", \"status\": 518, \"type\": \"\", \"details\": []}");
+                    }
+                } else {
+                    ctx.status(404).result("{\"title\": \"User (\"" + uuid + "\") not found!\", \"status\": 404, \"type\": \"\", \"details\": []}");
+                }
+            } else {
+                ctx.status(422).result("{\"title\": \"" + uuid + "is not a valid uuid!\", \"status\": 422, \"type\": \"\", \"details\": []}");
+            }
+        } catch (Exception e) {
+            LOG.error("user#deleteUser: " + ctx.body() + " => " + e.getLocalizedMessage());
+            ctx.status(518).result("{\"title\": \"My tea got overcooked!\", \"status\": 518, \"type\": \"\", \"details\": []}");
+        }
     };
 }
