@@ -10,7 +10,7 @@ public class Routes {
         app.get("api/user/name/:name", UserController.getUserName);
         app.post("api/user", UserController.registerUser);
         app.put("api/user/:uuid", UserController.updateUser);
-//        app.get("api/users", UserController.getUsers);
+        app.get("api/users", UserController.getUsers);
         app.delete("api/user/:uuid", UserController.deleteUser);
     }
 }

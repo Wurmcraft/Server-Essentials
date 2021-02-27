@@ -184,8 +184,40 @@ public class UserController {
         }
     };
 
-
+    @OpenApi(
+            responses = {
+                    @OpenApiResponse(status = "200", description = "Get a list of all users (with the requested values", content = @OpenApiContent(from = NetworkUser[].class)),
+                    @OpenApiResponse(status = "401", description = "Unauthorized, Invalid Auth Key"),
+                    @OpenApiResponse(status = "518", description = "Basically 418, but with a 5, Something terrible has happened!"),
+            },
+            queryParams = {
+                    @OpenApiParam(name = "username", type = Boolean.class),
+                    @OpenApiParam(name = "rank", type = Boolean.class)
+            }
+    )
     public static Handler getUsers = ctx -> {
+        try {
+            Map<String, List<String>> queryParams = ctx.queryParamMap();
+            NetworkUser[] users = SQLCommands.getUsers();
+            for (String key : USERS_TABLE_COLUMS) {
+                if (key.equals("uuid")) {
+                    continue;
+                }
+                if (!queryParams.containsKey(key.toLowerCase()) || !ParamChecker.returnBool(queryParams.get(key.toLowerCase()).get(0))) {
+                    for (NetworkUser user : users) {
+                        if (key.equalsIgnoreCase("username")) {
+                            user.username = null;
+                        } else if (key.equalsIgnoreCase("rank")) {
+                            user.rank = null;
+                        }
+                    }
+                }
+            }
+            ctx.status(200).result(GSON.toJson(users));
+        } catch (Exception e) {
+            LOG.error("user#getUsers: " + ctx.body() + " => " + e.getLocalizedMessage());
+            ctx.status(518).result("{\"title\": \"My tea got overcooked!\", \"status\": 518, \"type\": \"\", \"details\": []}");
+        }
     };
 
     @OpenApi(

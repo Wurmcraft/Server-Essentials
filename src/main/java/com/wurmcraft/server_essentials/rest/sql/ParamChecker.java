@@ -29,6 +29,8 @@ public class ParamChecker {
     }
 
     public static boolean returnBool(String str) {
+        if(str == null || str.isEmpty())
+            return false;
        if(str.equalsIgnoreCase("true") || str.equalsIgnoreCase("T")) {
            return true;
        }
