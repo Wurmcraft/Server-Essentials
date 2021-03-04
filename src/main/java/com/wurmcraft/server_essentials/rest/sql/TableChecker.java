@@ -12,6 +12,7 @@ public class TableChecker {
         try {
             Statement statement = connector.getConnection().createStatement();
             statement.execute("SELECT * from `server-essentials`.users");
+            statement.execute("SELECT * from `server-essentials`.ranks");
         } catch (SQLException e) {
             return false;
         }
@@ -25,6 +26,13 @@ public class TableChecker {
                 statement.execute("CREATE TABLE `users` (`uuid` text NOT NULL, `rank` text NOT NULL,`username` text NOT NULL);");
                 statement.execute("ALTER TABLE `users` ADD PRIMARY KEY (`uuid`(36))");
                 LOG.info("Adding users table");
+            } catch (SQLException e) {
+                LOG.error(e.getMessage());
+            }
+            try {
+                Statement statement = connector.getConnection().createStatement();
+                statement.execute("CREATE TABLE `ranks` (`name` text NOT NULL, `permission` longtext, `inheritance` text);");
+                LOG.info("Adding ranks table");
             } catch (SQLException e) {
                 LOG.error(e.getMessage());
             }

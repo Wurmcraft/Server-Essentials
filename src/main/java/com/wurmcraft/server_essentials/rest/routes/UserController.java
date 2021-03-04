@@ -19,7 +19,7 @@ import static com.wurmcraft.server_essentials.rest.sql.SQLCommands.getUserByUUID
 
 public class UserController {
 
-    public static String[] USERS_TABLE_COLUMS = {"uuid", "username", "rank"};
+    public static String[] USERS_TABLE_COLUMNS = {"uuid", "username", "rank"};
 
     @OpenApi(
             description = "Create a new user",
@@ -30,7 +30,8 @@ public class UserController {
                     @OpenApiResponse(status = "401", description = "Unauthorized, Invalid Auth Key"),
                     @OpenApiResponse(status = "409", description = "User Account exists"),
                     @OpenApiResponse(status = "518", description = "Basically 418, but with a 5, Something terrible has happened!"),
-            }
+            },
+            tags = {"Users"}
     )
     public static Handler registerUser = ctx -> {
         try {
@@ -73,7 +74,8 @@ public class UserController {
                     @OpenApiResponse(status = "404", description = "Requested User does not exist!"),
                     @OpenApiResponse(status = "401", description = "Unauthorized, Invalid Auth Key"),
                     @OpenApiResponse(status = "518", description = "Basically 418, but with a 5, Something terrible has happened!"),
-            }
+            },
+            tags = {"Users"}
     )
     public static Handler getUserUUID = ctx -> {
         String uuid = ParamChecker.sanitizeUUID(ctx.pathParam("uuid"));
@@ -102,7 +104,8 @@ public class UserController {
                     @OpenApiResponse(status = "404", description = "Requested User does not exist!"),
                     @OpenApiResponse(status = "401", description = "Unauthorized, Invalid Auth Key"),
                     @OpenApiResponse(status = "518", description = "Basically 418, but with a 5, Something terrible has happened!"),
-            }
+            },
+            tags = {"Users"}
     )
     public static Handler getUserName = ctx -> {
         String username = ParamChecker.sanitizeName(ctx.pathParam("name"));
@@ -137,7 +140,8 @@ public class UserController {
             queryParams = {
                     @OpenApiParam(name = "username", type = Boolean.class),
                     @OpenApiParam(name = "rank", type = Boolean.class)
-            }
+            },
+            tags = {"Users"}
     )
     public static Handler updateUser = ctx -> {
         try {
@@ -150,7 +154,7 @@ public class UserController {
                         NetworkUser updatedUser = GSON.fromJson(ctx.body(), NetworkUser.class);
                         StringBuilder builder = new StringBuilder();
                         builder.append("UPDATE `users` SET ");
-                        for (String key : USERS_TABLE_COLUMS) {
+                        for (String key : USERS_TABLE_COLUMNS) {
                             if (key.equals("uuid")) {
                                 continue;
                             }
@@ -193,13 +197,14 @@ public class UserController {
             queryParams = {
                     @OpenApiParam(name = "username", type = Boolean.class),
                     @OpenApiParam(name = "rank", type = Boolean.class)
-            }
+            },
+            tags = {"Users"}
     )
     public static Handler getUsers = ctx -> {
         try {
             Map<String, List<String>> queryParams = ctx.queryParamMap();
             NetworkUser[] users = SQLCommands.getUsers();
-            for (String key : USERS_TABLE_COLUMS) {
+            for (String key : USERS_TABLE_COLUMNS) {
                 if (key.equals("uuid")) {
                     continue;
                 }
@@ -228,7 +233,8 @@ public class UserController {
                     @OpenApiResponse(status = "401", description = "Unauthorized, Invalid Auth Key"),
                     @OpenApiResponse(status = "422", description = "Invalid UUID"),
                     @OpenApiResponse(status = "518", description = "Basically 418, but with a 5, Something terrible has happened!"),
-            }
+            },
+            tags = {"Users"}
     )
     public static Handler deleteUser = ctx -> {
         try {
