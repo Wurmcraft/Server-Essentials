@@ -59,7 +59,7 @@ public class UserController {
                     ctx.status(518).result("{\"title\": \"My tea got overcooked!\", \"status\": 518, \"type\": \"\", \"details\": []}");
                 }
             } else {    // User Exists
-                ctx.status(409).result("{\"title\": \"User with uuid (\" + uuid + \") exists!\", \"status\": 409, \"type\": \"\", \"details\": []}");
+                ctx.status(409).result("{\"title\": \"User with uuid (\"" + uuid + "\") exists!\", \"status\": 409, \"type\": \"\", \"details\": []}");
             }
         } catch (JsonSyntaxException e) {
             ctx.status(400).result("{\"title\": \"Invalid Json\", \"status\": 409, \"type\": \"\", \"details\": []}");

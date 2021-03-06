@@ -2,6 +2,7 @@ package com.wurmcraft.server_essentials.rest.sql;
 
 import com.wurmcraft.server_essentials.rest.SE_Rest;
 import com.wurmcraft.server_essentials.rest.api.NetworkUser;
+import com.wurmcraft.server_essentials.rest.api.Rank;
 import joptsimple.internal.Strings;
 
 import java.sql.ResultSet;
@@ -45,7 +46,7 @@ public class SQLCommands {
         Statement statement = SE_Rest.connector.getConnection().createStatement();
         String query = "SELECT * FROM users";
         ResultSet result = statement.executeQuery(query);
-        while(result.next()) {
+        while (result.next()) {
             users.add(getUserFromResults(result));
         }
         return users.toArray(new NetworkUser[0]);
@@ -58,4 +59,44 @@ public class SQLCommands {
         user.rank = set.getString("rank").split(" ");
         return user;
     }
+
+    public static Rank getRankByName(String name) throws SQLException {
+        Statement statement = SE_Rest.connector.getConnection().createStatement();
+        String query = "SELECT * FROM ranks WHERE name='%NAME%' LIMIT 1;".replace("%NAME%", name.toUpperCase());
+        ResultSet result = statement.executeQuery(query);
+       if(result.next()) {
+           try {
+                return getRankFromResults(result);
+           } catch (SQLException e) {
+               throw  e;
+           }
+       }
+       return null;
+    }
+
+    private static Rank getRankFromResults(ResultSet set) throws SQLException {
+        Rank rank = new Rank();
+        rank.name = set.getString("name");
+        rank.inheritance = set.getString("inheritance").split(" ");
+        rank.permission = set.getString("permission").split(" ");
+        return rank;
+    }
+
+    public static void addRank(Rank rank) throws SQLException {
+        Statement statement = SE_Rest.connector.getConnection().createStatement();
+        String query = "INSERT INTO `ranks` (`name`, `permission`, `inheritance`) VALUES ('%NAME%','%permission%', '%inheritance%')".replace("%NAME%", rank.name).replace("%permission%", Strings.join(rank.permission, " ")).replace("%INHERITANCE%", Strings.join(rank.inheritance, " "));
+        statement.execute(query);
+    }
+
+    public static Rank[] getRanks() throws SQLException {
+        List<Rank> ranks = new ArrayList<>();
+        Statement statement = SE_Rest.connector.getConnection().createStatement();
+        String query = "SELECT * FROM ranks";
+        ResultSet result = statement.executeQuery(query);
+        while (result.next()) {
+            ranks.add(getRankFromResults(result));
+        }
+        return ranks.toArray(new Rank[0]);
+    }
+
 }

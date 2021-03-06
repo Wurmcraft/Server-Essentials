@@ -12,5 +12,11 @@ public class Routes {
         app.put("api/user/:uuid", UserController.updateUser);
         app.get("api/users", UserController.getUsers);
         app.delete("api/user/:uuid", UserController.deleteUser);
+        // Rank Routes
+        app.get("api/rank/:name", RankController.getRank);
+        app.post("api/rank", RankController.addRank);
+        app.put("api/rank/:name", RankController.updateRank);
+        app.get("api/ranks", RankController.getRanks);
+        app.delete("api/rank/:name", RankController.deleteRank);
     }
 }

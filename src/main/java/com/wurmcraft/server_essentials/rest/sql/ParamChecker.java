@@ -1,6 +1,7 @@
 package com.wurmcraft.server_essentials.rest.sql;
 
 import com.wurmcraft.server_essentials.rest.api.NetworkUser;
+import com.wurmcraft.server_essentials.rest.api.Rank;
 import joptsimple.internal.Strings;
 
 import java.util.regex.Pattern;
@@ -44,5 +45,21 @@ public class ParamChecker {
             return Strings.join(user.rank, " ");
         }
         return "";
+    }
+
+    public static String getRankInfo(Rank rank, String name) {
+        if(name.equalsIgnoreCase("name")) {
+            return sanitizeRankName(rank.name);
+        } else if(name.equalsIgnoreCase("permission")) {
+            return Strings.join(rank.permission, " ");
+        } else if(name.equalsIgnoreCase("inheritance")) {
+            return Strings.join(rank.inheritance, " ");
+        }
+        return "";
+    }
+
+    public static String sanitizeRankName(String name) {
+        name = sanitizeName(name);
+        return name.contains(" ") ? "" : name;
     }
 }
