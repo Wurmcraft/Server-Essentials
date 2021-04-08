@@ -8,6 +8,6 @@ public class ServerEssentialsRest {
     public static final Logger LOG = LoggerFactory.getLogger(ServerEssentialsRest.class);
 
     public static void main(String[] args) {
-
+        LOG.info("Test");
     }
 }

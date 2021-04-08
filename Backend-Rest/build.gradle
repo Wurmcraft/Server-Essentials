@@ -1,9 +1,8 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "6.1.0"
-    id "com.diffplug.spotless" version "5.9.0"
+    id "com.github.johnrengelman.shadow" version "4.0.4"
 }
 apply plugin: 'java'
-apply plugin: 'eclipse'
+apply plugin: 'idea'
 
 repositories {
     jcenter()
@@ -35,23 +34,13 @@ dependencies {
     implementation "org.javassist:javassist:${javassist_version}" // https://www.javassist.org/}
 }
 
-spotless {
-    java {
-        removeUnusedImports()
-        indentWithSpaces()
-        trimTrailingWhitespace()
-        endWithNewline()
-    }
-}
-
 shadowJar.archiveName = "${archivesBaseName}-${version}.jar"
 jar {
     manifest {
         attributes(
                 'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-                'Main-Class': 'com.wurmcraft.server_essentials.rest.SE_Rest'
+                'Main-Class': 'com.wurmcraft.server_essentials.rest.ServerEssentialsRest'
         )
     }
 }
-jar.finalizedBy('spotlessApply')
 jar.finalizedBy('shadowJar')
