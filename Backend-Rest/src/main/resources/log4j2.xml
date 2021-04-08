@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<Configuration status="WARN">
+
+    <Properties>
+        <Property name="basePath">Server-Essentials/logs</Property>
+    </Properties>
+
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level- %msg%n" />
-            <ThresholdFilter level="info"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level > %msg%n"/>
         </Console>
-        <File name="Debug" fileName="./logs/trace.log" immediateFlush="false" append="false">
-            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss} [%t] %-5level- %msg%n"/>
-            <ThresholdFilter level="trace"/>
-        </File>
+        <RollingFile name="File" fileName="${basePath}/latest.log" filePattern="${basePath}/log-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level > %msg%n"/>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
     </Appenders>
+
     <Loggers>
-        <Root level="trace">
-            <AppenderRef ref="Console" />
-            <AppenderRef ref="Debug"/>
-        </Root>
+        <root level="debug">
+            <appender-ref ref="Console" level="info"/>
+            <appender-ref ref="File" level="debug"/>
+        </root>
     </Loggers>
 </Configuration>

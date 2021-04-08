@@ -16,6 +16,7 @@ archivesBaseName = 'SE-Rest'
 dependencies {
     // File's
     implementation "com.google.code.gson:gson:${gson_version}"              // https://github.com/google/gson
+    implementation "me.grison:jtoml:${jtoml_version}"                       // https://github.com/agrison/jtoml
     // Logging
     implementation "org.apache.logging.log4j:log4j-api:${log4j_version}"  // https://logging.apache.org/log4j/2.x/
     implementation "org.apache.logging.log4j:log4j-core:${log4j_version}" // https://logging.apache.org/log4j/2.x/
