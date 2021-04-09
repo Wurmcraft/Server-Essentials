@@ -14,8 +14,16 @@ import java.nio.file.StandardOpenOption;
 import static io.wurmatron.serveressentials.ServerEssentialsRest.LOG;
 import static io.wurmatron.serveressentials.ServerEssentialsRest.SAVE_DIR;
 
+/**
+ * Handles everything to do with config's (loading, saving, errors)
+ */
 public class ConfigLoader {
 
+    /**
+     * Called to load the main config
+     *
+     * @return Instance of config loaded, from config.toml with in the main SE directory
+     */
     public static Config setupAndHandleConfig() {
         Config config;
         File configFile = new File(SAVE_DIR + File.separator + "config.toml");
@@ -50,6 +58,7 @@ public class ConfigLoader {
                         System.exit(1);
                     }
                 }
+                // Create and save new instance
                 config = new Config();
                 String toml = FileUtils.toString(config, "toml");
                 Files.write(configFile.toPath(), toml.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
@@ -64,6 +73,13 @@ public class ConfigLoader {
         return null;
     }
 
+    /**
+     * Load a config from a instance of toml
+     *
+     * @param toml instance of toml get collect the data from
+     * @return instance of the config, created from the toml instance
+     * @see Toml#parse(File)
+     */
     private static Config readConfigFromTOML(Toml toml) {
         try {
             // Read Database
@@ -72,10 +88,18 @@ public class ConfigLoader {
                     toml.getString("config.database.password"),
                     Math.toIntExact(toml.getLong("config.database.port")),
                     toml.getString("config.database.host"));
-            GeneralConfig generalConfig = new GeneralConfig();
-            ServerConfig sererConfig = new ServerConfig(Math.toIntExact(toml.getLong("config.server.port")));
+            GeneralConfig generalConfig = new GeneralConfig(
+                    toml.getBoolean("config.general.testing"));
+            ServerConfig sererConfig = new ServerConfig(
+                    Math.toIntExact(toml.getLong("config.server.port")),
+                    toml.getString("config.server.host"),
+                    toml.getString("config.server.corosOrigins"),
+                    toml.getLong("config.server.requestTimeout"),
+                    toml.getBoolean("config.server.forceLowercase"),
+                    toml.getBoolean("config.server.swaggerEnabled"));
             return new Config(generalConfig, dbConfig, sererConfig);
         } catch (Exception e) {
+            e.printStackTrace();
             LOG.error("Failed to read toml config file");
             LOG.error(e.getMessage());
         }
