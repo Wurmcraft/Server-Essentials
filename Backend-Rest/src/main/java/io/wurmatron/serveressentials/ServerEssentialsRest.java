@@ -33,8 +33,8 @@ public class ServerEssentialsRest {
             cfg.defaultContentType = "application/json";
             cfg.autogenerateEtags = true;
             cfg.showJavalinBanner = false;
-            if(!config.server.corosOrigins.isEmpty() )
-            cfg.enableCorsForOrigin(config.server.corosOrigins.split(","));
+            if (!config.server.corosOrigins.isEmpty())
+                cfg.enableCorsForOrigin(config.server.corosOrigins.split(","));
             cfg.asyncRequestTimeout = config.server.requestTimeout;
             cfg.enforceSsl = !config.general.testing;
             // Plugins
