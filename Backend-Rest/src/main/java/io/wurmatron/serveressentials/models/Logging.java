@@ -10,6 +10,7 @@ public class Logging {
     public int x;
     public int y;
     public int z;
+    public int dim;
 
     /**
      * @param serverID   id of the server this occurred
@@ -20,8 +21,9 @@ public class Logging {
      * @param x          x pos that this occurred (if applicable)
      * @param y          y pos that this occurred (if applicable)
      * @param z          z pos that this occurred (if applicable)
+     * @param dim       dimension that this occurred (if applicable)
      */
-    public Logging(String serverID, long timestamp, String actionType, String actionData, String uuid, int x, int y, int z) {
+    public Logging(String serverID, long timestamp, String actionType, String actionData, String uuid, int x, int y, int z, int dim) {
         this.serverID = serverID;
         this.timestamp = timestamp;
         this.actionType = actionType;
@@ -30,5 +32,6 @@ public class Logging {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.dim = dim;
     }
 }

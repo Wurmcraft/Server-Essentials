@@ -25,6 +25,9 @@ public class Action {
         this.timestamp = timestamp;
     }
 
+    public Action() {
+    }
+
     @Override
     public String toString() {
         return ServerEssentialsRest.GSON.toJson(this);

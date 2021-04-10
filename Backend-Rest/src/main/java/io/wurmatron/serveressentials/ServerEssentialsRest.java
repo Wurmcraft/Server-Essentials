@@ -9,6 +9,9 @@ import io.javalin.plugin.openapi.OpenApiPlugin;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
 import io.wurmatron.serveressentials.config.Config;
+import io.wurmatron.serveressentials.models.Action;
+import io.wurmatron.serveressentials.sql.DatabaseConnection;
+import io.wurmatron.serveressentials.sql.SQLGenerator;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,13 +23,16 @@ public class ServerEssentialsRest {
     public static final Logger LOG = LoggerFactory.getLogger(ServerEssentialsRest.class);
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public static final File SAVE_DIR = new File("Server-Essentials");
+    public static final String version = "@VERSION@";
 
     public static Config config;
     public static Javalin javalin;
+    public static DatabaseConnection dbConnection;
 
     public static void main(String[] args) {
         displaySystemInfo();
         config = ConfigLoader.setupAndHandleConfig();
+        dbConnection = new DatabaseConnection();
         javalin = Javalin.create((cfg) -> {
             // Config
             cfg.precompressStaticFiles = true;
@@ -41,7 +47,7 @@ public class ServerEssentialsRest {
             if (config.server.forceLowercase)
                 cfg.registerPlugin(new RedirectToLowercasePathPlugin());
             if (config.server.swaggerEnabled)
-                cfg.registerPlugin(new OpenApiPlugin(new OpenApiOptions(new Info().version("@VERSION@").description("Server Essentials Rest API")).path("/swagger-json").swagger(new SwaggerOptions("/swagger").title("Server-Essentials Swagger"))));
+                cfg.registerPlugin(new OpenApiPlugin(new OpenApiOptions(new Info().version(version).description("Server Essentials Rest API")).path("/swagger-json").swagger(new SwaggerOptions("/swagger").title("Server-Essentials Swagger"))));
         });
         javalin.start(config.server.host.isEmpty() ? null : config.server.host, config.server.port);
     }

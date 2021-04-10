@@ -4,7 +4,7 @@ import io.wurmatron.serveressentials.ServerEssentialsRest;
 
 public class Ban {
 
-    public long id;
+    public long banID;
     public String uuid;
     public String discordID;
     public String bannedBy;
@@ -15,7 +15,7 @@ public class Ban {
     public String banData;
 
     /**
-     * @param id           id of the given ban (Don't change as this is used internally to track)
+     * @param banID           id of the given ban (Don't change as this is used internally to track)
      * @param uuid         uuid of the given user
      * @param discordID    discord ID of the given user
      * @param bannedBy     uuid or discordID of the person that banned the specified user
@@ -25,8 +25,8 @@ public class Ban {
      * @param banType      type of ban, "TEMP", "PERMANENT", "SPECIAL"
      * @param banData      extra data related to the ban
      */
-    public Ban(long id, String uuid, String discordID, String bannedBy, String bannedByType, String banReason, long timestamp, String banType, String banData) {
-        this.id = id;
+    public Ban(long banID, String uuid, String discordID, String bannedBy, String bannedByType, String banReason, long timestamp, String banType, String banData) {
+        this.banID = banID;
         this.uuid = uuid;
         this.discordID = discordID;
         this.bannedBy = bannedBy;

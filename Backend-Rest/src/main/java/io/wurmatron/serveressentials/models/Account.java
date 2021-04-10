@@ -1,7 +1,7 @@
 package io.wurmatron.serveressentials.models;
 
-import io.wurmatron.serveressentials.models.user.BankAccount;
-import io.wurmatron.serveressentials.models.user.ServerTime;
+import io.wurmatron.serveressentials.models.account.BankAccount;
+import io.wurmatron.serveressentials.models.account.ServerTime;
 
 public class Account {
 

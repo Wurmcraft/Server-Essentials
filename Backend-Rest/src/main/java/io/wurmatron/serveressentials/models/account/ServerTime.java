@@ -1,4 +1,4 @@
-package io.wurmatron.serveressentials.models.user;
+package io.wurmatron.serveressentials.models.account;
 
 public class ServerTime {
     public String serverID;

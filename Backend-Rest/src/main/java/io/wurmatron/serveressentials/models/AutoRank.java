@@ -4,7 +4,7 @@ import io.wurmatron.serveressentials.ServerEssentialsRest;
 
 public class AutoRank {
 
-    public long id;
+    public long autoRankID;
     public String rank;
     public String nextRank;
     public long playtime;
@@ -13,7 +13,7 @@ public class AutoRank {
     public String specialEvents;
 
     /**
-     * @param id             id of the given rank (Don't change as this is used internally to track)
+     * @param autoRankID             id of the given rank (Don't change as this is used internally to track)
      * @param rank           current rank of the user
      * @param nextRank       rank the user will gain after the requirements
      * @param playtime       amount of time (in minutes)
@@ -21,8 +21,8 @@ public class AutoRank {
      * @param currencyAmount amount of the given currency
      * @param specialEvents  special events required to rankup, (Used to extend functionality))
      */
-    public AutoRank(long id, String rank, String nextRank, long playtime, String currencyName, double currencyAmount, String specialEvents) {
-        this.id = id;
+    public AutoRank(long autoRankID, String rank, String nextRank, long playtime, String currencyName, double currencyAmount, String specialEvents) {
+        this.autoRankID = autoRankID;
         this.rank = rank;
         this.nextRank = nextRank;
         this.playtime = playtime;
