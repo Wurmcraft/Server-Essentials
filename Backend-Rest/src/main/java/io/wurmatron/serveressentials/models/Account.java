@@ -55,4 +55,7 @@ public class Account {
         this.passwordSalt = passwordSalt;
         this.systemPerms = systemPerms;
     }
+
+    public Account() {
+    }
 }

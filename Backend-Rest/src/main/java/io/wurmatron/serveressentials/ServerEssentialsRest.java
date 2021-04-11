@@ -9,7 +9,6 @@ import io.javalin.plugin.openapi.OpenApiPlugin;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
 import io.wurmatron.serveressentials.config.Config;
-import io.wurmatron.serveressentials.models.Action;
 import io.wurmatron.serveressentials.sql.DatabaseConnection;
 import io.wurmatron.serveressentials.sql.SQLGenerator;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
@@ -32,7 +31,7 @@ public class ServerEssentialsRest {
     public static void main(String[] args) {
         displaySystemInfo();
         config = ConfigLoader.setupAndHandleConfig();
-        dbConnection = new DatabaseConnection();
+        dbConnection = SQLGenerator.create();
         javalin = Javalin.create((cfg) -> {
             // Config
             cfg.precompressStaticFiles = true;

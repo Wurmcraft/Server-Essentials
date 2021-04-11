@@ -98,7 +98,8 @@ public class ConfigLoader {
                     toml.getString("config.server.corosOrigins"),
                     toml.getLong("config.server.requestTimeout"),
                     toml.getBoolean("config.server.forceLowercase"),
-                    toml.getBoolean("config.server.swaggerEnabled"));
+                    toml.getBoolean("config.server.swaggerEnabled"),
+                    Math.toIntExact(toml.getLong("config.server.cacheTime")));
             return new Config(generalConfig, dbConfig, sererConfig);
         } catch (Exception e) {
             e.printStackTrace();
