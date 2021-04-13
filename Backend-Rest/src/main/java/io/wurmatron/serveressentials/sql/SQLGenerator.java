@@ -6,6 +6,8 @@ import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.wurmatron.serveressentials.ServerEssentialsRest.LOG;
 
@@ -52,6 +54,27 @@ public class SQLGenerator {
         statement.setString(1, data);
         LOG.trace("GET: " + statement);
         return to(statement.executeQuery(), dataType);
+    }
+
+    /**
+     * Get a certain data array from the DB
+     *
+     * @param columns  columns that you want to get from the db
+     * @param table    table that this data is present within
+     * @param key      key to look for
+     * @param data     data to look for in the key column
+     * @param dataType instance of the data, to be created out of
+     * @return instance of the data, with the request data from the db filled in
+     * @throws SQLException             A SQL Error has occurred while running the request
+     * @throws IllegalAccessException   Issue with reflection to add data to the object instance
+     * @throws IllegalArgumentException Issue with reflection to add data to the object instance
+     * @throws InstantiationException   Issues with reflection, trying to copy requested object instance to fill in data
+     */
+    protected static <T> List<T> getArray(String columns, String table, String key, String data, T dataType) throws SQLException, IllegalAccessException, InstantiationException {
+        PreparedStatement statement = connection.createPrepared("SELECT " + columns + " FROM `" + table + "` WHERE " + key + "=?;");
+        statement.setString(1, data);
+        LOG.trace("GET ARR: " + statement);
+        return toArray(statement.executeQuery(), dataType);
     }
 
     /**
@@ -130,6 +153,29 @@ public class SQLGenerator {
             for (Field field : dataType.getClass().getDeclaredFields())
                 field.set(dataType, result.getObject(field.getName()));
         return dataType;
+    }
+
+    /**
+     * Reflection casts a ResultSet from the database into a usable data object array
+     *
+     * @param result   ResultSet provided from the database.
+     * @param dataType data instance to collect the data for
+     * @return instance of the provided instance with the data from the database
+     * @throws SQLException             A SQL Error has occurred while running the request
+     * @throws IllegalAccessException   Issue with reflection to add data to the object instance
+     * @throws IllegalArgumentException Issue with reflection to add data to the object instance
+     * @throws InstantiationException   Issue with reflection trying to create a new object instance
+     */
+    private static <T> List<T> toArray(ResultSet result, T dataType) throws SQLException, IllegalAccessException, IllegalArgumentException, InstantiationException {
+        List<T> dataArr = new ArrayList<>();
+        while (result.next()) {
+            // Attempt to create new instance and set values
+            T data = (T) dataType.getClass().newInstance();
+            for (Field field : dataType.getClass().getDeclaredFields())
+                field.set(data, result.getObject(field.getName()));
+            dataArr.add(data);
+        }
+        return dataArr;
     }
 
     /**

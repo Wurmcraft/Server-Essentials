@@ -3,7 +3,7 @@ package io.wurmatron.serveressentials.sql.routes;
 import io.wurmatron.serveressentials.models.Account;
 import io.wurmatron.serveressentials.sql.SQLCache;
 import io.wurmatron.serveressentials.sql.SQLGenerator;
-import io.wurmatron.serveressentials.sql.cacheHolder.CacheAccount;
+import io.wurmatron.serveressentials.sql.cache_holder.CacheAccount;
 
 import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
 import static io.wurmatron.serveressentials.ServerEssentialsRest.LOG;
@@ -104,6 +104,12 @@ public class SQLCacheAccount extends SQLCache {
         }
     }
 
+    /**
+     * Removes a entry from the cache, causing an update upon next request
+     * Note: Does not delete anything from the database
+     *
+     * @param uuid id used for the account to remove from cache
+     */
     public static void invalidate(String uuid) {
         accountCache.remove(uuid);
         LOG.debug("Account '" + uuid + " has been invalidated, will update on next request!");

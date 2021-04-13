@@ -52,11 +52,9 @@ public class ConfigLoader {
         } else {    // New Config
             try {
                 // Make sure config dir exists
-                if (!SAVE_DIR.exists()) {
-                    if (!SAVE_DIR.mkdirs()) {
-                        LOG.error("Failed to create dir '" + SAVE_DIR.getAbsolutePath() + "'");
-                        System.exit(1);
-                    }
+                if (!SAVE_DIR.exists() && !SAVE_DIR.mkdirs()) {
+                    LOG.error("Failed to create dir '" + SAVE_DIR.getAbsolutePath() + "'");
+                    System.exit(1);
                 }
                 // Create and save new instance
                 config = new Config();

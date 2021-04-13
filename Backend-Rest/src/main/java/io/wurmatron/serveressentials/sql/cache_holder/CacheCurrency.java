@@ -1,4 +1,4 @@
-package io.wurmatron.serveressentials.sql.cacheHolder;
+package io.wurmatron.serveressentials.sql.cache_holder;
 
 import io.wurmatron.serveressentials.models.Currency;
 

@@ -22,4 +22,7 @@ public class TransferEntry {
         this.items = items;
         this.serverID = serverID;
     }
+
+    public TransferEntry() {
+    }
 }
