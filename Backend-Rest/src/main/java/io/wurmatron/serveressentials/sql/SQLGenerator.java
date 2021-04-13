@@ -78,6 +78,23 @@ public class SQLGenerator {
     }
 
     /**
+     * Gets all the data from the DB
+     *
+     * @param columns  columns that you want to get from the db
+     * @param table    table that this data is present within
+     * @param dataType instance of the data, to be created out of
+     * @return instance of the data, with the request data from the db filled in
+     * @throws SQLException           A SQL Error has occurred while running the request
+     * @throws IllegalAccessException Issue with reflection to add data to the object instance
+     * @throws InstantiationException Issues with reflection, trying to copy requested object instance to fill in data
+     */
+    protected static <T> List<T> getAll(String columns, String table, T dataType) throws SQLException, IllegalAccessException, InstantiationException {
+        PreparedStatement statement = connection.createPrepared("SELECT " + columns + " FROM `" + table);
+        LOG.trace("GET ALL: " + statement);
+        return toArray(statement.executeQuery(), dataType);
+    }
+
+    /**
      * Insert new data into the database
      *
      * @param table   table to insert this data into

@@ -7,6 +7,7 @@ import io.wurmatron.serveressentials.sql.cache_holder.CacheTransfer;
 import io.wurmatron.serveressentials.sql.cache_holder.CacheTransferUUID;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -174,5 +175,56 @@ public class SQLCacheTransfers extends SQLCache {
         for (String id : uuidCache.transferCacheEntrys)
             invalidate(id);
         uuidTransferCache.remove(uuid);
+    }
+
+    /**
+     * Cleanup the stored cache and look for expired entries
+     */
+    public static void cleanupCache() {
+        LOG.info("Transfer Cache cleanup has begun!");
+        // ID Cache
+        List<String> toBeRemoved = new ArrayList<>();
+        for (CacheTransfer entry : transferCache.values())
+            if (needsUpdate(entry))
+                toBeRemoved.add(entry.transferEntry.transferID + "");
+        // UUID Cache
+        List<String> toBeRemovedUUID = new ArrayList<>();
+        for (String uuid : uuidTransferCache.keySet()) {
+            CacheTransferUUID uuidCache = uuidTransferCache.get(uuid);
+            if (needsUpdate(uuidCache))
+                toBeRemovedUUID.add(uuid);
+        }
+        // Remove from cache
+        int count = 0;
+        for (String transferEntry : toBeRemoved) {
+            count++;
+            invalidate(transferEntry);
+        }
+        for (String uuid : toBeRemovedUUID) {
+            count += uuidTransferCache.get(uuid).transferCacheEntrys.length;
+            invalidate(uuid, null);
+        }
+        LOG.info("Transfer Cache has been cleaned, " + count + " entries have been removed!");
+    }
+
+    /**
+     * Removes the expired entries from the database
+     */
+    public static void cleanupDB() {
+        LOG.info("Cleanup on DB table, '" + TRANSFERS_TABLE + "' has started!");
+        try {
+            int count = 0;
+            List<TransferEntry> dbData = getAll("transferID, startTime", TRANSFERS_TABLE, new TransferEntry());
+            for (TransferEntry entry : dbData)
+                if (entry.startTime + 10000 < Instant.now().getEpochSecond()) {
+                    count++;
+                    deleteTransfer(entry.transferID);
+                }
+            LOG.info("Transfer DB has been cleaned, " + count + " entries have been removed!");
+            return;
+        } catch (Exception e) {
+            LOG.debug("Failed to collect transfer entries from the database '(" + e.getMessage() + ")");
+        }
+        LOG.warn("Failed to cleanup DB table '" + TRANSFERS_TABLE + "'");
     }
 }
