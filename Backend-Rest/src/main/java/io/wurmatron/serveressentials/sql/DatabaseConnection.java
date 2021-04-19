@@ -7,25 +7,11 @@ import static io.wurmatron.serveressentials.ServerEssentialsRest.config;
 
 public class DatabaseConnection {
 
-    private Connection connection;
+    private final Connection connection;
 
-    public DatabaseConnection() {
-        try {
-            connection = DriverManager.getConnection(createConnectionURL(), config.database.username, config.database.password);
-        } catch (SQLException e)  {
-            LOG.error("Failed to connect to SQL '" + createConnectionURL() + "'");
-            e.printStackTrace();
-            LOG.error(e.getMessage());
-            System.exit(2);
-        }
-    }
-
-    public Statement create() throws SQLException {
-        return connection.createStatement();
-    }
-
-    public PreparedStatement createPrepared(String sql) throws SQLException {
-        return connection.prepareStatement(sql);
+    public DatabaseConnection() throws SQLException {
+        connection = DriverManager.getConnection(createConnectionURL(), config.database.username, config.database.password);
+        LOG.error("Failed to connect to SQL '" + createConnectionURL() + "'");
     }
 
     private static String createConnectionURL() {
@@ -34,5 +20,13 @@ public class DatabaseConnection {
                 config.database.port + "/" +
                 config.database.database + "?" +
                 config.database.sqlParams;
+    }
+
+    public Statement create() throws SQLException {
+        return connection.createStatement();
+    }
+
+    public PreparedStatement createPrepared(String sql) throws SQLException {
+        return connection.prepareStatement(sql);
     }
 }

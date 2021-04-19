@@ -1,7 +1,5 @@
 package io.wurmatron.serveressentials.models.account;
 
-import java.util.Objects;
-
 public class ServerTime {
     public String serverID;
     public long totalTime;

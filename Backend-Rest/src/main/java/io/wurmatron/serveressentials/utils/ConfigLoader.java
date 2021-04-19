@@ -7,6 +7,7 @@ import io.wurmatron.serveressentials.config.ServerConfig;
 import me.grison.jtoml.impl.Toml;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
@@ -24,49 +25,38 @@ public class ConfigLoader {
      *
      * @return Instance of config loaded, from config.toml with in the main SE directory
      */
-    public static Config setupAndHandleConfig() {
+    public static Config setupAndHandleConfig() throws IOException {
         Config config;
         File configFile = new File(SAVE_DIR + File.separator + "config.toml");
         if (SAVE_DIR.exists() && configFile.exists()) { // Existing
-            try {
-                Toml toml = Toml.parse(configFile);
-                config = readConfigFromTOML(toml);
-                if (config != null) {
-                    LOG.info("Loaded Config file '" + configFile.getAbsolutePath() + "'");
-                    return config;
+            Toml toml = Toml.parse(configFile);
+            config = readConfigFromTOML(toml);
+            if (config != null) {
+                LOG.info("Loaded Config file '" + configFile.getAbsolutePath() + "'");
+                return config;
+            } else {
+                if (configFile.delete()) {
+                    LOG.info("Empty Config File, Deleting...");
+                    LOG.info("Attempting to recreate");
+                    setupAndHandleConfig();
                 } else {
-                    if (configFile.delete()) {
-                        LOG.info("Empty Config File, Deleting...");
-                        LOG.info("Attempting to recreate");
-                        setupAndHandleConfig();
-                    } else {
-                        LOG.error("Failed to delete " + configFile.getAbsolutePath() + "'!");
-                        System.exit(1);
-                    }
+                    LOG.error("Failed to delete " + configFile.getAbsolutePath() + "'!");
+                  throw new IOException("Failed to delete " + configFile.getAbsolutePath() + "'!");
                 }
-            } catch (Exception e) {
-                LOG.error(e.getMessage());
-                LOG.error("Unable to access / load config file ('config.json')");
-                System.exit(1);
             }
+            LOG.error("Unable to access / load config file ('config.json')");
         } else {    // New Config
-            try {
-                // Make sure config dir exists
-                if (!SAVE_DIR.exists() && !SAVE_DIR.mkdirs()) {
-                    LOG.error("Failed to create dir '" + SAVE_DIR.getAbsolutePath() + "'");
-                    System.exit(1);
-                }
-                // Create and save new instance
-                config = new Config();
-                String toml = FileUtils.toString(config, "toml");
-                Files.write(configFile.toPath(), toml.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
-                LOG.info("Default config created at '" + configFile.getAbsolutePath() + "'");
-            } catch (Exception e) {
-                e.printStackTrace();
-                LOG.error(e.getMessage());
-                LOG.error("Unable to save config file ('config.json')");
-                System.exit(1);
+            // Make sure config dir exists
+            if (!SAVE_DIR.exists() && !SAVE_DIR.mkdirs()) {
+                LOG.error("Failed to create dir '" + SAVE_DIR.getAbsolutePath() + "'");
+                throw new IOException("Failed to create dir '" + SAVE_DIR.getAbsolutePath() + "'");
             }
+            // Create and save new instance
+            config = new Config();
+            String toml = FileUtils.toString(config, "toml");
+            Files.write(configFile.toPath(), toml.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+            LOG.info("Default config created at '" + configFile.getAbsolutePath() + "'");
+            LOG.error("Unable to save config file ('config.json')");
         }
         return null;
     }

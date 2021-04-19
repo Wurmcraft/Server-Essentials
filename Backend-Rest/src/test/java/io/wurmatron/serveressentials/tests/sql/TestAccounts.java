@@ -10,6 +10,8 @@ import io.wurmatron.serveressentials.sql.routes.SQLCacheAccount;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
 import org.junit.jupiter.api.*;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +27,7 @@ public class TestAccounts {
             2, "", "", new String[]{"*"});
 
     @BeforeAll
-    public static void setup() {
+    public static void setup() throws IOException, SQLException {
         ServerEssentialsRest.config = ConfigLoader.setupAndHandleConfig();
         ServerEssentialsRest.dbConnection = SQLGenerator.create();
     }

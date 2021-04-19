@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class ServerEssentialsRest {
 
@@ -28,7 +30,7 @@ public class ServerEssentialsRest {
     public static Javalin javalin;
     public static DatabaseConnection dbConnection;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException, IOException {
         displaySystemInfo();
         config = ConfigLoader.setupAndHandleConfig();
         dbConnection = SQLGenerator.create();
