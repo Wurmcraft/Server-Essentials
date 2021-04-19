@@ -5,6 +5,9 @@ import io.wurmatron.serveressentials.sql.SQLCache;
 import io.wurmatron.serveressentials.sql.SQLGenerator;
 import io.wurmatron.serveressentials.sql.cache_holder.CacheAccount;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
 import static io.wurmatron.serveressentials.ServerEssentialsRest.LOG;
 
@@ -52,14 +55,16 @@ public class SQLCacheAccount extends SQLCache {
      * @param account instance of the account to be created
      * @see SQLGenerator#insert(String, String[], Object)
      */
-    public static void newAccount(Account account) {
+    public static boolean newAccount(Account account) {
         try {
             insert(USERS_TABLE, USERS_COLUMNS, account);
             accountCache.put(account.uuid, new CacheAccount(account));
+            return true;
         } catch (Exception e) {
             LOG.debug("Failed to add account with uuid '" + account.uuid + "' (" + e.getMessage() + ")");
             LOG.debug("Account: " + GSON.toJson(account));
         }
+        return false;
     }
 
     /**
@@ -69,7 +74,7 @@ public class SQLCacheAccount extends SQLCache {
      * @param columnsToUpdate columns in the database to update with the provided data
      * @see SQLGenerator#update(String, String[], String, String, Object)
      */
-    public static void updateAccount(Account account, String[] columnsToUpdate) {
+    public static boolean updateAccount(Account account, String[] columnsToUpdate) {
         try {
             update(USERS_TABLE, columnsToUpdate, "uuid", account.uuid, account);
             if (accountCache.containsKey(account.uuid)) {    // Exists in cache, updating
@@ -77,15 +82,16 @@ public class SQLCacheAccount extends SQLCache {
                     accountCache.get(account.uuid).account = updateInfoLocal(columnsToUpdate, account, accountCache.get(account.uuid).account);
                     accountCache.get(account.uuid).lastSync = System.currentTimeMillis();
                 } catch (Exception e) {
-                    LOG.debug("");
                 }
             } else {    // Missing from cache
                 accountCache.put(account.uuid, new CacheAccount(account));
             }
+            return true;
         } catch (Exception e) {
             LOG.debug("Failed to update account with uuid '" + account.uuid + "' (" + e.getMessage() + ")");
             LOG.debug("Account: " + GSON.toJson(account));
         }
+        return false;
     }
 
 
@@ -96,12 +102,15 @@ public class SQLCacheAccount extends SQLCache {
      * @param uuid uuid of the account to be deleted
      * @see #invalidate(String)
      */
-    public static void deleteAccount(String uuid) {
+    public static boolean deleteAccount(String uuid) {
         try {
             delete(USERS_TABLE, "uuid", uuid);
+            invalidate(uuid);
+            return true;
         } catch (Exception e) {
             LOG.debug("Failed to delete account with uuid '" + uuid + "' (" + e.getMessage() + ")");
         }
+        return false;
     }
 
     /**
@@ -113,5 +122,30 @@ public class SQLCacheAccount extends SQLCache {
     public static void invalidate(String uuid) {
         accountCache.remove(uuid);
         LOG.debug("Account '" + uuid + " has been invalidated, will update on next request!");
+    }
+
+    /**
+     * Cleanup the stored cache and look for expired entries
+     */
+    public static void cleanupCache() {
+        LOG.info("Account Cache cleanup has begun!");
+        // ID Cache
+        List<String> toBeRemoved = new ArrayList<>();
+        for (CacheAccount entry : accountCache.values())
+            if (needsUpdate(entry))
+                toBeRemoved.add(entry.account.uuid + "");
+        // Remove from cache
+        int count = 0;
+        for (String accountEntry : toBeRemoved) {
+            count++;
+            invalidate(accountEntry);
+        }
+        LOG.info("Account Cache has been cleaned, " + count + " entries have been removed!");
+    }
+
+    /**
+     * This should do nothing, its here to prevent an possible reflection issue
+     */
+    public static void cleanupDB() {
     }
 }

@@ -35,6 +35,9 @@ dependencies {
     // Classpath search
     implementation "net.oneandone.reflections8:reflections8:${reflections_version}" // https://github.com/aschoerk/reflections8
     implementation "org.javassist:javassist:${javassist_version}" // https://www.javassist.org/}
+    // Unit Testing
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junit_version}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junit_version}"
 }
 
 shadowJar.archiveName = "${archivesBaseName}-${version}.jar"
@@ -57,4 +60,12 @@ task processSource(type: Sync) {
 
 compileJava {
     source = processSource.outputs
+}
+
+test {
+    useJUnitPlatform()
+    dependsOn 'cleanTest'
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }

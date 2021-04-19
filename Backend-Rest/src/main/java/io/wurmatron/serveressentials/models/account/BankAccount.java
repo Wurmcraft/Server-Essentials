@@ -1,5 +1,7 @@
 package io.wurmatron.serveressentials.models.account;
 
+import java.util.Objects;
+
 public class BankAccount {
 
     public String currencyName;
@@ -24,5 +26,18 @@ public class BankAccount {
         this.accountType = accountType;
         this.accountData = accountData;
         this.lastCalculated = lastCalculated;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BankAccount)) return false;
+        BankAccount that = (BankAccount) o;
+        return Double.compare(that.amount, amount) == 0 && lastUsed == that.lastUsed && lastCalculated == that.lastCalculated && currencyName.equals(that.currencyName) && accountType.equals(that.accountType) && Objects.equals(accountData, that.accountData);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(currencyName, amount, lastUsed, accountType, accountData, lastCalculated);
     }
 }

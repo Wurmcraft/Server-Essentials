@@ -1,7 +1,6 @@
 package io.wurmatron.serveressentials.sql;
 
 import io.wurmatron.serveressentials.sql.cache_holder.*;
-import io.wurmatron.serveressentials.sql.routes.SQLCacheAccount;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import java.lang.reflect.Field;
@@ -11,7 +10,6 @@ import static io.wurmatron.serveressentials.ServerEssentialsRest.config;
 /**
  * Between direct sql and the caching mechanism
  *
- * @see SQLCacheAccount Account Caching
  * @see SQLGenerator    Direct SQL
  */
 public class SQLCache extends SQLGenerator {

@@ -2,7 +2,6 @@ package io.wurmatron.serveressentials.sql.routes;
 
 import io.wurmatron.serveressentials.models.TransferEntry;
 import io.wurmatron.serveressentials.sql.SQLCache;
-import io.wurmatron.serveressentials.sql.SQLGenerator;
 import io.wurmatron.serveressentials.sql.cache_holder.CacheTransfer;
 import io.wurmatron.serveressentials.sql.cache_holder.CacheTransferUUID;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
@@ -101,14 +100,16 @@ public class SQLCacheTransfers extends SQLCache {
      * @param entry instance of the transfer entry to be created
      * @see io.wurmatron.serveressentials.sql.SQLGenerator#insert(String, String[], Object)
      */
-    public static void newTransferEntry(TransferEntry entry) {
+    public static boolean newTransferEntry(TransferEntry entry) {
         try {
             insert(TRANSFERS_TABLE, TRANSFERS_COLUMNS, entry);
             transferCache.put(entry.transferID + "", new CacheTransfer(entry));
+            return true;
         } catch (Exception e) {
             LOG.debug("Failed to add transfer id with id '" + entry.transferID + "' (" + e.getMessage() + ")");
             LOG.debug("TransferEntry: " + GSON.toJson(entry));
         }
+        return false;
     }
 
     /**
@@ -116,9 +117,9 @@ public class SQLCacheTransfers extends SQLCache {
      *
      * @param entry           transfer entry to collect the data to be updated
      * @param columnsToUpdate columns in the database to update with the provided data
-     * @see SQLGenerator#update(String, String[], String, String, Object)
+     * @see io.wurmatron.serveressentials.sql.SQLGenerator#update(String, String[], String, String, Object)
      */
-    public static void updateTransfer(TransferEntry entry, String[] columnsToUpdate) {
+    public static boolean updateTransfer(TransferEntry entry, String[] columnsToUpdate) {
         try {
             update(TRANSFERS_TABLE, columnsToUpdate, "transferID", entry.transferID + "", entry);
             if (transferCache.containsKey(entry.transferID + "")) {    // Exists in cache, updating
@@ -131,10 +132,12 @@ public class SQLCacheTransfers extends SQLCache {
             } else {    // Missing from cache
                 transferCache.put(entry.transferID + "", new CacheTransfer(entry));
             }
+            return true;
         } catch (Exception e) {
             LOG.debug("Failed to update transfer entry with id '" + entry.transferID + "' (" + e.getMessage() + ")");
             LOG.debug("TransferEntry: " + GSON.toJson(entry));
         }
+        return false;
     }
 
     /**
@@ -144,12 +147,15 @@ public class SQLCacheTransfers extends SQLCache {
      * @param transferID id of the transfer entry to be deleted
      * @see #invalidate(String)
      */
-    public static void deleteTransfer(long transferID) {
+    public static boolean deleteTransfer(long transferID) {
         try {
             delete(TRANSFERS_TABLE, "transferID", transferID + "");
+            invalidate("" + transferID);
+            return true;
         } catch (Exception e) {
             LOG.debug("Failed to delete transferEntry with id '" + transferID + "' (" + e.getMessage() + ")");
         }
+        return false;
     }
 
     /**
@@ -169,7 +175,7 @@ public class SQLCacheTransfers extends SQLCache {
      *
      * @param uuid id used for the transfer id's to remove from cache
      */
-    public static void invalidate(String uuid, Void _) {
+    public static void invalidate(String uuid, Void v) {
         LOG.debug("TransferEntries for user '" + uuid + "' have been invalidated, will update on next request!");
         CacheTransferUUID uuidCache = uuidTransferCache.get(uuid);
         for (String id : uuidCache.transferCacheEntrys)

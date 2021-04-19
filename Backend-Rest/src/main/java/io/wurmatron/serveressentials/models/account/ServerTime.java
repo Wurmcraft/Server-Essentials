@@ -1,5 +1,7 @@
 package io.wurmatron.serveressentials.models.account;
 
+import java.util.Objects;
+
 public class ServerTime {
     public String serverID;
     public long totalTime;
@@ -14,5 +16,13 @@ public class ServerTime {
         this.serverID = serverID;
         this.totalTime = totalTime;
         this.lastSeen = lastSeen;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ServerTime)) return false;
+        ServerTime that = (ServerTime) o;
+        return totalTime == that.totalTime && lastSeen == that.lastSeen && serverID.equals(that.serverID);
     }
 }

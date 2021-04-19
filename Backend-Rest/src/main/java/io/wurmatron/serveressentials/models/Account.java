@@ -12,6 +12,7 @@ public class Account {
     public String[] perks;
     public String language;
     public boolean muted;
+    public long muteTime;
     public String displayName;
     public String discordID;
     public ServerTime[] trackedTime;
@@ -29,6 +30,7 @@ public class Account {
      * @param perks        extra perms of the given user
      * @param language     language of the given user
      * @param muted        is the user muted
+     * @param muteTime     How long until the user will be unmute'd
      * @param displayName  user's displayName, "Nickname"
      * @param discordID    user's discordID
      * @param trackedTime  list of instances of the user's playtime
@@ -38,7 +40,7 @@ public class Account {
      * @param passwordSalt salt of the user's password
      * @param systemPerms  permissions to interact with the system
      */
-    public Account(String uuid, String username, String[] rank, String[] perms, String[] perks, String language, boolean muted, String displayName, String discordID, ServerTime[] trackedTime, BankAccount[] wallet, int rewardPoints, String passwordHash, String passwordSalt, String[] systemPerms) {
+    public Account(String uuid, String username, String[] rank, String[] perms, String[] perks, String language, boolean muted, long muteTime, String displayName, String discordID, ServerTime[] trackedTime, BankAccount[] wallet, int rewardPoints, String passwordHash, String passwordSalt, String[] systemPerms) {
         this.uuid = uuid;
         this.username = username;
         this.rank = rank;
@@ -46,6 +48,7 @@ public class Account {
         this.perks = perks;
         this.language = language;
         this.muted = muted;
+        this.muteTime = muteTime;
         this.displayName = displayName;
         this.discordID = discordID;
         this.trackedTime = trackedTime;

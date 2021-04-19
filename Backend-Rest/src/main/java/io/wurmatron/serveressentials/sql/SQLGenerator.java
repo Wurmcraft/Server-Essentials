@@ -1,5 +1,7 @@
 package io.wurmatron.serveressentials.sql;
 
+import io.wurmatron.serveressentials.models.account.BankAccount;
+import io.wurmatron.serveressentials.models.account.ServerTime;
 import joptsimple.internal.Strings;
 
 import java.lang.reflect.Field;
@@ -9,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
 import static io.wurmatron.serveressentials.ServerEssentialsRest.LOG;
 
 /**
@@ -108,7 +111,7 @@ public class SQLGenerator {
      * @see PreparedStatement#execute()
      */
     protected static <T> boolean insert(String table, String[] columns, T data) throws SQLException, IllegalAccessException, IllegalArgumentException, NoSuchFieldException {
-        PreparedStatement statement = connection.createPrepared("INSERT INTO " + table + " (" + String.join(", ", columns) + ") VALUES (" + argumentGenerator(columns.length - 1, 0, null) + ");");
+        PreparedStatement statement = connection.createPrepared("INSERT INTO " + table + " (`" + String.join("`, `", columns) + "`) VALUES (" + argumentGenerator(columns.length, 0, columns) + ")");
         addArguments(statement, columns, data);
         LOG.trace("INSERT: " + statement);
         return statement.execute();
@@ -130,9 +133,9 @@ public class SQLGenerator {
      * @see PreparedStatement#execute()
      */
     protected static <T> boolean update(String table, String[] columnsToUpdate, String key, String value, T data) throws SQLException, NoSuchFieldException, IllegalAccessException {
-        PreparedStatement statement = connection.createPrepared("UPDATE " + table + " SET " + argumentGenerator(columnsToUpdate.length - 1, 1, columnsToUpdate) + " WHERE " + key + "=?;");
+        PreparedStatement statement = connection.createPrepared("UPDATE " + table + " SET " + argumentGenerator(columnsToUpdate.length, 1, columnsToUpdate) + " WHERE " + key + "=?;");
         addArguments(statement, columnsToUpdate, data);
-        statement.setString(columnsToUpdate.length, value);
+        statement.setString(columnsToUpdate.length + 1, value);
         LOG.trace("UPDATE: " + statement);
         return statement.execute();
     }
@@ -166,10 +169,32 @@ public class SQLGenerator {
      * @throws IllegalArgumentException Issue with reflection to add data to the object instance
      */
     private static <T> T to(ResultSet result, T dataType) throws SQLException, IllegalAccessException, IllegalArgumentException {
-        if (result.next())
-            for (Field field : dataType.getClass().getDeclaredFields())
-                field.set(dataType, result.getObject(field.getName()));
-        return dataType;
+        if (result.next()) {
+            for (Field field : dataType.getClass().getDeclaredFields()) {
+                Object obj = result.getObject(field.getName());
+                Class<?> fieldType = field.getType();
+                boolean isArray = fieldType.isArray();
+                if (obj instanceof String && isArray && fieldType.equals(String[].class)) {
+                    String[] data = ((String) obj).split(",");
+                    for (int index = 0; index < data.length; index++)
+                        data[index] = data[index].trim();
+                    field.set(dataType, data);
+                } else if (obj instanceof String && fieldType.equals(long.class))
+                    field.set(dataType, Long.parseLong((String) obj));
+                else if (obj instanceof String && fieldType.equals(int.class))
+                    field.set(dataType, Integer.parseInt((String) obj));
+                else if (obj instanceof String && fieldType.equals(float.class))
+                    field.set(dataType, Float.parseFloat((String) obj));
+                else if (obj instanceof String && fieldType.equals(double.class))
+                    field.set(dataType, Double.parseDouble((String) obj));
+                else if (obj instanceof String && isArray && (fieldType.equals(BankAccount[].class) || fieldType.equals(ServerTime[].class)))
+                    field.set(dataType, GSON.fromJson((String) obj, fieldType));
+                else
+                    field.set(dataType, obj);
+            }
+            return dataType;
+        } else
+            return null;
     }
 
     /**
@@ -196,7 +221,7 @@ public class SQLGenerator {
     }
 
     /**
-     * Generates the string for use with sql params, based on the amount needed and its columns
+     * Generates the string for use with SQLGenerator params, based on the amount needed and its columns
      *
      * @param count   amount of arguments to generate
      * @param format  format of the arguments to generate
@@ -223,13 +248,13 @@ public class SQLGenerator {
      * Adds the parameters / arguments into a sql statement, collected from a data instance
      *
      * @param pStatement sql statement to add the arguments onto
-     * @param columns    columns of the data for the sql request
+     * @param columns    columns of the data for the SQL request
      * @param data       data to collect the data to be used for the params
      * @throws SQLException           A SQL Error has occurred while running the request
      * @throws NoSuchFieldException   Issue with reflection to get data from the object instance
      * @throws IllegalAccessException Issue with reflection to get data from the object instance
      */
-    private static <T> void addArguments(PreparedStatement pStatement, String[] columns, T data) throws SQLException, NoSuchFieldException, IllegalAccessException {
+    private static <T> PreparedStatement addArguments(PreparedStatement pStatement, String[] columns, T data) throws SQLException, NoSuchFieldException, IllegalAccessException {
         for (int index = 0; index < columns.length; index++) {
             Object fieldData = data.getClass().getDeclaredField(columns[index]).get(data);
             // Ignore null entries
@@ -237,11 +262,16 @@ public class SQLGenerator {
                 continue;
             // Check for Special Cases
             if (fieldData instanceof String[]) {
-                pStatement.setObject(index + 1, Strings.join(((String[]) fieldData), ", "));
+                pStatement.setObject(index + 1, ((String[]) fieldData).length > 0 ? Strings.join(((String[]) fieldData), ", ") : " ");
+                continue;
+            }
+            if (fieldData instanceof ServerTime[] || fieldData instanceof BankAccount[]) {
+                pStatement.setObject(index + 1, GSON.toJson(fieldData).replaceAll("\n", "").replaceAll(" ", ""));
                 continue;
             }
             // Not a special case
             pStatement.setObject(index + 1, fieldData);
         }
+        return pStatement;
     }
 }
