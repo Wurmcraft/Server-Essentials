@@ -1,6 +1,8 @@
 package io.wurmatron.serveressentials.models.account;
 
-public class ServerTime {
+import io.wurmatron.serveressentials.sql.SQLJson;
+
+public class ServerTime implements SQLJson {
     public String serverID;
     public long totalTime;
     public long lastSeen;

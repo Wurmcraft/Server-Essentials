@@ -53,18 +53,18 @@ public class SQLCacheAccount extends SQLCache {
      * Creates a new account with the provided instance
      *
      * @param account instance of the account to be created
-     * @see SQLGenerator#insert(String, String[], Object)
+     * @see SQLGenerator#insert(String, String[], Object, boolean)
      */
-    public static boolean newAccount(Account account) {
+    public static Account newAccount(Account account) {
         try {
-            insert(USERS_TABLE, USERS_COLUMNS, account);
+            insert(USERS_TABLE, USERS_COLUMNS, account,false);
             accountCache.put(account.uuid, new CacheAccount(account));
-            return true;
+            return account;
         } catch (Exception e) {
             LOG.debug("Failed to add account with uuid '" + account.uuid + "' (" + e.getMessage() + ")");
             LOG.debug("Account: " + GSON.toJson(account));
         }
-        return false;
+        return null;
     }
 
     /**

@@ -21,7 +21,7 @@ public class SQLCache extends SQLGenerator {
     protected static final NonBlockingHashMap<String, CacheRank> donatorCache = new NonBlockingHashMap<>();
     protected static final NonBlockingHashMap<String, CacheMarket> marketCache = new NonBlockingHashMap<>();
     protected static final NonBlockingHashMap<String, CacheRank> rankCache = new NonBlockingHashMap<>();
-    protected static final NonBlockingHashMap<String, CacheTransfer> transferCache = new NonBlockingHashMap<>();
+    protected static final NonBlockingHashMap<Long, CacheTransfer> transferCache = new NonBlockingHashMap<Long, CacheTransfer>();
     protected static final NonBlockingHashMap<String, CacheAccount> accountCache = new NonBlockingHashMap<>();
 
     /**

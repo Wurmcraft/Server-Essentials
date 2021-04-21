@@ -1,11 +1,15 @@
 package io.wurmatron.serveressentials.models;
 
+import io.wurmatron.serveressentials.models.transfer.ItemWrapper;
+
+import java.util.Arrays;
+
 public class TransferEntry {
 
     public long transferID;
     public String uuid;
     public long startTime;
-    public String[] items;
+    public ItemWrapper[] items;
     public String serverID;
 
     /**
@@ -15,7 +19,7 @@ public class TransferEntry {
      * @param items      list of items to be transferred (in json format)
      * @param serverID   id of the server that the transfer was started on
      */
-    public TransferEntry(long transferID, String uuid, long startTime, String[] items, String serverID) {
+    public TransferEntry(long transferID, String uuid, long startTime, ItemWrapper[] items, String serverID) {
         this.transferID = transferID;
         this.uuid = uuid;
         this.startTime = startTime;
@@ -24,5 +28,13 @@ public class TransferEntry {
     }
 
     public TransferEntry() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TransferEntry)) return false;
+        TransferEntry that = (TransferEntry) o;
+        return transferID == that.transferID && startTime == that.startTime && uuid.equals(that.uuid) && Arrays.equals(that.items, items) && serverID.equals(that.serverID);
     }
 }

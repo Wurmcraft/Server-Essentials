@@ -39,8 +39,8 @@ public class TestAccounts {
         if (SQLCacheAccount.getAccount(TEST_ACCOUNT.uuid) != null)
             SQLCacheAccount.deleteAccount(TEST_ACCOUNT.uuid);
         // Add new account
-        boolean added = SQLCacheAccount.newAccount(TEST_ACCOUNT);
-        assertTrue(added, "Account has been successfully created without errors");
+        Account account = SQLCacheAccount.newAccount(TEST_ACCOUNT);
+        assertNotNull(account, "Account has been successfully created without errors");
         // Check for the new account
         Account savedAccount = SQLCacheAccount.getAccount(TEST_ACCOUNT.uuid);
         assertEquals(TEST_ACCOUNT, savedAccount, "Added account should be the same as the one saved.");

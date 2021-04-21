@@ -8,6 +8,7 @@ import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
@@ -25,7 +26,7 @@ public class SQLCacheTransfers extends SQLCache {
      * @param transferID id for the given transfer id
      * @return instance of transfer entry
      */
-    public static TransferEntry getTransferFromID(String transferID) {
+    public static TransferEntry getTransferFromID(long transferID) {
         // Attempt to get from cache
         if (transferCache.containsKey(transferID))
             if (!needsUpdate(transferCache.get(transferID)))
@@ -34,7 +35,7 @@ public class SQLCacheTransfers extends SQLCache {
                 transferCache.remove(transferID);
         // Not in cache / invalid
         try {
-            TransferEntry entry = get("*", TRANSFERS_TABLE, "transferID", transferID, new TransferEntry());
+            TransferEntry entry = get("*", TRANSFERS_TABLE, "transferID", "" + transferID, new TransferEntry());
             if (entry != null) {
                 transferCache.put(transferID, new CacheTransfer(entry));
                 return entry;
@@ -56,7 +57,7 @@ public class SQLCacheTransfers extends SQLCache {
         // Attempt to get from cache
         if (uuidTransferCache.containsKey(uuid))
             if (!needsUpdate(uuidTransferCache.get(uuid)))
-                return getTransfersFromIDs(uuidTransferCache.get(uuid).transferCacheEntrys);
+                return getTransfersFromIDs(convertToLongArr(uuidTransferCache.get(uuid).transferCacheEntrys));
             else
                 uuidTransferCache.remove(uuid);
         // Not in cache / invalid
@@ -67,15 +68,29 @@ public class SQLCacheTransfers extends SQLCache {
                 List<String> cacheForUUID = new ArrayList<>();
                 for (TransferEntry entry : entries) {
                     cacheForUUID.add(entry.transferID + "");
-                    transferCache.put(entry.transferID + "", new CacheTransfer(entry));
+                    transferCache.put(entry.transferID, new CacheTransfer(entry));
                 }
                 uuidTransferCache.put(uuid, new CacheTransferUUID(cacheForUUID.toArray(new String[0])));
                 return entries;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             LOG.debug("Failed to find transfer id's for uuid '" + uuid + "' (" + e.getMessage() + ")");
         }
         return new ArrayList<>();
+    }
+
+    /**
+     * Converts a string of numbers into an array of longs
+     *
+     * @param arr array of longs but in string format
+     * @return Converted array of string to long
+     */
+    private static long[] convertToLongArr(String[] arr) {
+        long[] longArr = new long[arr.length];
+        for (int x = 0; x < arr.length; x++)
+            longArr[x] = Long.parseLong(arr[x]);
+        return longArr;
     }
 
     /**
@@ -84,9 +99,9 @@ public class SQLCacheTransfers extends SQLCache {
      * @param ids ids of transfer entries to convert into a list
      * @return the generated list of all the transfer entries
      */
-    private static List<TransferEntry> getTransfersFromIDs(String[] ids) {
+    private static List<TransferEntry> getTransfersFromIDs(long[] ids) {
         List<TransferEntry> transfers = new ArrayList<>();
-        for (String transferID : ids) {
+        for (long transferID : ids) {
             TransferEntry entry = getTransferFromID(transferID);
             if (entry != null)
                 transfers.add(entry);
@@ -98,18 +113,18 @@ public class SQLCacheTransfers extends SQLCache {
      * Create a new transfer entry with the provided instance
      *
      * @param entry instance of the transfer entry to be created
-     * @see io.wurmatron.serveressentials.sql.SQLGenerator#insert(String, String[], Object)
+     * @see io.wurmatron.serveressentials.sql.SQLGenerator#insert(String, String[], Object, boolean)
      */
-    public static boolean newTransferEntry(TransferEntry entry) {
+    public static TransferEntry newTransferEntry(TransferEntry entry) {
         try {
-            insert(TRANSFERS_TABLE, TRANSFERS_COLUMNS, entry);
-            transferCache.put(entry.transferID + "", new CacheTransfer(entry));
-            return true;
+            entry.transferID = insert(TRANSFERS_TABLE, Arrays.copyOfRange(TRANSFERS_COLUMNS, 1, TRANSFERS_COLUMNS.length), entry, true);
+            transferCache.put(entry.transferID, new CacheTransfer(entry));
+            return entry;
         } catch (Exception e) {
             LOG.debug("Failed to add transfer id with id '" + entry.transferID + "' (" + e.getMessage() + ")");
             LOG.debug("TransferEntry: " + GSON.toJson(entry));
         }
-        return false;
+        return null;
     }
 
     /**
@@ -122,15 +137,16 @@ public class SQLCacheTransfers extends SQLCache {
     public static boolean updateTransfer(TransferEntry entry, String[] columnsToUpdate) {
         try {
             update(TRANSFERS_TABLE, columnsToUpdate, "transferID", entry.transferID + "", entry);
-            if (transferCache.containsKey(entry.transferID + "")) {    // Exists in cache, updating
+            if (transferCache.containsKey(entry.transferID)) {    // Exists in cache, updating
                 try {
-                    transferCache.get(entry.transferID + "").transferEntry = updateInfoLocal(columnsToUpdate, entry, transferCache.get(entry.transferID + "").transferEntry);
-                    transferCache.get(entry.transferID + "").lastSync = System.currentTimeMillis();
+                    transferCache.get(entry.transferID).transferEntry = updateInfoLocal(columnsToUpdate, entry, transferCache.get(entry.transferID).transferEntry);
+                    transferCache.get(entry.transferID).lastSync = System.currentTimeMillis();
                 } catch (Exception e) {
-                    LOG.debug("");
+                    LOG.debug("Failed to update transfer id with id '" + entry.transferID + "' (" + e.getMessage() + ")");
+                    LOG.debug("TransferEntry: " + GSON.toJson(entry));
                 }
             } else {    // Missing from cache
-                transferCache.put(entry.transferID + "", new CacheTransfer(entry));
+                transferCache.put(entry.transferID, new CacheTransfer(entry));
             }
             return true;
         } catch (Exception e) {
@@ -150,7 +166,7 @@ public class SQLCacheTransfers extends SQLCache {
     public static boolean deleteTransfer(long transferID) {
         try {
             delete(TRANSFERS_TABLE, "transferID", transferID + "");
-            invalidate("" + transferID);
+            invalidate(transferID);
             return true;
         } catch (Exception e) {
             LOG.debug("Failed to delete transferEntry with id '" + transferID + "' (" + e.getMessage() + ")");
@@ -164,7 +180,7 @@ public class SQLCacheTransfers extends SQLCache {
      *
      * @param transferID id used for the transfer entry to remove from cache
      */
-    public static void invalidate(String transferID) {
+    public static void invalidate(long transferID) {
         transferCache.remove(transferID);
         LOG.debug("TransferEntry '" + transferID + " has been invalidated, will update on next request!");
     }
@@ -175,9 +191,9 @@ public class SQLCacheTransfers extends SQLCache {
      *
      * @param uuid id used for the transfer id's to remove from cache
      */
-    public static void invalidate(String uuid, Void v) {
+    public static void invalidate(String uuid) {
         LOG.debug("TransferEntries for user '" + uuid + "' have been invalidated, will update on next request!");
-        CacheTransferUUID uuidCache = uuidTransferCache.get(uuid);
+        CacheTransferUUID uuidCache = uuidTransferCache.getOrDefault(uuid, new CacheTransferUUID(new String[]{}));
         for (String id : uuidCache.transferCacheEntrys)
             invalidate(id);
         uuidTransferCache.remove(uuid);
@@ -189,10 +205,10 @@ public class SQLCacheTransfers extends SQLCache {
     public static void cleanupCache() {
         LOG.info("Transfer Cache cleanup has begun!");
         // ID Cache
-        List<String> toBeRemoved = new ArrayList<>();
+        List<Long> toBeRemoved = new ArrayList<>();
         for (CacheTransfer entry : transferCache.values())
             if (needsUpdate(entry))
-                toBeRemoved.add(entry.transferEntry.transferID + "");
+                toBeRemoved.add(entry.transferEntry.transferID);
         // UUID Cache
         List<String> toBeRemovedUUID = new ArrayList<>();
         for (String uuid : uuidTransferCache.keySet()) {
@@ -202,13 +218,13 @@ public class SQLCacheTransfers extends SQLCache {
         }
         // Remove from cache
         int count = 0;
-        for (String transferEntry : toBeRemoved) {
+        for (Long transferEntry : toBeRemoved) {
             count++;
             invalidate(transferEntry);
         }
         for (String uuid : toBeRemovedUUID) {
             count += uuidTransferCache.get(uuid).transferCacheEntrys.length;
-            invalidate(uuid, null);
+            invalidate(uuid);
         }
         LOG.info("Transfer Cache has been cleaned, " + count + " entries have been removed!");
     }

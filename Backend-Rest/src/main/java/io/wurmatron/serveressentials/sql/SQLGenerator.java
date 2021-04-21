@@ -1,13 +1,12 @@
 package io.wurmatron.serveressentials.sql;
 
-import io.wurmatron.serveressentials.models.account.BankAccount;
-import io.wurmatron.serveressentials.models.account.ServerTime;
 import joptsimple.internal.Strings;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,9 +99,10 @@ public class SQLGenerator {
     /**
      * Insert new data into the database
      *
-     * @param table   table to insert this data into
-     * @param columns columns you want to insert the data into
-     * @param data    instance of the data to send to the database
+     * @param table        table to insert this data into
+     * @param columns      columns you want to insert the data into
+     * @param data         instance of the data to send to the database
+     * @param generatedKey Should return the auto incremented value generated for this sql entry
      * @return see SQL.execute() for more info
      * @throws SQLException             A SQL Error has occurred while running the request
      * @throws IllegalAccessException   Issue with reflection to add data to the object instance
@@ -110,11 +110,15 @@ public class SQLGenerator {
      * @throws NoSuchFieldException     Issue with collecting the data from the object instance, via reflection
      * @see PreparedStatement#execute()
      */
-    protected static <T> boolean insert(String table, String[] columns, T data) throws SQLException, IllegalAccessException, IllegalArgumentException, NoSuchFieldException {
-        PreparedStatement statement = connection.createPrepared("INSERT INTO " + table + " (`" + String.join("`, `", columns) + "`) VALUES (" + argumentGenerator(columns.length, 0, columns) + ")");
+    protected static <T> int insert(String table, String[] columns, T data, boolean generatedKey) throws SQLException, IllegalAccessException, IllegalArgumentException, NoSuchFieldException {
+        PreparedStatement statement = connection.createPrepared("INSERT INTO " + table + " (`" + String.join("`, `", columns) + "`) VALUES (" + argumentGenerator(columns.length, 0, columns) + ")", generatedKey ? Statement.RETURN_GENERATED_KEYS : 0);
         addArguments(statement, columns, data);
         LOG.trace("INSERT: " + statement);
-        return statement.execute();
+        statement.executeUpdate();
+        ResultSet set = statement.getGeneratedKeys();
+        if (set.next())
+            return set.getInt(1);
+        return -1;
     }
 
     /**
@@ -157,7 +161,6 @@ public class SQLGenerator {
         return statement.execute();
     }
 
-
     /**
      * Reflection casts a ResultSet from the database into a usable data object
      *
@@ -174,20 +177,21 @@ public class SQLGenerator {
                 Object obj = result.getObject(field.getName());
                 Class<?> fieldType = field.getType();
                 boolean isArray = fieldType.isArray();
-                if (obj instanceof String && isArray && fieldType.equals(String[].class)) {
+                boolean str = obj instanceof String;
+                if (str && isArray && fieldType.equals(String[].class)) {
                     String[] data = ((String) obj).split(",");
                     for (int index = 0; index < data.length; index++)
                         data[index] = data[index].trim();
                     field.set(dataType, data);
-                } else if (obj instanceof String && fieldType.equals(long.class))
+                } else if (str && fieldType.equals(long.class))
                     field.set(dataType, Long.parseLong((String) obj));
-                else if (obj instanceof String && fieldType.equals(int.class))
+                else if (str && fieldType.equals(int.class))
                     field.set(dataType, Integer.parseInt((String) obj));
-                else if (obj instanceof String && fieldType.equals(float.class))
+                else if (str && fieldType.equals(float.class))
                     field.set(dataType, Float.parseFloat((String) obj));
-                else if (obj instanceof String && fieldType.equals(double.class))
+                else if (str && fieldType.equals(double.class))
                     field.set(dataType, Double.parseDouble((String) obj));
-                else if (obj instanceof String && isArray && (fieldType.equals(BankAccount[].class) || fieldType.equals(ServerTime[].class)))
+                else if (str && isJson(fieldType))
                     field.set(dataType, GSON.fromJson((String) obj, fieldType));
                 else
                     field.set(dataType, obj);
@@ -195,6 +199,20 @@ public class SQLGenerator {
             return dataType;
         } else
             return null;
+    }
+
+    private static boolean isJson(Class<?> fieldType) {
+        try {
+            fieldType.asSubclass(SQLJson[].class);
+            return true;
+        } catch (Exception e) {
+        }
+        try {
+            fieldType.asSubclass(SQLJson.class);
+            return true;
+        } catch (Exception e) {
+        }
+        return false;
     }
 
     /**
@@ -213,9 +231,9 @@ public class SQLGenerator {
         while (result.next()) {
             // Attempt to create new instance and set values
             T data = (T) dataType.getClass().newInstance();
-            for (Field field : dataType.getClass().getDeclaredFields())
-                field.set(data, result.getObject(field.getName()));
-            dataArr.add(data);
+            T temp = to(result, data);
+            if (temp != null)
+                dataArr.add(temp);
         }
         return dataArr;
     }
@@ -265,7 +283,7 @@ public class SQLGenerator {
                 pStatement.setObject(index + 1, ((String[]) fieldData).length > 0 ? Strings.join(((String[]) fieldData), ", ") : " ");
                 continue;
             }
-            if (fieldData instanceof ServerTime[] || fieldData instanceof BankAccount[]) {
+            if (fieldData instanceof SQLJson[] || fieldData instanceof SQLJson) {
                 pStatement.setObject(index + 1, GSON.toJson(fieldData).replaceAll("\n", "").replaceAll(" ", ""));
                 continue;
             }

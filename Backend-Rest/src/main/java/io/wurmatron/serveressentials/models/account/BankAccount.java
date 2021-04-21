@@ -1,8 +1,10 @@
 package io.wurmatron.serveressentials.models.account;
 
+import io.wurmatron.serveressentials.sql.SQLJson;
+
 import java.util.Objects;
 
-public class BankAccount {
+public class BankAccount implements SQLJson {
 
     public String currencyName;
     public double amount;
