@@ -2,7 +2,6 @@ package io.wurmatron.serveressentials.sql;
 
 import java.sql.*;
 
-import static io.wurmatron.serveressentials.ServerEssentialsRest.LOG;
 import static io.wurmatron.serveressentials.ServerEssentialsRest.config;
 
 public class DatabaseConnection {

@@ -1,11 +1,9 @@
 package io.wurmatron.serveressentials.tests.sql;
 
 import io.wurmatron.serveressentials.ServerEssentialsRest;
-import io.wurmatron.serveressentials.models.Account;
 import io.wurmatron.serveressentials.models.TransferEntry;
 import io.wurmatron.serveressentials.models.transfer.ItemWrapper;
 import io.wurmatron.serveressentials.sql.SQLGenerator;
-import io.wurmatron.serveressentials.sql.routes.SQLCacheAccount;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheTransfers;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
 import org.junit.jupiter.api.*;
@@ -32,14 +30,14 @@ public class TestTransfers {
     @Test
     @Order(1)
     public void testAddTransfer() {
-        TransferEntry entry = SQLCacheTransfers.newTransferEntry(TEST_ENTRY);
+        TransferEntry entry = SQLCacheTransfers.create(TEST_ENTRY);
         assertNotNull(entry, "Transfer Entry has been successfully created without errors");
         // Check if it was added
-        entry = SQLCacheTransfers.getTransferFromID(TEST_ENTRY.transferID);
+        entry = SQLCacheTransfers.getID(TEST_ENTRY.transferID);
         assertEquals(TEST_ENTRY, entry, "Added entry should be the same as the one saved.");
         // Find transferID
         SQLCacheTransfers.invalidate(entry.transferID);
-        entry = SQLCacheTransfers.getTransferFromID(TEST_ENTRY.transferID);
+        entry = SQLCacheTransfers.getID(TEST_ENTRY.transferID);
         assertEquals(TEST_ENTRY, entry, "Entry should be the same as the one saved.");
     }
 
@@ -47,11 +45,11 @@ public class TestTransfers {
     @Order(2)
     public void testUpdateTransfer() {
         TEST_ENTRY.serverID = "Test2";
-        boolean updated = SQLCacheTransfers.updateTransfer(TEST_ENTRY, new String[]{"serverID"});
+        boolean updated = SQLCacheTransfers.update(TEST_ENTRY, new String[]{"serverID"});
         assertTrue(updated, " has been successfully created without errors");
         // Invalidate Cache and try again
         SQLCacheTransfers.invalidate(TEST_ENTRY.transferID);
-        TransferEntry entry = SQLCacheTransfers.getTransferFromID(TEST_ENTRY.transferID);
+        TransferEntry entry = SQLCacheTransfers.getID(TEST_ENTRY.transferID);
         assertNotNull(entry, "Transfer Entry Exists");
         assertEquals(TEST_ENTRY.serverID, entry.serverID);
     }
@@ -59,11 +57,11 @@ public class TestTransfers {
     @Test
     @Order(2)
     public void testGetTransferID() {
-        TransferEntry transferEntry = SQLCacheTransfers.getTransferFromID(TEST_ENTRY.transferID);
+        TransferEntry transferEntry = SQLCacheTransfers.getID(TEST_ENTRY.transferID);
         assertEquals(TEST_ENTRY, transferEntry, "The TransferEntry are equal");
         // Remove from cache and try again
         SQLCacheTransfers.invalidate(TEST_ENTRY.transferID);
-        transferEntry = SQLCacheTransfers.getTransferFromID(TEST_ENTRY.transferID);
+        transferEntry = SQLCacheTransfers.getID(TEST_ENTRY.transferID);
         // Test Transfer Entry
         assertNotNull(transferEntry, "Cache has the Transfer Entry");
         assertEquals(TEST_ENTRY.serverID, transferEntry.serverID, "ServerID are the same");
@@ -76,28 +74,28 @@ public class TestTransfers {
     public void testGetTransferUUID() {
         long TEST_ID = TEST_ENTRY.transferID;
         TEST_ENTRY.transferID = -1;
-        TransferEntry newEntry = SQLCacheTransfers.newTransferEntry(TEST_ENTRY);
+        TransferEntry newEntry = SQLCacheTransfers.create(TEST_ENTRY);
         TEST_ENTRY.transferID = TEST_ID;
         assertNotNull(newEntry, "New entry should not be null");
-        List<TransferEntry> entries = SQLCacheTransfers.getTransferForUUID(TEST_ENTRY.uuid);
+        List<TransferEntry> entries = SQLCacheTransfers.getUUID(TEST_ENTRY.uuid);
         assertTrue(entries.size() >= 2, "Should be at least 2 entries");
         // Remove from cache and try again
         SQLCacheTransfers.invalidate(TEST_ENTRY.uuid);
-        entries = SQLCacheTransfers.getTransferForUUID(TEST_ENTRY.uuid);
+        entries = SQLCacheTransfers.getUUID(TEST_ENTRY.uuid);
         assertTrue(entries.size() >= 2, "Should be at least 2 entries");
     }
 
     @Test
     @Order(3)
     public void testDeleteTransferID() {
-        boolean deleted = SQLCacheTransfers.deleteTransfer(TEST_ENTRY.transferID);
+        boolean deleted = SQLCacheTransfers.delete(TEST_ENTRY.transferID);
         assertTrue(deleted, " has been successfully deleted without errors");
         // Make sure its deleted
-        TransferEntry entry = SQLCacheTransfers.getTransferFromID(TEST_ENTRY.transferID);
+        TransferEntry entry = SQLCacheTransfers.getID(TEST_ENTRY.transferID);
         assertNull(entry, "Entry has been successfully deleted");
         // Delete any still existing transfers
-        List<TransferEntry> entries = SQLCacheTransfers.getTransferForUUID(TEST_ENTRY.uuid);
+        List<TransferEntry> entries = SQLCacheTransfers.getUUID(TEST_ENTRY.uuid);
         for (TransferEntry e : entries)
-            assertTrue(SQLCacheTransfers.deleteTransfer(e.transferID), "Entry has been successfully deleted");
+            assertTrue(SQLCacheTransfers.delete(e.transferID), "Entry has been successfully deleted");
     }
 }

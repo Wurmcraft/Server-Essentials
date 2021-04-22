@@ -5,6 +5,7 @@ import io.wurmatron.serveressentials.sql.SQLCache;
 import io.wurmatron.serveressentials.sql.SQLGenerator;
 import io.wurmatron.serveressentials.sql.cache_holder.CacheAccount;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class SQLCacheAccount extends SQLCache {
      * @see SQLGenerator#get(String, String, String, String, Object)
      * @see #invalidate(String)
      */
+    @Nullable
     public static Account getAccount(String uuid) {
         // Attempt to get from cache
         if (accountCache.containsKey(uuid))
@@ -55,6 +57,7 @@ public class SQLCacheAccount extends SQLCache {
      * @param account instance of the account to be created
      * @see SQLGenerator#insert(String, String[], Object, boolean)
      */
+    @Nullable
     public static Account newAccount(Account account) {
         try {
             insert(USERS_TABLE, USERS_COLUMNS, account,false);

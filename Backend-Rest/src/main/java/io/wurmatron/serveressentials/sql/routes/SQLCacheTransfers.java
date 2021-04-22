@@ -6,6 +6,7 @@ import io.wurmatron.serveressentials.sql.cache_holder.CacheTransfer;
 import io.wurmatron.serveressentials.sql.cache_holder.CacheTransferUUID;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
+import javax.annotation.Nullable;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +27,8 @@ public class SQLCacheTransfers extends SQLCache {
      * @param transferID id for the given transfer id
      * @return instance of transfer entry
      */
-    public static TransferEntry getTransferFromID(long transferID) {
+    @Nullable
+    public static TransferEntry getID(long transferID) {
         // Attempt to get from cache
         if (transferCache.containsKey(transferID))
             if (!needsUpdate(transferCache.get(transferID)))
@@ -53,7 +55,7 @@ public class SQLCacheTransfers extends SQLCache {
      * @param uuid user to lookup transfer entries for
      * @return a list of the given users transfer entries
      */
-    public static List<TransferEntry> getTransferForUUID(String uuid) {
+    public static List<TransferEntry> getUUID(String uuid) {
         // Attempt to get from cache
         if (uuidTransferCache.containsKey(uuid))
             if (!needsUpdate(uuidTransferCache.get(uuid)))
@@ -102,7 +104,7 @@ public class SQLCacheTransfers extends SQLCache {
     private static List<TransferEntry> getTransfersFromIDs(long[] ids) {
         List<TransferEntry> transfers = new ArrayList<>();
         for (long transferID : ids) {
-            TransferEntry entry = getTransferFromID(transferID);
+            TransferEntry entry = getID(transferID);
             if (entry != null)
                 transfers.add(entry);
         }
@@ -115,7 +117,8 @@ public class SQLCacheTransfers extends SQLCache {
      * @param entry instance of the transfer entry to be created
      * @see io.wurmatron.serveressentials.sql.SQLGenerator#insert(String, String[], Object, boolean)
      */
-    public static TransferEntry newTransferEntry(TransferEntry entry) {
+    @Nullable
+    public static TransferEntry create(TransferEntry entry) {
         try {
             entry.transferID = insert(TRANSFERS_TABLE, Arrays.copyOfRange(TRANSFERS_COLUMNS, 1, TRANSFERS_COLUMNS.length), entry, true);
             transferCache.put(entry.transferID, new CacheTransfer(entry));
@@ -134,7 +137,7 @@ public class SQLCacheTransfers extends SQLCache {
      * @param columnsToUpdate columns in the database to update with the provided data
      * @see io.wurmatron.serveressentials.sql.SQLGenerator#update(String, String[], String, String, Object)
      */
-    public static boolean updateTransfer(TransferEntry entry, String[] columnsToUpdate) {
+    public static boolean update(TransferEntry entry, String[] columnsToUpdate) {
         try {
             update(TRANSFERS_TABLE, columnsToUpdate, "transferID", entry.transferID + "", entry);
             if (transferCache.containsKey(entry.transferID)) {    // Exists in cache, updating
@@ -163,7 +166,7 @@ public class SQLCacheTransfers extends SQLCache {
      * @param transferID id of the transfer entry to be deleted
      * @see #invalidate(String)
      */
-    public static boolean deleteTransfer(long transferID) {
+    public static boolean delete(long transferID) {
         try {
             delete(TRANSFERS_TABLE, "transferID", transferID + "");
             invalidate(transferID);
@@ -240,7 +243,7 @@ public class SQLCacheTransfers extends SQLCache {
             for (TransferEntry entry : dbData)
                 if (entry.startTime + 10000 < Instant.now().getEpochSecond()) {
                     count++;
-                    deleteTransfer(entry.transferID);
+                    delete(entry.transferID);
                 }
             LOG.info("Transfer DB has been cleaned, " + count + " entries have been removed!");
             return;
