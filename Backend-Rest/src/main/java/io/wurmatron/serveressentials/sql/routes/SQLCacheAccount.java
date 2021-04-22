@@ -32,11 +32,10 @@ public class SQLCacheAccount extends SQLCache {
     public static Account getAccount(String uuid) {
         // Attempt to get from cache
         if (accountCache.containsKey(uuid))
-            if (!needsUpdate(accountCache.get(uuid))) {
+            if (!needsUpdate(accountCache.get(uuid)))
                 return accountCache.get(uuid).account;
-            } else {
+            else
                 accountCache.remove(uuid);
-            }
         // Not in cache / invalid
         try {
             Account account = get("*", USERS_TABLE, "uuid", uuid, new Account());
@@ -60,7 +59,7 @@ public class SQLCacheAccount extends SQLCache {
     @Nullable
     public static Account newAccount(Account account) {
         try {
-            insert(USERS_TABLE, USERS_COLUMNS, account,false);
+            insert(USERS_TABLE, USERS_COLUMNS, account, false);
             accountCache.put(account.uuid, new CacheAccount(account));
             return account;
         } catch (Exception e) {

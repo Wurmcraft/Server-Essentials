@@ -1,5 +1,8 @@
 package io.wurmatron.serveressentials.models;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class Rank {
 
     public long rankID;
@@ -36,5 +39,16 @@ public class Rank {
         this.suffixPriority = suffixPriority;
         this.color = color;
         this.colorPriority = colorPriority;
+    }
+
+    public Rank() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Rank)) return false;
+        Rank rank = (Rank) o;
+        return rankID == rank.rankID && prefixPriority == rank.prefixPriority && suffixPriority == rank.suffixPriority && colorPriority == rank.colorPriority && name.equals(rank.name) && Arrays.equals(permissions, rank.permissions) && Arrays.equals(inheritance, rank.inheritance) && Objects.equals(prefix, rank.prefix) && Objects.equals(suffix, rank.suffix) && Objects.equals(color, rank.color);
     }
 }

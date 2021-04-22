@@ -76,7 +76,6 @@ public class SQLCacheTransfers extends SQLCache {
                 return entries;
             }
         } catch (Exception e) {
-            e.printStackTrace();
             LOG.debug("Failed to find transfer id's for uuid '" + uuid + "' (" + e.getMessage() + ")");
         }
         return new ArrayList<>();
@@ -141,13 +140,8 @@ public class SQLCacheTransfers extends SQLCache {
         try {
             update(TRANSFERS_TABLE, columnsToUpdate, "transferID", entry.transferID + "", entry);
             if (transferCache.containsKey(entry.transferID)) {    // Exists in cache, updating
-                try {
-                    transferCache.get(entry.transferID).transferEntry = updateInfoLocal(columnsToUpdate, entry, transferCache.get(entry.transferID).transferEntry);
-                    transferCache.get(entry.transferID).lastSync = System.currentTimeMillis();
-                } catch (Exception e) {
-                    LOG.debug("Failed to update transfer id with id '" + entry.transferID + "' (" + e.getMessage() + ")");
-                    LOG.debug("TransferEntry: " + GSON.toJson(entry));
-                }
+                transferCache.get(entry.transferID).transferEntry = updateInfoLocal(columnsToUpdate, entry, transferCache.get(entry.transferID).transferEntry);
+                transferCache.get(entry.transferID).lastSync = System.currentTimeMillis();
             } else {    // Missing from cache
                 transferCache.put(entry.transferID, new CacheTransfer(entry));
             }

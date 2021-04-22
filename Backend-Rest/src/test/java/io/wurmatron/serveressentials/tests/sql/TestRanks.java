@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestRanks {
 
-    public static final Rank TEST_RANK = new Rank(-1, "Test", new String[]{"general.*", "language.*"}, new String[]{"Test"}, "[Test]", 0, "", 0, "", 0);
+    public static final Rank TEST_RANK = new Rank(-1, "Test", new String[]{"general.*", "language.*"}, new String[]{"Test"}, "[Test]", 0, "&c", 0, "", 0);
 
     @BeforeAll
     public static void setup() throws IOException, SQLException {
@@ -50,12 +50,12 @@ public class TestRanks {
     @Test
     @Order(2)
     public void testGetRanks() {
-        List<Rank> ranks = SQLCacheRank.gets();
+        List<Rank> ranks = SQLCacheRank.get();
         assertTrue(ranks.size() > 0, "Ranks exist");
         // Remove from cache and try again
         for (Rank rank : ranks)
             SQLCacheRank.invalidate(rank.rankID);
-        ranks = SQLCacheRank.gets();
+        ranks = SQLCacheRank.get();
         assertTrue(ranks.size() > 0, "Ranks exist");
         boolean found = false;
         for (Rank rank : ranks)
@@ -70,7 +70,7 @@ public class TestRanks {
     @Order(2)
     public void testUpdateRank() {
         TEST_RANK.name = "Test2";
-        boolean updated = SQLCacheRank.update(TEST_RANK);
+        boolean updated = SQLCacheRank.update(TEST_RANK, new String[] {"name"});
         assertTrue(updated, "Rank has been updated updated without errors");
         Rank rank = SQLCacheRank.getID(TEST_RANK.rankID);
         assertEquals(TEST_RANK, rank, "Rank is the same");

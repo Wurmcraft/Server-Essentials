@@ -1,19 +1,18 @@
 package io.wurmatron.serveressentials.sql.cache_holder;
 
-import io.wurmatron.serveressentials.models.Rank;
+public class CacheRankName implements Cache {
 
-public class CacheRank implements Cache{
-
-    public Rank rank;
+    public long rankID;
     public long lastSync;
 
-    public CacheRank(Rank rank, long lastSync) {
-        this.rank = rank;
+
+    public CacheRankName(long rankID,long lastSync) {
+        this.rankID = rankID;
         this.lastSync = lastSync;
     }
 
-    public CacheRank(Rank rank) {
-        this.rank = rank;
+    public CacheRankName(long rankID) {
+        this.rankID = rankID;
         this.lastSync = System.currentTimeMillis();
     }
 
