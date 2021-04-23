@@ -1,9 +1,11 @@
 package io.wurmatron.serveressentials.models;
 
+import io.wurmatron.serveressentials.models.transfer.ItemWrapper;
+
 public class MarketEntry {
     public String serverID;
     public String sellerUUID;
-    public String item;
+    public ItemWrapper item;
     public String currencyName;
     public double currencyAmount;
     public long timestamp;
@@ -22,7 +24,7 @@ public class MarketEntry {
      * @param marketData     data related to the market entry
      * @param transferID     server's transferID, for use with multi-server market's
      */
-    public MarketEntry(String serverID, String sellerUUID, String item, String currencyName, double currencyAmount, long timestamp, String marketType, String marketData, String transferID) {
+    public MarketEntry(String serverID, String sellerUUID, ItemWrapper item, String currencyName, double currencyAmount, long timestamp, String marketType, String marketData, String transferID) {
         this.serverID = serverID;
         this.sellerUUID = sellerUUID;
         this.item = item;

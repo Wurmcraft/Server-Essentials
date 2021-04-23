@@ -9,6 +9,8 @@ import io.javalin.plugin.openapi.OpenApiPlugin;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
 import io.wurmatron.serveressentials.config.Config;
+import io.wurmatron.serveressentials.routes.EndpointSecurity;
+import io.wurmatron.serveressentials.routes.RouteLoader;
 import io.wurmatron.serveressentials.sql.DatabaseConnection;
 import io.wurmatron.serveressentials.sql.SQLGenerator;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
@@ -49,7 +51,12 @@ public class ServerEssentialsRest {
                 cfg.registerPlugin(new RedirectToLowercasePathPlugin());
             if (config.server.swaggerEnabled)
                 cfg.registerPlugin(new OpenApiPlugin(new OpenApiOptions(new Info().version(version).description("Server Essentials Rest API")).path("/swagger-json").swagger(new SwaggerOptions("/swagger").title("Server-Essentials Swagger"))));
+            cfg.requestLogger((ctx, ms) -> {
+                LOG.debug(ctx.ip() + " " + ctx.method() + " " + ctx.path() + " (" + Math.round(ms) + "ms)");
+            });
         });
+        EndpointSecurity.addSecurityManaging(javalin);
+        RouteLoader.registerRoutes(javalin);
         javalin.start(config.server.host.isEmpty() ? null : config.server.host, config.server.port);
     }
 
