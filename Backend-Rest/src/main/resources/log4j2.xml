@@ -12,7 +12,7 @@
         <RollingFile name="File" fileName="${basePath}/latest.log" filePattern="${basePath}/log-%d{yyyy-MM-dd}-%i.log">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level > %msg%n"/>
             <Policies>
-                <OnStartupTriggeringPolicy />
+                <OnStartupTriggeringPolicy/>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
             <DefaultRolloverStrategy max="20"/>
@@ -22,7 +22,10 @@
     <Loggers>
         <root level="debug">
             <appender-ref ref="Console" level="info"/>
-            <appender-ref ref="File" level="debug"/>
         </root>
+        <Logger name="io.wurmatron.serveressentials" level="DEBUG"
+                additivity="false">
+            <Appender-ref ref="File" level="DEBUG"/>
+        </Logger>
     </Loggers>
 </Configuration>
