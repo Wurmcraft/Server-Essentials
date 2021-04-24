@@ -10,6 +10,7 @@ import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
 import io.wurmatron.serveressentials.config.Config;
 import io.wurmatron.serveressentials.routes.EndpointSecurity;
+import io.wurmatron.serveressentials.routes.RestRoles;
 import io.wurmatron.serveressentials.routes.RouteLoader;
 import io.wurmatron.serveressentials.sql.DatabaseConnection;
 import io.wurmatron.serveressentials.sql.SQLGenerator;
@@ -20,6 +21,9 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 
 public class ServerEssentialsRest {
 
@@ -49,8 +53,15 @@ public class ServerEssentialsRest {
             // Plugins
             if (config.server.forceLowercase)
                 cfg.registerPlugin(new RedirectToLowercasePathPlugin());
-            if (config.server.swaggerEnabled)
-                cfg.registerPlugin(new OpenApiPlugin(new OpenApiOptions(new Info().version(version).description("Server Essentials Rest API")).path("/swagger-json").swagger(new SwaggerOptions("/swagger").title("Server-Essentials Swagger"))));
+            if (config.server.swaggerEnabled) {
+//                cfg.registerPlugin(new OpenApiPlugin(new OpenApiOptions(new Info().version(version).description("Server Essentials Rest API"))
+//                        .path("/swagger-json")
+//                        .swagger(new SwaggerOptions("/swagger")
+//                                .title("Server-Essentials Swagger"))));
+                cfg.registerPlugin(new OpenApiPlugin(new OpenApiOptions(new Info().version("1.0.0").description("MiniGram Rest API")).path("/swagger-docs").swagger(new SwaggerOptions("/swagger").title("MiniGram Swagger")).roles(Collections.singleton(RestRoles.DEV))));
+
+                LOG.info("Connect to swagger http://" + config.server.host + ":" + config.server.port + "/swagger");
+            }
             cfg.requestLogger((ctx, ms) -> {
                 LOG.debug(ctx.ip() + " " + ctx.method() + " " + ctx.path() + " (" + Math.round(ms) + "ms)");
             });

@@ -2,6 +2,7 @@ package io.wurmatron.serveressentials.routes;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.wurmatron.serveressentials.ServerEssentialsRest;
 
 import static io.wurmatron.serveressentials.routes.RouteUtils.response;
 
@@ -14,9 +15,11 @@ public class EndpointSecurity {
      * @return the permission level of this request
      */
     public static RestRoles getRole(Context ctx) {
+        if(ServerEssentialsRest.config.general.testing)
+            return RestRoles.DEV;
         String auth = ctx.cookie("authentication"); // TODO may change
         if (auth != null)
-            return RestRoles.DEV;
+            return RestRoles.SERVER;
         return RestRoles.ANONYMOUS;
     }
 
@@ -31,7 +34,7 @@ public class EndpointSecurity {
             if (permittedRoles.contains(authRoles))
                 handler.handle(ctx);
             else
-                ctx.contentType("application/json").status(401).result(response("Unauthorized", "You don't have permission to access this!"));
+                ctx.contentType("application/json").status(401).result(response("Unauthorized", "You dont have permission to access this!"));
         });
     }
 }

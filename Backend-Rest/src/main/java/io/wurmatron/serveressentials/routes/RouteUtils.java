@@ -1,5 +1,9 @@
 package io.wurmatron.serveressentials.routes;
 
+import io.wurmatron.serveressentials.models.MessageResponse;
+
+import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
+
 public class RouteUtils {
 
     /**
@@ -10,9 +14,6 @@ public class RouteUtils {
      * @return json message with the included information
      */
     public static String response(String title, String message) {
-        return "{" +
-                "\"title\": " + "\"" + title + "\"" +
-                "\"message\": " + "\"" + message + "\"" +
-                "}";
+        return GSON.toJson(new MessageResponse(title, message));
     }
 }
