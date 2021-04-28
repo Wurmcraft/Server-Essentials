@@ -1,12 +1,23 @@
 package io.wurmatron.serveressentials.routes.data;
 
+import com.google.gson.JsonParseException;
+import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.plugin.openapi.annotations.*;
 import io.wurmatron.serveressentials.models.Account;
 import io.wurmatron.serveressentials.models.MessageResponse;
+import io.wurmatron.serveressentials.models.Rank;
 import io.wurmatron.serveressentials.routes.Route;
+import io.wurmatron.serveressentials.sql.routes.SQLCacheAccount;
+import io.wurmatron.serveressentials.sql.routes.SQLCacheRank;
 
-import static io.wurmatron.serveressentials.routes.Route.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
+import static io.wurmatron.serveressentials.routes.Route.RestRoles;
+import static io.wurmatron.serveressentials.routes.RouteUtils.response;
 
 public class AccountRoutes {
 
@@ -28,8 +39,83 @@ public class AccountRoutes {
     )
     @Route(path = "/user", method = "POST", roles = {RestRoles.SERVER, RestRoles.DEV})
     public static Handler createAccount = ctx -> {
-        ctx.status(501);
+        try {
+            Account newAccount = GSON.fromJson(ctx.body(), Account.class);
+            if (isValidAccount(ctx, newAccount)) {
+                // Check for existing account
+                Account account = SQLCacheAccount.getAccount(newAccount.uuid);
+                if (account == null) {
+                    // Create new account
+                    newAccount = SQLCacheAccount.newAccount(newAccount);
+                    if (newAccount == null) {
+                        ctx.status(500).result(response("Account Failed to Create", "Account has failed to be created!"));
+                        return;
+                    }
+                    ctx.status(201).result(GSON.toJson(newAccount));
+                } else {
+                    ctx.status(409).result(response("Account Exists", "Account with the same uuid exists!"));
+                }
+            }
+        } catch (JsonParseException e) {
+            ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Account"));
+        }
     };
+
+    public static boolean isValidAccount(Context context, Account account) {
+        List<MessageResponse> errors = new ArrayList<>();
+        // Check for valid UUID
+        try {
+            UUID.fromString(account.uuid);
+        } catch (IllegalArgumentException e) {
+            context.status(400).result(response("Bad Request", "Invalid UUID"));
+            return false;
+        }
+
+        // Validate Username
+        if (account.username == null || account.username.trim().isEmpty()) {
+            errors.add(new MessageResponse("Bad Request", "Invalid / Empty Username"));
+        }
+
+        // Validate Rank
+        if (account.rank == null || account.rank.length == 0) {
+            errors.add(new MessageResponse("Bad Request", "Missing Rank(s)"));
+        }
+        // Check for valid ranks
+        if (account.rank != null)
+            for (String rank : account.rank)
+                if (rank.trim().isEmpty()) {
+                    errors.add(new MessageResponse("Bad Request", "Empty Rank(s)"));
+                } else {
+                    Rank validRank = SQLCacheRank.getName(rank);
+                    if (validRank == null) {
+                        errors.add(new MessageResponse("Bad Request", rank + " is not a valid rank!"));
+                    }
+                }
+
+        // Validate Perms
+        if (account.perms != null && account.perms.length > 0)
+            for (String perm : account.perms)
+                if (!perm.contains(".") && !perm.equalsIgnoreCase("*"))
+                    errors.add(new MessageResponse("Bad Request", perm + " is not a perm!"));
+
+        // Validate Perks
+        if (account.perks != null && account.perks.length > 0)
+            for (String perk : account.perks)
+                if (!perk.contains("."))
+                    errors.add(new MessageResponse("Bad Request", perk + " is not a perk!"));
+
+        // Validate Language
+        if (account.language == null || account.language.trim().isEmpty()) {
+            errors.add(new MessageResponse("Bad Request", "Language must not be empty"));
+        }
+        // TODO Check for valid language
+
+        if (errors.size() > 0) {
+            context.status(400).result(GSON.toJson(errors.toArray(new MessageResponse[0])));
+            return false;
+        }
+        return true;
+    }
 
     // TODO Implement
     @Route(path = "/user/:uuid", method = "BEFORE")

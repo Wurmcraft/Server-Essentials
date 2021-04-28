@@ -1,5 +1,7 @@
 package io.wurmatron.serveressentials.routes;
 
+import io.javalin.Javalin;
+import io.javalin.http.BadRequestResponse;
 import io.wurmatron.serveressentials.models.MessageResponse;
 
 import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
@@ -15,5 +17,11 @@ public class RouteUtils {
      */
     public static String response(String title, String message) {
         return GSON.toJson(new MessageResponse(title, message));
+    }
+
+    public static void setupExceptions(Javalin app) {
+        app.exception(BadRequestResponse.class, (e, ctx) -> {
+            ctx.contentType("application/json").result(response("Bad Request", e.getMessage()));
+        });
     }
 }

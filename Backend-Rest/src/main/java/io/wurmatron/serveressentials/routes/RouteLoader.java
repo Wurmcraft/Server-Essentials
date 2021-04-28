@@ -84,6 +84,8 @@ public class RouteLoader {
             }
         });
         LOG.info(routes.size() + " routes have been created!");
+        RouteUtils.setupExceptions(javalin);
+        LOG.info("Default Exception Handlers have been registered!");
     }
 
     /**

@@ -24,7 +24,7 @@ public class TestAccounts {
             "en_us", false, 0, "Test", "",
             new ServerTime[]{new ServerTime("test", 9001, Instant.now().toEpochMilli())},
             new BankAccount[]{new BankAccount("Test", 50, Instant.now().toEpochMilli(), "Savings", "{}", Instant.now().toEpochMilli())},
-            2, "", "", new String[]{"*"});
+            0, "", "", new String[]{});
 
     @BeforeAll
     public static void setup() throws IOException, SQLException {
