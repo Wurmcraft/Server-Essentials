@@ -14,13 +14,13 @@ public class EndpointSecurity {
      * @param ctx information about the given request
      * @return the permission level of this request
      */
-    public static RestRoles getRole(Context ctx) {
+    public static Route.RestRoles getRole(Context ctx) {
         if(ServerEssentialsRest.config.general.testing)
-            return RestRoles.DEV;
+            return Route.RestRoles.DEV;
         String auth = ctx.cookie("authentication"); // TODO may change
         if (auth != null)
-            return RestRoles.SERVER;
-        return RestRoles.ANONYMOUS;
+            return Route.RestRoles.SERVER;
+        return Route.RestRoles.ANONYMOUS;
     }
 
     /**
@@ -30,7 +30,7 @@ public class EndpointSecurity {
      */
     public static void addSecurityManaging(Javalin app) {
         app.config.accessManager((handler, ctx, permittedRoles) -> {
-            RestRoles authRoles = getRole(ctx);
+            Route.RestRoles authRoles = getRole(ctx);
             if (permittedRoles.contains(authRoles))
                 handler.handle(ctx);
             else

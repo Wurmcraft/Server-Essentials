@@ -34,7 +34,7 @@ public @interface Route {
     /**
      * Minimum Role required to access any part of this resource
      */
-    RestRoles[] roles() default {RestRoles.ANONYMOUS};
+    RestRoles[] roles() default {RestRoles.ANONYMOUS, RestRoles.USER, RestRoles.SERVER, RestRoles.DEV};
 
     /**
      * Used for each route to determine if the requested data is accessible to the given user, or some needs to be removed / blanked out

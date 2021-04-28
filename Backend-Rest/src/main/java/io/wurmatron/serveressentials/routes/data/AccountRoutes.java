@@ -4,8 +4,9 @@ import io.javalin.http.Handler;
 import io.javalin.plugin.openapi.annotations.*;
 import io.wurmatron.serveressentials.models.Account;
 import io.wurmatron.serveressentials.models.MessageResponse;
-import io.wurmatron.serveressentials.routes.RestRoles;
 import io.wurmatron.serveressentials.routes.Route;
+
+import static io.wurmatron.serveressentials.routes.Route.*;
 
 public class AccountRoutes {
 

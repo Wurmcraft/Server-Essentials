@@ -10,7 +10,6 @@ import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
 import io.wurmatron.serveressentials.config.Config;
 import io.wurmatron.serveressentials.routes.EndpointSecurity;
-import io.wurmatron.serveressentials.routes.RestRoles;
 import io.wurmatron.serveressentials.routes.RouteLoader;
 import io.wurmatron.serveressentials.sql.DatabaseConnection;
 import io.wurmatron.serveressentials.sql.SQLGenerator;
@@ -23,6 +22,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
+
+import static io.wurmatron.serveressentials.routes.Route.RestRoles;
 
 public class ServerEssentialsRest {
 
