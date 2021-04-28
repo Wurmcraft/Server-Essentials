@@ -1,6 +1,7 @@
 package io.wurmatron.serveressentials.routes;
 
 
+import io.javalin.core.security.Role;
 import io.javalin.http.Handler;
 
 import java.lang.annotation.ElementType;
@@ -34,4 +35,12 @@ public @interface Route {
      * Minimum Role required to access any part of this resource
      */
     RestRoles[] roles() default {RestRoles.ANONYMOUS};
+
+    /**
+     * Used for each route to determine if the requested data is accessible to the given user, or some needs to be removed / blanked out
+     */
+    public enum RestRoles implements Role {
+        ANONYMOUS, USER,SERVER, DEV
+    }
+
 }

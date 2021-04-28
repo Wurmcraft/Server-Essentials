@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 
 public class ServerEssentialsRest {
@@ -54,11 +53,10 @@ public class ServerEssentialsRest {
             if (config.server.forceLowercase)
                 cfg.registerPlugin(new RedirectToLowercasePathPlugin());
             if (config.server.swaggerEnabled) {
-//                cfg.registerPlugin(new OpenApiPlugin(new OpenApiOptions(new Info().version(version).description("Server Essentials Rest API"))
-//                        .path("/swagger-json")
-//                        .swagger(new SwaggerOptions("/swagger")
-//                                .title("Server-Essentials Swagger"))));
-                cfg.registerPlugin(new OpenApiPlugin(new OpenApiOptions(new Info().version("1.0.0").description("MiniGram Rest API")).path("/swagger-docs").swagger(new SwaggerOptions("/swagger").title("MiniGram Swagger")).roles(Collections.singleton(RestRoles.DEV))));
+                cfg.registerPlugin(new OpenApiPlugin(new OpenApiOptions(new Info().version(version).description("Server Essentials Rest API"))
+                        .path("/swagger-json")
+                        .swagger(new SwaggerOptions("/swagger")
+                                .title("Server-Essentials Swagger")).roles(new HashSet<>(Arrays.asList(RestRoles.DEV)))));
 
                 LOG.info("Connect to swagger http://" + config.server.host + ":" + config.server.port + "/swagger");
             }
