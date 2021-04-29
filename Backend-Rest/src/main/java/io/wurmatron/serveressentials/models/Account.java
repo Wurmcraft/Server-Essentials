@@ -12,12 +12,12 @@ public class Account {
     public String[] perks;
     public String language;
     public boolean muted;
-    public long muteTime;
+    public Long muteTime;
     public String displayName;
     public String discordID;
     public ServerTime[] trackedTime;
     public BankAccount[] wallet;
-    public int rewardPoints;
+    public Integer rewardPoints;
     public String passwordHash;
     public String passwordSalt;
     public String[] systemPerms;

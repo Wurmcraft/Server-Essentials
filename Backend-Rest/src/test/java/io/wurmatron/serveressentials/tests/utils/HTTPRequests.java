@@ -129,7 +129,7 @@ public class HTTPRequests {
      * @throws IOException An Error has occurred, invalid URL, Not Found, Invalid Json
      */
     public static <T> T get(String url, Class<T> type) throws IOException {
-        return withReturn("GET", "user", null, type);
+        return withReturn("GET", url, null, type);
     }
 
     /**

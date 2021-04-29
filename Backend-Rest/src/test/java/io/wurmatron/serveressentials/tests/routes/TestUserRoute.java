@@ -39,7 +39,7 @@ public class TestUserRoute {
     @Test
     @Order(2)
     public void testGetUser() throws IOException {
-        Account account = HTTPRequests.get("user", Account.class);
+        Account account = HTTPRequests.get("user/" + TestAccounts.TEST_ACCOUNT.uuid, Account.class);
         assertNotNull(account, "Account is not null");
         assertEquals(TestAccounts.TEST_ACCOUNT, account);
     }

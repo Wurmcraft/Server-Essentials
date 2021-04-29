@@ -7,6 +7,7 @@ import io.javalin.plugin.openapi.annotations.*;
 import io.wurmatron.serveressentials.models.Account;
 import io.wurmatron.serveressentials.models.MessageResponse;
 import io.wurmatron.serveressentials.models.Rank;
+import io.wurmatron.serveressentials.routes.EndpointSecurity;
 import io.wurmatron.serveressentials.routes.Route;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheAccount;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheRank;
@@ -196,8 +197,46 @@ public class AccountRoutes {
     )
     @Route(path = "/user/:uuid", method = "GET")
     public static Handler getAccount = ctx -> {
-        ctx.status(501);
+        // Validate UUID
+        String uuid = ctx.pathParam("uuid", String.class).get();
+        try {
+            UUID.fromString(uuid);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(response("Bad Request", "PathParam UUID is not valid"));
+            return;
+        }
+        Account account = SQLCacheAccount.getAccount(uuid);
+        if (account != null)
+            ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, account)));
+        else
+            ctx.status(404).result(response("Account Not Found", "Account with uuid " + uuid + " does not exist!"));
     };
+
+    private static Account filterBasedOnPerms(Context ctx, Account account) {
+        RestRoles role = EndpointSecurity.getRole(ctx);
+        if (role.equals(RestRoles.DEV))
+            return account;
+        if (role.equals(RestRoles.SERVER)) {
+            account.passwordHash = null;
+            account.passwordSalt = null;
+            account.systemPerms = null;
+            return account;
+        }
+        if (role.equals(RestRoles.USER)) {
+            // TODO Based on SystemPerms
+        }
+        account.discordID = null;
+        account.perms = null;
+        account.perks = null;
+        account.muteTime = null;
+        account.trackedTime = null;
+        account.wallet = null;
+        account.rewardPoints = null;
+        account.passwordHash = null;
+        account.passwordSalt = null;
+        account.systemPerms = null;
+        return account;
+    }
 
     // TODO Implement
     @OpenApi(
@@ -290,6 +329,20 @@ public class AccountRoutes {
     )
     @Route(path = "/user/:uuid", method = "DELETE", roles = {RestRoles.SERVER, RestRoles.DEV})
     public static Handler deleteAccount = ctx -> {
-        ctx.status(501);
+        // Validate UUID
+        String uuid = ctx.pathParam("uuid", String.class).get();
+        try {
+            UUID.fromString(uuid);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(response("Bad Request", "PathParam UUID is not valid"));
+            return;
+        }
+        // Check if account exists
+        Account existingAccount = SQLCacheAccount.getAccount(uuid);
+        if (existingAccount != null) {
+            if (SQLCacheAccount.deleteAccount(uuid))
+                ctx.status(200).result(GSON.toJson(existingAccount));
+        } else
+            ctx.status(404).result(response("No Account", "No Account exists with the provided UUID"));
     };
 }

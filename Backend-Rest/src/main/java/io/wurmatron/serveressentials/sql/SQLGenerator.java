@@ -189,13 +189,13 @@ public class SQLGenerator {
                     for (int index = 0; index < data.length; index++)
                         data[index] = data[index].trim();
                     field.set(dataType, data);
-                } else if (str && fieldType.equals(long.class))
+                } else if (str && fieldType.equals(long.class) || str && fieldType.equals(Long.class))
                     field.set(dataType, Long.parseLong((String) obj));
-                else if (str && fieldType.equals(int.class))
+                else if (str && fieldType.equals(int.class) || str && fieldType.equals(Integer.class))
                     field.set(dataType, Integer.parseInt((String) obj));
-                else if (str && fieldType.equals(float.class))
+                else if (str && fieldType.equals(float.class) || str && fieldType.equals(Float.class))
                     field.set(dataType, Float.parseFloat((String) obj));
-                else if (str && fieldType.equals(double.class))
+                else if (str && fieldType.equals(double.class) || str && fieldType.equals(Double.class))
                     field.set(dataType, Double.parseDouble((String) obj));
                 else if (str && isJson(fieldType))
                     field.set(dataType, GSON.fromJson((String) obj, fieldType));
