@@ -7,6 +7,7 @@ import io.wurmatron.serveressentials.sql.cache_holder.CacheAccount;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
@@ -149,5 +150,14 @@ public class SQLCacheAccount extends SQLCache {
      * This should do nothing, its here to prevent an possible reflection issue
      */
     public static void cleanupDB() {
+    }
+
+    /**
+     * List all the table columns besides the key, in this case 'uuid'
+     *
+     * @return List of all the columns in the table, except the key
+     */
+    public static String[] getColumns() {
+        return Arrays.copyOfRange(USERS_COLUMNS, 1, USERS_COLUMNS.length);
     }
 }

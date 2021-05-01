@@ -23,7 +23,6 @@ import static io.wurmatron.serveressentials.routes.RouteUtils.response;
 
 public class AccountRoutes {
 
-    // TODO Implement
     @OpenApi(
             summary = "Creates a new user with the provided information",
             description = "Creates a new user account with the provided information, no system perms or password will be set, even if provided",
@@ -125,7 +124,6 @@ public class AccountRoutes {
         ctx.status(501);
     };
 
-    // TODO Implement
     @OpenApi(
             summary = "Overrides the given user information with the provided information",
             description = "Override a user's account with the provided information",
@@ -135,7 +133,7 @@ public class AccountRoutes {
             requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = Account.class)}, required = true, description = "Amount information used to update the requested account"),
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Account.class)}, description = "Account has been updated successfully"),
-                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = MessageResponse[].class)}, description = "One or more of the provided values, has failed to validate!"),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = MessageResponse.class)}, description = "One or more of the provided values, has failed to validate!"),
                     @OpenApiResponse(status = "401", content = {@OpenApiContent(from = MessageResponse.class)}, description = "You are missing an authorization token"),
                     @OpenApiResponse(status = "403", content = {@OpenApiContent(from = MessageResponse.class)}, description = "Forbidden, Your provided auth token does not have permission to do this"),
                     @OpenApiResponse(status = "404", content = {@OpenApiContent(from = MessageResponse.class)}, description = "User does not exist"),
@@ -145,7 +143,28 @@ public class AccountRoutes {
     )
     @Route(path = "/user/:uuid", method = "PUT", roles = {RestRoles.DEV})
     public static Handler overrideAccount = ctx -> {
-        ctx.status(501);
+        // Validate UUID
+        String uuid = ctx.pathParam("uuid", String.class).get();
+        try {
+            UUID.fromString(uuid);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(response("Bad Request", "PathParam UUID is not valid"));
+            return;
+        }
+        try {
+            Account account = GSON.fromJson(ctx.body(), Account.class);
+            // Make sure account uuid and path uuid are the same
+            if (account.uuid.equalsIgnoreCase(uuid)) {
+                // Update / Override account
+                if (SQLCacheAccount.updateAccount(account, SQLCacheAccount.getColumns())) {
+                    ctx.status(200).result(GSON.toJson(SQLCacheAccount.getAccount(account.uuid)));
+                } else
+                    ctx.status(500).result(response("Account Failed to Update", "Account Update has failed!"));
+            } else
+                ctx.status(400).result(response("Bad Request", "UUID's don't match, path: '" + uuid + "' and body: '" + account.uuid + "'"));
+        } catch (JsonParseException e) {
+            ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Account"));
+        }
     };
 
     // TODO Implement
