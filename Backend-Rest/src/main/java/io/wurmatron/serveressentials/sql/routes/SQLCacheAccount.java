@@ -33,7 +33,7 @@ public class SQLCacheAccount extends SQLCache {
         // Attempt to get from cache
         if (accountCache.containsKey(uuid))
             if (!needsUpdate(accountCache.get(uuid)))
-                return accountCache.get(uuid).account;
+                return accountCache.get(uuid).account.clone();
             else
                 accountCache.remove(uuid);
         // Not in cache / invalid

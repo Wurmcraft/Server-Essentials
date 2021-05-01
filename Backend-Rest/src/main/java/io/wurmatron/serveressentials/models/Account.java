@@ -1,5 +1,6 @@
 package io.wurmatron.serveressentials.models;
 
+import io.wurmatron.serveressentials.ServerEssentialsRest;
 import io.wurmatron.serveressentials.models.account.BankAccount;
 import io.wurmatron.serveressentials.models.account.ServerTime;
 
@@ -11,7 +12,7 @@ public class Account {
     public String[] perms;
     public String[] perks;
     public String language;
-    public boolean muted;
+    public Boolean muted;
     public Long muteTime;
     public String displayName;
     public String discordID;
@@ -60,5 +61,11 @@ public class Account {
     }
 
     public Account() {
+    }
+
+    @Override
+    public Account clone() {
+        String json = ServerEssentialsRest.GSON.toJson(this);
+        return ServerEssentialsRest.GSON.fromJson(json, Account.class);
     }
 }

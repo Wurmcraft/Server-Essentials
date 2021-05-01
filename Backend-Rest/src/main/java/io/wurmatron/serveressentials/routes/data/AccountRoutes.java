@@ -12,6 +12,7 @@ import io.wurmatron.serveressentials.routes.Route;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheAccount;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheRank;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -212,31 +213,45 @@ public class AccountRoutes {
             ctx.status(404).result(response("Account Not Found", "Account with uuid " + uuid + " does not exist!"));
     };
 
+    /**
+     * Removes the data, the given account does not have access to
+     *
+     * @param ctx     context of the request
+     * @param account account to remove the data from
+     * @return account with the data missing / null
+     */
     private static Account filterBasedOnPerms(Context ctx, Account account) {
         RestRoles role = EndpointSecurity.getRole(ctx);
         if (role.equals(RestRoles.DEV))
             return account;
+        Account clone = account.clone();
         if (role.equals(RestRoles.SERVER)) {
-            account.passwordHash = null;
-            account.passwordSalt = null;
-            account.systemPerms = null;
-            return account;
+            clone.passwordHash = null;
+            clone.passwordSalt = null;
+            clone.systemPerms = null;
+            return clone;
         }
         if (role.equals(RestRoles.USER)) {
             // TODO Based on SystemPerms
         }
-        account.discordID = null;
-        account.perms = null;
-        account.perks = null;
-        account.muteTime = null;
-        account.trackedTime = null;
-        account.wallet = null;
-        account.rewardPoints = null;
-        account.passwordHash = null;
-        account.passwordSalt = null;
-        account.systemPerms = null;
-        return account;
+        clone.discordID = null;
+        clone.perms = null;
+        clone.perks = null;
+        clone.muteTime = null;
+        clone.trackedTime = null;
+        clone.wallet = null;
+        clone.rewardPoints = null;
+        clone.passwordHash = null;
+        clone.passwordSalt = null;
+        clone.systemPerms = null;
+        return clone;
     }
+
+    // TODO Implement
+    @Route(path = "/user/:uuid/:data", method = "BEFORE")
+    public static Handler getAccountInformation_AuthCheck = ctx -> {
+        ctx.status(501);
+    };
 
     // TODO Implement
     @OpenApi(
@@ -259,15 +274,88 @@ public class AccountRoutes {
     )
     @Route(path = "/user/:uuid/:data", method = "GET")
     public static Handler getAccountInformation = ctx -> {
-        ctx.status(501);
+        // Validate UUID
+        String uuid = ctx.pathParam("uuid", String.class).get();
+        try {
+            UUID.fromString(uuid);
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result(response("Bad Request", "UUID is not valid"));
+            return;
+        }
+        // Validate Data
+        String data = ctx.pathParam("data", String.class).get();
+        String field = convertPathToField(data);
+        if (field == null) {
+            ctx.status(400).result(response("Bad Request", data + " is not valid entry for the requested Account"));
+            return;
+        }
+        Account account = filterBasedOnPerms(ctx, SQLCacheAccount.getAccount(uuid));
+        if (account != null) {
+            Field accountField = account.getClass().getDeclaredField(field);
+            account = wipeAllExceptField(account, accountField);
+            ctx.status(200).result(GSON.toJson(account));
+        } else
+            ctx.status(404).result(response("Account Not Found", "Account with uuid " + uuid + " does not exist!"));
     };
 
+    /**
+     * Converts the endpoint PathParm into he internal data name, used for reflection
+     *
+     * @param data PathParam provided by the user via the endpoint
+     */
+    public static String convertPathToField(String data) {
+        if (data.equalsIgnoreCase("uuid"))
+            return "uuid";
+        else if (data.equalsIgnoreCase("username"))
+            return "username";
+        else if (data.equalsIgnoreCase("rank") || data.equalsIgnoreCase("ranks"))
+            return "rank";
+        else if (data.equalsIgnoreCase("perm") || data.equalsIgnoreCase("perms"))
+            return "perms";
+        else if (data.equalsIgnoreCase("perk") || data.equalsIgnoreCase("perks"))
+            return "perks";
+        else if (data.equalsIgnoreCase("lang") || data.equalsIgnoreCase("language"))
+            return "language";
+        else if (data.equalsIgnoreCase("mute") || data.equalsIgnoreCase("muted"))
+            return "muted";
+        else if (data.equalsIgnoreCase("mute-time") || data.equalsIgnoreCase("mutetime"))
+            return "muteTime";
+        else if (data.equalsIgnoreCase("display-name") || data.equalsIgnoreCase("displayname"))
+            return "displayName";
+        else if (data.equalsIgnoreCase("discord-id") || data.equalsIgnoreCase("discordid") || data.equalsIgnoreCase("discord"))
+            return "discordID";
+        else if (data.equalsIgnoreCase("play-time") || data.equalsIgnoreCase("playtime") || data.equalsIgnoreCase("time"))
+            return "trackedTime";
+        else if (data.equalsIgnoreCase("currency") || data.equalsIgnoreCase("wallet"))
+            return "wallet";
+        else if (data.equalsIgnoreCase("reward-points") || data.equalsIgnoreCase("rewardpoints"))
+            return "rewardPoints";
+        else if (data.equalsIgnoreCase("password-hash") || data.equalsIgnoreCase("passwordhash"))
+            return "passwordHash";
+        else if (data.equalsIgnoreCase("password-salt") || data.equalsIgnoreCase("passwordsalt"))
+            return "passwordSalt";
+        else if (data.equalsIgnoreCase("system-perms") || data.equalsIgnoreCase("systemperms"))
+            return "systemPerms";
+        return null;
+    }
 
-    // TODO Implement
-    @Route(path = "/user/:uuid/:data", method = "BEFORE")
-    public static Handler getAccountInformation_AuthCheck = ctx -> {
-        ctx.status(501);
-    };
+    /**
+     * Removes / sets all the fields to null except the one provided
+     *
+     * @param account instance of account to remove everything from
+     * @param safe    field to keep in the account instance
+     * @return Account with all but one field has been removed / null'd
+     * @throws IllegalAccessException This should never happen, unless Account has been modified
+     */
+    private static Account wipeAllExceptField(Account account, Field safe) throws IllegalAccessException {
+        account = account.clone();
+        for (Field field : account.getClass().getDeclaredFields())
+            if (!field.equals(safe))
+                field.set(account, null);
+        if (safe.get(account) instanceof String && ((String) safe.get(account)).isEmpty())
+            safe.set(account, "");
+        return account;
+    }
 
     // TODO Implement
     @OpenApi(
