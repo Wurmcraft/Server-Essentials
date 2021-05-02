@@ -143,27 +143,24 @@ public class AccountRoutes {
     )
     @Route(path = "/user/:uuid", method = "PUT", roles = {RestRoles.DEV})
     public static Handler overrideAccount = ctx -> {
-        // Validate UUID
-        String uuid = ctx.pathParam("uuid", String.class).get();
-        try {
-            UUID.fromString(uuid);
-        } catch (IllegalArgumentException e) {
-            ctx.status(400).result(response("Bad Request", "PathParam UUID is not valid"));
-            return;
-        }
-        try {
-            Account account = GSON.fromJson(ctx.body(), Account.class);
-            // Make sure account uuid and path uuid are the same
-            if (account.uuid.equalsIgnoreCase(uuid)) {
-                // Update / Override account
-                if (SQLCacheAccount.updateAccount(account, SQLCacheAccount.getColumns())) {
-                    ctx.status(200).result(GSON.toJson(SQLCacheAccount.getAccount(account.uuid)));
+        if (validateUUID(ctx)) {
+            String uuid = ctx.pathParam("uuid", String.class).get();
+            try {
+                Account account = GSON.fromJson(ctx.body(), Account.class);
+                // Make sure account uuid and path uuid are the same
+                if (account.uuid.equalsIgnoreCase(uuid)) {
+                    if (isValidAccount(ctx, account)) {
+                        // Update / Override account
+                        if (SQLCacheAccount.updateAccount(account, SQLCacheAccount.getColumns())) {
+                            ctx.status(200).result(GSON.toJson(SQLCacheAccount.getAccount(account.uuid)));
+                        } else
+                            ctx.status(500).result(response("Account Failed to Update", "Account Update has failed!"));
+                    }
                 } else
-                    ctx.status(500).result(response("Account Failed to Update", "Account Update has failed!"));
-            } else
-                ctx.status(400).result(response("Bad Request", "UUID's don't match, path: '" + uuid + "' and body: '" + account.uuid + "'"));
-        } catch (JsonParseException e) {
-            ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Account"));
+                    ctx.status(400).result(response("Bad Request", "UUID's don't match, path: '" + uuid + "' and body: '" + account.uuid + "'"));
+            } catch (JsonParseException e) {
+                ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Account"));
+            }
         }
     };
 
@@ -173,7 +170,6 @@ public class AccountRoutes {
         ctx.status(501);
     };
 
-    // TODO Implement
     @OpenApi(
             summary = "Overrides the given user information with the provided information",
             description = "Override a user's account with the provided information",
@@ -196,7 +192,33 @@ public class AccountRoutes {
     )
     @Route(path = "/user/:uuid/:data", method = "PATCH", roles = {RestRoles.USER, RestRoles.SERVER, RestRoles.DEV})
     public static Handler patchAccount = ctx -> {
-        ctx.status(501);
+        if (validateUUID(ctx)) {
+            String uuid = ctx.pathParam("uuid", String.class).get();
+            String data = ctx.pathParam("data", String.class).get();
+            String fieldName = convertPathToField(data);
+            if (fieldName == null) {
+                ctx.status(400).result(response("Bad Request", data + " is not valid entry for the requested Account"));
+                return;
+            }
+            // Validate the input data
+            try {
+                Account patchInfo = GSON.fromJson(ctx.body(), Account.class);
+                // Check if user exists
+                Account account = SQLCacheAccount.getAccount(uuid);
+                if (account != null) {
+                    Field field = account.getClass().getDeclaredField(fieldName);
+                    field.set(account, field.get(patchInfo));
+                    if (isValidAccount(ctx, account)) {
+                        ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, account)));
+                    } else {
+                        ctx.status(500).result(response("Account Error", "User Account has failed to be validated!, Full Update / Put is required"));
+                    }
+                } else
+                    ctx.status(404).result(response("Account Not Found", "Account with uuid " + uuid + " does not exist!"));
+            } catch (JsonParseException e) {
+                ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Account"));
+            }
+        }
     };
 
     // TODO Implement
@@ -217,19 +239,14 @@ public class AccountRoutes {
     )
     @Route(path = "/user/:uuid", method = "GET")
     public static Handler getAccount = ctx -> {
-        // Validate UUID
-        String uuid = ctx.pathParam("uuid", String.class).get();
-        try {
-            UUID.fromString(uuid);
-        } catch (IllegalArgumentException e) {
-            ctx.status(400).result(response("Bad Request", "PathParam UUID is not valid"));
-            return;
+        if (validateUUID(ctx)) {
+            String uuid = ctx.pathParam("uuid", String.class).get();
+            Account account = SQLCacheAccount.getAccount(uuid);
+            if (account != null)
+                ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, account)));
+            else
+                ctx.status(404).result(response("Account Not Found", "Account with uuid " + uuid + " does not exist!"));
         }
-        Account account = SQLCacheAccount.getAccount(uuid);
-        if (account != null)
-            ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, account)));
-        else
-            ctx.status(404).result(response("Account Not Found", "Account with uuid " + uuid + " does not exist!"));
     };
 
     /**
@@ -293,88 +310,24 @@ public class AccountRoutes {
     )
     @Route(path = "/user/:uuid/:data", method = "GET")
     public static Handler getAccountInformation = ctx -> {
-        // Validate UUID
-        String uuid = ctx.pathParam("uuid", String.class).get();
-        try {
-            UUID.fromString(uuid);
-        } catch (IllegalArgumentException e) {
-            ctx.status(400).result(response("Bad Request", "UUID is not valid"));
-            return;
+        if (validateUUID(ctx)) {
+            String uuid = ctx.pathParam("uuid", String.class).get();
+            // Validate Data
+            String data = ctx.pathParam("data", String.class).get();
+            String field = convertPathToField(data);
+            if (field == null) {
+                ctx.status(400).result(response("Bad Request", data + " is not valid entry for the requested Account"));
+                return;
+            }
+            Account account = filterBasedOnPerms(ctx, SQLCacheAccount.getAccount(uuid));
+            if (account != null) {
+                Field accountField = account.getClass().getDeclaredField(field);
+                account = wipeAllExceptField(account, accountField);
+                ctx.status(200).result(GSON.toJson(account));
+            } else
+                ctx.status(404).result(response("Account Not Found", "Account with uuid " + uuid + " does not exist!"));
         }
-        // Validate Data
-        String data = ctx.pathParam("data", String.class).get();
-        String field = convertPathToField(data);
-        if (field == null) {
-            ctx.status(400).result(response("Bad Request", data + " is not valid entry for the requested Account"));
-            return;
-        }
-        Account account = filterBasedOnPerms(ctx, SQLCacheAccount.getAccount(uuid));
-        if (account != null) {
-            Field accountField = account.getClass().getDeclaredField(field);
-            account = wipeAllExceptField(account, accountField);
-            ctx.status(200).result(GSON.toJson(account));
-        } else
-            ctx.status(404).result(response("Account Not Found", "Account with uuid " + uuid + " does not exist!"));
     };
-
-    /**
-     * Converts the endpoint PathParm into he internal data name, used for reflection
-     *
-     * @param data PathParam provided by the user via the endpoint
-     */
-    public static String convertPathToField(String data) {
-        if (data.equalsIgnoreCase("uuid"))
-            return "uuid";
-        else if (data.equalsIgnoreCase("username"))
-            return "username";
-        else if (data.equalsIgnoreCase("rank") || data.equalsIgnoreCase("ranks"))
-            return "rank";
-        else if (data.equalsIgnoreCase("perm") || data.equalsIgnoreCase("perms"))
-            return "perms";
-        else if (data.equalsIgnoreCase("perk") || data.equalsIgnoreCase("perks"))
-            return "perks";
-        else if (data.equalsIgnoreCase("lang") || data.equalsIgnoreCase("language"))
-            return "language";
-        else if (data.equalsIgnoreCase("mute") || data.equalsIgnoreCase("muted"))
-            return "muted";
-        else if (data.equalsIgnoreCase("mute-time") || data.equalsIgnoreCase("mutetime"))
-            return "muteTime";
-        else if (data.equalsIgnoreCase("display-name") || data.equalsIgnoreCase("displayname"))
-            return "displayName";
-        else if (data.equalsIgnoreCase("discord-id") || data.equalsIgnoreCase("discordid") || data.equalsIgnoreCase("discord"))
-            return "discordID";
-        else if (data.equalsIgnoreCase("play-time") || data.equalsIgnoreCase("playtime") || data.equalsIgnoreCase("time"))
-            return "trackedTime";
-        else if (data.equalsIgnoreCase("currency") || data.equalsIgnoreCase("wallet"))
-            return "wallet";
-        else if (data.equalsIgnoreCase("reward-points") || data.equalsIgnoreCase("rewardpoints"))
-            return "rewardPoints";
-        else if (data.equalsIgnoreCase("password-hash") || data.equalsIgnoreCase("passwordhash"))
-            return "passwordHash";
-        else if (data.equalsIgnoreCase("password-salt") || data.equalsIgnoreCase("passwordsalt"))
-            return "passwordSalt";
-        else if (data.equalsIgnoreCase("system-perms") || data.equalsIgnoreCase("systemperms"))
-            return "systemPerms";
-        return null;
-    }
-
-    /**
-     * Removes / sets all the fields to null except the one provided
-     *
-     * @param account instance of account to remove everything from
-     * @param safe    field to keep in the account instance
-     * @return Account with all but one field has been removed / null'd
-     * @throws IllegalAccessException This should never happen, unless Account has been modified
-     */
-    private static Account wipeAllExceptField(Account account, Field safe) throws IllegalAccessException {
-        account = account.clone();
-        for (Field field : account.getClass().getDeclaredFields())
-            if (!field.equals(safe))
-                field.set(account, null);
-        if (safe.get(account) instanceof String && ((String) safe.get(account)).isEmpty())
-            safe.set(account, "");
-        return account;
-    }
 
     // TODO Implement
     @OpenApi(
@@ -436,20 +389,91 @@ public class AccountRoutes {
     )
     @Route(path = "/user/:uuid", method = "DELETE", roles = {RestRoles.SERVER, RestRoles.DEV})
     public static Handler deleteAccount = ctx -> {
-        // Validate UUID
+        if (validateUUID(ctx)) {
+            String uuid = ctx.pathParam("uuid", String.class).get();
+            // Check if account exists
+            Account existingAccount = SQLCacheAccount.getAccount(uuid);
+            if (existingAccount != null) {
+                if (SQLCacheAccount.deleteAccount(uuid))
+                    ctx.status(200).result(GSON.toJson(existingAccount));
+            } else
+                ctx.status(404).result(response("No Account", "No Account exists with the provided UUID"));
+        }
+    };
+
+    /**
+     * Checks if the provided UUID is a valid / possible UUID
+     *
+     * @param ctx context of the message instance
+     * @return if the uuid in the path is a valid uuid
+     */
+    private static boolean validateUUID(Context ctx) {
         String uuid = ctx.pathParam("uuid", String.class).get();
         try {
             UUID.fromString(uuid);
+            return true;
         } catch (IllegalArgumentException e) {
             ctx.status(400).result(response("Bad Request", "PathParam UUID is not valid"));
-            return;
         }
-        // Check if account exists
-        Account existingAccount = SQLCacheAccount.getAccount(uuid);
-        if (existingAccount != null) {
-            if (SQLCacheAccount.deleteAccount(uuid))
-                ctx.status(200).result(GSON.toJson(existingAccount));
-        } else
-            ctx.status(404).result(response("No Account", "No Account exists with the provided UUID"));
-    };
+        return false;
+    }
+
+    /**
+     * Removes / sets all the fields to null except the one provided
+     *
+     * @param account instance of account to remove everything from
+     * @param safe    field to keep in the account instance
+     * @return Account with all but one field has been removed / null'd
+     * @throws IllegalAccessException This should never happen, unless Account has been modified
+     */
+    private static Account wipeAllExceptField(Account account, Field safe) throws IllegalAccessException {
+        account = account.clone();
+        for (Field field : account.getClass().getDeclaredFields())
+            if (!field.equals(safe))
+                field.set(account, null);
+        if (safe.get(account) instanceof String && ((String) safe.get(account)).isEmpty())
+            safe.set(account, "");
+        return account;
+    }
+
+    /**
+     * Converts the endpoint PathParm into he internal data name, used for reflection
+     *
+     * @param data PathParam provided by the user via the endpoint
+     */
+    public static String convertPathToField(String data) {
+        if (data.equalsIgnoreCase("uuid"))
+            return "uuid";
+        else if (data.equalsIgnoreCase("username"))
+            return "username";
+        else if (data.equalsIgnoreCase("rank") || data.equalsIgnoreCase("ranks"))
+            return "rank";
+        else if (data.equalsIgnoreCase("perm") || data.equalsIgnoreCase("perms"))
+            return "perms";
+        else if (data.equalsIgnoreCase("perk") || data.equalsIgnoreCase("perks"))
+            return "perks";
+        else if (data.equalsIgnoreCase("lang") || data.equalsIgnoreCase("language"))
+            return "language";
+        else if (data.equalsIgnoreCase("mute") || data.equalsIgnoreCase("muted"))
+            return "muted";
+        else if (data.equalsIgnoreCase("mute-time") || data.equalsIgnoreCase("mutetime"))
+            return "muteTime";
+        else if (data.equalsIgnoreCase("display-name") || data.equalsIgnoreCase("displayname"))
+            return "displayName";
+        else if (data.equalsIgnoreCase("discord-id") || data.equalsIgnoreCase("discordid") || data.equalsIgnoreCase("discord"))
+            return "discordID";
+        else if (data.equalsIgnoreCase("play-time") || data.equalsIgnoreCase("playtime") || data.equalsIgnoreCase("time"))
+            return "trackedTime";
+        else if (data.equalsIgnoreCase("currency") || data.equalsIgnoreCase("wallet"))
+            return "wallet";
+        else if (data.equalsIgnoreCase("reward-points") || data.equalsIgnoreCase("rewardpoints"))
+            return "rewardPoints";
+        else if (data.equalsIgnoreCase("password-hash") || data.equalsIgnoreCase("passwordhash"))
+            return "passwordHash";
+        else if (data.equalsIgnoreCase("password-salt") || data.equalsIgnoreCase("passwordsalt"))
+            return "passwordSalt";
+        else if (data.equalsIgnoreCase("system-perms") || data.equalsIgnoreCase("systemperms"))
+            return "systemPerms";
+        return null;
+    }
 }

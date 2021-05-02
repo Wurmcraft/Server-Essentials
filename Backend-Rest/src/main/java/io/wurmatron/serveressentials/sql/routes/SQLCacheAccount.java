@@ -42,7 +42,7 @@ public class SQLCacheAccount extends SQLCache {
             Account account = get("*", USERS_TABLE, "uuid", uuid, new Account());
             if (account != null) {
                 accountCache.put(uuid, new CacheAccount(account));
-                return account;
+                return account.clone();
             }
         } catch (Exception e) {
             LOG.debug("Failed to find account with uuid '" + uuid + "' (" + e.getMessage() + ")");

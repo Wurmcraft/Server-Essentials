@@ -3,6 +3,7 @@ package io.wurmatron.serveressentials.routes;
 import io.javalin.Javalin;
 import io.javalin.core.security.Role;
 import io.javalin.http.Handler;
+import io.wurmatron.serveressentials.utils.HttpUtils;
 import org.reflections8.Reflections;
 import org.reflections8.scanners.FieldAnnotationsScanner;
 import org.reflections8.scanners.MethodAnnotationsScanner;
@@ -86,6 +87,8 @@ public class RouteLoader {
         LOG.info(routes.size() + " routes have been created!");
         RouteUtils.setupExceptions(javalin);
         LOG.info("Default Exception Handlers have been registered!");
+        // Patch JDK Bug
+        HttpUtils.allowMethods("PATCH");
     }
 
     /**

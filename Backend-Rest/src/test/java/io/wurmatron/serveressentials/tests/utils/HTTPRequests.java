@@ -141,6 +141,6 @@ public class HTTPRequests {
      * @throws IOException An Error has occurred, invalid URL, Not Found, Invalid Json
      */
     public static <T> T deleteWithReturn(String url, T data, Class<T> clazz) throws IOException {
-        return withReturn("DELETE", url,data,clazz);
+        return withReturn("DELETE", url, data, clazz);
     }
 }
