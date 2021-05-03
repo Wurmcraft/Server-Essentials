@@ -32,7 +32,7 @@ public class SQLGenerator {
     protected static final String[] TRANSFERS_COLUMNS = new String[]{"transferID", "uuid", "startTime", "items", "serverID"};
     protected static final String[] USERS_COLUMNS = new String[]{"uuid", "username", "rank", "perms", "perks", "language", "muted", "muteTime", "displayName", "discordID", "trackedTime", "wallet", "rewardPoints", "passwordHash", "passwordSalt", "systemPerms"};
 
-    private static DatabaseConnection connection;
+    protected static DatabaseConnection connection;
 
     public static DatabaseConnection create() throws SQLException {
         return connection = new DatabaseConnection();
@@ -177,7 +177,7 @@ public class SQLGenerator {
      * @throws IllegalAccessException   Issue with reflection to add data to the object instance
      * @throws IllegalArgumentException Issue with reflection to add data to the object instance
      */
-    private static <T> T to(ResultSet result, T dataType, boolean next) throws SQLException, IllegalAccessException, IllegalArgumentException {
+    protected static <T> T to(ResultSet result, T dataType, boolean next) throws SQLException, IllegalAccessException, IllegalArgumentException {
         if (!next || result.next()) {
             for (Field field : dataType.getClass().getDeclaredFields()) {
                 Object obj = result.getObject(field.getName());
@@ -232,7 +232,7 @@ public class SQLGenerator {
      * @throws IllegalArgumentException Issue with reflection to add data to the object instance
      * @throws InstantiationException   Issue with reflection trying to create a new object instance
      */
-    private static <T> List<T> toArray(ResultSet result, T dataType) throws SQLException, IllegalAccessException, IllegalArgumentException, InstantiationException {
+    protected static <T> List<T> toArray(ResultSet result, T dataType) throws SQLException, IllegalAccessException, IllegalArgumentException, InstantiationException {
         List<T> dataArr = new ArrayList<>();
         while (result.next()) {
             // Attempt to create new instance and set values

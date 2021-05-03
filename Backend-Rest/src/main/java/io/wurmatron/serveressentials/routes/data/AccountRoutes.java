@@ -11,6 +11,7 @@ import io.wurmatron.serveressentials.routes.EndpointSecurity;
 import io.wurmatron.serveressentials.routes.Route;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheAccount;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheRank;
+import io.wurmatron.serveressentials.sql.routes.SQLDirect;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -62,62 +63,6 @@ public class AccountRoutes {
         }
     };
 
-    public static boolean isValidAccount(Context context, Account account) {
-        List<MessageResponse> errors = new ArrayList<>();
-        // Check for valid UUID
-        try {
-            UUID.fromString(account.uuid);
-        } catch (IllegalArgumentException e) {
-            context.status(400).result(response("Bad Request", "Invalid UUID"));
-            return false;
-        }
-
-        // Validate Username
-        if (account.username == null || account.username.trim().isEmpty()) {
-            errors.add(new MessageResponse("Bad Request", "Invalid / Empty Username"));
-        }
-
-        // Validate Rank
-        if (account.rank == null || account.rank.length == 0) {
-            errors.add(new MessageResponse("Bad Request", "Missing Rank(s)"));
-        }
-        // Check for valid ranks
-        if (account.rank != null)
-            for (String rank : account.rank)
-                if (rank.trim().isEmpty()) {
-                    errors.add(new MessageResponse("Bad Request", "Empty Rank(s)"));
-                } else {
-                    Rank validRank = SQLCacheRank.getName(rank);
-                    if (validRank == null) {
-                        errors.add(new MessageResponse("Bad Request", rank + " is not a valid rank!"));
-                    }
-                }
-
-        // Validate Perms
-        if (account.perms != null && account.perms.length > 0)
-            for (String perm : account.perms)
-                if (!perm.contains(".") && !perm.equalsIgnoreCase("*"))
-                    errors.add(new MessageResponse("Bad Request", perm + " is not a perm!"));
-
-        // Validate Perks
-        if (account.perks != null && account.perks.length > 0)
-            for (String perk : account.perks)
-                if (!perk.contains("."))
-                    errors.add(new MessageResponse("Bad Request", perk + " is not a perk!"));
-
-        // Validate Language
-        if (account.language == null || account.language.trim().isEmpty()) {
-            errors.add(new MessageResponse("Bad Request", "Language must not be empty"));
-        }
-        // TODO Check for valid language
-
-        if (errors.size() > 0) {
-            context.status(400).result(GSON.toJson(errors.toArray(new MessageResponse[0])));
-            return false;
-        }
-        return true;
-    }
-
     // TODO Implement
     @Route(path = "/user/:uuid", method = "BEFORE")
     public static Handler overrideAccount_AuthCheck = ctx -> {
@@ -143,7 +88,7 @@ public class AccountRoutes {
     )
     @Route(path = "/user/:uuid", method = "PUT", roles = {RestRoles.DEV})
     public static Handler overrideAccount = ctx -> {
-        if (validateUUID(ctx)) {
+        if (validateUUID(ctx, true)) {
             String uuid = ctx.pathParam("uuid", String.class).get();
             try {
                 Account account = GSON.fromJson(ctx.body(), Account.class);
@@ -192,7 +137,7 @@ public class AccountRoutes {
     )
     @Route(path = "/user/:uuid/:data", method = "PATCH", roles = {RestRoles.USER, RestRoles.SERVER, RestRoles.DEV})
     public static Handler patchAccount = ctx -> {
-        if (validateUUID(ctx)) {
+        if (validateUUID(ctx, true)) {
             String uuid = ctx.pathParam("uuid", String.class).get();
             String data = ctx.pathParam("data", String.class).get();
             String fieldName = convertPathToField(data);
@@ -221,7 +166,6 @@ public class AccountRoutes {
         }
     };
 
-    // TODO Implement
     @OpenApi(
             summary = "Get a users information via UUID",
             description = "Gets a users information via UUID",
@@ -239,7 +183,7 @@ public class AccountRoutes {
     )
     @Route(path = "/user/:uuid", method = "GET")
     public static Handler getAccount = ctx -> {
-        if (validateUUID(ctx)) {
+        if (validateUUID(ctx, true)) {
             String uuid = ctx.pathParam("uuid", String.class).get();
             Account account = SQLCacheAccount.getAccount(uuid);
             if (account != null)
@@ -289,7 +233,6 @@ public class AccountRoutes {
         ctx.status(501);
     };
 
-    // TODO Implement
     @OpenApi(
             summary = "Get a specific data entry for the given account via UUID",
             description = "Get a specific entry for the given account via UUID",
@@ -310,7 +253,7 @@ public class AccountRoutes {
     )
     @Route(path = "/user/:uuid/:data", method = "GET")
     public static Handler getAccountInformation = ctx -> {
-        if (validateUUID(ctx)) {
+        if (validateUUID(ctx, true)) {
             String uuid = ctx.pathParam("uuid", String.class).get();
             // Validate Data
             String data = ctx.pathParam("data", String.class).get();
@@ -329,7 +272,6 @@ public class AccountRoutes {
         }
     };
 
-    // TODO Implement
     @OpenApi(
             summary = "Get a list of all Accounts",
             description = "Get a list of all accounts, query filtering is enabled, Max amount per request is set on auth token permissions",
@@ -354,7 +296,7 @@ public class AccountRoutes {
             headers = {@OpenApiParam(name = "Authorization", description = "Authorization Token to used for authentication within the rest API", required = true)},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Account[].class)}, description = "Account has been updated successfully,"),
-                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = MessageResponse[].class)}, description = "One or more of the provided values, has failed to validate!"),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = MessageResponse.class)}, description = "One or more of the provided values, has failed to validate!"),
                     @OpenApiResponse(status = "401", content = {@OpenApiContent(from = MessageResponse.class)}, description = "You are missing an authorization token"),
                     @OpenApiResponse(status = "403", content = {@OpenApiContent(from = MessageResponse.class)}, description = "Forbidden, Your provided auth token does not have permission to do this"),
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
@@ -362,8 +304,12 @@ public class AccountRoutes {
     )
     @Route(path = "/user", method = "GET")
     public static Handler getAccounts = ctx -> {
-        ctx.status(501);
+        String sql = createSQLForUsersWithFilters(ctx);
+        // Send Request and Process
+        List<Account> accounts = SQLDirect.queryArray(sql, new Account());
+        ctx.status(200).result(GSON.toJson(accounts.toArray(new Account[0])));
     };
+
 
     // TODO Implement
     @Route(path = "/user/:uuid", method = "BEFORE")
@@ -371,7 +317,6 @@ public class AccountRoutes {
         ctx.status(501);
     };
 
-    // TODO Implement
     @OpenApi(
             summary = "Delete a user's account via UUID",
             description = "Delete a user's account via UUID",
@@ -389,7 +334,7 @@ public class AccountRoutes {
     )
     @Route(path = "/user/:uuid", method = "DELETE", roles = {RestRoles.SERVER, RestRoles.DEV})
     public static Handler deleteAccount = ctx -> {
-        if (validateUUID(ctx)) {
+        if (validateUUID(ctx, true)) {
             String uuid = ctx.pathParam("uuid", String.class).get();
             // Check if account exists
             Account existingAccount = SQLCacheAccount.getAccount(uuid);
@@ -407,13 +352,20 @@ public class AccountRoutes {
      * @param ctx context of the message instance
      * @return if the uuid in the path is a valid uuid
      */
-    private static boolean validateUUID(Context ctx) {
-        String uuid = ctx.pathParam("uuid", String.class).get();
+    private static boolean validateUUID(Context ctx, boolean path) {
+        String uuid;
+        if (path)
+            uuid = ctx.pathParam("uuid", String.class).get();
+        else {
+            uuid = ctx.queryParam("uuid");
+            if (uuid == null)
+                uuid = "";
+        }
         try {
             UUID.fromString(uuid);
             return true;
         } catch (IllegalArgumentException e) {
-            ctx.status(400).result(response("Bad Request", "PathParam UUID is not valid"));
+            ctx.status(400).result(response("Bad Request", "Param UUID is not valid"));
         }
         return false;
     }
@@ -475,5 +427,119 @@ public class AccountRoutes {
         else if (data.equalsIgnoreCase("system-perms") || data.equalsIgnoreCase("systemperms"))
             return "systemPerms";
         return null;
+    }
+
+    /**
+     * Checks an accounts info to make sure its valid
+     *
+     * @param context message context for the request
+     * @param account account instance to be checked
+     * @return if a account is valid or not
+     */
+    public static boolean isValidAccount(Context context, Account account) {
+        List<MessageResponse> errors = new ArrayList<>();
+        // Check for valid UUID
+        try {
+            UUID.fromString(account.uuid);
+        } catch (IllegalArgumentException e) {
+            errors.add(new MessageResponse("Bad Request", "Invalid UUID"));
+            return false;
+        }
+
+        // Validate Username
+        if (account.username == null || account.username.trim().isEmpty()) {
+            errors.add(new MessageResponse("Bad Request", "Invalid / Empty Username"));
+        }
+
+        // Validate Rank
+        if (account.rank == null || account.rank.length == 0) {
+            errors.add(new MessageResponse("Bad Request", "Missing Rank(s)"));
+        }
+        // Check for valid ranks
+        if (account.rank != null)
+            for (String rank : account.rank)
+                if (rank.trim().isEmpty()) {
+                    errors.add(new MessageResponse("Bad Request", "Empty Rank(s)"));
+                } else {
+                    Rank validRank = SQLCacheRank.getName(rank);
+                    if (validRank == null) {
+                        errors.add(new MessageResponse("Bad Request", rank + " is not a valid rank!"));
+                    }
+                }
+
+        // Validate Perms
+        if (account.perms != null && account.perms.length > 0)
+            for (String perm : account.perms)
+                if (!perm.contains(".") && !perm.equalsIgnoreCase("*"))
+                    errors.add(new MessageResponse("Bad Request", perm + " is not a perm!"));
+
+        // Validate Perks
+        if (account.perks != null && account.perks.length > 0)
+            for (String perk : account.perks)
+                if (!perk.contains("."))
+                    errors.add(new MessageResponse("Bad Request", perk + " is not a perk!"));
+
+        // Validate Language
+        if (account.language == null || account.language.trim().isEmpty()) {
+            errors.add(new MessageResponse("Bad Request", "Language must not be empty"));
+        }
+        // TODO Check for valid language
+
+        if (errors.size() > 0) {
+            context.status(400).result(GSON.toJson(errors.toArray(new MessageResponse[0])));
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     *  Generates a SQL Statement for get users with filters applied
+     *
+     * @param ctx context to get the information from the user
+     * @return  sql statement for user lookup
+     */
+    private static String createSQLForUsersWithFilters(Context ctx) {
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("SELECT * FROM " + SQLCacheAccount.USERS_TABLE + " WHERE ");
+        // Verify, Check and Apply UUID Filter
+        String uuid = ctx.queryParam("uuid");
+        if (uuid != null && !uuid.trim().isEmpty())
+            sqlBuilder.append("uuid LIKE '").append(uuid).append("%' AND ");
+        // Verify, Check and Apply Username Filter
+        String username = ctx.queryParam("username");
+        if (username != null && !username.trim().isEmpty())
+            sqlBuilder.append("username LIKE '").append(username).append("%' AND ");
+        // Verify, Check and Apply Rank Filter
+        String rank = ctx.queryParam("rank");
+        if (rank != null && !rank.trim().isEmpty())
+            sqlBuilder.append("rank LIKE '").append(rank).append("%' AND ");
+        // Verify, Check and Apply Language Filter
+        String language = ctx.queryParam("language");
+        if (language != null && !language.trim().isEmpty())
+            sqlBuilder.append("language LIKE '").append(language).append("%' AND ");
+        // Verify, Check and Apply Muted Filter
+        String muted = ctx.queryParam("language");
+        if (language != null && !language.trim().isEmpty())
+            sqlBuilder.append("muted LIKE '").append(muted).append("' AND ");
+        // Verify, Check and Apply DiscordID Filter
+        String discordID = ctx.queryParam("discordID");
+        if (discordID != null && !discordID.trim().isEmpty())
+            sqlBuilder.append("discordID LIKE '").append(discordID).append("%' AND ");
+        // TODO Playtime
+        // TODO Currency
+        String rewardPointsMin = ctx.queryParam("rewardPointsMin");
+        if (rewardPointsMin != null && !rewardPointsMin.trim().isEmpty())
+            sqlBuilder.append("rewardPoints >= '").append(rewardPointsMin).append("' AND ");
+        String rewardPointsMax = ctx.queryParam("rewardPointsMax");
+        if (rewardPointsMax != null && !rewardPointsMax.trim().isEmpty())
+            sqlBuilder.append("rewardPoints <= '").append(rewardPointsMax).append("' AND ");
+        // Finalize SQL
+        sqlBuilder.append(";");
+        String sql = sqlBuilder.toString();
+        if (sql.endsWith("WHERE ;"))
+            sql = sql.substring(0, sql.length() - 7);
+        if (sql.endsWith(" AND ;"))
+            sql = sql.substring(0, sql.length() - 5);
+        return sql;
     }
 }
