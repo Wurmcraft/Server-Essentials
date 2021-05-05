@@ -12,6 +12,11 @@ public class CacheDonator implements Cache {
         this.lastSync = lastSync;
     }
 
+    public CacheDonator(Donator donator) {
+        this.donator = donator;
+        this.lastSync = System.currentTimeMillis();
+    }
+
     @Override
     public long lastSync() {
         return lastSync;

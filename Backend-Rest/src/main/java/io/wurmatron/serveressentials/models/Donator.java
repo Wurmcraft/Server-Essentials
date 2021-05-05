@@ -3,10 +3,10 @@ package io.wurmatron.serveressentials.models;
 public class Donator {
 
     public String store;
-    public String transationID;
-    public double amount;
+    public String transactionID;
+    public Double amount;
     public String uuid;
-    public long timestamp;
+    public Long timestamp;
     public String type;
     public String typeData;
 
@@ -21,11 +21,14 @@ public class Donator {
      */
     public Donator(String store, String transactionID, double amount, String uuid, long timestamp, String type, String typeData) {
         this.store = store;
-        this.transationID = transactionID;
+        this.transactionID = transactionID;
         this.amount = amount;
         this.uuid = uuid;
         this.timestamp = timestamp;
         this.type = type;
         this.typeData = typeData;
+    }
+
+    public Donator() {
     }
 }

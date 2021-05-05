@@ -3,6 +3,7 @@ package io.wurmatron.serveressentials.sql;
 import joptsimple.internal.Strings;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -195,10 +196,12 @@ public class SQLGenerator {
                     field.set(dataType, Integer.parseInt((String) obj));
                 else if (str && fieldType.equals(float.class) || str && fieldType.equals(Float.class))
                     field.set(dataType, Float.parseFloat((String) obj));
-                else if (str && fieldType.equals(double.class) || str && fieldType.equals(Double.class))
+                else if (str && fieldType.equals(double.class) || str && fieldType.equals(Double.class) || str && fieldType.equals(BigDecimal.class))
                     field.set(dataType, Double.parseDouble((String) obj));
                 else if (str && isJson(fieldType))
                     field.set(dataType, GSON.fromJson((String) obj, fieldType));
+                else if(obj instanceof BigDecimal && fieldType.equals(Double.class))
+                    field.set(dataType, ((BigDecimal) obj).doubleValue());
                 else
                     field.set(dataType, obj);
             }
