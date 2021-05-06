@@ -29,7 +29,7 @@ public class AccountRoutes {
             description = "Creates a new user account with the provided information, no system perms or password will be set, even if provided",
             tags = {"User"},
             headers = {@OpenApiParam(name = "Authorization", description = "Authorization Token to used for authentication within the rest API", required = true)},
-            requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = Account.class)}, required = true, description = "Amount information used to create the requested account, systemPerms, password info will not be set even if provided"),
+            requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = Account.class)}, required = true, description = "Account information used to create the requested account, systemPerms, password info will not be set even if provided"),
             responses = {
                     @OpenApiResponse(status = "201", content = {@OpenApiContent(from = Account.class)}, description = "Account has been created successfully,"),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = MessageResponse[].class)}, description = "One or more of the provided values, has failed to validate!"),
@@ -75,7 +75,7 @@ public class AccountRoutes {
             tags = {"User"},
             pathParams = {@OpenApiParam(name = "uuid", description = "UUID of the a given account", required = true)},
             headers = {@OpenApiParam(name = "Authorization", description = "Authorization Token to used for authentication within the rest API", required = true)},
-            requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = Account.class)}, required = true, description = "Amount information used to update the requested account"),
+            requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = Account.class)}, required = true, description = "Account information used to update the requested account"),
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Account.class)}, description = "Account has been updated successfully"),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = MessageResponse.class)}, description = "One or more of the provided values, has failed to validate!"),
@@ -124,7 +124,7 @@ public class AccountRoutes {
                     @OpenApiParam(name = "data", description = "Information to be patched / updated", required = true),
             },
             headers = {@OpenApiParam(name = "Authorization", description = "Authorization Token to used for authentication within the rest API", required = true)},
-            requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = Account.class)}, required = true, description = "Amount information used to update the requested account"),
+            requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = Account.class)}, required = true, description = "Account information used to update the requested account"),
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Account.class)}, description = "Account has been updated successfully,"),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = MessageResponse[].class)}, description = "One or more of the provided values, has failed to validate!"),
@@ -295,7 +295,7 @@ public class AccountRoutes {
             },
             headers = {@OpenApiParam(name = "Authorization", description = "Authorization Token to used for authentication within the rest API", required = true)},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Account[].class)}, description = "Account has been updated successfully,"),
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Account[].class)}, description = "Account has been returned successfully,"),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = MessageResponse.class)}, description = "One or more of the provided values, has failed to validate!"),
                     @OpenApiResponse(status = "401", content = {@OpenApiContent(from = MessageResponse.class)}, description = "You are missing an authorization token"),
                     @OpenApiResponse(status = "403", content = {@OpenApiContent(from = MessageResponse.class)}, description = "Forbidden, Your provided auth token does not have permission to do this"),
