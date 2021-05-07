@@ -165,7 +165,7 @@ public class TestUserRoute {
         Account deletedAccount = HTTPRequests.deleteWithReturn("user/" + TestAccounts.TEST_ACCOUNT.uuid, null, Account.class);
         assertNotNull(deletedAccount, "Account should be returned");
         // Make sure its been deleted
-        deletedAccount = HTTPRequests.get("user" + TestAccounts.TEST_ACCOUNT.uuid, Account.class);
+        deletedAccount = HTTPRequests.get("user/" + TestAccounts.TEST_ACCOUNT.uuid, Account.class);
         assertNull(deletedAccount, "Account has bee deleted");
     }
 }
