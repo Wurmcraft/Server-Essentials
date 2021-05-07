@@ -10,7 +10,6 @@ import static io.wurmatron.serveressentials.ServerEssentialsRest.LOG;
 
 public class SQLDirect extends SQLGenerator {
 
-
     /**
      * Send a Query to the SQL Server
      *
