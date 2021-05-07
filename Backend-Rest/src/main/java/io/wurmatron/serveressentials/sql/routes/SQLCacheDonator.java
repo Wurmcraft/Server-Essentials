@@ -54,6 +54,7 @@ public class SQLCacheDonator extends SQLCache {
      * @return donator instance will all information filled out
      * @see SQLGenerator#insert(String, String[], Object, boolean)
      */
+    @Nullable
     public static Donator newDonator(Donator donator) {
         try {
             insert(DONATOR_TABLE, DONATOR_COLUMNS, donator, false);
@@ -127,12 +128,12 @@ public class SQLCacheDonator extends SQLCache {
         LOG.info("Donator Cache cleanup has begun!");
         // ID Cache
         List<String> toBeRemoved = new ArrayList<>();
-        for(CacheDonator entry : donatorCache.values())
-            if(needsUpdate(entry))
+        for (CacheDonator entry : donatorCache.values())
+            if (needsUpdate(entry))
                 toBeRemoved.add(entry.donator.uuid);
-            // Remove from Cache
+        // Remove from Cache
         int count = 0;
-        for(String donatorEntry : toBeRemoved) {
+        for (String donatorEntry : toBeRemoved) {
             count++;
             invalidate(donatorEntry);
         }
