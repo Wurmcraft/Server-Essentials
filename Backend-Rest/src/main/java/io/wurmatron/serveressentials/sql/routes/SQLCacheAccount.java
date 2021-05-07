@@ -30,7 +30,7 @@ public class SQLCacheAccount extends SQLCache {
      * @see #invalidate(String)
      */
     @Nullable
-    public static Account getAccount(String uuid) {
+    public static Account get(String uuid) {
         // Attempt to get from cache
         if (accountCache.containsKey(uuid))
             if (!needsUpdate(accountCache.get(uuid)))

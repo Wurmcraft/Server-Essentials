@@ -45,7 +45,7 @@ public class AccountRoutes {
             Account newAccount = GSON.fromJson(ctx.body(), Account.class);
             if (isValidAccount(ctx, newAccount)) {
                 // Check for existing account
-                Account account = SQLCacheAccount.getAccount(newAccount.uuid);
+                Account account = SQLCacheAccount.get(newAccount.uuid);
                 if (account == null) {
                     // Create new account
                     newAccount = SQLCacheAccount.newAccount(newAccount);
@@ -97,7 +97,7 @@ public class AccountRoutes {
                     if (isValidAccount(ctx, account)) {
                         // Update / Override account
                         if (SQLCacheAccount.updateAccount(account, SQLCacheAccount.getColumns())) {
-                            ctx.status(200).result(GSON.toJson(SQLCacheAccount.getAccount(account.uuid)));
+                            ctx.status(200).result(GSON.toJson(SQLCacheAccount.get(account.uuid)));
                         } else
                             ctx.status(500).result(response("Account Failed to Update", "Account Update has failed!"));
                     }
@@ -149,7 +149,7 @@ public class AccountRoutes {
             try {
                 Account patchInfo = GSON.fromJson(ctx.body(), Account.class);
                 // Check if user exists
-                Account account = SQLCacheAccount.getAccount(uuid);
+                Account account = SQLCacheAccount.get(uuid);
                 if (account != null) {
                     Field field = account.getClass().getDeclaredField(fieldName);
                     field.set(account, field.get(patchInfo));
@@ -185,7 +185,7 @@ public class AccountRoutes {
     public static Handler getAccount = ctx -> {
         if (validateUUID(ctx, true)) {
             String uuid = ctx.pathParam("uuid", String.class).get();
-            Account account = SQLCacheAccount.getAccount(uuid);
+            Account account = SQLCacheAccount.get(uuid);
             if (account != null)
                 ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, account)));
             else
@@ -262,7 +262,7 @@ public class AccountRoutes {
                 ctx.status(400).result(response("Bad Request", data + " is not valid entry for the requested Account"));
                 return;
             }
-            Account account = filterBasedOnPerms(ctx, SQLCacheAccount.getAccount(uuid));
+            Account account = filterBasedOnPerms(ctx, SQLCacheAccount.get(uuid));
             if (account != null) {
                 Field accountField = account.getClass().getDeclaredField(field);
                 account = wipeAllExceptField(account, accountField);
@@ -337,7 +337,7 @@ public class AccountRoutes {
         if (validateUUID(ctx, true)) {
             String uuid = ctx.pathParam("uuid", String.class).get();
             // Check if account exists
-            Account existingAccount = SQLCacheAccount.getAccount(uuid);
+            Account existingAccount = SQLCacheAccount.get(uuid);
             if (existingAccount != null) {
                 if (SQLCacheAccount.deleteAccount(uuid))
                     ctx.status(200).result(GSON.toJson(existingAccount));

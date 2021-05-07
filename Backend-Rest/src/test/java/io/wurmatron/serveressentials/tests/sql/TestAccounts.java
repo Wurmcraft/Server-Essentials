@@ -36,24 +36,24 @@ public class TestAccounts {
     @Order(1)
     public void testAddAccount() {
         // Check if account exists, if so delete it
-        if (SQLCacheAccount.getAccount(TEST_ACCOUNT.uuid) != null)
+        if (SQLCacheAccount.get(TEST_ACCOUNT.uuid) != null)
             SQLCacheAccount.deleteAccount(TEST_ACCOUNT.uuid);
         // Add new account
         Account account = SQLCacheAccount.newAccount(TEST_ACCOUNT);
         assertNotNull(account, "Account has been successfully created without errors");
         // Check for the new account
-        Account savedAccount = SQLCacheAccount.getAccount(TEST_ACCOUNT.uuid);
+        Account savedAccount = SQLCacheAccount.get(TEST_ACCOUNT.uuid);
         assertEquals(TEST_ACCOUNT, savedAccount, "Added account should be the same as the one saved.");
     }
 
     @Test
     @Order(2)
     public void testGetAccount() {
-        Account account = SQLCacheAccount.getAccount(TEST_ACCOUNT.uuid);
+        Account account = SQLCacheAccount.get(TEST_ACCOUNT.uuid);
         assertEquals(TEST_ACCOUNT, account, "The Accounts are equal");
         // Remove from cache and try again
         SQLCacheAccount.invalidate(TEST_ACCOUNT.uuid);
-        account = SQLCacheAccount.getAccount(TEST_ACCOUNT.uuid);
+        account = SQLCacheAccount.get(TEST_ACCOUNT.uuid);
         // Test Account
         assertNotNull(account, "Cache has the account");
         assertEquals(TEST_ACCOUNT.uuid, account.uuid, "UUID's are the same");
@@ -70,12 +70,12 @@ public class TestAccounts {
         boolean updated = SQLCacheAccount.updateAccount(TEST_ACCOUNT, new String[]{"language"});
         assertTrue(updated, "Account has been successfully updated without errors");
         // Check for updates
-        Account account = SQLCacheAccount.getAccount(TEST_ACCOUNT.uuid);
+        Account account = SQLCacheAccount.get(TEST_ACCOUNT.uuid);
         assertNotNull(account, "Account Exists");
         assertEquals(TEST_ACCOUNT.language, account.language, "Language has been updated");
         // Invalidate Cache and try again
         SQLCacheAccount.invalidate(TEST_ACCOUNT.uuid);
-        account = SQLCacheAccount.getAccount(TEST_ACCOUNT.uuid);
+        account = SQLCacheAccount.get(TEST_ACCOUNT.uuid);
         assertNotNull(account, "Account Exists");
         assertEquals(TEST_ACCOUNT.language, account.language, "Language has been updated");
     }
@@ -86,18 +86,18 @@ public class TestAccounts {
         boolean deleted = SQLCacheAccount.deleteAccount(TEST_ACCOUNT.uuid);
         assertTrue(deleted, "Account has been successfully deleted without errors");
         // Make sure it was deleted
-        Account account = SQLCacheAccount.getAccount(TEST_ACCOUNT.uuid);
+        Account account = SQLCacheAccount.get(TEST_ACCOUNT.uuid);
         assertNull(account, "Account does not exist");
         // Invalidate Cache and try again
         SQLCacheAccount.invalidate(TEST_ACCOUNT.uuid);
-        account = SQLCacheAccount.getAccount(TEST_ACCOUNT.uuid);
+        account = SQLCacheAccount.get(TEST_ACCOUNT.uuid);
         assertNull(account, "Account does not exist");
     }
 
     @Test
     @Order(1)
     public void checkForMiscAccount() {
-        Account account = SQLCacheAccount.getAccount("fc074365-07af-43a5-bd37-c780b6b8a497"); // Valid UUID, Invalid Name
+        Account account = SQLCacheAccount.get("fc074365-07af-43a5-bd37-c780b6b8a497"); // Valid UUID, Invalid Name
         assertNull(account, "Invalid account should be null");
     }
 }

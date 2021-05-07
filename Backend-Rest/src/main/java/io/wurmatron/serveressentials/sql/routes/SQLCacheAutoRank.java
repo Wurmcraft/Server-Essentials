@@ -74,6 +74,7 @@ public class SQLCacheAutoRank extends SQLCache {
      * @return a list of all the auto-ranks
      * @see SQLGenerator#getArray(String, String, String, String, Object)
      */
+    // TODO Implement
     public static List<AutoRank> get() {
         return new ArrayList<>();
     }
