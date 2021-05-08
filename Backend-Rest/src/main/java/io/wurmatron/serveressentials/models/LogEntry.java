@@ -1,6 +1,6 @@
 package io.wurmatron.serveressentials.models;
 
-public class Logging {
+public class LogEntry {
 
     public String serverID;
     public long timestamp;
@@ -23,7 +23,7 @@ public class Logging {
      * @param z          z pos that this occurred (if applicable)
      * @param dim       dimension that this occurred (if applicable)
      */
-    public Logging(String serverID, long timestamp, String actionType, String actionData, String uuid, int x, int y, int z, int dim) {
+    public LogEntry(String serverID, long timestamp, String actionType, String actionData, String uuid, int x, int y, int z, int dim) {
         this.serverID = serverID;
         this.timestamp = timestamp;
         this.actionType = actionType;
