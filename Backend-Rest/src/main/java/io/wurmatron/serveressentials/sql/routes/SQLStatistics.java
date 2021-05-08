@@ -31,8 +31,8 @@ public class SQLStatistics extends SQLGenerator {
      */
     // TODO Implement
     @Nullable
-    public static TrackedStat update(TrackedStat stat, String[] columnsToUpdate) {
-        return null;
+    public static boolean update(TrackedStat stat, String[] columnsToUpdate) {
+        return false;
     }
 
     /**
