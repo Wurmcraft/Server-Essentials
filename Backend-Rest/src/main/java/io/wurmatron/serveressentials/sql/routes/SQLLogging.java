@@ -28,11 +28,11 @@ public class SQLLogging extends SQLGenerator {
      *
      * @param entry           Log Entry to create the update from
      * @param columnsToUpdate columns in the db to update
-     * @return Updated instance of the Log Entry
+     * @return if the update was completed without errors
      */
     // TODO Implement
-    public static LogEntry update(LogEntry entry, String[] columnsToUpdate) {
-        return null;
+    public static boolean update(LogEntry entry, String[] columnsToUpdate) {
+        return false;
     }
 
     /**
@@ -70,10 +70,10 @@ public class SQLLogging extends SQLGenerator {
      * @param actionType event / action that took place
      * @param uuid       uuid of the account / user that created this log-entry
      * @param timestamp  unix timestamp when this log-entry was created
-     * @return instance of the log entry that was deleted
+     * @return if the delete was successfully without any errors
      */
     // TODO Implement
-    public static LogEntry delete(String serverID, String actionType, String uuid, long timestamp) {
-        return null;
+    public static boolean delete(String serverID, String actionType, String uuid, long timestamp) {
+        return false;
     }
 }
