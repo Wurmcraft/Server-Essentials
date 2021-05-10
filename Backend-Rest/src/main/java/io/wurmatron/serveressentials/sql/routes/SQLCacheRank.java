@@ -58,7 +58,7 @@ public class SQLCacheRank extends SQLCache {
      * @return instance of the rank
      */
     @Nullable
-    public static Rank getName(String name) {
+    public static Rank get(String name) {
         // Attempt to get from cache
         if (rankNameCache.contains(name.toUpperCase()))
             if (!needsUpdate(rankNameCache.get(name.toUpperCase())))

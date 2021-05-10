@@ -461,7 +461,7 @@ public class AccountRoutes {
                 if (rank.trim().isEmpty()) {
                     errors.add(new MessageResponse("Bad Request", "Empty Rank(s)"));
                 } else {
-                    Rank validRank = SQLCacheRank.getName(rank);
+                    Rank validRank = SQLCacheRank.get(rank);
                     if (validRank == null) {
                         errors.add(new MessageResponse("Bad Request", rank + " is not a valid rank!"));
                     }

@@ -1,11 +1,20 @@
 package io.wurmatron.serveressentials.routes.data;
 
+import com.google.gson.JsonParseException;
+import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.plugin.openapi.annotations.*;
 import io.wurmatron.serveressentials.models.Account;
 import io.wurmatron.serveressentials.models.MessageResponse;
 import io.wurmatron.serveressentials.models.Rank;
 import io.wurmatron.serveressentials.routes.Route;
+import io.wurmatron.serveressentials.sql.routes.SQLCacheRank;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
+import static io.wurmatron.serveressentials.routes.RouteUtils.response;
 
 public class RankRoutes {
 
@@ -20,13 +29,33 @@ public class RankRoutes {
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = MessageResponse[].class)}, description = "One or more of the provided values, has failed to validate!"),
                     @OpenApiResponse(status = "401", content = {@OpenApiContent(from = MessageResponse.class)}, description = "You are missing an authorization token"),
                     @OpenApiResponse(status = "403", content = {@OpenApiContent(from = MessageResponse.class)}, description = "Forbidden, Your provided auth token does not have permission to do this"),
+                    @OpenApiResponse(status = "409", content = {@OpenApiContent(from = MessageResponse.class)}, description = "Rank already exists"),
                     @OpenApiResponse(status = "422", content = {@OpenApiContent(from = MessageResponse.class)}, description = "Unable to process, due to invalid format / json"),
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
     @Route(path = "/rank", method = "POST", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler createRank = ctx -> {
+        try {
+            Rank newRank = GSON.fromJson(ctx.body(), Rank.class);
+            if(isValidRank(ctx, newRank)) {
+                // Check for existing rank
+                Rank rank = SQLCacheRank.get(newRank.name);
+                if(rank == null) {
+                    rank = SQLCacheRank.create(newRank);
+                    if(rank == null) {
+                        ctx.status(500).result(response("Rank Failed to Create", "Rank has failed to be created!"));
+                        return;
+                    }
+                    ctx.status(201).result(GSON.toJson(filterBasedOnPerms(ctx,rank)));
+                } else {    // Rank exists
+                    ctx.status(409).result(response("Rank Exists", "Rank '" + rank.name + "' already exists"));
+                }
 
+            }
+        } catch (JsonParseException e) {
+            ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Rank"));
+        }
     };
 
     @OpenApi(
@@ -167,4 +196,39 @@ public class RankRoutes {
     public static Handler deleteRank = ctx -> {
 
     };
+
+    /**
+     * Validates if the instance is a valid rank or not
+     *
+     * @param rank instance of the rank to verify
+     * @return if the rank is valid, invalid will result in messages being sent on the context
+     */
+    private static boolean isValidRank(Context ctx, Rank rank) {
+        List<MessageResponse> errors = new ArrayList<>();
+        // Name
+        if (rank.name.trim().isEmpty() || !rank.name.matches("[A-Za-z0-9]+"))
+            errors.add(new MessageResponse("Bad Request", "Name must be alpha-numeric with a size of 1 or greater"));
+        // Prefix
+        if (!rank.prefix.trim().isEmpty() && !rank.prefix.matches("[A-Za-z0-9&_()*]+"))
+            errors.add(new MessageResponse("Bad Request", "Prefix must be alpha-numeric / &_() or *"));
+        // Suffix
+        if (!rank.suffix.trim().isEmpty() && !rank.suffix.matches("[A-Za-z0-9&_()*]+"))
+            errors.add(new MessageResponse("Bad Request", "Suffix must be alpha-numeric / &_() or *"));
+        if (errors.size() > 0) {
+            ctx.status(400).result(GSON.toJson(errors));
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     *  Removes the data, the given account does not have access to
+     * @param ctx context of the message
+     * @param rank
+     * @return
+     */
+    // TODO Implement
+    private static Rank filterBasedOnPerms(Context ctx, Rank rank) {
+        return rank;
+    }
 }
