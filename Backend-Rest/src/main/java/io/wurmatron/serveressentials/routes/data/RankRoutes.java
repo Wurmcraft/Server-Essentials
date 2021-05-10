@@ -38,16 +38,16 @@ public class RankRoutes {
     public static Handler createRank = ctx -> {
         try {
             Rank newRank = GSON.fromJson(ctx.body(), Rank.class);
-            if(isValidRank(ctx, newRank)) {
+            if (isValidRank(ctx, newRank)) {
                 // Check for existing rank
                 Rank rank = SQLCacheRank.get(newRank.name);
-                if(rank == null) {
+                if (rank == null) {
                     rank = SQLCacheRank.create(newRank);
-                    if(rank == null) {
+                    if (rank == null) {
                         ctx.status(500).result(response("Rank Failed to Create", "Rank has failed to be created!"));
                         return;
                     }
-                    ctx.status(201).result(GSON.toJson(filterBasedOnPerms(ctx,rank)));
+                    ctx.status(201).result(GSON.toJson(filterBasedOnPerms(ctx, rank)));
                 } else {    // Rank exists
                     ctx.status(409).result(response("Rank Exists", "Rank '" + rank.name + "' already exists"));
                 }
@@ -122,7 +122,16 @@ public class RankRoutes {
     )
     @Route(path = "/rank/:name", method = "GET")
     public static Handler getRank = ctx -> {
-
+        String name = ctx.pathParam("name", String.class).get();
+        if (name != null && !name.trim().isEmpty() && !name.matches("[A-Za-z0-9]+")) {
+            Rank rank = SQLCacheRank.get(name);
+            if (rank != null)
+                ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, rank)));
+            else
+                ctx.status(404).result(response("Rank Not Found", "Rank with the name '" + name + "' does not exist"));
+        } else {
+            ctx.status(400).result(response("Bad Request", "Name is not valid"));
+        }
     };
 
     @OpenApi(
@@ -222,8 +231,9 @@ public class RankRoutes {
     }
 
     /**
-     *  Removes the data, the given account does not have access to
-     * @param ctx context of the message
+     * Removes the data, the given account does not have access to
+     *
+     * @param ctx  context of the message
      * @param rank
      * @return
      */
