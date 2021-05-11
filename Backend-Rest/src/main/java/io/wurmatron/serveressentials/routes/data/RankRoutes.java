@@ -209,7 +209,7 @@ public class RankRoutes {
             pathParams = {@OpenApiParam(name = "name", description = "name of the a given Rank", required = true)},
             headers = {@OpenApiParam(name = "Authorization", description = "Authorization Token to used for authentication within the rest API", required = true)},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Account.class)}, description = "Deleted Rank is returned"),
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Rank.class)}, description = "Deleted Rank is returned"),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = MessageResponse[].class)}, description = "One or more of the provided values, has failed to validate!"),
                     @OpenApiResponse(status = "401", content = {@OpenApiContent(from = MessageResponse.class)}, description = "You are missing an authorization token"),
                     @OpenApiResponse(status = "403", content = {@OpenApiContent(from = MessageResponse.class)}, description = "Forbidden, Your provided auth token does not have permission to do this"),
@@ -219,7 +219,19 @@ public class RankRoutes {
     )
     @Route(path = "/rank/:name", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler deleteRank = ctx -> {
-
+        String name = ctx.pathParam("name", String.class).get();
+        if (name != null && !name.trim().isEmpty() && !name.matches("[A-Za-z0-9]+")) {
+            Rank rank = SQLCacheRank.get(name);
+            if(rank != null) {
+                boolean deleted = SQLCacheRank.delete(rank.rankID);
+                if(deleted)
+                    ctx.status(200).result(GSON.toJson(rank));
+                else
+                    ctx.status(500).result(response("Rank Not Deleted", "Rank '" + rank.name + "' failed to be deleted!"));
+            } else
+                ctx.status(404).result(response("Rank Not Found", "Rank with the name '" + name + "' does not exist"));
+        } else
+            ctx.status(400).result(response("Bad Request", "Name is not valid"));
     };
 
     /**
