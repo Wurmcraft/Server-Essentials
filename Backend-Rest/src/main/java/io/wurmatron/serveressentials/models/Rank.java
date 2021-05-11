@@ -1,5 +1,7 @@
 package io.wurmatron.serveressentials.models;
 
+import io.wurmatron.serveressentials.ServerEssentialsRest;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -50,5 +52,11 @@ public class Rank {
         if (!(o instanceof Rank)) return false;
         Rank rank = (Rank) o;
         return rankID == rank.rankID && prefixPriority == rank.prefixPriority && suffixPriority == rank.suffixPriority && colorPriority == rank.colorPriority && name.equals(rank.name) && Arrays.equals(permissions, rank.permissions) && Arrays.equals(inheritance, rank.inheritance) && Objects.equals(prefix, rank.prefix) && Objects.equals(suffix, rank.suffix) && Objects.equals(color, rank.color);
+    }
+
+    @Override
+    public Rank clone() {
+        String json = ServerEssentialsRest.GSON.toJson(this);
+        return ServerEssentialsRest.GSON.fromJson(json, Rank.class);
     }
 }

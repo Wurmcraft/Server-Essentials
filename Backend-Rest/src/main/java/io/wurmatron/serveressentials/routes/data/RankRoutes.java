@@ -10,6 +10,7 @@ import io.wurmatron.serveressentials.models.Rank;
 import io.wurmatron.serveressentials.routes.Route;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheRank;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,7 +155,22 @@ public class RankRoutes {
     )
     @Route(path = "/rank/:name/:data", method = "GET")
     public static Handler getRankInfo = ctx -> {
-
+        String name = ctx.pathParam("name", String.class).get();
+        if (name != null && !name.trim().isEmpty() && !name.matches("[A-Za-z0-9]+")) {
+            String pathParam = ctx.pathParam("data", String.class).get();
+            String field = convertPathToField(pathParam);
+            if (field != null) {
+                Rank rank = SQLCacheRank.get(name);
+                if (rank != null) {
+                    Field rankField = rank.getClass().getDeclaredField(field);
+                    rank = wipeAllExceptField(rank,rankField);
+                    ctx.status(200).result(GSON.toJson(rank));
+                } else
+                    ctx.status(404).result(response("Rank Not Found", "Rank with the name '" + name + "' does not exist"));
+            } else
+                ctx.status(400).result(response("Bad Request", "Invalid data field"));
+        } else
+            ctx.status(400).result(response("Bad Request", "Name is not valid"));
     };
 
     @OpenApi(
@@ -239,6 +255,55 @@ public class RankRoutes {
      */
     // TODO Implement
     private static Rank filterBasedOnPerms(Context ctx, Rank rank) {
+        return rank;
+    }
+
+    /**
+     * Converts a path param into its name for use as a field / lookup
+     *
+     * @param data path param to be converted
+     * @return Converts a path param into its field name, in Rank
+     * @see Rank
+     */
+    public static String convertPathToField(String data) {
+        if (data.equalsIgnoreCase("rank-id") || data.equalsIgnoreCase("id"))
+            return "rankID";
+        else if (data.equalsIgnoreCase("name"))
+            return "name";
+        else if (data.equalsIgnoreCase("permissions") || data.equalsIgnoreCase("perms") || data.equalsIgnoreCase("permission"))
+            return "permissions";
+        else if (data.equalsIgnoreCase("inheritance") || data.equalsIgnoreCase("inheritances"))
+            return "inheritance";
+        else if (data.equalsIgnoreCase("prefix"))
+            return "prefix";
+        else if (data.equalsIgnoreCase("prefix-priority") || data.equalsIgnoreCase("prefixPriority"))
+            return "prefixPriority";
+        else if (data.equalsIgnoreCase("suffix"))
+            return "suffix";
+        else if (data.equalsIgnoreCase("suffix-priority") || data.equalsIgnoreCase("suffixPriority"))
+            return "prefixPriority";
+        else if (data.equalsIgnoreCase("color"))
+            return "color";
+        else if (data.equalsIgnoreCase("color-priority") || data.equalsIgnoreCase("colorPriority"))
+            return "colorPriority";
+        return null;
+    }
+
+    /**
+     * Removes all the fields from this object, except for the one specified
+     *
+     * @param rank instance to remove / copy the values from
+     * @param safe the field that will be copied over
+     * @return Rank will all but one field removed, set to null
+     * @throws IllegalAccessException This should never happen, unless Rank has been modified
+     */
+    private static Rank wipeAllExceptField(Rank rank, Field safe) throws IllegalAccessException {
+        rank = rank.clone();
+        for (Field field : rank.getClass().getDeclaredFields())
+            if (!field.equals(safe))
+                field.set(rank, null);
+        if (safe.get(rank) instanceof String && ((String) safe.get(rank)).isEmpty())
+            safe.set(rank, "");
         return rank;
     }
 }
