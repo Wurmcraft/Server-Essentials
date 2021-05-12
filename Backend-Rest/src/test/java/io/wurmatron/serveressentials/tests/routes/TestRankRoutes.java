@@ -18,6 +18,7 @@ public class TestRankRoutes {
     @BeforeAll
     public static void setup() throws IOException, SQLException {
         ServerEssentialsRest.main(new String[]{});
+        ServerEssentialsRest.config.server.host = "localhost";
         HTTPRequests.BASE_URL = "http://" + ServerEssentialsRest.config.server.host + ":" + ServerEssentialsRest.config.server.port + "/";
         // TODO Add Authentication or force config.testing when running tests
     }

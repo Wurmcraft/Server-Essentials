@@ -61,17 +61,17 @@ public class HTTPRequests {
             }
             int responseCode = http.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_ACCEPTED || responseCode == java.net.HttpURLConnection.HTTP_CREATED) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-                while ((inputLine = in.readLine()) != null)
-                    response.append(inputLine);
-                in.close();
-                return GSON.fromJson(response.toString(), type);
-            }
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null)
+                response.append(inputLine);
+            in.close();
+            return GSON.fromJson(response.toString(), type);
         }
-        return null;
     }
+        return null;
+}
 
     /**
      * Sends a HTTP Post request with the provided data to the given URL

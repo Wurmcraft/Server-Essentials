@@ -7,16 +7,16 @@ import java.util.Objects;
 
 public class Rank {
 
-    public long rankID;
+    public Long rankID;
     public String name;
     public String[] permissions;
     public String[] inheritance;
     public String prefix;
-    public int prefixPriority;
+    public Integer prefixPriority;
     public String suffix;
-    public int suffixPriority;
+    public Integer suffixPriority;
     public String color;
-    public int colorPriority;
+    public Integer colorPriority;
 
     /**
      * @param rankID         id of the given rank (Don't change as this is used internally to track)

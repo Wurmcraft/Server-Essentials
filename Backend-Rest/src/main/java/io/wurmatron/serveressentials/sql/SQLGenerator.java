@@ -202,7 +202,10 @@ public class SQLGenerator {
                     field.set(dataType, GSON.fromJson((String) obj, fieldType));
                 else if(obj instanceof BigDecimal && fieldType.equals(Double.class))
                     field.set(dataType, ((BigDecimal) obj).doubleValue());
-                else
+                else if(fieldType.equals(Long.class) ) {
+                    int data = (int) obj;
+                    field.set(dataType, (long) data);
+                } else
                     field.set(dataType, obj);
             }
             return dataType;

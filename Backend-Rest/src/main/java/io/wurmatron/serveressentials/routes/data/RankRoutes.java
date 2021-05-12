@@ -52,7 +52,6 @@ public class RankRoutes {
                 } else {    // Rank exists
                     ctx.status(409).result(response("Rank Exists", "Rank '" + rank.name + "' already exists"));
                 }
-
             }
         } catch (JsonParseException e) {
             ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Rank"));
@@ -124,7 +123,7 @@ public class RankRoutes {
     @Route(path = "/rank/:name", method = "GET")
     public static Handler getRank = ctx -> {
         String name = ctx.pathParam("name", String.class).get();
-        if (name != null && !name.trim().isEmpty() && !name.matches("[A-Za-z0-9]+")) {
+        if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
             Rank rank = SQLCacheRank.get(name);
             if (rank != null)
                 ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, rank)));
@@ -156,7 +155,7 @@ public class RankRoutes {
     @Route(path = "/rank/:name/:data", method = "GET")
     public static Handler getRankInfo = ctx -> {
         String name = ctx.pathParam("name", String.class).get();
-        if (name != null && !name.trim().isEmpty() && !name.matches("[A-Za-z0-9]+")) {
+        if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
             String pathParam = ctx.pathParam("data", String.class).get();
             String field = convertPathToField(pathParam);
             if (field != null) {
@@ -220,7 +219,7 @@ public class RankRoutes {
     @Route(path = "/rank/:name", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler deleteRank = ctx -> {
         String name = ctx.pathParam("name", String.class).get();
-        if (name != null && !name.trim().isEmpty() && !name.matches("[A-Za-z0-9]+")) {
+        if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
             Rank rank = SQLCacheRank.get(name);
             if(rank != null) {
                 boolean deleted = SQLCacheRank.delete(rank.rankID);
@@ -246,10 +245,10 @@ public class RankRoutes {
         if (rank.name.trim().isEmpty() || !rank.name.matches("[A-Za-z0-9]+"))
             errors.add(new MessageResponse("Bad Request", "Name must be alpha-numeric with a size of 1 or greater"));
         // Prefix
-        if (!rank.prefix.trim().isEmpty() && !rank.prefix.matches("[A-Za-z0-9&_()*]+"))
-            errors.add(new MessageResponse("Bad Request", "Prefix must be alpha-numeric / &_() or *"));
+        if (!rank.prefix.trim().isEmpty() && !rank.prefix.matches("[A-Za-z0-9&_()*\\[\\]]+"))
+            errors.add(new MessageResponse("Bad Request", "Prefix must be alpha-numeric / &_()[] or *"));
         // Suffix
-        if (!rank.suffix.trim().isEmpty() && !rank.suffix.matches("[A-Za-z0-9&_()*]+"))
+        if (!rank.suffix.trim().isEmpty() && !rank.suffix.matches("[A-Za-z0-9&_()*\\[\\]]+"))
             errors.add(new MessageResponse("Bad Request", "Suffix must be alpha-numeric / &_() or *"));
         if (errors.size() > 0) {
             ctx.status(400).result(GSON.toJson(errors));

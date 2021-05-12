@@ -22,7 +22,7 @@ public class ServerConfig {
 
     public ServerConfig() {
         this.port = 8080;
-        this.host = "";
+        this.host = "localhost";
         this.corosOrigins = "";
         this.requestTimeout = 5000;
         this.forceLowercase = true;

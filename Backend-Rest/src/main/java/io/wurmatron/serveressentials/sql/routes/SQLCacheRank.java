@@ -70,7 +70,7 @@ public class SQLCacheRank extends SQLCache {
             Rank rank = get("*", RANKS_TABLE, "name", name.toLowerCase(), new Rank());
             if (rank != null) {
                 rankCache.put(rank.rankID, new CacheRank(rank));
-                rankNameCache.put(rank.name, new CacheRankName(rank.rankID));
+                rankNameCache.put(rank.name.toUpperCase(), new CacheRankName(rank.rankID));
                 return rank;
             }
         } catch (Exception e) {
@@ -128,7 +128,7 @@ public class SQLCacheRank extends SQLCache {
     public static Rank create(Rank rank) {
         try {
             rank.name = rank.name.toLowerCase();
-            rank.rankID = insert(RANKS_TABLE, Arrays.copyOfRange(RANKS_COLUMNS, 1, RANKS_COLUMNS.length), rank, true);
+            rank.rankID = (long) insert(RANKS_TABLE, Arrays.copyOfRange(RANKS_COLUMNS, 1, RANKS_COLUMNS.length), rank, true);
             rankCache.put(rank.rankID, new CacheRank(rank));
             rankNameCache.put(rank.name.toUpperCase(), new CacheRankName(rank.rankID));
             return rank;
@@ -136,7 +136,7 @@ public class SQLCacheRank extends SQLCache {
             LOG.debug("Failed to add rank with name '" + rank.name + "'(" + e.getMessage() + ")");
             LOG.debug("Rank: " + GSON.toJson(rank));
         }
-        return rank;
+        return null;
     }
 
     /**
