@@ -1,5 +1,9 @@
 package io.wurmatron.serveressentials.models;
 
+import io.wurmatron.serveressentials.ServerEssentialsRest;
+
+import java.util.Objects;
+
 public class LogEntry {
 
     public String serverID;
@@ -33,5 +37,19 @@ public class LogEntry {
         this.y = y;
         this.z = z;
         this.dim = dim;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LogEntry)) return false;
+        LogEntry logEntry = (LogEntry) o;
+        return timestamp == logEntry.timestamp && x == logEntry.x && y == logEntry.y && z == logEntry.z && dim == logEntry.dim && Objects.equals(serverID, logEntry.serverID) && Objects.equals(actionType, logEntry.actionType) && Objects.equals(actionData, logEntry.actionData) && Objects.equals(uuid, logEntry.uuid);
+    }
+
+    @Override
+    public Rank clone() {
+        String json = ServerEssentialsRest.GSON.toJson(this);
+        return ServerEssentialsRest.GSON.fromJson(json, Rank.class);
     }
 }

@@ -1,6 +1,9 @@
 package io.wurmatron.serveressentials.models;
 
+import io.wurmatron.serveressentials.ServerEssentialsRest;
 import io.wurmatron.serveressentials.models.transfer.ItemWrapper;
+
+import java.util.Objects;
 
 public class MarketEntry {
     public String serverID;
@@ -34,5 +37,22 @@ public class MarketEntry {
         this.marketType = marketType;
         this.marketData = marketData;
         this.transferID = transferID;
+    }
+
+    public MarketEntry() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MarketEntry)) return false;
+        MarketEntry that = (MarketEntry) o;
+        return Double.compare(that.currencyAmount, currencyAmount) == 0 && timestamp == that.timestamp && Objects.equals(serverID, that.serverID) && Objects.equals(sellerUUID, that.sellerUUID) && Objects.equals(item, that.item) && Objects.equals(currencyName, that.currencyName) && Objects.equals(marketType, that.marketType) && Objects.equals(marketData, that.marketData) && Objects.equals(transferID, that.transferID);
+    }
+
+    @Override
+    public Rank clone() {
+        String json = ServerEssentialsRest.GSON.toJson(this);
+        return ServerEssentialsRest.GSON.fromJson(json, Rank.class);
     }
 }

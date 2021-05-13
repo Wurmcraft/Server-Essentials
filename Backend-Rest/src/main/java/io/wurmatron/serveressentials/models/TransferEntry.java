@@ -1,5 +1,6 @@
 package io.wurmatron.serveressentials.models;
 
+import io.wurmatron.serveressentials.ServerEssentialsRest;
 import io.wurmatron.serveressentials.models.transfer.ItemWrapper;
 
 import java.util.Arrays;
@@ -36,5 +37,11 @@ public class TransferEntry {
         if (!(o instanceof TransferEntry)) return false;
         TransferEntry that = (TransferEntry) o;
         return transferID == that.transferID && startTime == that.startTime && uuid.equals(that.uuid) && Arrays.equals(that.items, items) && serverID.equals(that.serverID);
+    }
+
+    @Override
+    public Rank clone() {
+        String json = ServerEssentialsRest.GSON.toJson(this);
+        return ServerEssentialsRest.GSON.fromJson(json, Rank.class);
     }
 }

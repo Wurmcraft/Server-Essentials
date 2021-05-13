@@ -4,6 +4,9 @@ import io.wurmatron.serveressentials.ServerEssentialsRest;
 import io.wurmatron.serveressentials.models.account.BankAccount;
 import io.wurmatron.serveressentials.models.account.ServerTime;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class Account {
 
     public String uuid;
@@ -67,5 +70,13 @@ public class Account {
     public Account clone() {
         String json = ServerEssentialsRest.GSON.toJson(this);
         return ServerEssentialsRest.GSON.fromJson(json, Account.class);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Account)) return false;
+        Account account = (Account) o;
+        return Objects.equals(uuid, account.uuid) && Objects.equals(username, account.username) && Arrays.equals(rank, account.rank) && Arrays.equals(perms, account.perms) && Arrays.equals(perks, account.perks) && Objects.equals(language, account.language) && Objects.equals(muted, account.muted) && Objects.equals(muteTime, account.muteTime) && Objects.equals(displayName, account.displayName) && Objects.equals(discordID, account.discordID) && Arrays.equals(trackedTime, account.trackedTime) && Arrays.equals(wallet, account.wallet) && Objects.equals(rewardPoints, account.rewardPoints) && Objects.equals(passwordHash, account.passwordHash) && Objects.equals(passwordSalt, account.passwordSalt) && Arrays.equals(systemPerms, account.systemPerms);
     }
 }

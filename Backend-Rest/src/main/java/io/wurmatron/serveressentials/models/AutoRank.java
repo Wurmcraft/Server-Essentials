@@ -2,6 +2,8 @@ package io.wurmatron.serveressentials.models;
 
 import io.wurmatron.serveressentials.ServerEssentialsRest;
 
+import java.util.Objects;
+
 public class AutoRank {
 
     public long autoRankID;
@@ -34,5 +36,19 @@ public class AutoRank {
     @Override
     public String toString() {
         return ServerEssentialsRest.GSON.toJson(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AutoRank)) return false;
+        AutoRank autoRank = (AutoRank) o;
+        return autoRankID == autoRank.autoRankID && playtime == autoRank.playtime && Double.compare(autoRank.currencyAmount, currencyAmount) == 0 && Objects.equals(rank, autoRank.rank) && Objects.equals(nextRank, autoRank.nextRank) && Objects.equals(currencyName, autoRank.currencyName) && Objects.equals(specialEvents, autoRank.specialEvents);
+    }
+
+    @Override
+    public Rank clone() {
+        String json = ServerEssentialsRest.GSON.toJson(this);
+        return ServerEssentialsRest.GSON.fromJson(json, Rank.class);
     }
 }

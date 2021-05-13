@@ -1,5 +1,9 @@
 package io.wurmatron.serveressentials.models;
 
+import io.wurmatron.serveressentials.ServerEssentialsRest;
+
+import java.util.Objects;
+
 public class TrackedStat {
 
     public String serverID;
@@ -21,5 +25,22 @@ public class TrackedStat {
         this.timestamp = timestamp;
         this.eventType = eventType;
         this.eventData = eventData;
+    }
+
+    public TrackedStat() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TrackedStat)) return false;
+        TrackedStat that = (TrackedStat) o;
+        return timestamp == that.timestamp && Objects.equals(serverID, that.serverID) && Objects.equals(uuid, that.uuid) && Objects.equals(eventType, that.eventType) && Objects.equals(eventData, that.eventData);
+    }
+
+    @Override
+    public Rank clone() {
+        String json = ServerEssentialsRest.GSON.toJson(this);
+        return ServerEssentialsRest.GSON.fromJson(json, Rank.class);
     }
 }

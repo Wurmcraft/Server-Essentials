@@ -1,5 +1,9 @@
 package io.wurmatron.serveressentials.models;
 
+import io.wurmatron.serveressentials.ServerEssentialsRest;
+
+import java.util.Objects;
+
 public class Donator {
 
     public String store;
@@ -30,5 +34,19 @@ public class Donator {
     }
 
     public Donator() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Donator)) return false;
+        Donator donator = (Donator) o;
+        return Objects.equals(store, donator.store) && Objects.equals(transactionID, donator.transactionID) && Objects.equals(amount, donator.amount) && Objects.equals(uuid, donator.uuid) && Objects.equals(timestamp, donator.timestamp) && Objects.equals(type, donator.type) && Objects.equals(typeData, donator.typeData);
+    }
+
+    @Override
+    public Rank clone() {
+        String json = ServerEssentialsRest.GSON.toJson(this);
+        return ServerEssentialsRest.GSON.fromJson(json, Rank.class);
     }
 }

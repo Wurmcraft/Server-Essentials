@@ -41,4 +41,10 @@ public class Action {
         }
         return false;
     }
+
+    @Override
+    public Rank clone() {
+        String json = ServerEssentialsRest.GSON.toJson(this);
+        return ServerEssentialsRest.GSON.fromJson(json, Rank.class);
+    }
 }
