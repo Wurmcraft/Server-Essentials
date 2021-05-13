@@ -8,6 +8,7 @@ import io.javalin.plugin.openapi.annotations.*;
 import io.wurmatron.serveressentials.models.Account;
 import io.wurmatron.serveressentials.models.MessageResponse;
 import io.wurmatron.serveressentials.models.Rank;
+import io.wurmatron.serveressentials.routes.EndpointSecurity;
 import io.wurmatron.serveressentials.routes.Route;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheRank;
 import io.wurmatron.serveressentials.sql.routes.SQLDirect;
@@ -204,8 +205,8 @@ public class RankRoutes {
         // Send Request and Process
         List<Rank> ranks = SQLDirect.queryArray(sql, new Rank());
         List<Rank> permedRanks = new ArrayList<>();
-        for(Rank rank : ranks)
-            permedRanks.add(filterBasedOnPerms(ctx,rank));
+        for (Rank rank : ranks)
+            permedRanks.add(filterBasedOnPerms(ctx, rank));
         ctx.status(200).result(GSON.toJson(permedRanks.toArray(new Rank[0])));
     };
 
@@ -266,20 +267,27 @@ public class RankRoutes {
     }
 
     /**
-     * Removes the data, the given account does not have access to
+     * Removes the data, the given rank does not have access to
      *
      * @param ctx  context of the message
      * @param rank
-     * @return
+     * @return instance with certain values removed / null'd
      */
-    // TODO Implement
     private static Rank filterBasedOnPerms(Context ctx, Rank rank) {
-        return rank;
+        Route.RestRoles role = EndpointSecurity.getRole(ctx);
+        if (role.equals(Route.RestRoles.DEV) || role.equals(Route.RestRoles.SERVER))
+            return rank;
+        Rank clone = rank.clone();
+        if (role.equals(Route.RestRoles.USER)) {
+            // TODO Based on SystemPerms
+        }
+        clone.rankID = null;
+        return clone;
     }
 
     /**
      * Converts a path param into its name for use as a field / lookup
-     *
+     *dw
      * @param data path param to be converted
      * @return Converts a path param into its field name, in Rank
      * @see Rank
