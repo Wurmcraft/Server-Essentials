@@ -124,7 +124,28 @@ public class RankRoutes {
     )
     @Route(path = "/rank/:name/:data", method = "PATCH", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler patchRank = ctx -> {
-
+        String name = ctx.pathParam("name");
+        if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
+            Rank rank = SQLCacheRank.get(name);
+            if(rank != null) {
+                String fieldName = convertPathToField(ctx.pathParam("data"));
+                if(fieldName != null) {
+                  try {
+                    Rank inputData = GSON.fromJson(ctx.body(), Rank.class);
+                    Field field = rank.getClass().getDeclaredField(fieldName);
+                    field.set(rank, field.get(inputData));
+                    if(isValidRank(ctx, rank)) {
+                        ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, rank)));
+                    }
+                  } catch (JsonParseException e) {
+                      ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Rank"));
+                  }
+                } else
+                    ctx.status(400).result(response("Bad Request", ctx.pathParam("data") + " is not valid entry for the requested Rank"));
+            } else
+                ctx.status(404).result(response("Rank Not Found", "Rank '" + name + "' does not exist"));
+        } else
+            ctx.status(400).result(response("Bad Request", "Name is not valid"));
     };
 
     @OpenApi(
