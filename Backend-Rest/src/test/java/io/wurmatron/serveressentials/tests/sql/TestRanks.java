@@ -30,7 +30,7 @@ public class TestRanks {
         Rank addedRank = SQLCacheRank.create(TEST_RANK);
         assertNotNull(addedRank, "Rank has been successfully updated without errors");
         TEST_RANK.rankID = addedRank.rankID;
-        addedRank = SQLCacheRank.getID(TEST_RANK.rankID);
+        addedRank = SQLCacheRank.get(TEST_RANK.rankID);
         assertNotNull(addedRank, "Rank exists");
         assertEquals(TEST_RANK, addedRank, "Rank should be the same");
     }
@@ -38,11 +38,11 @@ public class TestRanks {
     @Test
     @Order(2)
     public void testGetRank() {
-        Rank rank = SQLCacheRank.getID(TEST_RANK.rankID);
+        Rank rank = SQLCacheRank.get(TEST_RANK.rankID);
         assertNotNull(rank, "Rank exists");
         // Remove from cache and try again
         SQLCacheRank.invalidate(TEST_RANK.rankID);
-        rank = SQLCacheRank.getID(TEST_RANK.rankID);
+        rank = SQLCacheRank.get(TEST_RANK.rankID);
         assertNotNull(rank, "Rank exists");
         assertEquals(TEST_RANK, rank, "Rank is the same");
     }
@@ -72,10 +72,10 @@ public class TestRanks {
         TEST_RANK.name = "Test2";
         boolean updated = SQLCacheRank.update(TEST_RANK, new String[] {"name"});
         assertTrue(updated, "Rank has been updated updated without errors");
-        Rank rank = SQLCacheRank.getID(TEST_RANK.rankID);
+        Rank rank = SQLCacheRank.get(TEST_RANK.rankID);
         assertEquals(TEST_RANK, rank, "Rank is the same");
         // Remove from cache and try again
-        rank = SQLCacheRank.getID(TEST_RANK.rankID);
+        rank = SQLCacheRank.get(TEST_RANK.rankID);
         assertEquals(TEST_RANK, rank, "Rank is the same");
     }
 
@@ -85,11 +85,11 @@ public class TestRanks {
         boolean deleted = SQLCacheRank.delete(TEST_RANK.rankID);
         assertTrue(deleted, "Rank has been successfully deleted without errors");
         // Make sure it was deleted
-        Rank rank = SQLCacheRank.getID(TEST_RANK.rankID);
+        Rank rank = SQLCacheRank.get(TEST_RANK.rankID);
         assertNull(rank, "Rank does not exist");
         // Invalidate Cache and try again
         SQLCacheRank.invalidate(TEST_RANK.rankID);
-        rank = SQLCacheRank.getID(TEST_RANK.rankID);
+        rank = SQLCacheRank.get(TEST_RANK.rankID);
         assertNull(rank, "Rank does not exist");
     }
 

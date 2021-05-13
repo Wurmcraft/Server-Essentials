@@ -80,7 +80,26 @@ public class RankRoutes {
     )
     @Route(path = "/rank/:name", method = "PUT", roles = {Route.RestRoles.DEV})
     public static Handler overrideRank = ctx -> {
-
+        String name = ctx.pathParam("name", String.class).get();
+        if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
+            try {
+                // Check for valid json
+                Rank rank = GSON.fromJson(ctx.body(), Rank.class);
+                if(rank.name.equalsIgnoreCase(name)) {
+                    if(isValidRank(ctx,rank)) {
+                        // Update / Override Rank
+                        if(SQLCacheRank.update(rank, SQLCacheRank.getColumns()))
+                            ctx.status(200).result(GSON.toJson(SQLCacheRank.get(rank.rankID)));
+                        else
+                            ctx.status(500).result(response("Rank Failed To Update", "Rank Update has failed!"));
+                    }
+                } else
+                    ctx.status(400).result(response("Bad Request", "Names's don't match, path: '" + name + "' and body: '" + rank.name + "'"));
+            } catch (Exception e) {
+                ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Rank"));
+            }
+        } else
+            ctx.status(400).result(response("Bad Request", "Name is not valid"));
     };
 
     @OpenApi(

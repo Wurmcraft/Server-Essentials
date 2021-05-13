@@ -29,7 +29,7 @@ public class SQLCacheRank extends SQLCache {
      * @see #invalidate(long)
      */
     @Nullable
-    public static Rank getID(long id) {
+    public static Rank get(long id) {
         // Attempt to get from cache
         if (rankCache.contains(id))
             if (!needsUpdate(rankCache.get(id)))
@@ -62,7 +62,7 @@ public class SQLCacheRank extends SQLCache {
         // Attempt to get from cache
         if (rankNameCache.contains(name.toUpperCase()))
             if (!needsUpdate(rankNameCache.get(name.toUpperCase())))
-                return getID(rankNameCache.get(name.toUpperCase()).rankID);
+                return get(rankNameCache.get(name.toUpperCase()).rankID);
             else
                 rankNameCache.remove(name.toUpperCase());
         // Not in cache / invalid
@@ -95,7 +95,7 @@ public class SQLCacheRank extends SQLCache {
                     ranks.add(cache.rank);
                 else {  // Update entry
                     invalidate(cache.rank.rankID);
-                    Rank rank = getID(cache.rank.rankID);
+                    Rank rank = get(cache.rank.rankID);
                     if (rank != null)
                         ranks.add(rank);
                 }
@@ -223,5 +223,14 @@ public class SQLCacheRank extends SQLCache {
      * Removes the expired entries from the database
      */
     public static void cleanupDB() {
+    }
+
+    /**
+     * List all the table columns besides the key, in this case 'rankID'
+     *
+     * @return List of all the columns in the table, except the key
+     */
+    public static String[] getColumns() {
+        return Arrays.copyOfRange(RANKS_COLUMNS, 1, RANKS_COLUMNS.length);
     }
 }
