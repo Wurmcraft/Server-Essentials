@@ -1,6 +1,7 @@
 package io.wurmatron.serveressentials.routes.data;
 
 import com.google.gson.JsonParseException;
+import io.javalin.core.validation.Validator;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.plugin.openapi.annotations.*;
@@ -9,6 +10,7 @@ import io.wurmatron.serveressentials.models.MessageResponse;
 import io.wurmatron.serveressentials.models.Rank;
 import io.wurmatron.serveressentials.routes.Route;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheRank;
+import io.wurmatron.serveressentials.sql.routes.SQLDirect;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -162,7 +164,7 @@ public class RankRoutes {
                 Rank rank = SQLCacheRank.get(name);
                 if (rank != null) {
                     Field rankField = rank.getClass().getDeclaredField(field);
-                    rank = wipeAllExceptField(rank,rankField);
+                    rank = wipeAllExceptField(rank, rankField);
                     ctx.status(200).result(GSON.toJson(rank));
                 } else
                     ctx.status(404).result(response("Rank Not Found", "Rank with the name '" + name + "' does not exist"));
@@ -181,11 +183,11 @@ public class RankRoutes {
                     @OpenApiParam(name = "permission", description = "Filter based on perms, single or multiple nodes"),
                     @OpenApiParam(name = "inheritance", description = "Filter based on inheritances"),
                     @OpenApiParam(name = "prefix", description = "Filter based on prefix"),
-                    @OpenApiParam(name = "prefixPriority", description = "Filter based on prefix priority", type = Integer.class),
+                    @OpenApiParam(name = "prefixPriority", description = "Filter based on prefix priority"),
                     @OpenApiParam(name = "suffix", description = "Filter based on suffix priority"),
-                    @OpenApiParam(name = "suffixPriority", description = "Filter based on suffix priority", type = Integer.class),
+                    @OpenApiParam(name = "suffixPriority", description = "Filter based on suffix priority"),
                     @OpenApiParam(name = "color", description = "Filter based on color"),
-                    @OpenApiParam(name = "colorPriority", description = "Filter based on color priority", type = Integer.class),
+                    @OpenApiParam(name = "colorPriority", description = "Filter based on color priority"),
             },
             headers = {@OpenApiParam(name = "Authorization", description = "Authorization Token to used for authentication within the rest API", required = true)},
             responses = {
@@ -198,7 +200,13 @@ public class RankRoutes {
     )
     @Route(path = "/rank", method = "GET")
     public static Handler getRanks = ctx -> {
-
+        String sql = createSQLForRanksWithFilters(ctx);
+        // Send Request and Process
+        List<Rank> ranks = SQLDirect.queryArray(sql, new Rank());
+        List<Rank> permedRanks = new ArrayList<>();
+        for(Rank rank : ranks)
+            permedRanks.add(filterBasedOnPerms(ctx,rank));
+        ctx.status(200).result(GSON.toJson(permedRanks.toArray(new Rank[0])));
     };
 
     @OpenApi(
@@ -221,9 +229,9 @@ public class RankRoutes {
         String name = ctx.pathParam("name", String.class).get();
         if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
             Rank rank = SQLCacheRank.get(name);
-            if(rank != null) {
+            if (rank != null) {
                 boolean deleted = SQLCacheRank.delete(rank.rankID);
-                if(deleted)
+                if (deleted)
                     ctx.status(200).result(GSON.toJson(rank));
                 else
                     ctx.status(500).result(response("Rank Not Deleted", "Rank '" + rank.name + "' failed to be deleted!"));
@@ -316,5 +324,52 @@ public class RankRoutes {
         if (safe.get(rank) instanceof String && ((String) safe.get(rank)).isEmpty())
             safe.set(rank, "");
         return rank;
+    }
+
+    /**
+     * Generates a SQL Statement for getting ranks with filters applied
+     *
+     * @param ctx context to get the information from the request
+     * @return sql statement for rank lookup
+     */
+    private static String createSQLForRanksWithFilters(Context ctx) {
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("SELECT * FROM " + SQLCacheRank.RANKS_TABLE);
+        StringBuilder whereBuilder = new StringBuilder();
+        whereBuilder.append(" WHERE ");
+        String name = ctx.queryParam("name");
+        if (name != null && !name.trim().isEmpty())
+            whereBuilder.append("name LIKE '%").append(name).append("%' AND");
+        String perms = ctx.queryParam("permission");
+        if (perms != null && !perms.trim().isEmpty())
+            whereBuilder.append("permission LIKE '%").append(perms).append("%' AND");
+        String inheritance = ctx.queryParam("inheritance");
+        if (inheritance != null && !inheritance.trim().isEmpty())
+            whereBuilder.append("inheritance LIKE '%").append(inheritance).append("%' AND");
+        String prefix = ctx.queryParam("prefix");
+        if (prefix != null && !prefix.trim().isEmpty())
+            whereBuilder.append("prefix LIKE '%").append(prefix).append("%' AND");
+        Validator<Integer> prefixPriority = ctx.queryParam("prefixPriority", Integer.class);
+        if (ctx.queryParam("prefixPriority") != null && !ctx.queryParam("prefixPriority").trim().isEmpty() && prefixPriority.isValid())
+            whereBuilder.append("prefixPriority='").append(prefixPriority.get()).append("' AND");
+        String suffix = ctx.queryParam("suffix");
+        if (suffix != null && !suffix.trim().isEmpty())
+            whereBuilder.append("suffix LIKE '%").append(suffix).append("%' AND");
+        Validator<Integer> suffixPriority = ctx.queryParam("suffixPriority", Integer.class);
+        if (ctx.queryParam("suffixPriority") != null && !ctx.queryParam("suffixPriority").trim().isEmpty() && suffixPriority.isValid())
+            whereBuilder.append("suffixPriority='").append(suffixPriority.get()).append("' AND");
+        String color = ctx.queryParam("color");
+        if (color != null && !color.trim().isEmpty())
+            whereBuilder.append("color LIKE '%").append(color).append("%' AND");
+        Validator<Integer> colorPriority = ctx.queryParam("colorPriority", Integer.class);
+        if (ctx.queryParam("colorPriority") != null && !ctx.queryParam("colorPriority").trim().isEmpty() && colorPriority.isValid())
+            whereBuilder.append("colorPriority='").append(colorPriority.get()).append("' AND");
+        String sql = sqlBuilder.toString();
+        String whereSQL = whereBuilder.toString();
+        if (whereSQL.endsWith("AND")) {
+            whereSQL = whereSQL.substring(0, whereSQL.length() - 3);
+            sql = sql + whereSQL;
+        }
+        return sql;
     }
 }
