@@ -24,7 +24,7 @@ public class CurrencyRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "currency", method = "POST", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/currency", method = "POST", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler create = ctx -> {
 
     };
@@ -49,7 +49,7 @@ public class CurrencyRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "currency", method = "GET")
+    @Route(path = "api/currency", method = "GET")
     public static Handler get = ctx -> {
 
     };
@@ -67,7 +67,7 @@ public class CurrencyRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "currency/:id", method = "GET")
+    @Route(path = "api/currency/:id", method = "GET")
     public static Handler getID = ctx -> {
 
     };
@@ -89,7 +89,7 @@ public class CurrencyRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "currency/:id", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/currency/:id", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler override = ctx -> {
 
     };
@@ -111,7 +111,7 @@ public class CurrencyRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "currency/:id", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/currency/:id", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler delete = ctx -> {
 
     };

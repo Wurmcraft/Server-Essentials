@@ -24,7 +24,7 @@ public class BanRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "ban", method = "POST", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/ban", method = "POST", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler create = ctx -> {
 
     };
@@ -49,7 +49,7 @@ public class BanRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "ban", method = "GET")
+    @Route(path = "api/ban", method = "GET")
     public static Handler get = ctx -> {
 
     };
@@ -69,7 +69,7 @@ public class BanRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "ban/:id", method = "GET")
+    @Route(path = "api/ban/:id", method = "GET")
     public static Handler getID = ctx -> {
 
     };
@@ -90,7 +90,7 @@ public class BanRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "ban/:id", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/ban/:id", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler override = ctx -> {
 
     };
@@ -110,7 +110,7 @@ public class BanRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "ban/:id", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/ban/:id", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler delete = ctx -> {
 
     };

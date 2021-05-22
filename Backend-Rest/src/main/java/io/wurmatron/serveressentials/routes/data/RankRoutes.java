@@ -38,7 +38,7 @@ public class RankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "/rank", method = "POST", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/rank", method = "POST", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler createRank = ctx -> {
         try {
             Rank newRank = GSON.fromJson(ctx.body(), Rank.class);
@@ -78,7 +78,7 @@ public class RankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "/rank/:name", method = "PUT", roles = {Route.RestRoles.DEV})
+    @Route(path = "api/rank/:name", method = "PUT", roles = {Route.RestRoles.DEV})
     public static Handler overrideRank = ctx -> {
         String name = ctx.pathParam("name", String.class).get();
         if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
@@ -122,7 +122,7 @@ public class RankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "/rank/:name/:data", method = "PATCH", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/rank/:name/:data", method = "PATCH", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler patchRank = ctx -> {
         String name = ctx.pathParam("name");
         if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
@@ -163,7 +163,7 @@ public class RankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "/rank/:name", method = "GET")
+    @Route(path = "api/rank/:name", method = "GET")
     public static Handler getRank = ctx -> {
         String name = ctx.pathParam("name", String.class).get();
         if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
@@ -195,7 +195,7 @@ public class RankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "/rank/:name/:data", method = "GET")
+    @Route(path = "api/rank/:name/:data", method = "GET")
     public static Handler getRankInfo = ctx -> {
         String name = ctx.pathParam("name", String.class).get();
         if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
@@ -239,7 +239,7 @@ public class RankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "/rank", method = "GET")
+    @Route(path = "api/rank", method = "GET")
     public static Handler getRanks = ctx -> {
         String sql = createSQLForRanksWithFilters(ctx);
         // Send Request and Process
@@ -265,7 +265,7 @@ public class RankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "/rank/:name", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/rank/:name", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler deleteRank = ctx -> {
         String name = ctx.pathParam("name", String.class).get();
         if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {

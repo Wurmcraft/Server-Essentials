@@ -24,7 +24,7 @@ public class ActionRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "action", method = "POST", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/action", method = "POST", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler create = ctx -> {
 
     };
@@ -51,7 +51,7 @@ public class ActionRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "action", method = "GET")
+    @Route(path = "api/action", method = "GET")
     public static Handler get = ctx -> {
 
     };
@@ -72,7 +72,7 @@ public class ActionRoutes {
             }
     )
     // TODO implement
-    @Route(path = "action", method = "PUT")
+    @Route(path = "api/action", method = "PUT")
     public static Handler update = ctx -> {
 
     };
@@ -93,7 +93,7 @@ public class ActionRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "action", method = "DELETE")
+    @Route(path = "api/action", method = "DELETE")
     public static Handler delete = ctx -> {
 
     };

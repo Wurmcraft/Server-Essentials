@@ -39,7 +39,7 @@ public class AccountRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "/user", method = "POST", roles = {RestRoles.SERVER, RestRoles.DEV})
+    @Route(path = "api/user", method = "POST", roles = {RestRoles.SERVER, RestRoles.DEV})
     public static Handler createAccount = ctx -> {
         try {
             Account newAccount = GSON.fromJson(ctx.body(), Account.class);
@@ -64,7 +64,7 @@ public class AccountRoutes {
     };
 
     // TODO Implement
-    @Route(path = "/user/:uuid", method = "BEFORE")
+    @Route(path = "api/user/:uuid", method = "BEFORE")
     public static Handler overrideAccount_AuthCheck = ctx -> {
         ctx.status(501);
     };
@@ -86,7 +86,7 @@ public class AccountRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "/user/:uuid", method = "PUT", roles = {RestRoles.DEV})
+    @Route(path = "api/user/:uuid", method = "PUT", roles = {RestRoles.DEV})
     public static Handler overrideAccount = ctx -> {
         if (validateUUID(ctx, true)) {
             String uuid = ctx.pathParam("uuid", String.class).get();
@@ -110,7 +110,7 @@ public class AccountRoutes {
     };
 
     // TODO Implement
-    @Route(path = "/user/:uuid/:data", method = "BEFORE")
+    @Route(path = "api/user/:uuid/:data", method = "BEFORE")
     public static Handler patchAccount_AuthCheck = ctx -> {
         ctx.status(501);
     };
@@ -135,7 +135,7 @@ public class AccountRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "/user/:uuid/:data", method = "PATCH", roles = {RestRoles.USER, RestRoles.SERVER, RestRoles.DEV})
+    @Route(path = "api/user/:uuid/:data", method = "PATCH", roles = {RestRoles.USER, RestRoles.SERVER, RestRoles.DEV})
     public static Handler patchAccount = ctx -> {
         if (validateUUID(ctx, true)) {
             String uuid = ctx.pathParam("uuid", String.class).get();
@@ -181,7 +181,7 @@ public class AccountRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "/user/:uuid", method = "GET")
+    @Route(path = "api/user/:uuid", method = "GET")
     public static Handler getAccount = ctx -> {
         if (validateUUID(ctx, true)) {
             String uuid = ctx.pathParam("uuid", String.class).get();
@@ -251,7 +251,7 @@ public class AccountRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "/user/:uuid/:data", method = "GET")
+    @Route(path = "api/user/:uuid/:data", method = "GET")
     public static Handler getAccountInformation = ctx -> {
         if (validateUUID(ctx, true)) {
             String uuid = ctx.pathParam("uuid", String.class).get();
@@ -302,7 +302,7 @@ public class AccountRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "/user", method = "GET")
+    @Route(path = "api/user", method = "GET")
     public static Handler getAccounts = ctx -> {
         String sql = createSQLForUsersWithFilters(ctx);
         // Send Request and Process
@@ -312,7 +312,7 @@ public class AccountRoutes {
 
 
     // TODO Implement
-    @Route(path = "/user/:uuid", method = "BEFORE")
+    @Route(path = "api/user/:uuid", method = "BEFORE")
     public static Handler deleteAccount_AuthCheck = ctx -> {
         ctx.status(501);
     };
@@ -332,7 +332,7 @@ public class AccountRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "/user/:uuid", method = "DELETE", roles = {RestRoles.SERVER, RestRoles.DEV})
+    @Route(path = "api/user/:uuid", method = "DELETE", roles = {RestRoles.SERVER, RestRoles.DEV})
     public static Handler deleteAccount = ctx -> {
         if (validateUUID(ctx, true)) {
             String uuid = ctx.pathParam("uuid", String.class).get();

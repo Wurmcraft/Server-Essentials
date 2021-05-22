@@ -25,7 +25,7 @@ public class MarketRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "market", method = "POST", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/market", method = "POST", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler create = ctx -> {
 
     };
@@ -51,7 +51,7 @@ public class MarketRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "market", method = "GET")
+    @Route(path = "api/market", method = "GET")
     public static Handler get = ctx -> {
 
     };
@@ -72,7 +72,7 @@ public class MarketRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "market", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/market", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler override = ctx -> {
 
     };
@@ -93,7 +93,7 @@ public class MarketRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "market", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/market", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler delete = ctx -> {
 
     };

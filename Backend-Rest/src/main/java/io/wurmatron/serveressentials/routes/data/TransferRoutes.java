@@ -27,7 +27,7 @@ public class TransferRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "/transfer", method = "POST", roles = {Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/transfer", method = "POST", roles = {Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler create = ctx -> {
 
     };
@@ -51,7 +51,7 @@ public class TransferRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "/transfer", method = "GET", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/transfer", method = "GET", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler get = ctx -> {
 
     };
@@ -70,7 +70,7 @@ public class TransferRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "/transfer/:id", method = "GET", roles = {Route.RestRoles.ANONYMOUS, Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/transfer/:id", method = "GET", roles = {Route.RestRoles.ANONYMOUS, Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler getID = ctx -> {
 
     };
@@ -89,7 +89,7 @@ public class TransferRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "/transfer/:id/:data", method = "GET", roles = {Route.RestRoles.ANONYMOUS, Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/transfer/:id/:data", method = "GET", roles = {Route.RestRoles.ANONYMOUS, Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler getData = ctx -> {
 
     };
@@ -109,7 +109,7 @@ public class TransferRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "/transfer/:id", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/transfer/:id", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler update = ctx -> {
 
     };
@@ -128,7 +128,7 @@ public class TransferRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "/transfer/:id/:data", method = "PATCH", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/transfer/:id/:data", method = "PATCH", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler patch = ctx -> {
 
     };
@@ -146,7 +146,7 @@ public class TransferRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "/transfer/:id", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/transfer/:id", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler delete = ctx -> {
 
     };

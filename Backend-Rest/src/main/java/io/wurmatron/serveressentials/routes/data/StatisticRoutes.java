@@ -27,7 +27,7 @@ public class StatisticRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "/statistics", method = "POST", roles = {Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/statistics", method = "POST", roles = {Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler create = ctx -> {
 
     };
@@ -48,7 +48,7 @@ public class StatisticRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "/statistics", method = "PUT", roles = {Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/statistics", method = "PUT", roles = {Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler override = ctx -> {
 
     };
@@ -66,7 +66,7 @@ public class StatisticRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "/statistics", method = "GET")
+    @Route(path = "api/statistics", method = "GET")
     public static Handler get = ctx -> {
 
     };
@@ -86,7 +86,7 @@ public class StatisticRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "/statistics/:data", method = "PATCH", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/statistics/:data", method = "PATCH", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler patch = ctx -> {
 
     };
@@ -106,7 +106,7 @@ public class StatisticRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "/statistics", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/statistics", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler delete = ctx -> {
 
     };

@@ -55,7 +55,7 @@ public class ServerEssentialsRest {
                 cfg.registerPlugin(new RedirectToLowercasePathPlugin());
             if (config.server.swaggerEnabled) {
                 cfg.registerPlugin(new OpenApiPlugin(new OpenApiOptions(new Info().version(version).description("Server Essentials Rest API"))
-                        .path("/swagger-json")
+                        .path("api/swagger")
                         .swagger(new SwaggerOptions("/swagger")
                                 .title("Server-Essentials Swagger")).roles(new HashSet<>(Arrays.asList(RestRoles.DEV)))));
 

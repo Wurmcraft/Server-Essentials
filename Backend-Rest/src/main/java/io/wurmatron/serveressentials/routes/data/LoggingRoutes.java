@@ -25,7 +25,7 @@ public class LoggingRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "logging", method = "POST", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/logging", method = "POST", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler create = ctx -> {
 
     };
@@ -54,7 +54,7 @@ public class LoggingRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "logging", method = "GET")
+    @Route(path = "api/logging", method = "GET")
     public static Handler get = ctx -> {
 
     };
@@ -75,7 +75,7 @@ public class LoggingRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "logging", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/logging", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler override = ctx -> {
 
     };
@@ -96,7 +96,7 @@ public class LoggingRoutes {
             }
     )
     // TODO Implement
-    @Route(path = "logging", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/logging", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler delete = ctx -> {
 
     };
