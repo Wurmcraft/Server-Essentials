@@ -12,6 +12,7 @@ import io.wurmatron.serveressentials.models.LoginEntry;
 import io.wurmatron.serveressentials.models.MessageResponse;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheAccount;
 import io.wurmatron.serveressentials.utils.EncryptionUtils;
+import io.wurmatron.serveressentials.utils.PermissionValidator;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import java.security.SecureRandom;
@@ -29,6 +30,8 @@ public class EndpointSecurity {
     public static final long USER_TIMEOUT = 24 * 60 * 60 * 1000;
     public static final int SERVER_TOKEN_SIZE = 128;        // 1d
     public static final int SERVER_TIMEOUT = 5 * 60 * 1000; // 5m
+    // Perm Cache
+    public static NonBlockingHashMap<String, String> permCache = new NonBlockingHashMap<>();
 
     /**
      * Gets the permission for a given request
@@ -188,5 +191,74 @@ public class EndpointSecurity {
         for (int x = 0; x < length; x++)
             builder.append(POSSIBLE_VALUES[RAND.nextInt(POSSIBLE_VALUES.length)]);
         return builder.toString();
+    }
+
+    /**
+     * @param ctx  context of the message
+     * @param perm permission you are trying to check for
+     * @return if the user has the provided perm
+     */
+    public static boolean hasPerms(Context ctx, String perm) {
+        Route.RestRoles role = getRole(ctx);
+        if (role.equals(Route.RestRoles.USER)) {
+            String auth = ctx.cookie("authentication"); // TODO may change
+            AuthUser user = authTokens.get(auth);
+            for (String p : user.perms) {
+                if (PermissionValidator.isSamePerm(perm, p)) {
+                    return true;
+                }
+            }
+            return false;
+        } else if (role.equals(Route.RestRoles.SERVER) || role.equals(Route.RestRoles.DEV))
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * Check if the provided message has the required permissions
+     *
+     * @param ctx context of the message
+     */
+    public static void checkForPerms(Context ctx) {
+        Route.RestRoles role = getRole(ctx);
+        if (role.equals(Route.RestRoles.USER)) {
+            String perm = getPermNode(ctx.path(), ctx.method());
+            String auth = ctx.cookie("authentication"); // TODO may change
+            AuthUser user = authTokens.get(auth);
+            if (!hasPerms(ctx, perm)) {
+                ctx.status(403).result(response("Not Authorized", "No Perms"));
+            }
+        }
+    }
+
+    /**
+     * Generate a permission node based on a endpoints path and http method
+     *
+     * @param path   endpoint path
+     * @param method http method used by the endpoint
+     * @return Dynamically generated permission node
+     */
+    public static String getPermNode(String path, String method) {
+        if (permCache.contains(path + "_" + method.toLowerCase())) {
+            return permCache.get(path + "_" + method.toLowerCase());
+        } else {
+            // Dynamically Generate Perm Nodes based on path and method
+            String[] split = path.split("/");
+            StringBuilder builder = new StringBuilder();
+            int startX = 0;
+            // Split api if its the first entry
+            if (split[0].equalsIgnoreCase("api"))
+                startX = 1;
+            for (int x = startX; x < split.length; x++) {
+                if (split[x].startsWith(":"))
+                    break;
+                builder.append(split[x]);
+                builder.append(".");
+            }
+            String node = builder.toString() + method;
+            permCache.put(path + "_" + method.toLowerCase(), node);
+            return node;
+        }
     }
 }
