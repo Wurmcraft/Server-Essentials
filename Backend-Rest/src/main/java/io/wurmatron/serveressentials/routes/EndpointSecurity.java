@@ -1,17 +1,34 @@
 package io.wurmatron.serveressentials.routes;
 
+import com.google.gson.JsonParseException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.plugin.openapi.annotations.*;
 import io.wurmatron.serveressentials.ServerEssentialsRest;
+import io.wurmatron.serveressentials.models.Account;
 import io.wurmatron.serveressentials.models.AuthUser;
 import io.wurmatron.serveressentials.models.LoginEntry;
 import io.wurmatron.serveressentials.models.MessageResponse;
+import io.wurmatron.serveressentials.sql.routes.SQLCacheAccount;
+import io.wurmatron.serveressentials.utils.EncryptionUtils;
+import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
+import java.security.SecureRandom;
+import java.time.Instant;
+
+import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
 import static io.wurmatron.serveressentials.routes.RouteUtils.response;
 
 public class EndpointSecurity {
+
+    public static NonBlockingHashMap<String, AuthUser> authTokens = new NonBlockingHashMap<>();
+    public static final SecureRandom RAND = new SecureRandom();
+    // Config
+    public static final int USER_TOKEN_SIZE = 64;
+    public static final long USER_TIMEOUT = 24 * 60 * 60 * 1000;
+    public static final int SERVER_TOKEN_SIZE = 128;        // 1d
+    public static final int SERVER_TIMEOUT = 5 * 60 * 1000; // 5m
 
     /**
      * Gets the permission for a given request
@@ -23,8 +40,13 @@ public class EndpointSecurity {
         if (ServerEssentialsRest.config.general.testing)
             return Route.RestRoles.DEV;
         String auth = ctx.cookie("authentication"); // TODO may change
-        if (auth != null)
-            return Route.RestRoles.SERVER;
+        if (auth != null && authTokens.contains(auth)) {
+            AuthUser user = authTokens.get(auth);
+            if (user.type.equalsIgnoreCase("USER"))
+                return Route.RestRoles.USER;
+            if (user.type.equalsIgnoreCase("SERVER"))
+                return Route.RestRoles.SERVER;
+        }
         return Route.RestRoles.ANONYMOUS;
     }
 
@@ -55,10 +77,37 @@ public class EndpointSecurity {
                     @OpenApiResponse(status = "403", content = {@OpenApiContent(from = MessageResponse.class)}, description = "Invalid Credentials, Same as 401 however its details are more precise, such as lock account or already logged in"),
             }
     )
-    // TODO Implement
     @Route(path = "api/login", method = "POST", roles = {Route.RestRoles.ANONYMOUS})
     public static Handler login = ctx -> {
-
+        try {
+            AuthUser authUser = GSON.fromJson(ctx.body(), AuthUser.class);
+            if (validateLogin(ctx, authUser)) {
+                if (authUser.type.equalsIgnoreCase("USER")) {
+                    Account account = SQLCacheAccount.get(authUser.name);
+                    if (account != null) {
+                        if (EncryptionUtils.isSame(account.passwordHash, account.passwordSalt, authUser.token)) {
+                            // User will now login
+                            String userToken = generateToken(USER_TOKEN_SIZE);
+                            authUser.token = userToken;
+                            authUser.key = "";
+                            authUser.type = "USER";
+                            authUser.perms = account.systemPerms;
+                            authUser.expiration = Instant.now().toEpochMilli() + USER_TIMEOUT;
+                            authTokens.put(userToken, authUser); // TODO Delete Expired Tokens
+                            ctx.status(200).result(GSON.toJson(authUser));
+                        } else {
+                            ctx.status(403).result(response("Bad Credentials", "Invalid User / Password Combination"));
+                        }
+                    } else {
+                        ctx.status(401).result(response("Bad Credentials", "Authentication Failed"));
+                    }
+                } else if (authUser.type.equalsIgnoreCase("SERVER")) {
+                    // TODO Add server auth
+                }
+            }
+        } catch (JsonParseException e) {
+            ctx.status(400).result(response("Bad Request", "Cannot convert body to Authentication Login"));
+        }
     };
 
     @OpenApi(
@@ -95,4 +144,49 @@ public class EndpointSecurity {
     public static Handler reauth = ctx -> {
 
     };
+
+    /**
+     * Checks if the request is a possible valid login request, before checking for login
+     *
+     * @param ctx  context of the message
+     * @param user instance of the login request
+     * @return if the account is valid or not
+     */
+    private static boolean validateLogin(Context ctx, AuthUser user) {
+        // Validate login type
+        if (!user.type.equalsIgnoreCase("USER") && !user.type.equalsIgnoreCase("SERVER")) {
+            ctx.status(400).result(response("Bad Request", "Invalid User Login Type"));
+            return false;
+        }
+        // Validate username
+        if (user.name.trim().isEmpty()) {
+            ctx.status(400).result(response("Bad Request", "Invalid / Empty Name"));
+            return false;
+        }
+        // Validate password / token
+        if (user.token.trim().isEmpty()) {
+            ctx.status(400).result(response("Bad Request", "Token must not be empty!"));
+            return false;
+        }
+        // Validate key (for SERVER only)
+        if (user.type.equalsIgnoreCase("SERVER") && user.key.trim().isEmpty()) {
+            ctx.status(400).result(response("Bad Request", "Server's must provide there key upon login request"));
+        }
+        return true;
+    }
+
+    public static final String[] POSSIBLE_VALUES = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+
+    /**
+     * Generate a token to be used for authentication
+     *
+     * @param length Amount of characters in the token
+     * @return token with the provided length
+     */
+    public static String generateToken(int length) {
+        StringBuilder builder = new StringBuilder();
+        for (int x = 0; x < length; x++)
+            builder.append(POSSIBLE_VALUES[RAND.nextInt(POSSIBLE_VALUES.length)]);
+        return builder.toString();
+    }
 }
