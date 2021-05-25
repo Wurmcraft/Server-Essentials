@@ -119,7 +119,7 @@ public class EndpointSecurity {
             tags = {"Security"},
             headers = {@OpenApiParam(name = "Authorization", description = "Authorization Token to used for authentication within the rest API", required = true)},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = AuthUser.class)}, description = "User you logged in as, along with its permissions, expiration and more information"),
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = AuthUser.class)}, description = "User you logged out, along with its permissions, expiration and more information"),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = MessageResponse.class)}, description = "Invalid Json / Request"),
                     @OpenApiResponse(status = "401", content = {@OpenApiContent(from = MessageResponse.class)}, description = "Invalid Credentials"),
                     @OpenApiResponse(status = "403", content = {@OpenApiContent(from = MessageResponse.class)}, description = "Invalid Credentials, Same as 401 however its details are more precise, such as lock account or already logged in"),
@@ -224,8 +224,6 @@ public class EndpointSecurity {
         Route.RestRoles role = getRole(ctx);
         if (role.equals(Route.RestRoles.USER)) {
             String perm = getPermNode(ctx.path(), ctx.method());
-            String auth = ctx.cookie("authentication"); // TODO may change
-            AuthUser user = authTokens.get(auth);
             if (!hasPerms(ctx, perm)) {
                 ctx.status(403).result(response("Not Authorized", "No Perms"));
             }
@@ -256,7 +254,7 @@ public class EndpointSecurity {
                 builder.append(split[x]);
                 builder.append(".");
             }
-            String node = builder.toString() + method;
+            String node = builder + method;
             permCache.put(path + "_" + method.toLowerCase(), node);
             return node;
         }

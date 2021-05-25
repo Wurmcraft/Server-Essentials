@@ -63,12 +63,6 @@ public class AccountRoutes {
         }
     };
 
-    // TODO Implement
-    @Route(path = "api/user/:uuid", method = "BEFORE")
-    public static Handler overrideAccount_AuthCheck = ctx -> {
-        ctx.status(501);
-    };
-
     @OpenApi(
             summary = "Overrides the given user information with the provided information",
             description = "Override a user's account with the provided information",
@@ -107,12 +101,6 @@ public class AccountRoutes {
                 ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Account"));
             }
         }
-    };
-
-    // TODO Implement
-    @Route(path = "api/user/:uuid/:data", method = "BEFORE")
-    public static Handler patchAccount_AuthCheck = ctx -> {
-        ctx.status(501);
     };
 
     @OpenApi(
@@ -227,12 +215,6 @@ public class AccountRoutes {
         return clone;
     }
 
-    // TODO Implement
-    @Route(path = "/user/:uuid/:data", method = "BEFORE")
-    public static Handler getAccountInformation_AuthCheck = ctx -> {
-        ctx.status(501);
-    };
-
     @OpenApi(
             summary = "Get a specific data entry for the given account via UUID",
             description = "Get a specific entry for the given account via UUID",
@@ -308,13 +290,6 @@ public class AccountRoutes {
         // Send Request and Process
         List<Account> accounts = SQLDirect.queryArray(sql, new Account());
         ctx.status(200).result(GSON.toJson(accounts.toArray(new Account[0])));
-    };
-
-
-    // TODO Implement
-    @Route(path = "api/user/:uuid", method = "BEFORE")
-    public static Handler deleteAccount_AuthCheck = ctx -> {
-        ctx.status(501);
     };
 
     @OpenApi(

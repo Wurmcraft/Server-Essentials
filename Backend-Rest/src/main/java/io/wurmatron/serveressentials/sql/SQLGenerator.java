@@ -152,6 +152,34 @@ public class SQLGenerator {
     }
 
     /**
+     * Update's existing data in the database
+     *
+     * @param table           table where the data is being stored
+     * @param columnsToUpdate columns to update from the data instance
+     * @param key             column to look for the data to update
+     * @param value           value to look for in the key column
+     * @param data            instance of the data to be updated in the database
+     * @return see SQL.execute() for more info
+     * @throws SQLException             A SQL Error has occurred while running the request
+     * @throws IllegalAccessException   Issue with reflection to add data to the object instance
+     * @throws IllegalArgumentException Issue with reflection to add data to the object instance
+     * @throws NoSuchFieldException     Issue with collecting the data from the object instance, via reflection
+     * @see PreparedStatement#execute()
+     */
+    protected static <T> boolean update(String table, String[] columnsToUpdate, String[] key, String[] value, T data) throws SQLException, NoSuchFieldException, IllegalAccessException {
+        StringBuilder sql = new StringBuilder("UPDATE `" + table + "` SET " + argumentGenerator(columnsToUpdate.length, 1, columnsToUpdate) + " WHERE ");
+        for (int x = 0; x < key.length; x++)
+            sql.append(key[x]).append("=? ").append("AND ");
+       String slq = sql.substring(0, sql.length() - 4).toString();
+        PreparedStatement statement = connection.createPrepared(slq + ";");
+        addArguments(statement, columnsToUpdate, data);
+        for (int x = 1; x < key.length + 1; x++)
+            statement.setString(columnsToUpdate.length + x, value[x - 1]);
+        LOG.trace("UPDATE: " + statement);
+        return statement.execute();
+    }
+
+    /**
      * Delete the given account from the database
      *
      * @param table table where the data is stored
@@ -200,11 +228,14 @@ public class SQLGenerator {
                     field.set(dataType, Double.parseDouble((String) obj));
                 else if (str && isJson(fieldType))
                     field.set(dataType, GSON.fromJson((String) obj, fieldType));
-                else if(obj instanceof BigDecimal && fieldType.equals(Double.class))
+                else if (obj instanceof BigDecimal && fieldType.equals(Double.class))
                     field.set(dataType, ((BigDecimal) obj).doubleValue());
-                else if(fieldType.equals(Long.class) ) {
-                    int data = (int) obj;
+                else if (fieldType.equals(Long.class)) {
+                    long data = (long) obj;
                     field.set(dataType, (long) data);
+                } else if (fieldType.equals(Integer.class)) {
+                    int data = (int) obj;
+                    field.set(dataType, data);
                 } else
                     field.set(dataType, obj);
             }
@@ -303,5 +334,23 @@ public class SQLGenerator {
             pStatement.setObject(index + 1, fieldData);
         }
         return pStatement;
+    }
+
+    /**
+     * Mimics how a database update is completed, without the need to request the update from the database
+     *
+     * @param columnsToUpdate columns in the database that have been updated
+     * @param updateData      data that was used to update the database
+     * @param localInfo       data from the database, before the update
+     * @return Updated version of the data, (should be in-sync with the database)
+     * @throws NoSuchFieldException   Issue with reflection to collect data from the object instance
+     * @throws IllegalAccessException Issue with reflection to collect data from the object instance
+     */
+    protected static <T> T updateInfoLocal(String[] columnsToUpdate, T updateData, T localInfo) throws NoSuchFieldException, IllegalAccessException {
+        for (String column : columnsToUpdate) {
+            Field field = updateData.getClass().getDeclaredField(column);
+            field.set(localInfo, field.get(updateData));
+        }
+        return localInfo;
     }
 }

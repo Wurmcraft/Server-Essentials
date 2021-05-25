@@ -19,7 +19,6 @@ public class SQLDirect extends SQLGenerator {
      * @throws SQLException             A SQL Error has occurred while running the request
      * @throws IllegalAccessException   Issue with reflection to add data to the object instance
      * @throws IllegalArgumentException Issue with reflection to add data to the object instance
-     * @return
      */
     public static <T> List<T> queryArray(String sql, T dataType) throws SQLException, IllegalAccessException, IllegalArgumentException, InstantiationException {
         PreparedStatement statement = connection.createPrepared(sql);

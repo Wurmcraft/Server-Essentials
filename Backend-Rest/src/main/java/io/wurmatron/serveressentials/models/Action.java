@@ -2,13 +2,15 @@ package io.wurmatron.serveressentials.models;
 
 import io.wurmatron.serveressentials.ServerEssentialsRest;
 
+import java.util.Objects;
+
 public class Action {
 
     public String relatedID;
     public String host;
     public String action;
     public String actionData;
-    public long timestamp;
+    public Long timestamp;
 
     /**
      * @param relatedID  serverID/discord Channel ID
@@ -34,12 +36,11 @@ public class Action {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Action) {
-            Action otherAction = (Action) obj;
-            return relatedID.equalsIgnoreCase(otherAction.relatedID) && host.equalsIgnoreCase(otherAction.host) && action.equalsIgnoreCase(otherAction.action);
-        }
-        return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Action)) return false;
+        Action action1 = (Action) o;
+        return Objects.equals(relatedID, action1.relatedID) && Objects.equals(host, action1.host) && Objects.equals(action, action1.action) && Objects.equals(actionData, action1.actionData) && Objects.equals(timestamp, action1.timestamp);
     }
 
     @Override

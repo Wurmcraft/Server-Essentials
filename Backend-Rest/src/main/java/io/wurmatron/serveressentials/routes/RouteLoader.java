@@ -91,6 +91,8 @@ public class RouteLoader {
         HttpUtils.allowMethods("PATCH");
     }
 
+    public static final Handler userPermCheck = EndpointSecurity::checkForPerms;
+
     /**
      * Registers the route with javalin, based on the @Route configuration
      *
@@ -103,6 +105,9 @@ public class RouteLoader {
         Route route = field.getAnnotation(Route.class);
         Set<Role> roles = new HashSet<>(Arrays.asList(route.roles()));
         Handler handler = (Handler) field.get(field.getClass());
+        for (Role role : roles)
+            if (role.equals(Route.RestRoles.USER))
+                javalin.before(route.path(), userPermCheck);
         switch (route.method().toUpperCase()) {
             case "GET": {
                 javalin.get(route.path(), handler, roles);
@@ -130,5 +135,4 @@ public class RouteLoader {
             }
         }
     }
-
 }
