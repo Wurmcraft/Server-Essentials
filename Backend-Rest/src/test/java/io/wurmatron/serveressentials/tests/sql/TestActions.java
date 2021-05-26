@@ -44,8 +44,8 @@ public class TestActions {
     @Test
     @Order(2)
     public void testUpdateAction() {
-        TEST_ACTION.host = "Test2";
-        Action action = SQLActions.update(TEST_ACTION, new String[] {"host"});
+        TEST_ACTION.actionData = "{\"type\": \"Test2\"}";
+        Action action = SQLActions.update(TEST_ACTION, new String[] {"actionData"});
         assertNotNull(action, "Action has updated successfully without errors");
         // Make sure it was updated
         List<Action> actions = SQLActions.get(TEST_ACTION.relatedID, TEST_ACTION.action);

@@ -62,7 +62,7 @@ public class SQLActions extends SQLDirect {
      */
     public static List<Action> get(String relatedID) {
         try {
-            return queryArray("SELECT * from " + ACTIONS_TABLE + "WHERE relatedID='" + relatedID + "'", new Action());
+            return queryArray("SELECT * from " + ACTIONS_TABLE + " WHERE relatedID='" + relatedID + "'", new Action());
         } catch (Exception e) {
             LOG.debug("Failed to add get action from '" + relatedID + "' (" + e.getMessage() + ")");
         }
@@ -113,7 +113,7 @@ public class SQLActions extends SQLDirect {
      */
     public static Action delete(String host, String action, String relatedID, long timestamp) {
         try {
-            List<Action> actions = queryArray("SELECT * from " + ACTIONS_TABLE + "WHERE host='" + host + "' AND action='" + action + "' AND relatedID='" + relatedID + "'", new Action());
+            List<Action> actions = queryArray("SELECT * from " + ACTIONS_TABLE + " WHERE host='" + host + "' AND action='" + action + "' AND relatedID='" + relatedID + "'", new Action());
             PreparedStatement statement = connection.createPrepared("DELETE FROM " + ACTIONS_TABLE + " WHERE host='" + host + "' AND action='" + action + "' AND relatedID='" + relatedID + "'");
             statement.execute();
             for (Action a : actions)

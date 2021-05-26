@@ -176,7 +176,8 @@ public class SQLGenerator {
         for (int x = 1; x < key.length + 1; x++)
             statement.setString(columnsToUpdate.length + x, value[x - 1]);
         LOG.trace("UPDATE: " + statement);
-        return statement.execute();
+        statement.executeUpdate();
+        return true;
     }
 
     /**
