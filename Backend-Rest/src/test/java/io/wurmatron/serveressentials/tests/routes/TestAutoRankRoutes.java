@@ -42,7 +42,7 @@ public class TestAutoRankRoutes {
     @Test
     @Order(2)
     public void testUpdateAutoRank() throws IOException {
-        TestAutoRanks.TEST_AUTORANK.playtime = 4000;
+        TestAutoRanks.TEST_AUTORANK.playTime = 4000L;
         HTTPRequests.put("autorank/" + TestAutoRanks.TEST_AUTORANK.autoRankID, TestAutoRanks.TEST_AUTORANK);
         // Check if the auto-rank has ranked up
         AutoRank[] autoranks = HTTPRequests.get("autorank", AutoRank[].class);
@@ -72,8 +72,8 @@ public class TestAutoRankRoutes {
     @Test
     @Order(2)
     public void testGetSpecificPlaytimeAutoRank() throws IOException {
-        long playtime = HTTPRequests.get("autorank/" + TestAutoRanks.TEST_AUTORANK.autoRankID + "/playtime", AutoRank.class).playtime;
-        assertEquals(TestAutoRanks.TEST_AUTORANK.playtime, playtime, "Playtime is the same");
+        long playtime = HTTPRequests.get("autorank/" + TestAutoRanks.TEST_AUTORANK.autoRankID + "/playtime", AutoRank.class).playTime;
+        assertEquals(TestAutoRanks.TEST_AUTORANK.playTime, playtime, "Playtime is the same");
     }
 
     @Test

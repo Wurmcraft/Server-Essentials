@@ -6,12 +6,12 @@ import java.util.Objects;
 
 public class AutoRank {
 
-    public long autoRankID;
+    public Integer autoRankID;
     public String rank;
     public String nextRank;
-    public long playtime;
+    public Long playTime;
     public String currencyName;
-    public double currencyAmount;
+    public Double currencyAmount;
     public String specialEvents;
 
     /**
@@ -23,14 +23,17 @@ public class AutoRank {
      * @param currencyAmount amount of the given currency
      * @param specialEvents  special events required to rankup, (Used to extend functionality))
      */
-    public AutoRank(long autoRankID, String rank, String nextRank, long playtime, String currencyName, double currencyAmount, String specialEvents) {
+    public AutoRank(Integer autoRankID, String rank, String nextRank, long playtime, String currencyName, double currencyAmount, String specialEvents) {
         this.autoRankID = autoRankID;
         this.rank = rank;
         this.nextRank = nextRank;
-        this.playtime = playtime;
+        this.playTime = playtime;
         this.currencyName = currencyName;
         this.currencyAmount = currencyAmount;
         this.specialEvents = specialEvents;
+    }
+
+    public AutoRank() {
     }
 
     @Override
@@ -43,12 +46,12 @@ public class AutoRank {
         if (this == o) return true;
         if (!(o instanceof AutoRank)) return false;
         AutoRank autoRank = (AutoRank) o;
-        return autoRankID == autoRank.autoRankID && playtime == autoRank.playtime && Double.compare(autoRank.currencyAmount, currencyAmount) == 0 && Objects.equals(rank, autoRank.rank) && Objects.equals(nextRank, autoRank.nextRank) && Objects.equals(currencyName, autoRank.currencyName) && Objects.equals(specialEvents, autoRank.specialEvents);
+        return autoRankID.equals(autoRank.autoRankID) && playTime.equals(autoRank.playTime) && Double.compare(autoRank.currencyAmount, currencyAmount) == 0 && Objects.equals(rank, autoRank.rank) && Objects.equals(nextRank, autoRank.nextRank) && Objects.equals(currencyName, autoRank.currencyName) && Objects.equals(specialEvents, autoRank.specialEvents);
     }
 
     @Override
-    public Rank clone() {
+    public AutoRank clone() {
         String json = ServerEssentialsRest.GSON.toJson(this);
-        return ServerEssentialsRest.GSON.fromJson(json, Rank.class);
+        return ServerEssentialsRest.GSON.fromJson(json, AutoRank.class);
     }
 }

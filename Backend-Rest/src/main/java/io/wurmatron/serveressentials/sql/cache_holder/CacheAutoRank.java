@@ -12,6 +12,11 @@ public class CacheAutoRank implements Cache {
         this.lastSync = lastSync;
     }
 
+    public CacheAutoRank(AutoRank autoRank) {
+        this.autoRank = autoRank;
+        this.lastSync = System.currentTimeMillis();
+    }
+
     @Override
     public long lastSync() {
         return lastSync;

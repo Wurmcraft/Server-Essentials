@@ -170,7 +170,7 @@ public class SQLGenerator {
         StringBuilder sql = new StringBuilder("UPDATE `" + table + "` SET " + argumentGenerator(columnsToUpdate.length, 1, columnsToUpdate) + " WHERE ");
         for (int x = 0; x < key.length; x++)
             sql.append(key[x]).append("=? ").append("AND ");
-       String slq = sql.substring(0, sql.length() - 4).toString();
+        String slq = sql.substring(0, sql.length() - 4).toString();
         PreparedStatement statement = connection.createPrepared(slq + ";");
         addArguments(statement, columnsToUpdate, data);
         for (int x = 1; x < key.length + 1; x++)
@@ -232,11 +232,23 @@ public class SQLGenerator {
                 else if (obj instanceof BigDecimal && fieldType.equals(Double.class))
                     field.set(dataType, ((BigDecimal) obj).doubleValue());
                 else if (fieldType.equals(Long.class)) {
-                    long data = (long) obj;
-                    field.set(dataType, (long) data);
+                    if (obj instanceof Integer) {
+                        int data = (int) obj;
+                        field.set(dataType, (long) data);
+                    } else {
+                        long data = (long) obj;
+                        field.set(dataType, (long) data);
+                    }
                 } else if (fieldType.equals(Integer.class)) {
                     int data = (int) obj;
                     field.set(dataType, data);
+                } else if (fieldType.equals(Double.class)) {
+                    if (obj instanceof Integer) {
+                        int data = (int) obj;
+                        field.set(dataType, (double) data);
+                    } else {
+                        field.set(dataType, obj);
+                    }
                 } else
                     field.set(dataType, obj);
             }

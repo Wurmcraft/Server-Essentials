@@ -13,7 +13,7 @@ import static io.wurmatron.serveressentials.ServerEssentialsRest.config;
 public class SQLCache extends SQLGenerator {
 
     // Cache (applicably only)
-    protected static final NonBlockingHashMap<String, CacheAutoRank> autoRankCache = new NonBlockingHashMap<>();
+    protected static final NonBlockingHashMap<Integer, CacheAutoRank> autoRankCache = new NonBlockingHashMap<>();
     protected static final NonBlockingHashMap<String, CacheBan> bansCache = new NonBlockingHashMap<>();
     protected static final NonBlockingHashMap<String, CacheCurrency> currencyCache = new NonBlockingHashMap<>();
     protected static final NonBlockingHashMap<String, CacheDonator> donatorCache = new NonBlockingHashMap<>();

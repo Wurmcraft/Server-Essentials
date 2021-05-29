@@ -71,11 +71,11 @@ public class TestAutoRanks {
     @Test
     @Order(2)
     public void testUpdateAutoRank() {
-        TEST_AUTORANK.playtime = 800;
-        boolean updated = SQLCacheAutoRank.update(TEST_AUTORANK, new String[] {"playtime"});
+        TEST_AUTORANK.playTime = 800L;
+        boolean updated = SQLCacheAutoRank.update(TEST_AUTORANK, new String[] {"playTime"});
         assertTrue(updated, "Auto-Rank has been updated updated without errors");
         AutoRank autoRank = SQLCacheAutoRank.getID(TEST_AUTORANK.autoRankID);
-        assertEquals(TEST_AUTORANK, autoRank, "Rank is the same");
+        assertEquals(TEST_AUTORANK, autoRank, "AutoRank is the same");
         // Remove from cache and try again
         autoRank = SQLCacheAutoRank.getID(TEST_AUTORANK.autoRankID);
         assertEquals(TEST_AUTORANK, autoRank, "Auto-Rank is the same");
