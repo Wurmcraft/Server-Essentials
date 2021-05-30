@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestBans {
 
-    public static final Ban TEST_BAN = new Ban(-1, TestAccounts.TEST_ACCOUNT.uuid, "", "", "Minecraft", "Testing", Instant.now().getEpochSecond(), "PERM", "{}");
+    public static final Ban TEST_BAN = new Ban(-1, TestAccounts.TEST_ACCOUNT.uuid,"localhost", "", "148", "Minecraft", "Testing", Instant.now().getEpochSecond(), "PERM", "{}", true);
 
     @BeforeAll
     public static void setup() throws IOException, SQLException {
@@ -57,7 +57,7 @@ public class TestBans {
         assertTrue(updated, "Ban has been successfully updated without errors");
         // Check for updates
         Ban ban = SQLCacheBan.get(TEST_BAN.banID);
-        assertNotNull(ban, "Ban exists");
+         assertNotNull(ban, "Ban exists");
         assertEquals(TEST_BAN.bannedBy, ban.bannedBy, "Banned-By has been updated");
         // Invalidate Cache and try again
         SQLCacheBan.invalidate(TEST_BAN.banID);
@@ -92,7 +92,7 @@ public class TestBans {
         assertTrue(deleted, "Ban has been successfully deleted without errors");
         // Make sure it was deleted
         Ban ban = SQLCacheBan.get(TEST_BAN.banID);
-        assertNull(ban, "Currency does not exist");
+        assertNull(ban, "Ban does not exist");
         // Invalidate Cache and try again
         SQLCacheBan.invalidate(TEST_BAN.banID);
         ban = SQLCacheBan.get(TEST_BAN.banID);

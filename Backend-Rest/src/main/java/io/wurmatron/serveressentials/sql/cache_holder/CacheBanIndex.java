@@ -1,19 +1,17 @@
 package io.wurmatron.serveressentials.sql.cache_holder;
 
-import io.wurmatron.serveressentials.models.Ban;
+public class CacheBanIndex implements Cache {
 
-public class CacheBan implements Cache {
-
-    public Ban ban;
+    public int[] banIDs;
     public long lastSync;
 
-    public CacheBan(Ban ban, long lastSync) {
-        this.ban = ban;
+    public CacheBanIndex(int[] banIDs, long lastSync) {
+        this.banIDs = banIDs;
         this.lastSync = lastSync;
     }
 
-    public CacheBan(Ban ban) {
-        this.ban = ban;
+    public CacheBanIndex(int[] banIDs) {
+        this.banIDs = banIDs;
         this.lastSync = System.currentTimeMillis();
     }
 

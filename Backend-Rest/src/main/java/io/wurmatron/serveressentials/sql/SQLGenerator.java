@@ -23,7 +23,7 @@ public class SQLGenerator {
     // Columns
     protected static final String[] ACTIONS_COLUMNS = new String[]{"relatedID", "host", "action", "actionData", "timestamp"};
     protected static final String[] AUTORANKS_COLUMNS = new String[]{"autoRankID", "rank", "nextRank", "playTime", "currencyName", "currencyAmount", "specialEvents"};
-    protected static final String[] BANS_COLUMNS = new String[]{"banID", "uuid", "discordID", "bannedBy", "banReason", "timestamp", "banType", "banData"};
+    protected static final String[] BANS_COLUMNS = new String[]{"banID", "uuid","ip", "discordID", "bannedBy","bannedByType", "banReason", "timestamp", "banType", "banData", "banStatus"};
     protected static final String[] CURRENCYS_COLUMNS = new String[]{"currencyID", "displayName", "globalWorth", "sellWorth", "tax"};
     protected static final String[] DONATOR_COLUMNS = new String[]{"store", "transactionID", "amount", "uuid", "timestamp", "type", "typeData"};
     protected static final String[] LOGGING_COLUMNS = new String[]{"serverID", "timestamp", "actionType", "actionData", "uuid", "x", "y", "z", "dim"};
@@ -96,7 +96,7 @@ public class SQLGenerator {
      * @throws InstantiationException Issues with reflection, trying to copy requested object instance to fill in data
      */
     protected static <T> List<T> getAll(String columns, String table, T dataType) throws SQLException, IllegalAccessException, InstantiationException {
-        PreparedStatement statement = connection.createPrepared("SELECT " + columns + " FROM `" + table);
+        PreparedStatement statement = connection.createPrepared("SELECT " + columns + " FROM " + table);
         LOG.trace("GET ALL: " + statement);
         return toArray(statement.executeQuery(), dataType);
     }
