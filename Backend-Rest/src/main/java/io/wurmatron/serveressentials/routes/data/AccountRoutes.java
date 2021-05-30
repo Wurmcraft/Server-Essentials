@@ -48,7 +48,7 @@ public class AccountRoutes {
                 Account account = SQLCacheAccount.get(newAccount.uuid);
                 if (account == null) {
                     // Create new account
-                    newAccount = SQLCacheAccount.newAccount(newAccount);
+                    newAccount = SQLCacheAccount.create(newAccount);
                     if (newAccount == null) {
                         ctx.status(500).result(response("Account Failed to Create", "Account has failed to be created!"));
                         return;
@@ -90,7 +90,7 @@ public class AccountRoutes {
                 if (account.uuid.equalsIgnoreCase(uuid)) {
                     if (isValidAccount(ctx, account)) {
                         // Update / Override account
-                        if (SQLCacheAccount.updateAccount(account, SQLCacheAccount.getColumns())) {
+                        if (SQLCacheAccount.update(account, SQLCacheAccount.getColumns())) {
                             ctx.status(200).result(GSON.toJson(SQLCacheAccount.get(account.uuid)));
                         } else
                             ctx.status(500).result(response("Account Failed to Update", "Account Update has failed!"));
@@ -314,7 +314,7 @@ public class AccountRoutes {
             // Check if account exists
             Account existingAccount = SQLCacheAccount.get(uuid);
             if (existingAccount != null) {
-                if (SQLCacheAccount.deleteAccount(uuid))
+                if (SQLCacheAccount.delete(uuid))
                     ctx.status(200).result(GSON.toJson(existingAccount));
             } else
                 ctx.status(404).result(response("No Account", "No Account exists with the provided UUID"));

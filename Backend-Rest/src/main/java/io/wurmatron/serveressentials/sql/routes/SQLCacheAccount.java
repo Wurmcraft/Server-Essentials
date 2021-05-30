@@ -58,7 +58,7 @@ public class SQLCacheAccount extends SQLCache {
      * @see SQLGenerator#insert(String, String[], Object, boolean)
      */
     @Nullable
-    public static Account newAccount(Account account) {
+    public static Account create(Account account) {
         try {
             insert(USERS_TABLE, USERS_COLUMNS, account, false);
             accountCache.put(account.uuid, new CacheAccount(account));
@@ -77,7 +77,7 @@ public class SQLCacheAccount extends SQLCache {
      * @param columnsToUpdate columns in the database to update with the provided data
      * @see SQLGenerator#update(String, String[], String, String, Object)
      */
-    public static boolean updateAccount(Account account, String[] columnsToUpdate) {
+    public static boolean update(Account account, String[] columnsToUpdate) {
         try {
             update(USERS_TABLE, columnsToUpdate, "uuid", account.uuid, account);
             if (accountCache.containsKey(account.uuid)) {    // Exists in cache, updating
@@ -105,7 +105,7 @@ public class SQLCacheAccount extends SQLCache {
      * @param uuid uuid of the account to be deleted
      * @see #invalidate(String)
      */
-    public static boolean deleteAccount(String uuid) {
+    public static boolean delete(String uuid) {
         try {
             delete(USERS_TABLE, "uuid", uuid);
             invalidate(uuid);

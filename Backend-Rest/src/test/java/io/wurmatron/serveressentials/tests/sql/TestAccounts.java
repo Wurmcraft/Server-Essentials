@@ -37,9 +37,9 @@ public class TestAccounts {
     public void testAddAccount() {
         // Check if account exists, if so delete it
         if (SQLCacheAccount.get(TEST_ACCOUNT.uuid) != null)
-            SQLCacheAccount.deleteAccount(TEST_ACCOUNT.uuid);
+            SQLCacheAccount.delete(TEST_ACCOUNT.uuid);
         // Add new account
-        Account account = SQLCacheAccount.newAccount(TEST_ACCOUNT);
+        Account account = SQLCacheAccount.create(TEST_ACCOUNT);
         assertNotNull(account, "Account has been successfully created without errors");
         // Check for the new account
         Account savedAccount = SQLCacheAccount.get(TEST_ACCOUNT.uuid);
@@ -67,7 +67,7 @@ public class TestAccounts {
     @Order(2)
     public void testUpdateAccount() {
         TEST_ACCOUNT.language = "en_us";
-        boolean updated = SQLCacheAccount.updateAccount(TEST_ACCOUNT, new String[]{"language"});
+        boolean updated = SQLCacheAccount.update(TEST_ACCOUNT, new String[]{"language"});
         assertTrue(updated, "Account has been successfully updated without errors");
         // Check for updates
         Account account = SQLCacheAccount.get(TEST_ACCOUNT.uuid);
@@ -83,7 +83,7 @@ public class TestAccounts {
     @Test
     @Order(3)
     public void testDeleteAccount() {
-        boolean deleted = SQLCacheAccount.deleteAccount(TEST_ACCOUNT.uuid);
+        boolean deleted = SQLCacheAccount.delete(TEST_ACCOUNT.uuid);
         assertTrue(deleted, "Account has been successfully deleted without errors");
         // Make sure it was deleted
         Account account = SQLCacheAccount.get(TEST_ACCOUNT.uuid);
