@@ -51,8 +51,8 @@ public class MarketEntry {
     }
 
     @Override
-    public Rank clone() {
+    public MarketEntry clone() {
         String json = ServerEssentialsRest.GSON.toJson(this);
-        return ServerEssentialsRest.GSON.fromJson(json, Rank.class);
+        return ServerEssentialsRest.GSON.fromJson(json, MarketEntry.class);
     }
 }

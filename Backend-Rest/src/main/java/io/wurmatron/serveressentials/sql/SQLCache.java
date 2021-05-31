@@ -2,6 +2,7 @@ package io.wurmatron.serveressentials.sql;
 
 import io.wurmatron.serveressentials.sql.cache_holder.*;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
+import java.util.*;
 
 import static io.wurmatron.serveressentials.ServerEssentialsRest.config;
 
@@ -17,7 +18,7 @@ public class SQLCache extends SQLGenerator {
     protected static final NonBlockingHashMap<Long, CacheBan> bansCache = new NonBlockingHashMap<>();
     protected static final NonBlockingHashMap<Long, CacheCurrency> currencyCache = new NonBlockingHashMap<>();
     protected static final NonBlockingHashMap<String, CacheDonator> donatorCache = new NonBlockingHashMap<>();
-    protected static final NonBlockingHashMap<String, CacheMarket> marketCache = new NonBlockingHashMap<>();
+    protected static final NonBlockingHashMap<String, List<CacheMarket>> marketCache = new NonBlockingHashMap<>();
     protected static final NonBlockingHashMap<Long, CacheRank> rankCache = new NonBlockingHashMap<>();
     protected static final NonBlockingHashMap<Long, CacheTransfer> transferCache = new NonBlockingHashMap<Long, CacheTransfer>();
     protected static final NonBlockingHashMap<String, CacheAccount> accountCache = new NonBlockingHashMap<>();

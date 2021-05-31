@@ -12,6 +12,11 @@ public class CacheMarket implements Cache{
         this.lastSync = lastSync;
     }
 
+    public CacheMarket(MarketEntry marketEntry) {
+        this.marketEntry = marketEntry;
+        this.lastSync = System.currentTimeMillis();
+    }
+
     @Override
     public long lastSync() {
         return lastSync;

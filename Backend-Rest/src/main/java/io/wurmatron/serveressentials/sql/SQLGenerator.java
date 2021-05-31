@@ -198,6 +198,28 @@ public class SQLGenerator {
     }
 
     /**
+     * Delete the given account from the database
+     *
+     * @param table table where the data is stored
+     * @param key   column to delete the data instance from
+     * @param value column / key value to look for the data object
+     * @return see SQL.execute() for more info
+     * @throws SQLException A SQL Error has occurred while running the request
+     * @see PreparedStatement#execute()
+     */
+    protected static boolean delete(String table, String[] key, String[] value) throws SQLException {
+        StringBuilder sql = new StringBuilder("DELETE FROM " + table + " WHERE ");
+        for (int x = 0; x < key.length; x++)
+            sql.append(key[x]).append("=? ").append("AND ");
+        String slq = sql.substring(0, sql.length() - 4);
+        PreparedStatement statement = connection.createPrepared(slq + ";");
+        for (int x = 1; x < key.length + 1; x++)
+            statement.setString(x, value[x-1]);
+        LOG.trace("DELETE: " + statement);
+        return statement.execute();
+    }
+
+    /**
      * Reflection casts a ResultSet from the database into a usable data object
      *
      * @param result   ResultSet provided from the database.
