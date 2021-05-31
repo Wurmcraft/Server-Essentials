@@ -23,7 +23,7 @@ public class SQLGenerator {
     // Columns
     protected static final String[] ACTIONS_COLUMNS = new String[]{"relatedID", "host", "action", "actionData", "timestamp"};
     protected static final String[] AUTORANKS_COLUMNS = new String[]{"autoRankID", "rank", "nextRank", "playTime", "currencyName", "currencyAmount", "specialEvents"};
-    protected static final String[] BANS_COLUMNS = new String[]{"banID", "uuid","ip", "discordID", "bannedBy","bannedByType", "banReason", "timestamp", "banType", "banData", "banStatus"};
+    protected static final String[] BANS_COLUMNS = new String[]{"banID", "uuid", "ip", "discordID", "bannedBy", "bannedByType", "banReason", "timestamp", "banType", "banData", "banStatus"};
     protected static final String[] CURRENCYS_COLUMNS = new String[]{"currencyID", "displayName", "globalWorth", "sellWorth", "tax"};
     protected static final String[] DONATOR_COLUMNS = new String[]{"store", "transactionID", "amount", "uuid", "timestamp", "type", "typeData"};
     protected static final String[] LOGGING_COLUMNS = new String[]{"serverID", "timestamp", "actionType", "actionData", "uuid", "x", "y", "z", "dim"};
@@ -246,6 +246,9 @@ public class SQLGenerator {
                     if (obj instanceof Integer) {
                         int data = (int) obj;
                         field.set(dataType, (double) data);
+                    } else if (obj instanceof BigDecimal) {
+                        BigDecimal bigDec = (BigDecimal) obj;
+                        field.set(dataType, bigDec.doubleValue());
                     } else {
                         field.set(dataType, obj);
                     }

@@ -6,11 +6,11 @@ import java.util.Objects;
 
 public class Currency {
 
-    public long id;
+    public Long currencyID;
     public String displayName;
-    public double globalWorth;
-    public double sellWorth;
-    public double tax;
+    public Double globalWorth;
+    public Double sellWorth;
+    public Double tax;
 
     /**
      * @param id          id of the given currency (Don't change as this is used internally to track)
@@ -20,7 +20,7 @@ public class Currency {
      * @param tax         how much tax's are taken on transactions of this currency
      */
     public Currency(long id, String displayName, double globalWorth, double sellWorth, double tax) {
-        this.id = id;
+        this.currencyID = id;
         this.displayName = displayName;
         this.globalWorth = globalWorth;
         this.sellWorth = sellWorth;
@@ -40,12 +40,12 @@ public class Currency {
         if (this == o) return true;
         if (!(o instanceof Currency)) return false;
         Currency currency = (Currency) o;
-        return id == currency.id && Double.compare(currency.globalWorth, globalWorth) == 0 && Double.compare(currency.sellWorth, sellWorth) == 0 && Double.compare(currency.tax, tax) == 0 && Objects.equals(displayName, currency.displayName);
+        return currencyID.equals(currency.currencyID) && Double.compare(currency.globalWorth, globalWorth) == 0 && Double.compare(currency.sellWorth, sellWorth) == 0 && Double.compare(currency.tax, tax) == 0 && Objects.equals(displayName, currency.displayName);
     }
 
     @Override
-    public Rank clone() {
+    public Currency clone() {
         String json = ServerEssentialsRest.GSON.toJson(this);
-        return ServerEssentialsRest.GSON.fromJson(json, Rank.class);
+        return ServerEssentialsRest.GSON.fromJson(json, Currency.class);
     }
 }

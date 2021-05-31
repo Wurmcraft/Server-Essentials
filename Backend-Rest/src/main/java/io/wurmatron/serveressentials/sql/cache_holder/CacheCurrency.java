@@ -12,6 +12,11 @@ public class CacheCurrency implements Cache{
         this.lastSync = lastSync;
     }
 
+    public CacheCurrency(Currency currency) {
+        this.currency = currency;
+        this.lastSync = System.currentTimeMillis();
+    }
+
     @Override
     public long lastSync() {
         return 0;
