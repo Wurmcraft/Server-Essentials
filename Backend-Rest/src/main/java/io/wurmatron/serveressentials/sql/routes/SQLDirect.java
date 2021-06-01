@@ -3,6 +3,7 @@ package io.wurmatron.serveressentials.sql.routes;
 import io.wurmatron.serveressentials.sql.SQLGenerator;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -24,5 +25,17 @@ public class SQLDirect extends SQLGenerator {
         PreparedStatement statement = connection.createPrepared(sql);
         LOG.trace("DIRECT ARR: " + statement);
         return toArray(statement.executeQuery(), dataType);
+    }
+
+    /**
+     * Directly execute a sql statement
+     *
+     * @param sql sql statment to be run
+     * @return  resulting info from that sql server
+     * @throws SQLException unable to create the sql statement
+     */
+    public static ResultSet direct(String sql) throws SQLException {
+        LOG.trace("DIRECT SQL: " + sql);
+        return connection.create().executeQuery(sql);
     }
 }

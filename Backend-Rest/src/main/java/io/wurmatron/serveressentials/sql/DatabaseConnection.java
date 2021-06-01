@@ -10,6 +10,7 @@ public class DatabaseConnection {
 
     public DatabaseConnection() throws SQLException {
         connection = DriverManager.getConnection(createConnectionURL(), config.database.username, config.database.password);
+        DatabasePopulator.setupDB(connection);
     }
 
     private static String createConnectionURL() {
