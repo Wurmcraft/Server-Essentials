@@ -6,6 +6,9 @@ import io.wurmatron.serveressentials.sql.SQLGenerator;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
+import static io.wurmatron.serveressentials.ServerEssentialsRest.LOG;
+
 public class SQLLogging extends SQLGenerator {
 
     public static String LOGGING_TABLE = "logging";
@@ -17,9 +20,15 @@ public class SQLLogging extends SQLGenerator {
      * @return instance of the log entry that was created
      * @see SQLGenerator#insert(String, String[], Object, boolean)
      */
-    // TODO Implement
     @Nullable
     public static LogEntry create(LogEntry entry) {
+        try {
+            insert(LOGGING_TABLE, LOGGING_COLUMNS, entry, false);
+            return entry;
+        } catch (Exception e) {
+            LOG.debug("Failed to create log entry for '" + entry.actionType + "' at '" + entry.timestamp + "' (" + e.getMessage() + ")");
+            LOG.debug("Log Entry: " + GSON.toJson(entry));
+        }
         return null;
     }
 
@@ -30,8 +39,14 @@ public class SQLLogging extends SQLGenerator {
      * @param columnsToUpdate columns in the db to update
      * @return if the update was completed without errors
      */
-    // TODO Implement
     public static boolean update(LogEntry entry, String[] columnsToUpdate) {
+        try {
+            update(LOGGING_TABLE, columnsToUpdate, new String[]{"actionType", "x", "y", "z", "dim", "timestamp", "uuid"}, new String[]{entry.actionType, "" + entry.x, "" + entry.y, "" + entry.z, "" + entry.dim, "" + entry.timestamp, entry.uuid}, entry);
+            return true;
+        } catch (Exception e) {
+            LOG.debug("Failed to update log entry '" + entry.actionType + "' " + entry.x + ", " + entry.y + ", " + entry.z + ", " + entry.dim + "' (" + e.getMessage() + ")");
+            LOG.debug("Log Entry: " + GSON.toJson(entry));
+        }
         return false;
     }
 
@@ -45,8 +60,12 @@ public class SQLLogging extends SQLGenerator {
      * @param dim      dimension where this entry took place
      * @return a list of entries that took place at this location
      */
-    // TODO Implement
     public static List<LogEntry> get(String serverID, int x, int y, int z, int dim) {
+        try {
+            return getArray("*", LOGGING_TABLE, new String[]{"serverID", "x", "y", "z", "dim"}, new String[]{serverID, "" + x, "" + y, "" + z, "" + dim}, new LogEntry());
+        } catch (Exception e) {
+            LOG.debug("Failed to get log entry for '" + serverID + " '" + x + ", " + y + ", " + z + ", " + dim);
+        }
         return null;
     }
 
@@ -58,8 +77,12 @@ public class SQLLogging extends SQLGenerator {
      * @param uuid       uuid or the account that created the requested log entry
      * @return a list of entries that are related to the provided user with the requested type
      */
-    // TODO Implement
     public static List<LogEntry> get(String serverID, String actionType, String uuid) {
+        try {
+            return getArray("*", LOGGING_TABLE, new String[]{"serverID", "actionType", "uuid"}, new String[]{serverID, actionType, uuid}, new LogEntry());
+        } catch (Exception e) {
+            LOG.debug("Failed to get log entry for '" + serverID + " with type '" + actionType + "' for '" + uuid + "' (" + e.getMessage() + ")");
+        }
         return null;
     }
 
@@ -72,8 +95,13 @@ public class SQLLogging extends SQLGenerator {
      * @param timestamp  unix timestamp when this log-entry was created
      * @return if the delete was successfully without any errors
      */
-    // TODO Implement
     public static boolean delete(String serverID, String actionType, String uuid, long timestamp) {
+        try {
+            delete(LOGGING_TABLE, new String[]{"serverID", "actionType", "uuid", "timestamp"}, new String[]{serverID, actionType, uuid, "" + timestamp});
+            return true;
+        } catch (Exception e) {
+            LOG.debug("Failed to delete log entry at '" + timestamp + "' on '" + serverID + "' for type '" + actionType + "'");
+        }
         return false;
     }
 }

@@ -85,6 +85,32 @@ public class SQLGenerator {
     }
 
     /**
+     * Get a certain data array from the DB
+     *
+     * @param columns  columns that you want to get from the db
+     * @param table    table that this data is present within
+     * @param key      keys to look for
+     * @param data     data to look for in the key column
+     * @param dataType instance of the data, to be created out of
+     * @return instance of the data, with the request data from the db filled in
+     * @throws SQLException             A SQL Error has occurred while running the request
+     * @throws IllegalAccessException   Issue with reflection to add data to the object instance
+     * @throws IllegalArgumentException Issue with reflection to add data to the object instance
+     * @throws InstantiationException   Issues with reflection, trying to copy requested object instance to fill in data
+     */
+    protected static <T> List<T> getArray(String columns, String table, String[] key, String[] data, T dataType) throws SQLException, IllegalAccessException, InstantiationException {
+        StringBuilder sql = new StringBuilder("SELECT " + columns + " FROM " + table + " WHERE ");
+        for (int x = 0; x < key.length; x++)
+            sql.append(key[x]).append("=? ").append("AND ");
+        String slq = sql.substring(0, sql.length() - 4);
+        PreparedStatement statement = connection.createPrepared(slq + ";");
+        for (int x = 1; x < key.length + 1; x++)
+            statement.setString(x, data[x-1]);
+        LOG.trace("GET ARR: " + statement);
+        return toArray(statement.executeQuery(), dataType);
+    }
+
+    /**
      * Gets all the data from the DB
      *
      * @param columns  columns that you want to get from the db

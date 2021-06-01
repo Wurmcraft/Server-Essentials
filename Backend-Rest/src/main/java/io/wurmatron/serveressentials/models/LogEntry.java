@@ -7,14 +7,14 @@ import java.util.Objects;
 public class LogEntry {
 
     public String serverID;
-    public long timestamp;
+    public Long timestamp;
     public String actionType;
     public String actionData;
     public String uuid;
-    public int x;
-    public int y;
-    public int z;
-    public int dim;
+    public Integer x;
+    public Integer y;
+    public Integer z;
+    public Integer dim;
 
     /**
      * @param serverID   id of the server this occurred
@@ -39,17 +39,20 @@ public class LogEntry {
         this.dim = dim;
     }
 
+    public LogEntry() {
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof LogEntry)) return false;
         LogEntry logEntry = (LogEntry) o;
-        return timestamp == logEntry.timestamp && x == logEntry.x && y == logEntry.y && z == logEntry.z && dim == logEntry.dim && Objects.equals(serverID, logEntry.serverID) && Objects.equals(actionType, logEntry.actionType) && Objects.equals(actionData, logEntry.actionData) && Objects.equals(uuid, logEntry.uuid);
+        return timestamp.equals(logEntry.timestamp) && x.equals(logEntry.x) && y.equals(logEntry.y) && z.equals(logEntry.z) && dim.equals(logEntry.dim) && Objects.equals(serverID, logEntry.serverID) && Objects.equals(actionType, logEntry.actionType) && Objects.equals(actionData, logEntry.actionData) && Objects.equals(uuid, logEntry.uuid);
     }
 
     @Override
-    public Rank clone() {
+    public LogEntry clone() {
         String json = ServerEssentialsRest.GSON.toJson(this);
-        return ServerEssentialsRest.GSON.fromJson(json, Rank.class);
+        return ServerEssentialsRest.GSON.fromJson(json, LogEntry.class);
     }
 }
