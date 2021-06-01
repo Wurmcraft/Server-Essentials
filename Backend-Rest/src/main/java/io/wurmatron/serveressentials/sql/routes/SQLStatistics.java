@@ -4,7 +4,11 @@ import io.wurmatron.serveressentials.models.TrackedStat;
 import io.wurmatron.serveressentials.sql.SQLGenerator;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
+import static io.wurmatron.serveressentials.ServerEssentialsRest.LOG;
 
 public class SQLStatistics extends SQLGenerator {
 
@@ -16,9 +20,15 @@ public class SQLStatistics extends SQLGenerator {
      * @param stat instance of the stat to be created
      * @return instance of the statistic that was created
      */
-    // TODO Implement
     @Nullable
     public static TrackedStat create(TrackedStat stat) {
+        try {
+            insert(STATISTICS_TABLE, STATISTICS_COLUMNS, stat, false);
+            return stat;
+        } catch (Exception e) {
+            LOG.debug("Failed to update stat '" + stat.eventType + "' on '" + stat.serverID + "' (" + e.getMessage() + ")");
+            LOG.debug("Stat: " + GSON.toJson(stat));
+        }
         return null;
     }
 
@@ -29,9 +39,14 @@ public class SQLStatistics extends SQLGenerator {
      * @param columnsToUpdate columns within the db to be updated
      * @return updated tracked statistic based on the provided information within the db
      */
-    // TODO Implement
-    @Nullable
     public static boolean update(TrackedStat stat, String[] columnsToUpdate) {
+        try {
+            update(STATISTICS_TABLE, columnsToUpdate, new String[]{"serverID", "uuid", "eventType", "timestamp"}, new String[]{stat.serverID, stat.uuid, stat.eventType, "" + stat.timestamp}, stat);
+            return true;
+        } catch (Exception e) {
+            LOG.debug("Failed to update stat ' " + stat.serverID + "' for '" + stat.uuid + "' within '" + stat.eventType + "' (" + e.getMessage() + ")");
+            LOG.debug("Stat: " + GSON.toJson(stat));
+        }
         return false;
     }
 
@@ -41,9 +56,13 @@ public class SQLStatistics extends SQLGenerator {
      * @param uuid uuid of the user to find the tracked stats for
      * @return a list of all the tracked stats related to the provided uuid
      */
-    // TODO Implement
     public static List<TrackedStat> get(String uuid) {
-        return null;
+        try {
+            return getArray("*", STATISTICS_TABLE, "uuid", uuid, new TrackedStat());
+        } catch (Exception e) {
+            LOG.debug("Failed to get for uuid '" + uuid + "' (" + e.getMessage() + ")");
+        }
+        return new ArrayList<>();
     }
 
     /**
@@ -53,9 +72,13 @@ public class SQLStatistics extends SQLGenerator {
      * @param uuid     uuid of the user account to lookup
      * @return a list of all the tracked stats related to the proved user on the given serverID
      */
-    // TODO Implement
     public static List<TrackedStat> get(String serverID, String uuid) {
-        return null;
+        try {
+            return getArray("*", STATISTICS_TABLE, new String[]{"serverID", "uuid"}, new String[]{serverID, uuid}, new TrackedStat());
+        } catch (Exception e) {
+            LOG.debug("Failed to get for uuid '" + uuid + "' on '" + serverID + "' (" + e.getMessage() + ")");
+        }
+        return new ArrayList<>();
     }
 
     /**
@@ -64,9 +87,13 @@ public class SQLStatistics extends SQLGenerator {
      * @param eventType type of event to lookup the statistics
      * @return a list of all the tracked stats related to this event
      */
-    // TODO Implement
     public static List<TrackedStat> getType(String eventType) {
-        return null;
+        try {
+            return getArray("*", STATISTICS_TABLE, "eventType", eventType, new TrackedStat());
+        } catch (Exception e) {
+            LOG.debug("Failed to get for event '" + eventType + "' (" + e.getMessage() + ")");
+        }
+        return new ArrayList<>();
     }
 
     /**
@@ -76,9 +103,13 @@ public class SQLStatistics extends SQLGenerator {
      * @param serverID  id of the server to find this event on
      * @return a list of all the tracked stats related to this event
      */
-    // TODO Implement
     public static List<TrackedStat> getType(String serverID, String eventType) {
-        return null;
+        try {
+            return getArray("*", STATISTICS_TABLE, new String[]{"serverID", "eventType"}, new String[]{serverID, eventType}, new TrackedStat());
+        } catch (Exception e) {
+            LOG.debug("Failed to get for event '" + eventType + "' on '" + serverID + "' (" + e.getMessage() + ")");
+        }
+        return new ArrayList<>();
     }
 
     /**
@@ -89,8 +120,13 @@ public class SQLStatistics extends SQLGenerator {
      * @param eventType type of event, to remove the stats from
      * @return if a tracked statistic has been deleted or not.
      */
-    // TODO Implement
     public static boolean delete(String serverID, String uuid, String eventType) {
+        try {
+            delete(STATISTICS_TABLE, new String[]{"serverID", "uuid", "eventType"}, new String[]{serverID, uuid, eventType});
+            return true;
+        } catch (Exception e) {
+            LOG.debug("Failed to delete stat for '" + uuid + "' on '" + serverID + "' of '" + eventType + "' (" + e.getMessage() + ")");
+        }
         return false;
     }
 }

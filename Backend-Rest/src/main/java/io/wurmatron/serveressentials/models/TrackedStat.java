@@ -39,8 +39,8 @@ public class TrackedStat {
     }
 
     @Override
-    public Rank clone() {
+    public TrackedStat clone() {
         String json = ServerEssentialsRest.GSON.toJson(this);
-        return ServerEssentialsRest.GSON.fromJson(json, Rank.class);
+        return ServerEssentialsRest.GSON.fromJson(json, TrackedStat.class);
     }
 }
