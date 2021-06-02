@@ -44,8 +44,8 @@ public class Action {
     }
 
     @Override
-    public Rank clone() {
+    public Action clone() {
         String json = ServerEssentialsRest.GSON.toJson(this);
-        return ServerEssentialsRest.GSON.fromJson(json, Rank.class);
+        return ServerEssentialsRest.GSON.fromJson(json, Action.class);
     }
 }

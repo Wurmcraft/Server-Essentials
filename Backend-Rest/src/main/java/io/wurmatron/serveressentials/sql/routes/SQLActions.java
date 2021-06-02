@@ -95,7 +95,7 @@ public class SQLActions extends SQLDirect {
      */
     public static List<Action> get(String host, String action, String relatedID) {
         try {
-            return queryArray("SELECT * from " + ACTIONS_TABLE + " WHERE relatedID='" + relatedID + "' AND action='" + action + "'", new Action());
+            return queryArray("SELECT * from " + ACTIONS_TABLE + " WHERE relatedID='" + relatedID + "' AND action='" + action + "' AND host='" + host + "';", new Action());
         } catch (Exception e) {
             LOG.debug("Failed to add get action from '" + relatedID + "' (" + e.getMessage() + ")");
         }

@@ -1,10 +1,21 @@
 package io.wurmatron.serveressentials.routes.data;
 
+import com.google.gson.JsonParseException;
+import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.plugin.openapi.annotations.*;
 import io.wurmatron.serveressentials.models.Action;
 import io.wurmatron.serveressentials.models.MessageResponse;
 import io.wurmatron.serveressentials.routes.Route;
+import io.wurmatron.serveressentials.sql.routes.SQLActions;
+import io.wurmatron.serveressentials.sql.routes.SQLDirect;
+
+import java.util.*;
+
+import java.util.ArrayList;
+
+import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
+import static io.wurmatron.serveressentials.routes.RouteUtils.response;
 
 public class ActionRoutes {
 
@@ -23,10 +34,16 @@ public class ActionRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    // TODO Implement
     @Route(path = "api/action", method = "POST", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler create = ctx -> {
-
+        try {
+            Action newAction = GSON.fromJson(ctx.body(), Action.class);
+            if (isValidAction(ctx, newAction)) {
+                ctx.status(201).result(GSON.toJson(SQLActions.create(newAction)));
+            }
+        } catch (JsonParseException e) {
+            ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Action Entry"));
+        }
     };
 
     @OpenApi(
@@ -50,10 +67,21 @@ public class ActionRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    // TODO Implement
     @Route(path = "api/action", method = "GET")
     public static Handler get = ctx -> {
-
+        String min = ctx.queryParam("min-timestamp");
+        String max = ctx.queryParam("max-timestamp");
+        if (min != null && !isNumber(min)) {
+            ctx.status(400).result(response("Bad Request", "min-timestamp must be a valid timestamp"));
+            return;
+        }
+        if (max != null && !isNumber(max)) {
+            ctx.status(400).result(response("Bad Request", "max-timestamp must be a valid timestamp"));
+            return;
+        }
+        String sql = createSQLForActionsWithFilters(ctx);
+        List<Action> actions = SQLDirect.queryArray(sql, new Action());
+        ctx.status(200).result(GSON.toJson(actions.toArray(new Action[0])));
     };
 
     @OpenApi(
@@ -71,10 +99,26 @@ public class ActionRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    // TODO implement
     @Route(path = "api/action", method = "PUT")
     public static Handler update = ctx -> {
-
+        try {
+            Action updatedAction = GSON.fromJson(ctx.body(), Action.class);
+            // Check for Action to update
+            Action sqlAction = null;
+            List<Action> sqlActions = SQLActions.get(updatedAction.host, updatedAction.action, updatedAction.relatedID);
+            for (Action action : sqlActions)
+                if (action.timestamp.equals(updatedAction.timestamp)) {
+                    sqlAction = action;
+                    break;
+                }
+            if (sqlAction != null) {
+                Action action = SQLActions.update(updatedAction, new String[]{"actionData"});
+                ctx.status(200).result(GSON.toJson(action));
+            } else
+                ctx.status(404).result(response("Invalid Action", "Requested Action does not exist"));
+        } catch (JsonParseException e) {
+            ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Action Entry"));
+        }
     };
 
     @OpenApi(
@@ -92,9 +136,104 @@ public class ActionRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    // TODO Implement
     @Route(path = "api/action", method = "DELETE")
     public static Handler delete = ctx -> {
-
+        try {
+            Action updatedAction = GSON.fromJson(ctx.body(), Action.class);
+            // Check for Action to delete
+            Action sqlAction = null;
+            List<Action> sqlActions = SQLActions.get(updatedAction.host, updatedAction.action, updatedAction.relatedID);
+            for (Action action : sqlActions)
+                if (action.timestamp.equals(updatedAction.timestamp)) {
+                    sqlAction = action;
+                    break;
+                }
+            if (sqlAction != null) {
+                Action action = SQLActions.delete(updatedAction.host, updatedAction.action, sqlAction.relatedID, sqlAction.timestamp);
+                ctx.status(200).result(GSON.toJson(action));
+            } else
+                ctx.status(404).result(response("Invalid Action", "Requested Action does not exist"));
+        } catch (JsonParseException e) {
+            ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Action Entry"));
+        }
     };
+
+    /**
+     * Checks if the provided action is valid
+     *
+     * @param context message context for the request
+     * @param action  action to check if its valid
+     * @return if the provided action is valid
+     */
+    public static boolean isValidAction(Context context, Action action) {
+        List<MessageResponse> errors = new ArrayList<>();
+        // Validate relatedID
+        if (action.relatedID.trim().isEmpty())
+            errors.add(new MessageResponse("Invalid Entry", "Invalid / Empty RelatedID"));
+        // Validate host
+        if (action.host.trim().isEmpty())
+            errors.add(new MessageResponse("Invalid Entry", "Invalid / Empty Host"));
+        if (action.action.trim().isEmpty())
+            errors.add(new MessageResponse("Invalid Entry", "Invalid / Empty Action"));
+        if (action.timestamp <= 0)
+            errors.add(new MessageResponse("Invalid Entry", "Timestamp must be greater than 0"));
+        if (errors.size() > 0) {
+            context.status(400).result(GSON.toJson(errors));
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Collects the filters from the message context and create a sql statement with the provided information
+     *
+     * @param ctx context for the requested sql statement
+     * @return sql statement matching the requested filters
+     */
+    private static String createSQLForActionsWithFilters(Context ctx) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT * FROM " + SQLActions.ACTIONS_TABLE + " WHERE ");
+        String relatedID = ctx.queryParam("related-id");
+        if (relatedID != null && !relatedID.trim().isEmpty())
+            builder.append("relatedID LIKE '" + relatedID + "%' AND ");
+        String host = ctx.queryParam("host");
+        if (host != null && !host.trim().isEmpty())
+            builder.append("host LIKE '" + host + "%' AND ");
+        String action = ctx.queryParam("action");
+        if (action != null && !action.trim().isEmpty())
+            builder.append("action LIKE '" + action + "%' AND ");
+        String min = ctx.queryParam("min-timestamp");
+        String max = ctx.queryParam("max-timestamp");
+        if (min != null && max != null && !min.trim().isEmpty() && !max.trim().isEmpty())
+            builder.append("timestamp BETWEEN " + min + " AND " + max);
+        else if (min != null && !min.trim().isEmpty())
+            builder.append("timestamp <= " + min);
+        else if (max != null && !max.trim().isEmpty())
+            builder.append("timestamp >= " + max);
+        String sql = builder.toString();
+        int shift = 4;
+        if(sql.endsWith("WHERE "))
+            shift = 6;
+        sql = sql.substring(0, sql.length() - shift);
+        sql = sql + ";";
+        return sql;
+    }
+
+    /**
+     * Checks if the provided string is a positive number
+     *
+     * @param num string of a possible number
+     * @return if the string is a valid number, equal or greater than 0
+     */
+    public static boolean isNumber(String num) {
+        if (num != null && !num.trim().isEmpty()) {
+            try {
+                long no = Long.parseLong(num);
+                if (no >= 0)
+                    return true;
+            } catch (NumberFormatException e) {
+            }
+        }
+        return false;
+    }
 }

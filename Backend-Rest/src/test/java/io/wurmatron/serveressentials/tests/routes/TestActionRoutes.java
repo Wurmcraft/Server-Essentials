@@ -24,10 +24,10 @@ public class TestActionRoutes {
     @Test
     @Order(1)
     public void testAddAction() throws IOException {
-        Action addedAction = HTTPRequests.postWithReturn("action", TestActions.TEST_ACTION, Action.class);
+        Action addedAction = HTTPRequests.postWithReturn("api/action", TestActions.TEST_ACTION, Action.class);
         assertNotNull(addedAction, "Action was created successfully");
         // Make sure the action was added successfully
-        Action[] actions = HTTPRequests.get("action?action=" + addedAction.action, Action[].class);
+        Action[] actions = HTTPRequests.get("api/action?action=" + addedAction.action, Action[].class);
         boolean exists = false;
         for (Action action : actions)
             if (TestActions.TEST_ACTION.equals(action)) {
@@ -40,7 +40,7 @@ public class TestActionRoutes {
     @Test
     @Order(2)
     public void testGetAction() throws IOException {
-        Action[] actions = HTTPRequests.get("action?host=" + TestActions.TEST_ACTION.host, Action[].class);
+        Action[] actions = HTTPRequests.get("api/action?host=" + TestActions.TEST_ACTION.host, Action[].class);
         boolean exists = false;
         for (Action action : actions)
             if (TestActions.TEST_ACTION.equals(action)) {
@@ -53,10 +53,10 @@ public class TestActionRoutes {
     @Test
     @Order(2)
     public void testUpdateAction() throws IOException {
-        TestActions.TEST_ACTION.action = "Destroy";
-        HTTPRequests.put("action", TestActions.TEST_ACTION);
+        TestActions.TEST_ACTION.actionData = "{\"Test\": true}";
+        HTTPRequests.put("api/action", TestActions.TEST_ACTION);
         // Check if action was updated
-        Action[] actions = HTTPRequests.get("action?host=" + TestActions.TEST_ACTION.host, Action[].class);
+        Action[] actions = HTTPRequests.get("api/action?host=" + TestActions.TEST_ACTION.host, Action[].class);
         boolean exists = false;
         for (Action action : actions)
             if (TestActions.TEST_ACTION.equals(action)) {
@@ -69,10 +69,10 @@ public class TestActionRoutes {
     @Test
     @Order(3)
     public void testDeleteAction() throws IOException {
-        Action deletedAction = HTTPRequests.deleteWithReturn("action", TestActions.TEST_ACTION, Action.class);
+        Action deletedAction = HTTPRequests.deleteWithReturn("api/action", TestActions.TEST_ACTION, Action.class);
         assertNotNull(deletedAction, "Action was been deleted successfully");
         // Make sure the action was deleted
-        Action[] actions = HTTPRequests.get("action?action=" + TestActions.TEST_ACTION.action, Action[].class);
+        Action[] actions = HTTPRequests.get("api/action?action=" + TestActions.TEST_ACTION.action, Action[].class);
         boolean exists = false;
         for (Action action : actions)
             if (TestActions.TEST_ACTION.equals(action)) {
