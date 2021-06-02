@@ -24,10 +24,10 @@ public class TestDonatorRoutes {
     @Test
     @Order(1)
     public void testAddDonationEntry() throws IOException {
-        Donator newEntry = HTTPRequests.postWithReturn("donator", TestDonators.TEST_DONATOR, Donator.class);
+        Donator newEntry = HTTPRequests.postWithReturn("api/donator", TestDonators.TEST_DONATOR, Donator.class);
         assertNotNull(newEntry, "Entry was created successfully");
         // Make sure the donation entry was created
-        Donator[] entries = HTTPRequests.get("donator?transaction=" + TestDonators.TEST_DONATOR.transactionID, Donator[].class);
+        Donator[] entries = HTTPRequests.get("api/donator?transaction=" + TestDonators.TEST_DONATOR.transactionID, Donator[].class);
         boolean exists = false;
         for (Donator entry : entries)
             if (TestDonators.TEST_DONATOR.equals(entry)) {
@@ -40,7 +40,7 @@ public class TestDonatorRoutes {
     @Test
     @Order(2)
     public void testGetDonationEntry() throws IOException {
-        Donator[] entries = HTTPRequests.get("donator?uuid=" + TestDonators.TEST_DONATOR.uuid, Donator[].class);
+        Donator[] entries = HTTPRequests.get("api/donator?uuid=" + TestDonators.TEST_DONATOR.uuid, Donator[].class);
         boolean exists = false;
         for (Donator entry : entries)
             if (TestDonators.TEST_DONATOR.equals(entry)) {
@@ -56,7 +56,7 @@ public class TestDonatorRoutes {
         TestDonators.TEST_DONATOR.amount = 9000.1;
         HTTPRequests.put("donator", TestDonators.TEST_DONATOR);
         // MAke sure the entry was updated successfully
-        Donator[] entries = HTTPRequests.get("donator?type=" + TestDonators.TEST_DONATOR.type, Donator[].class);
+        Donator[] entries = HTTPRequests.get("api/donator?type=" + TestDonators.TEST_DONATOR.type, Donator[].class);
         boolean exists = false;
         for (Donator entry : entries)
             if (TestDonators.TEST_DONATOR.equals(entry)) {
@@ -69,10 +69,10 @@ public class TestDonatorRoutes {
     @Test
     @Order(3)
     public void testDeleteDonationEntry() throws IOException {
-        Donator deletedEntry = HTTPRequests.deleteWithReturn("donator", TestDonators.TEST_DONATOR, Donator.class);
+        Donator deletedEntry = HTTPRequests.deleteWithReturn("api/donator", TestDonators.TEST_DONATOR, Donator.class);
         assertNotNull(deletedEntry, "Entry was deleted successfully");
         //  Check if the entry was deleted successfully
-        Donator[] entries = HTTPRequests.get("donator?type=" + TestDonators.TEST_DONATOR.type, Donator[].class);
+        Donator[] entries = HTTPRequests.get("api/donator?type=" + TestDonators.TEST_DONATOR.type, Donator[].class);
         boolean exists = false;
         for (Donator entry : entries)
             if (TestDonators.TEST_DONATOR.equals(entry)) {

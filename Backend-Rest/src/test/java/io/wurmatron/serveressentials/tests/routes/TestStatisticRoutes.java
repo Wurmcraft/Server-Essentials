@@ -25,7 +25,7 @@ public class TestStatisticRoutes {
     @Test
     @Order(1)
     public void testAddStatistic() throws IOException {
-        TrackedStat stat = HTTPRequests.postWithReturn("statistics", TestStatistics.TEST_STAT, TrackedStat.class);
+        TrackedStat stat = HTTPRequests.postWithReturn("api/statistics", TestStatistics.TEST_STAT, TrackedStat.class);
         assertNotNull(stat, "Tracked Stat is not null");
         // Check for added entry
         TrackedStat[] stats = HTTPRequests.get("statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);
@@ -39,7 +39,7 @@ public class TestStatisticRoutes {
     @Test
     @Order(2)
     public void testGetStatistic() throws IOException {
-        TrackedStat[] stats = HTTPRequests.get("statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);
+        TrackedStat[] stats = HTTPRequests.get("api/statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);
         boolean exists = false;
         for (TrackedStat s : stats)
             if (s.equals(TestStatistics.TEST_STAT))
@@ -53,7 +53,7 @@ public class TestStatisticRoutes {
         TestStatistics.TEST_STAT.serverID = "Test2";
         HTTPRequests.put("statistics", TestStatistics.TEST_STAT);
         // Check for update
-        TrackedStat[] stats = HTTPRequests.get("statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);
+        TrackedStat[] stats = HTTPRequests.get("api/statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);
         boolean exists = false;
         for (TrackedStat s : stats)
             if (s.equals(TestStatistics.TEST_STAT))
@@ -67,7 +67,7 @@ public class TestStatisticRoutes {
         TestStatistics.TEST_STAT.eventData = "{\"data\": 5}";
         HTTPRequests.patch("statistics/event-data", TestStatistics.TEST_STAT);
         // Check if it was updated
-        TrackedStat[] stats = HTTPRequests.get("statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);
+        TrackedStat[] stats = HTTPRequests.get("api/statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);
         boolean exists = false;
         for (TrackedStat s : stats)
             if (s.equals(TestStatistics.TEST_STAT))
@@ -78,10 +78,10 @@ public class TestStatisticRoutes {
     @Test
     @Order(3)
     public void testDeleteStatistic() throws IOException {
-        TrackedStat deletedStat = HTTPRequests.deleteWithReturn("statistics", TestStatistics.TEST_STAT, TrackedStat.class);
+        TrackedStat deletedStat = HTTPRequests.deleteWithReturn("api/statistics", TestStatistics.TEST_STAT, TrackedStat.class);
         assertNotNull(deletedStat, "Deleted Stat is returned");
         // Check if make sure it was deleted
-        TrackedStat[] stats = HTTPRequests.get("statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);
+        TrackedStat[] stats = HTTPRequests.get("api/statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);
         boolean exists = false;
         for (TrackedStat s : stats)
             if (s.equals(TestStatistics.TEST_STAT))

@@ -29,7 +29,7 @@ public class TestMarketRoutes {
         MarketEntry newEntry = HTTPRequests.postWithReturn("market", TestMarkets.TEST_MARKET, MarketEntry.class);
         assertNotNull(newEntry, "Market Entry is not null");
         // Check if the new entry was created
-        MarketEntry[] entries = HTTPRequests.get("market?uuid=" + TestMarkets.TEST_MARKET.sellerUUID, MarketEntry[].class);
+        MarketEntry[] entries = HTTPRequests.get("api/market?uuid=" + TestMarkets.TEST_MARKET.sellerUUID, MarketEntry[].class);
         boolean exists = false;
         for (MarketEntry entry : entries)
             if (TestMarkets.TEST_MARKET.equals(entry)) {
@@ -42,7 +42,7 @@ public class TestMarketRoutes {
     @Test
     @Order(2)
     public void testGetMarketEntry() throws IOException {
-        MarketEntry[] entries = HTTPRequests.get("market?uuid=" + TestMarkets.TEST_MARKET.sellerUUID, MarketEntry[].class);
+        MarketEntry[] entries = HTTPRequests.get("api/market?uuid=" + TestMarkets.TEST_MARKET.sellerUUID, MarketEntry[].class);
         boolean exists = false;
         for (MarketEntry entry : entries)
             if (TestMarkets.TEST_MARKET.equals(entry)) {
@@ -58,7 +58,7 @@ public class TestMarketRoutes {
         TestMarkets.TEST_MARKET.marketType = "BUY";
         HTTPRequests.put("market", TestMarkets.TEST_MARKET);
         // Make sure it was updated
-        MarketEntry[] entries = HTTPRequests.get("market?uuid=" + TestMarkets.TEST_MARKET.sellerUUID, MarketEntry[].class);
+        MarketEntry[] entries = HTTPRequests.get("api/market?uuid=" + TestMarkets.TEST_MARKET.sellerUUID, MarketEntry[].class);
         boolean exists = false;
         for (MarketEntry entry : entries)
             if (TestMarkets.TEST_MARKET.equals(entry)) {
@@ -71,10 +71,10 @@ public class TestMarketRoutes {
     @Test
     @Order(3)
     public void testDeleteMarketEntry() throws IOException {
-        MarketEntry deletedEntry = HTTPRequests.deleteWithReturn("market", TestMarkets.TEST_MARKET, MarketEntry.class);
+        MarketEntry deletedEntry = HTTPRequests.deleteWithReturn("api/market", TestMarkets.TEST_MARKET, MarketEntry.class);
         assertNotNull(deletedEntry, "Deleted entry is not null");
         // Make sure the entry was deleted
-        MarketEntry[] entries = HTTPRequests.get("market?uuid=" + TestMarkets.TEST_MARKET.sellerUUID, MarketEntry[].class);
+        MarketEntry[] entries = HTTPRequests.get("api/market?uuid=" + TestMarkets.TEST_MARKET.sellerUUID, MarketEntry[].class);
         boolean exists = false;
         for (MarketEntry entry : entries)
             if (TestMarkets.TEST_MARKET.equals(entry)) {

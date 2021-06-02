@@ -24,7 +24,7 @@ public class TestBanRoutes {
     @Test
     @Order(1)
     public void testAddBanEntry() throws IOException {
-        Ban newEntry = HTTPRequests.postWithReturn("ban", TestBans.TEST_BAN, Ban.class);
+        Ban newEntry = HTTPRequests.postWithReturn("api/ban", TestBans.TEST_BAN, Ban.class);
         assertNotNull(newEntry, "Entry was added successfully");
         // Make sure the ban was added.
     }
@@ -32,14 +32,14 @@ public class TestBanRoutes {
     @Test
     @Order(2)
     public void testGetBanEntry() throws IOException {
-        Ban entry = HTTPRequests.get("ban/" + TestBans.TEST_BAN.banID, Ban.class);
+        Ban entry = HTTPRequests.get("api/ban/" + TestBans.TEST_BAN.banID, Ban.class);
         assertEquals(TestBans.TEST_BAN, entry, "Entry exists");
     }
 
     @Test
     @Order(2)
     public void testGetBans() throws IOException {
-        Ban[] bans = HTTPRequests.get("ban", Ban[].class);
+        Ban[] bans = HTTPRequests.get("api/ban", Ban[].class);
         boolean exists = false;
         for(Ban ban : bans)
             if(TestBans.TEST_BAN.equals(ban)) {
@@ -53,16 +53,16 @@ public class TestBanRoutes {
     @Order(2)
     public void testUpdateBan() throws IOException {
         TestBans.TEST_BAN.banReason ="Stupidity";
-        HTTPRequests.put("ban/" + TestBans.TEST_BAN.banID, TestBans.TEST_BAN.banID);
+        HTTPRequests.put("api/ban/" + TestBans.TEST_BAN.banID, TestBans.TEST_BAN.banID);
         // Make sure it was updated
-        Ban entry = HTTPRequests.get("ban/" + TestBans.TEST_BAN.banID, Ban.class);
+        Ban entry = HTTPRequests.get("api/ban/" + TestBans.TEST_BAN.banID, Ban.class);
         assertEquals(TestBans.TEST_BAN, entry, "Entry was updated");
     }
 
     @Test
     @Order(3)
     public void testDeleteBan() throws IOException {
-        Ban deletedBan = HTTPRequests.deleteWithReturn("ban/" + TestBans.TEST_BAN.banID,TestBans.TEST_BAN, Ban.class);
+        Ban deletedBan = HTTPRequests.deleteWithReturn("api/ban/" + TestBans.TEST_BAN.banID,TestBans.TEST_BAN, Ban.class);
         assertNotNull(deletedBan, "Ban was deleted");
     }
 }

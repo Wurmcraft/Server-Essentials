@@ -25,18 +25,18 @@ public class TestCurrencyRoutes {
     @Test
     @Order(1)
     public void testAddCurrency() throws IOException {
-        Currency currency = HTTPRequests.postWithReturn("currency", TestCurrencys.TEST_CURRENCY, Currency.class);
+        Currency currency = HTTPRequests.postWithReturn("api/currency", TestCurrencys.TEST_CURRENCY, Currency.class);
         assertNotNull(currency, "Currency was added successfully");
         // Make sure the currency was added correctly
         TestCurrencys.TEST_CURRENCY.currencyID = currency.currencyID;
-        currency = HTTPRequests.get("currency/" + currency.currencyID, Currency.class);
+        currency = HTTPRequests.get("api/currency/" + currency.currencyID, Currency.class);
         assertEquals(TestCurrencys.TEST_CURRENCY, currency, "Currencies are the same");
     }
 
     @Test
     @Order(2)
     public void testGetCurrency() throws IOException {
-        Currency[] currencies = HTTPRequests.get("currency", Currency[].class);
+        Currency[] currencies = HTTPRequests.get("api/currency", Currency[].class);
         boolean exists = false;
         for (Currency currency : currencies)
             if (TestCurrencys.TEST_CURRENCY.equals(currency)) {
@@ -50,19 +50,19 @@ public class TestCurrencyRoutes {
     @Order(2)
     public void testUpdateCurrency() throws IOException {
         TestCurrencys.TEST_CURRENCY.globalWorth = .001;
-        HTTPRequests.put("currency/" + TestCurrencys.TEST_CURRENCY.currencyID, TestCurrencys.TEST_CURRENCY);
+        HTTPRequests.put("api/currency/" + TestCurrencys.TEST_CURRENCY.currencyID, TestCurrencys.TEST_CURRENCY);
         // Make sure the currency was updated
-        Currency currency = HTTPRequests.get("currency/" + TestCurrencys.TEST_CURRENCY.currencyID, Currency.class);
+        Currency currency = HTTPRequests.get("api/currency/" + TestCurrencys.TEST_CURRENCY.currencyID, Currency.class);
         assertEquals(TestCurrencys.TEST_CURRENCY, currency, "Currencies are the same");
     }
 
     @Test
     @Order(3)
     public void testDeleteCurrency() throws IOException {
-        Currency deletedCurrency = HTTPRequests.deleteWithReturn("currency/" + TestCurrencys.TEST_CURRENCY.currencyID, TestCurrencys.TEST_CURRENCY, Currency.class);
+        Currency deletedCurrency = HTTPRequests.deleteWithReturn("api/currency/" + TestCurrencys.TEST_CURRENCY.currencyID, TestCurrencys.TEST_CURRENCY, Currency.class);
         assertNotNull(deletedCurrency, "Currency was deleted successfully");
         // Make sure the currency was deleted successfully
-        Currency[] currencies = HTTPRequests.get("currency", Currency[].class);
+        Currency[] currencies = HTTPRequests.get("api/currency", Currency[].class);
         boolean exists = false;
         for (Currency currency : currencies)
             if (TestCurrencys.TEST_CURRENCY.equals(currency)) {

@@ -26,10 +26,10 @@ public class TestLoggingRoutes {
     @Test
     @Order(1)
     public void testAddLoggingEvent() throws IOException {
-        LogEntry newEntry = HTTPRequests.postWithReturn("logging", TestLogging.TEST_ENTRY, LogEntry.class);
+        LogEntry newEntry = HTTPRequests.postWithReturn("api/logging", TestLogging.TEST_ENTRY, LogEntry.class);
         assertNotNull(newEntry, "Log Entry is not null");
         // Check if the log entry was created successfully
-        LogEntry[] entries = HTTPRequests.get("logging?action=" + TestLogging.TEST_ENTRY.actionType, LogEntry[].class);
+        LogEntry[] entries = HTTPRequests.get("api/logging?action=" + TestLogging.TEST_ENTRY.actionType, LogEntry[].class);
         boolean exists = false;
         for (LogEntry entry : entries)
             if (TestLogging.TEST_ENTRY.equals(entry)) {
@@ -42,7 +42,7 @@ public class TestLoggingRoutes {
     @Test
     @Order(2)
     public void testGetLogEvent() throws IOException {
-        LogEntry[] entries = HTTPRequests.get("logging?action=" + TestLogging.TEST_ENTRY.actionType, LogEntry[].class);
+        LogEntry[] entries = HTTPRequests.get("api/logging?action=" + TestLogging.TEST_ENTRY.actionType, LogEntry[].class);
         boolean exists = false;
         for (LogEntry entry : entries)
             if (TestLogging.TEST_ENTRY.equals(entry)) {
@@ -58,7 +58,7 @@ public class TestLoggingRoutes {
         TestLogging.TEST_ENTRY.x = 50000;
         HTTPRequests.put("logging", TestLogging.TEST_ENTRY);
         // Check if the log entry was updated successfully
-        LogEntry[] entries = HTTPRequests.get("logging?action=" + TestLogging.TEST_ENTRY.actionType, LogEntry[].class);
+        LogEntry[] entries = HTTPRequests.get("api/logging?action=" + TestLogging.TEST_ENTRY.actionType, LogEntry[].class);
         boolean exists = false;
         for (LogEntry entry : entries)
             if (TestLogging.TEST_ENTRY.equals(entry)) {
@@ -71,10 +71,10 @@ public class TestLoggingRoutes {
     @Test
     @Order(3)
     public void testDeleteLogEvent() throws IOException {
-        LogEntry deletedEntry = HTTPRequests.deleteWithReturn("logging", TestLogging.TEST_ENTRY, LogEntry.class);
+        LogEntry deletedEntry = HTTPRequests.deleteWithReturn("api/logging", TestLogging.TEST_ENTRY, LogEntry.class);
         assertNotNull(deletedEntry, "Entry was deleted successfully");
         // Make sure the log event was deleted successfully
-        LogEntry[] entries = HTTPRequests.get("logging?action=" + TestLogging.TEST_ENTRY.actionType, LogEntry[].class);
+        LogEntry[] entries = HTTPRequests.get("api/logging?action=" + TestLogging.TEST_ENTRY.actionType, LogEntry[].class);
         boolean exists = false;
         for (LogEntry entry : entries)
             if (TestLogging.TEST_ENTRY.equals(entry)) {
