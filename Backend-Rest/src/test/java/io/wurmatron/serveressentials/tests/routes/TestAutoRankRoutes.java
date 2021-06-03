@@ -97,6 +97,6 @@ public class TestAutoRankRoutes {
         assertNotNull(deletedRank, "AutoRank was deleted");
         // Make sure the autorank was deleted
         AutoRank autorank = HTTPRequests.get("api/autorank/" + TestAutoRanks.TEST_AUTORANK.autoRankID, AutoRank.class);
-        assertEquals(TestAutoRanks.TEST_AUTORANK, autorank, "Auto-Ranks are the same");
+        assertNull( autorank, "Auto-Ranks has been deleted");
     }
 }

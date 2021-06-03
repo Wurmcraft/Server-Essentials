@@ -92,7 +92,7 @@ public class SQLCacheAutoRank extends SQLCache {
     @Nullable
     public static AutoRank create(AutoRank autoRank) {
         try {
-            autoRank.autoRankID = insert(AUTORANK_TABLE, Arrays.copyOfRange(AUTORANKS_COLUMNS,1,AUTORANKS_COLUMNS.length), autoRank, true);
+            autoRank.autoRankID = insert(AUTORANK_TABLE, Arrays.copyOfRange(AUTORANKS_COLUMNS, 1, AUTORANKS_COLUMNS.length), autoRank, true);
             autoRankCache.put(autoRank.autoRankID, new CacheAutoRank(autoRank));
             nameCache.put(autoRank.rank.toUpperCase(), new NameCache(autoRank.autoRankID));
             return autoRank;
@@ -124,6 +124,7 @@ public class SQLCacheAutoRank extends SQLCache {
             } else {
                 autoRankCache.put(autoRank.autoRankID, new CacheAutoRank(autoRank));
                 nameCache.put(autoRank.rank.toUpperCase(), new NameCache(autoRank.autoRankID));
+                return true;
             }
         } catch (Exception e) {
             LOG.debug("Failed to update autorank with id '" + autoRank.autoRankID + "' (" + e.getMessage() + ")");
@@ -140,7 +141,7 @@ public class SQLCacheAutoRank extends SQLCache {
      */
     public static List<AutoRank> get() {
         try {
-            return SQLDirect.queryArray("SELECT * FROM " + AUTORANK_TABLE,new AutoRank());
+            return SQLDirect.queryArray("SELECT * FROM " + AUTORANK_TABLE, new AutoRank());
         } catch (Exception e) {
             LOG.debug("Failed to GET autoranks (" + e.getMessage() + ")");
         }
@@ -159,7 +160,7 @@ public class SQLCacheAutoRank extends SQLCache {
             delete(AUTORANK_TABLE, "autoRankID", autorankID + "");
             invalidate(autorankID);
             return true;
-        }catch (Exception e) {
+        } catch (Exception e) {
             LOG.debug("Failed to delete autorank with id '" + autorankID + "'");
         }
         return false;
@@ -194,20 +195,20 @@ public class SQLCacheAutoRank extends SQLCache {
         LOG.info("AutoRank Cache cleanup has begun");
         // ID / Main cache
         List<Integer> toBeRemoved = new ArrayList<>();
-        for(CacheAutoRank entry : autoRankCache.values())
-            if(needsUpdate(entry))
+        for (CacheAutoRank entry : autoRankCache.values())
+            if (needsUpdate(entry))
                 toBeRemoved.add(entry.autoRank.autoRankID);
-            List<String> toRemoveNames = new ArrayList<>();
-            for(String key : nameCache.keySet())
-                if(needsUpdate(nameCache.get(key)))
-                    toRemoveNames.add(key);
-                // Remove from Cache
+        List<String> toRemoveNames = new ArrayList<>();
+        for (String key : nameCache.keySet())
+            if (needsUpdate(nameCache.get(key)))
+                toRemoveNames.add(key);
+        // Remove from Cache
         int count = 0;
-        for(int entry : toBeRemoved) {
+        for (int entry : toBeRemoved) {
             count++;
             invalidate(entry);
         }
-        for(String key : toRemoveNames) {
+        for (String key : toRemoveNames) {
             count++;
             invalidate(key);
         }
@@ -218,5 +219,13 @@ public class SQLCacheAutoRank extends SQLCache {
      * This should do nothing, its here to prevent an possible reflection issue
      */
     public static void cleanupDB() {
+    }
+
+
+    /**
+     * Get the table columns beside the ID
+     */
+    public static String[] getColumns() {
+        return Arrays.copyOfRange(AUTORANKS_COLUMNS, 1, AUTORANKS_COLUMNS.length);
     }
 }

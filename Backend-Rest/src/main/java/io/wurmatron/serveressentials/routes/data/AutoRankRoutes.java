@@ -6,9 +6,13 @@ import io.javalin.http.Handler;
 import io.javalin.plugin.openapi.annotations.*;
 import io.wurmatron.serveressentials.models.AutoRank;
 import io.wurmatron.serveressentials.models.MessageResponse;
+import io.wurmatron.serveressentials.routes.EndpointSecurity;
 import io.wurmatron.serveressentials.routes.Route;
+import io.wurmatron.serveressentials.routes.RouteUtils;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheAutoRank;
+import io.wurmatron.serveressentials.sql.routes.SQLDirect;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,10 +96,7 @@ public class AutoRankRoutes {
                 AutoRank existing = SQLCacheAutoRank.getID(autoRank.autoRankID);
                 if (existing != null) {
                     // Update Existing Autorank
-                    boolean updated = SQLCacheAutoRank.update(autoRank, new String[]{"rank", "nextRank", "playTime", "currencyName", "currencyAmount", "specialEvents"});
-                    if (!updated) {
-                        ctx.status(500).result(response("AutoRank failed to update", "Autorank has failed to be updated"));
-                    }
+                   SQLCacheAutoRank.update(autoRank, new String[] {"playTime", "nextRank","currencyName", "currencyAmount", "specialEvents"});
                     ctx.status(200).result(GSON.toJson(autoRank));
                 } else
                     ctx.status(404).result(response("AutoRank does not exists", "AutoRank with the id does not exist!"));
@@ -119,10 +120,21 @@ public class AutoRankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    // TODO Implement
     @Route(path = "api/autorank/:id", method = "GET")
     public static Handler getID = ctx -> {
-
+        try {
+            long id = Long.parseLong(ctx.pathParam("id"));
+            if (id >= 0) {
+                AutoRank autoRank = SQLCacheAutoRank.getID(id);
+                if (autoRank != null) {
+                    ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, autoRank)));
+                } else
+                    ctx.status(404).result(response("Invalid ID", "No AutoRank Exists with the provided ID"));
+            } else
+                ctx.status(400).result(response("Bad Request", "ID must be 0 or greater"));
+        } catch (Exception e) {
+            ctx.status(400).result(response("Bad Request", "ID is not a valid number!"));
+        }
     };
 
     @OpenApi(
@@ -139,10 +151,27 @@ public class AutoRankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    // TODO Implement
     @Route(path = "api/autorank/:id/:data", method = "GET")
     public static Handler getData = ctx -> {
-
+        try {
+            long id = Long.parseLong(ctx.pathParam("id"));
+            if (id >= 0) {
+                AutoRank autoRank = SQLCacheAutoRank.getID(id);
+                if (autoRank != null) {
+                    String field = convertPathToField(ctx.pathParam("data"));
+                    if (field != null) {
+                        Field autoRankField = autoRank.getClass().getField(field);
+                        autoRank = RouteUtils.wipeAllExceptField(autoRank.clone(), autoRankField);
+                        ctx.status(200).result(GSON.toJson(autoRank));
+                    } else
+                        ctx.status(400).result(response("Bad Request", ctx.pathParam("data") + " is not a valid path param"));
+                } else
+                    ctx.status(404).result(response("Invalid ID", "No AutoRank Exists with the provided ID"));
+            } else
+                ctx.status(400).result(response("Bad Request", "ID must be 0 or greater"));
+        } catch (Exception e) {
+            ctx.status(400).result(response("Bad Request", "ID is not a valid number!"));
+        }
     };
 
     @OpenApi(
@@ -167,10 +196,12 @@ public class AutoRankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    // TODO Implement
     @Route(path = "api/autorank", method = "GET")
     public static Handler get = ctx -> {
-
+        String sql = createSQLForUsersWithFilters(ctx);
+        // Send Request and Process
+        List<AutoRank> accounts = SQLDirect.queryArray(sql, new AutoRank());
+        ctx.status(200).result(GSON.toJson(accounts.toArray(new AutoRank[0])));
     };
 
     @OpenApi(
@@ -189,10 +220,36 @@ public class AutoRankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    // TODO Implement
     @Route(path = "api/autorank/:id/:data", method = "PATCH", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler patch = ctx -> {
-
+        try {
+            AutoRank autorank = GSON.fromJson(ctx.body(), AutoRank.class);
+            try {
+                long id = Long.parseLong(ctx.pathParam("id"));
+                if (id >= 0) {
+                    AutoRank cacheAutoRank = SQLCacheAutoRank.getID(id);
+                    if (cacheAutoRank != null) {
+                        String field = convertPathToField(ctx.pathParam("data"));
+                        if (field != null) {
+                            Field arField = cacheAutoRank.getClass().getDeclaredField(field);
+                            arField.set(cacheAutoRank, arField.get(autorank));
+                            if (isValidAutoRank(ctx, cacheAutoRank)) {
+                                ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, cacheAutoRank)));
+                            } else {
+                                ctx.status(500).result(response("AutoRank Error", "AutoRank has failed to be validated!, Full Update / Put is required"));
+                            }
+                        } else
+                            ctx.status(400).result(response("Bad Request", ctx.pathParam("data") + " is not a valid path param"));
+                    } else
+                        ctx.status(404).result(response("Invalid ID", "No AutoRank Exists with the provided ID"));
+                } else
+                    ctx.status(400).result(response("Bad Request", "ID must be 0 or greater"));
+            } catch (Exception e) {
+                ctx.status(400).result(response("Bad Request", "ID is not a valid number!"));
+            }
+        } catch (JsonParseException e) {
+            ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an AutoRank"));
+        }
     };
 
     @OpenApi(
@@ -200,7 +257,6 @@ public class AutoRankRoutes {
             description = "Delete an existing auto-rank",
             tags = {"Auto-Rank"},
             headers = {@OpenApiParam(name = "Authorization", description = "Authorization Token to used for authentication within the rest API", required = true)},
-            requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = AutoRank.class)}, required = true, description = "Auto-Rank Information used to delete the existing entry"),
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = AutoRank.class)}, description = "Auto-Rank has been updated deleted"),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = MessageResponse[].class)}, description = "One or more of the provided values, has failed to validate!"),
@@ -211,10 +267,25 @@ public class AutoRankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    // TODO Implement
     @Route(path = "api/autorank/:id", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler delete = ctx -> {
-
+        try {
+            long id = Long.parseLong(ctx.pathParam("id"));
+            if (id >= 0) {
+                AutoRank autoRank = SQLCacheAutoRank.getID(id);
+                if (autoRank != null) {
+                    boolean deleted = SQLCacheAutoRank.delete(autoRank.autoRankID);
+                    if (deleted)
+                        ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, autoRank)));
+                    else
+                        ctx.status(500).result(response("Delete Failed", "Failed to delete autorank ID '" + autoRank.autoRankID + "'"));
+                } else
+                    ctx.status(404).result(response("Invalid ID", "No AutoRank Exists with the provided ID"));
+            } else
+                ctx.status(400).result(response("Bad Request", "ID must be 0 or greater"));
+        } catch (Exception e) {
+            ctx.status(400).result(response("Bad Request", "ID is not a valid number!"));
+        }
     };
 
     /**
@@ -242,5 +313,86 @@ public class AutoRankRoutes {
             context.status(400).result(GSON.toJson(errors.toArray(new MessageResponse[0])));
         }
         return false;
+    }
+
+    /**
+     * Filters / Removes data based on the users permission / authentication
+     *
+     * @param ctx      context to get the user from, user authentication
+     * @param autoRank instance to remove the data from before returning
+     * @return filtered version of the autoRank instance with data removed (if required)
+     */
+    private static AutoRank filterBasedOnPerms(Context ctx, AutoRank autoRank) {
+        Route.RestRoles role = EndpointSecurity.getRole(ctx);
+        if (role.equals(Route.RestRoles.DEV) || role.equals(Route.RestRoles.SERVER))
+            return autoRank;
+        AutoRank clone = autoRank.clone();
+        if (role.equals(Route.RestRoles.USER)) {
+            // TODO Based on SystemPerms
+        }
+        clone.specialEvents = null;
+        return clone;
+    }
+
+    /**
+     * Converts the endpoint PathParm into he internal data name, used for reflection
+     *
+     * @param data PathParam provided by the user via the endpoint
+     */
+    public static String convertPathToField(String data) {
+        if (data.equalsIgnoreCase("autorank-id"))
+            return "autoRankID";
+        if (data.equalsIgnoreCase("rank") || data.equals("name"))
+            return "rank";
+        if (data.equalsIgnoreCase("next-rank"))
+            return "nextRank";
+        if (data.equalsIgnoreCase("playtime"))
+            return "playTime";
+        if (data.equalsIgnoreCase("currency"))
+            return "currencyName";
+        if (data.equalsIgnoreCase("currency-amount"))
+            return "currencyAmount";
+        if (data.equalsIgnoreCase("special-event") || data.equalsIgnoreCase("special-events") || data.equalsIgnoreCase("event"))
+            return "specialEvents";
+        return null;
+    }
+
+    /**
+     *  Generates a SQL Statement for get users with filters applied
+     *
+     * @param ctx context to get the information from the user
+     * @return  sql statement for autorank lookup
+     */
+    private static String createSQLForUsersWithFilters(Context ctx) {
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("SELECT * FROM " + SQLCacheAutoRank.AUTORANK_TABLE + " WHERE ");
+        // Verify, Check and Apply Rank Filter
+        String rank = ctx.queryParam("rank");
+        if (rank != null && !rank.trim().isEmpty())
+            sqlBuilder.append("rank LIKE '").append(rank).append("%' AND ");
+        // Verify, Check and Apply Next-Rank Filter
+        String nextRank = ctx.queryParam("next");
+        if (nextRank != null && !nextRank.trim().isEmpty())
+            sqlBuilder.append("nextRank LIKE '").append(nextRank).append("%' AND ");
+        // Verify, Check and Apply playtimeFilter
+        String playtime = ctx.queryParam("playtime");
+        if (playtime != null && !playtime.trim().isEmpty())
+            sqlBuilder.append("playTime='").append(playtime).append("' AND ");
+        // Verify, Check and Apply Currency Filter
+        String currency = ctx.queryParam("currency");
+        if (currency != null && !currency.trim().isEmpty())
+            sqlBuilder.append("currencyName LIKE '").append(currency).append("%' AND ");
+        // Verify, Check and Apply currency amount Filter
+        String amount = ctx.queryParam("currency-amount");
+        if (amount != null && !amount.trim().isEmpty())
+            sqlBuilder.append("currencyAmount='").append(amount).append("' AND ");
+        // Finalize SQL
+        sqlBuilder.append(";");
+        String sql = sqlBuilder.toString();
+        if (sql.endsWith("WHERE ;"))
+            sql = sql.substring(0, sql.length() - 7);
+        if (sql.endsWith(" AND ;"))
+            sql = sql.substring(0, sql.length() - 5);
+        return sql;
     }
 }

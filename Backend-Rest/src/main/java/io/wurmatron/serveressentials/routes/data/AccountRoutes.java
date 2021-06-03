@@ -9,6 +9,7 @@ import io.wurmatron.serveressentials.models.MessageResponse;
 import io.wurmatron.serveressentials.models.Rank;
 import io.wurmatron.serveressentials.routes.EndpointSecurity;
 import io.wurmatron.serveressentials.routes.Route;
+import io.wurmatron.serveressentials.routes.RouteUtils;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheAccount;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheRank;
 import io.wurmatron.serveressentials.sql.routes.SQLDirect;
@@ -247,7 +248,7 @@ public class AccountRoutes {
             Account account = filterBasedOnPerms(ctx, SQLCacheAccount.get(uuid));
             if (account != null) {
                 Field accountField = account.getClass().getDeclaredField(field);
-                account = wipeAllExceptField(account, accountField);
+                account = RouteUtils.wipeAllExceptField(account.clone(), accountField);
                 ctx.status(200).result(GSON.toJson(account));
             } else
                 ctx.status(404).result(response("Account Not Found", "Account with uuid " + uuid + " does not exist!"));
@@ -345,23 +346,6 @@ public class AccountRoutes {
         return false;
     }
 
-    /**
-     * Removes / sets all the fields to null except the one provided
-     *
-     * @param account instance of account to remove everything from
-     * @param safe    field to keep in the account instance
-     * @return Account with all but one field has been removed / null'd
-     * @throws IllegalAccessException This should never happen, unless Account has been modified
-     */
-    private static Account wipeAllExceptField(Account account, Field safe) throws IllegalAccessException {
-        account = account.clone();
-        for (Field field : account.getClass().getDeclaredFields())
-            if (!field.equals(safe))
-                field.set(account, null);
-        if (safe.get(account) instanceof String && ((String) safe.get(account)).isEmpty())
-            safe.set(account, "");
-        return account;
-    }
 
     /**
      * Converts the endpoint PathParm into he internal data name, used for reflection

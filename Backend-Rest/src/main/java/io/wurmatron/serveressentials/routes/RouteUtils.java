@@ -4,6 +4,8 @@ import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
 import io.wurmatron.serveressentials.models.MessageResponse;
 
+import java.lang.reflect.Field;
+
 import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
 
 public class RouteUtils {
@@ -23,5 +25,22 @@ public class RouteUtils {
         app.exception(BadRequestResponse.class, (e, ctx) -> {
             ctx.contentType("application/json").result(response("Bad Request", e.getMessage()));
         });
+    }
+
+    /**
+     * Removes / sets all the fields to null except the one provided
+     *
+     * @param instance instance to remove everything from
+     * @param safe    field to keep in the account instance
+     * @return  instance with all but one field has been removed / null'd
+     * @throws IllegalAccessException This should never happen, unless Account has been modified
+     */
+    public static<T extends Object>  T  wipeAllExceptField(T instance, Field safe) throws IllegalAccessException {
+        for (Field field : instance.getClass().getDeclaredFields())
+            if (!field.equals(safe))
+                field.set(instance, null);
+        if (safe.get(instance) instanceof String && ((String) safe.get(instance)).isEmpty())
+            safe.set(instance, "");
+        return instance;
     }
 }
