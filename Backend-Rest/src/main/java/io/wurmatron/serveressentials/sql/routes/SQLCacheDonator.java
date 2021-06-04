@@ -145,4 +145,11 @@ public class SQLCacheDonator extends SQLCache {
      */
     public static void cleanupDB() {
     }
+
+    /**
+     * Get the columns for the Donator Table
+     */
+    public static String[] getColumns() {
+        return DONATOR_COLUMNS;
+    }
 }

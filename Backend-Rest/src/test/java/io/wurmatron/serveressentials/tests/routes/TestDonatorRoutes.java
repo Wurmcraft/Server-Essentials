@@ -54,8 +54,8 @@ public class TestDonatorRoutes {
     @Order(2)
     public void testUpdateDonationEntry() throws IOException {
         TestDonators.TEST_DONATOR.amount = 9000.1;
-        HTTPRequests.put("donator", TestDonators.TEST_DONATOR);
-        // MAke sure the entry was updated successfully
+        HTTPRequests.put("api/donator", TestDonators.TEST_DONATOR);
+        // Make sure the entry was updated successfully
         Donator[] entries = HTTPRequests.get("api/donator?type=" + TestDonators.TEST_DONATOR.type, Donator[].class);
         boolean exists = false;
         for (Donator entry : entries)
