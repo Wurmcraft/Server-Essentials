@@ -1,11 +1,22 @@
 package io.wurmatron.serveressentials.routes.data;
 
 
+import com.google.gson.JsonParseException;
+import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.plugin.openapi.annotations.*;
 import io.wurmatron.serveressentials.models.LogEntry;
 import io.wurmatron.serveressentials.models.MessageResponse;
 import io.wurmatron.serveressentials.routes.Route;
+import io.wurmatron.serveressentials.sql.routes.SQLDirect;
+import io.wurmatron.serveressentials.sql.routes.SQLLogging;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
+import static io.wurmatron.serveressentials.routes.RouteUtils.response;
 
 public class LoggingRoutes {
 
@@ -24,10 +35,17 @@ public class LoggingRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    // TODO Implement
     @Route(path = "api/logging", method = "POST", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler create = ctx -> {
-
+        try {
+            LogEntry newLogEntry = GSON.fromJson(ctx.body(), LogEntry.class);
+            if (isValidLogEntry(ctx, newLogEntry)) {
+                SQLLogging.create(newLogEntry);
+                ctx.status(201).result(GSON.toJson(newLogEntry));
+            }
+        } catch (JsonParseException e) {
+            ctx.status(422).result(response("Invalid JSON", "Failed to parse body into Log Entry"));
+        }
     };
 
     @OpenApi(
@@ -53,10 +71,12 @@ public class LoggingRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    // TODO Implement
     @Route(path = "api/logging", method = "GET")
     public static Handler get = ctx -> {
-
+        String sql = createSQLForLogEntryWithFilters(ctx);
+        // Send Request and Process
+        List<LogEntry> entries = SQLDirect.queryArray(sql, new LogEntry());
+        ctx.status(200).result(GSON.toJson(entries.toArray(new LogEntry[0])));
     };
 
     @OpenApi(
@@ -74,10 +94,22 @@ public class LoggingRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    // TODO Implement
     @Route(path = "api/logging", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler override = ctx -> {
-
+        try {
+            LogEntry updatedLogEntry = GSON.fromJson(ctx.body(), LogEntry.class);
+            if (isValidLogEntry(ctx, updatedLogEntry)) {
+                SQLLogging.update(updatedLogEntry, new String[]{"actionData", "x", "y", "z", "dim"});
+                List<LogEntry> entrys = SQLLogging.get(updatedLogEntry.serverID, updatedLogEntry.actionType, updatedLogEntry.uuid);
+                for (LogEntry e : entrys)
+                    if (e.x.equals(updatedLogEntry.x) && e.y.equals(updatedLogEntry.y) && e.z.equals(updatedLogEntry.z) && e.dim.equals(updatedLogEntry.dim)) {
+                        ctx.status(200).result(GSON.toJson(e));
+                        return;
+                    }
+            }
+        } catch (JsonParseException e) {
+            ctx.status(422).result(response("Invalid JSON", "Failed to parse body into Log Entry"));
+        }
     };
 
     @OpenApi(
@@ -95,9 +127,99 @@ public class LoggingRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    // TODO Implement
     @Route(path = "api/logging", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler delete = ctx -> {
-
+        try {
+            LogEntry logEntryToDelete = GSON.fromJson(ctx.body(), LogEntry.class);
+            if (isValidLogEntry(ctx, logEntryToDelete)) {
+                List<LogEntry> entrys = SQLLogging.get(logEntryToDelete.serverID, logEntryToDelete.actionType, logEntryToDelete.uuid);
+                for (LogEntry e : entrys)
+                    if (e.equals(logEntryToDelete)) {
+                        SQLLogging.delete(logEntryToDelete.serverID, logEntryToDelete.actionType, logEntryToDelete.uuid, logEntryToDelete.timestamp);
+                        ctx.status(200).result(GSON.toJson(e));
+                        return;
+                    }
+                ctx.status(404).result(response("Not Found", "Log Entry not found"));
+            }
+        } catch (JsonParseException e) {
+            ctx.status(422).result(response("Invalid JSON", "Failed to parse body into Log Entry"));
+        }
     };
+
+    /**
+     * Verify a log entry is valid
+     *
+     * @param ctx   instance of the message
+     * @param entry Log entry to be tested
+     * @return if the log entry is valid
+     */
+    public static boolean isValidLogEntry(Context ctx, LogEntry entry) {
+        List<MessageResponse> errors = new ArrayList<>();
+        // Verify ServerID
+        if (entry.serverID == null || entry.serverID.trim().isEmpty())
+            errors.add(new MessageResponse("Invalid ServerID", "serverID must be non-null / empty"));
+        // Verify actionType
+        if (entry.actionType == null || entry.actionType.trim().isEmpty())
+            errors.add(new MessageResponse("Invalid ActionType", "actionType must be non-null / empty"));
+        // Verify UUID
+        if (entry.uuid == null || entry.uuid.trim().isEmpty())
+            errors.add(new MessageResponse("Invalid UUID", "uuid must be a valid uuid"));
+        try {
+            if (entry.uuid != null)
+                UUID.fromString(entry.uuid);
+        } catch (Exception e) {
+            errors.add(new MessageResponse("Invalid UUID", "uuid must be a valid uuid"));
+        }
+        if (errors.size() == 0)
+            return true;
+        ctx.status(400).result(GSON.toJson(errors.toArray(new MessageResponse[0])));
+        return false;
+    }
+
+    /**
+     * Generates a SQL Statement for get users with filters applied
+     *
+     * @param ctx context to get the information from the user
+     * @return sql statement for currency lookup
+     */
+    private static String createSQLForLogEntryWithFilters(Context ctx) {
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("SELECT * FROM " + SQLLogging.LOGGING_TABLE + " WHERE ");
+        // Verify, Check and Apply ServerID Filter
+        String serverID = ctx.queryParam("server-id");
+        if (serverID != null && !serverID.trim().isEmpty())
+            sqlBuilder.append("serverID LIKE '").append(serverID).append("%' AND ");
+        // Verify, Check and Apply action Filter
+        String action = ctx.queryParam("action");
+        if (action != null && !action.trim().isEmpty())
+            sqlBuilder.append("actionType LIKE '").append(action).append("%' AND ");
+        // Verify, Check and Apply UUID Filter
+        String uuid = ctx.queryParam("uuid");
+        if (uuid != null && !uuid.trim().isEmpty())
+            sqlBuilder.append("uuid LIKE '").append(uuid).append("%' AND ");
+        // Verify, Check and Apply x Filter
+        String x = ctx.queryParam("x");
+        if (x != null && !x.trim().isEmpty())
+            sqlBuilder.append("x=").append(x).append(" AND ");
+        // Verify, Check and Apply y Filter
+        String y = ctx.queryParam("y");
+        if (y != null && !y.trim().isEmpty())
+            sqlBuilder.append("y=").append(y).append(" AND ");
+        // Verify, Check and Apply z Filter
+        String z = ctx.queryParam("z");
+        if (z != null && !z.trim().isEmpty())
+            sqlBuilder.append("z=").append(z).append(" AND ");
+        // Verify, Check and Apply dim Filter
+        String dim = ctx.queryParam("dim");
+        if (dim != null && !dim.trim().isEmpty())
+            sqlBuilder.append("dim=").append(dim).append(" AND ");
+        // Finalize SQL
+        sqlBuilder.append(";");
+        String sql = sqlBuilder.toString();
+        if (sql.endsWith("WHERE ;"))
+            sql = sql.substring(0, sql.length() - 7);
+        if (sql.endsWith(" AND ;"))
+            sql = sql.substring(0, sql.length() - 5);
+        return sql;
+    }
 }

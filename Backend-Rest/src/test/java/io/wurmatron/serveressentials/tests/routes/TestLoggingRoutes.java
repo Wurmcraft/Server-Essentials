@@ -58,8 +58,8 @@ public class TestLoggingRoutes {
     @Test
     @Order(2)
     public void testUpdateLogEvent() throws IOException {
-        TestLogging.TEST_ENTRY.x = 50000;
-        HTTPRequests.put("logging", TestLogging.TEST_ENTRY);
+        TestLogging.TEST_ENTRY.actionData = "{\"block\": \"<minecraft:dirt\"}";
+        HTTPRequests.put("api/logging", TestLogging.TEST_ENTRY);
         // Check if the log entry was updated successfully
         LogEntry[] entries = HTTPRequests.get("api/logging?action=" + TestLogging.TEST_ENTRY.actionType, LogEntry[].class);
         boolean exists = false;
