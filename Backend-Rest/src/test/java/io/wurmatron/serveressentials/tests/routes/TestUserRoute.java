@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.sql.SQLException;
 
+import static io.wurmatron.serveressentials.tests.utils.Tests.isSetup;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -19,9 +20,12 @@ public class TestUserRoute {
 
     @BeforeAll
     public static void setup() throws IOException, SQLException {
-        ServerEssentialsRest.main(new String[]{});
-        HTTPRequests.BASE_URL = "http://" + ServerEssentialsRest.config.server.host + ":" + ServerEssentialsRest.config.server.port + "/";
-        // TODO Add Authentication or force config.testing when running tests
+        if(!isSetup) {
+            ServerEssentialsRest.main(new String[]{});
+            HTTPRequests.BASE_URL = "http://" + ServerEssentialsRest.config.server.host + ":" + ServerEssentialsRest.config.server.port + "/";
+            // TODO Add Authentication or force config.testing when running tests
+            isSetup = true;
+        }
     }
 
     @Test

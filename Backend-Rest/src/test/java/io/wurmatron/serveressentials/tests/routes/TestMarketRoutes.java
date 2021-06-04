@@ -9,6 +9,7 @@ import org.junit.jupiter.api.*;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import static io.wurmatron.serveressentials.tests.utils.Tests.isSetup;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,10 +18,12 @@ public class TestMarketRoutes {
 
     @BeforeAll
     public static void setup() throws IOException, SQLException {
-        ServerEssentialsRest.main(new String[]{});
-        ServerEssentialsRest.config.server.host = "localhost";
-        HTTPRequests.BASE_URL = "http://" + ServerEssentialsRest.config.server.host + ":" + ServerEssentialsRest.config.server.port + "/";
-        // TODO Add Authentication or force config.testing when running tests
+        if(!isSetup) {
+            ServerEssentialsRest.main(new String[]{});
+            HTTPRequests.BASE_URL = "http://" + ServerEssentialsRest.config.server.host + ":" + ServerEssentialsRest.config.server.port + "/";
+            // TODO Add Authentication or force config.testing when running tests
+            isSetup = true;
+        }
     }
 
     @Test
