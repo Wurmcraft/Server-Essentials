@@ -10,8 +10,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import static io.wurmatron.serveressentials.tests.utils.Tests.isSetup;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestMarketRoutes {
@@ -29,7 +28,7 @@ public class TestMarketRoutes {
     @Test
     @Order(1)
     public void testAddMarketEntry() throws IOException {
-        MarketEntry newEntry = HTTPRequests.postWithReturn("market", TestMarkets.TEST_MARKET, MarketEntry.class);
+        MarketEntry newEntry = HTTPRequests.postWithReturn("api/market", TestMarkets.TEST_MARKET, MarketEntry.class);
         assertNotNull(newEntry, "Market Entry is not null");
         // Check if the new entry was created
         MarketEntry[] entries = HTTPRequests.get("api/market?uuid=" + TestMarkets.TEST_MARKET.sellerUUID, MarketEntry[].class);
@@ -58,8 +57,8 @@ public class TestMarketRoutes {
     @Test
     @Order(2)
     public void testUpdateMarketEntry() throws IOException {
-        TestMarkets.TEST_MARKET.marketType = "BUY";
-        HTTPRequests.put("market", TestMarkets.TEST_MARKET);
+        TestMarkets.TEST_MARKET.marketData = "{\"pos\": 56}";
+        HTTPRequests.put("api/market", TestMarkets.TEST_MARKET);
         // Make sure it was updated
         MarketEntry[] entries = HTTPRequests.get("api/market?uuid=" + TestMarkets.TEST_MARKET.sellerUUID, MarketEntry[].class);
         boolean exists = false;
@@ -84,6 +83,6 @@ public class TestMarketRoutes {
                 exists = true;
                 break;
             }
-        assertTrue(exists, "Market entry was updated successfully");
+        assertFalse(exists, "Market entry was updated successfully");
     }
 }

@@ -10,8 +10,8 @@ public class MarketEntry {
     public String sellerUUID;
     public ItemWrapper item;
     public String currencyName;
-    public double currencyAmount;
-    public long timestamp;
+    public Double currencyAmount;
+    public Long timestamp;
     public String marketType;
     public String marketData;
     public String transferID;
@@ -47,7 +47,7 @@ public class MarketEntry {
         if (this == o) return true;
         if (!(o instanceof MarketEntry)) return false;
         MarketEntry that = (MarketEntry) o;
-        return Double.compare(that.currencyAmount, currencyAmount) == 0 && timestamp == that.timestamp && Objects.equals(serverID, that.serverID) && Objects.equals(sellerUUID, that.sellerUUID) && Objects.equals(item, that.item) && Objects.equals(currencyName, that.currencyName) && Objects.equals(marketType, that.marketType) && Objects.equals(marketData, that.marketData) && Objects.equals(transferID, that.transferID);
+        return Objects.equals(serverID, that.serverID) && Objects.equals(sellerUUID, that.sellerUUID) && Objects.equals(item, that.item) && Objects.equals(currencyName, that.currencyName) && Objects.equals(currencyAmount, that.currencyAmount) && Objects.equals(timestamp, that.timestamp) && Objects.equals(marketType, that.marketType) && Objects.equals(marketData, that.marketData) && Objects.equals(transferID, that.transferID);
     }
 
     @Override

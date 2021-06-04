@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestMarkets {
 
-    public static final MarketEntry TEST_MARKET = new MarketEntry("test", TestAccounts.TEST_ACCOUNT.uuid, new ItemWrapper(""), "test", 500, Instant.now().getEpochSecond(), "Sell", "{}", "");
+    public static final MarketEntry TEST_MARKET = new MarketEntry("test", TestAccounts.TEST_ACCOUNT.uuid, new ItemWrapper("<diamond>"), "test", 500, Instant.now().getEpochSecond(), "Sell", "{}", "");
 
     @BeforeAll
     public static void setup() throws IOException, SQLException {
