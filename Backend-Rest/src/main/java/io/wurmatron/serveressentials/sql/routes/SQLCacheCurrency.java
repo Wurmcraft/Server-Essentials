@@ -209,4 +209,11 @@ public class SQLCacheCurrency extends SQLCache {
      */
     public static void cleanupDB() {
     }
+
+    /**
+     * Get all the columns except the id
+     */
+    public static String[] getColumns() {
+        return Arrays.copyOfRange(CURRENCYS_COLUMNS, 1, CURRENCYS_COLUMNS.length);
+    }
 }
