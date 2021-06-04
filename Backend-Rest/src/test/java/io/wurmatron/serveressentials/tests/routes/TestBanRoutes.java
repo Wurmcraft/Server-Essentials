@@ -25,6 +25,7 @@ public class TestBanRoutes {
     @Order(1)
     public void testAddBanEntry() throws IOException {
         Ban newEntry = HTTPRequests.postWithReturn("api/ban", TestBans.TEST_BAN, Ban.class);
+        TestBans.TEST_BAN.banID = newEntry.banID;
         assertNotNull(newEntry, "Entry was added successfully");
         // Make sure the ban was added.
     }
@@ -53,7 +54,7 @@ public class TestBanRoutes {
     @Order(2)
     public void testUpdateBan() throws IOException {
         TestBans.TEST_BAN.banReason ="Stupidity";
-        HTTPRequests.put("api/ban/" + TestBans.TEST_BAN.banID, TestBans.TEST_BAN.banID);
+        HTTPRequests.put("api/ban/" + TestBans.TEST_BAN.banID, TestBans.TEST_BAN);
         // Make sure it was updated
         Ban entry = HTTPRequests.get("api/ban/" + TestBans.TEST_BAN.banID, Ban.class);
         assertEquals(TestBans.TEST_BAN, entry, "Entry was updated");

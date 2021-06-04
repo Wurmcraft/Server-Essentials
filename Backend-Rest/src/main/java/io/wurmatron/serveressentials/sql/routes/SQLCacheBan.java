@@ -130,9 +130,16 @@ public class SQLCacheBan extends SQLCache {
     @Nullable
     public static Ban create(Ban ban) {
         try {
-            if (ban.discordID.isEmpty())
-                ban.discordID = "0";
-            ban.banID = insert(BAN_TABLE, Arrays.copyOfRange(BANS_COLUMNS, 1, BANS_COLUMNS.length), ban, true);
+            String[] columns = getColumns();
+            // Check if discordID exists, if not remove
+            if (ban.discordID.isEmpty()) {
+                List<String> columnList = new ArrayList<>();
+                for(String column : columns)
+                    if(!column.equalsIgnoreCase("discordID"))
+                        columnList.add(column);
+                    columns = columnList.toArray(new String[0]);
+            }
+            ban.banID = insert(BAN_TABLE, columns, ban, true);
             bansCache.put(ban.banID, new CacheBan(ban));
             return ban;
         } catch (Exception e) {
@@ -153,6 +160,7 @@ public class SQLCacheBan extends SQLCache {
     public static boolean update(Ban ban, String[] columnsToUpdate) {
         try {
             update(BAN_TABLE, columnsToUpdate, "banID", "" + ban.banID, ban);
+            invalidate(ban.banID);
             return true;
         } catch (Exception e) {
             LOG.debug("Failed to update ban for uuid '" + ban.uuid + "' (" + e.getMessage() + ")");
@@ -193,7 +201,6 @@ public class SQLCacheBan extends SQLCache {
      *
      * @param uuid uuid of the user to remove from the sql cache
      */
-    // TODO Implement
     public static void invalidate(String uuid) {
         uuidCache.remove(uuid);
         LOG.debug("Ban's for '" + uuid + "' has been invalidated, will update on next request");
@@ -254,5 +261,12 @@ public class SQLCacheBan extends SQLCache {
     // TODO Implement
     private static boolean handleBanUpdateCheck(Ban ban) {
         return false;
+    }
+
+    /**
+     * Get all the columns except the id
+     */
+    public static String[] getColumns() {
+        return Arrays.copyOfRange(BANS_COLUMNS, 1, BANS_COLUMNS.length);
     }
 }
