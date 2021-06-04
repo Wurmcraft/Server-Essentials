@@ -17,7 +17,7 @@ public class TestStatisticRoutes {
 
     @BeforeAll
     public static void setup() throws IOException, SQLException {
-        if(!isSetup) {
+        if (!isSetup) {
             ServerEssentialsRest.main(new String[]{});
             HTTPRequests.BASE_URL = "http://" + ServerEssentialsRest.config.server.host + ":" + ServerEssentialsRest.config.server.port + "/";
             // TODO Add Authentication or force config.testing when running tests
@@ -31,11 +31,13 @@ public class TestStatisticRoutes {
         TrackedStat stat = HTTPRequests.postWithReturn("api/statistics", TestStatistics.TEST_STAT, TrackedStat.class);
         assertNotNull(stat, "Tracked Stat is not null");
         // Check for added entry
-        TrackedStat[] stats = HTTPRequests.get("statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);
+        TrackedStat[] stats = HTTPRequests.get("api/statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);
         boolean exists = false;
         for (TrackedStat s : stats)
-            if (s.equals(stat))
+            if (s.equals(stat)) {
                 exists = true;
+                break;
+            }
         assertTrue(exists, "Entry was created");
     }
 
@@ -53,8 +55,8 @@ public class TestStatisticRoutes {
     @Test
     @Order(2)
     public void testOverrideStatistic() throws IOException {
-        TestStatistics.TEST_STAT.serverID = "Test2";
-        HTTPRequests.put("statistics", TestStatistics.TEST_STAT);
+        TestStatistics.TEST_STAT.eventData = "{\"test\": true}";
+        HTTPRequests.put("api/statistics", TestStatistics.TEST_STAT);
         // Check for update
         TrackedStat[] stats = HTTPRequests.get("api/statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);
         boolean exists = false;
@@ -62,20 +64,6 @@ public class TestStatisticRoutes {
             if (s.equals(TestStatistics.TEST_STAT))
                 exists = true;
         assertTrue(exists, "Entry was Updated");
-    }
-
-    @Test
-    @Order(2)
-    public void testPatchStatistic() throws IOException {
-        TestStatistics.TEST_STAT.eventData = "{\"data\": 5}";
-        HTTPRequests.patch("statistics/event-data", TestStatistics.TEST_STAT);
-        // Check if it was updated
-        TrackedStat[] stats = HTTPRequests.get("api/statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);
-        boolean exists = false;
-        for (TrackedStat s : stats)
-            if (s.equals(TestStatistics.TEST_STAT))
-                exists = true;
-        assertTrue(exists, "Entry was Patched");
     }
 
     @Test
@@ -87,8 +75,10 @@ public class TestStatisticRoutes {
         TrackedStat[] stats = HTTPRequests.get("api/statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);
         boolean exists = false;
         for (TrackedStat s : stats)
-            if (s.equals(TestStatistics.TEST_STAT))
+            if (s.equals(TestStatistics.TEST_STAT)) {
                 exists = true;
+                break;
+            }
         assertFalse(exists, "Entry was Removed");
     }
 }
