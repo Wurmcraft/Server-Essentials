@@ -7,9 +7,9 @@ import java.util.Arrays;
 
 public class TransferEntry {
 
-    public long transferID;
+    public Long transferID;
     public String uuid;
-    public long startTime;
+    public Long startTime;
     public ItemWrapper[] items;
     public String serverID;
 
@@ -36,12 +36,12 @@ public class TransferEntry {
         if (this == o) return true;
         if (!(o instanceof TransferEntry)) return false;
         TransferEntry that = (TransferEntry) o;
-        return transferID == that.transferID && startTime == that.startTime && uuid.equals(that.uuid) && Arrays.equals(that.items, items) && serverID.equals(that.serverID);
+        return transferID.equals(that.transferID) && startTime.equals(that.startTime) && uuid.equals(that.uuid) && Arrays.equals(that.items, items) && serverID.equals(that.serverID);
     }
 
     @Override
-    public Rank clone() {
+    public TransferEntry clone() {
         String json = ServerEssentialsRest.GSON.toJson(this);
-        return ServerEssentialsRest.GSON.fromJson(json, Rank.class);
+        return ServerEssentialsRest.GSON.fromJson(json, TransferEntry.class);
     }
 }

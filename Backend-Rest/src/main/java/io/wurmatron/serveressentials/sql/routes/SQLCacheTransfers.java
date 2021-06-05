@@ -119,7 +119,7 @@ public class SQLCacheTransfers extends SQLCache {
     @Nullable
     public static TransferEntry create(TransferEntry entry) {
         try {
-            entry.transferID = insert(TRANSFERS_TABLE, Arrays.copyOfRange(TRANSFERS_COLUMNS, 1, TRANSFERS_COLUMNS.length), entry, true);
+            entry.transferID = (long) insert(TRANSFERS_TABLE, Arrays.copyOfRange(TRANSFERS_COLUMNS, 1, TRANSFERS_COLUMNS.length), entry, true);
             transferCache.put(entry.transferID, new CacheTransfer(entry));
             return entry;
         } catch (Exception e) {

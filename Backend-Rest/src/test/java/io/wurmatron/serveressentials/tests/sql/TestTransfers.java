@@ -73,7 +73,7 @@ public class TestTransfers {
     @Order(2)
     public void testGetTransferUUID() {
         long TEST_ID = TEST_ENTRY.transferID;
-        TEST_ENTRY.transferID = -1;
+        TEST_ENTRY.transferID = -1L;
         TransferEntry newEntry = SQLCacheTransfers.create(TEST_ENTRY);
         TEST_ENTRY.transferID = TEST_ID;
         assertNotNull(newEntry, "New entry should not be null");

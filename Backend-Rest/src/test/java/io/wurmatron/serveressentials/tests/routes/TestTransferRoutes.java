@@ -2,6 +2,7 @@ package io.wurmatron.serveressentials.tests.routes;
 
 import io.wurmatron.serveressentials.ServerEssentialsRest;
 import io.wurmatron.serveressentials.models.TransferEntry;
+import io.wurmatron.serveressentials.models.transfer.ItemWrapper;
 import io.wurmatron.serveressentials.tests.sql.TestTransfers;
 import io.wurmatron.serveressentials.tests.utils.HTTPRequests;
 import org.junit.jupiter.api.*;
@@ -51,14 +52,14 @@ public class TestTransferRoutes {
     @Order(2)
     public void testGetUUID() throws IOException {
         TransferEntry entry = HTTPRequests.get("api/transfer/" + TestTransfers.TEST_ENTRY.transferID + "/uuid", TransferEntry.class);
-        assertEquals(TestTransfers.TEST_ENTRY.uuid, entry.uuid, "UUID is the same");
+        assertEquals(TestTransfers.TEST_ENTRY.uuid,entry.uuid, "UUID is the same");
     }
 
     @Test
     @Order(2)
     public void testGetStartTime() throws IOException {
         TransferEntry entry = HTTPRequests.get("api/transfer/" + TestTransfers.TEST_ENTRY.transferID + "/start-time", TransferEntry.class);
-        assertEquals(TestTransfers.TEST_ENTRY.startTime, entry.startTime, "Start Time is the same");
+        assertEquals(TestTransfers.TEST_ENTRY.startTime,entry.startTime, "Start Time is the same");
     }
 
     @Test
@@ -72,25 +73,26 @@ public class TestTransferRoutes {
     @Order(2)
     public void testGetServerID() throws IOException {
         TransferEntry entry = HTTPRequests.get("api/transfer/" + TestTransfers.TEST_ENTRY.transferID + "/server-id", TransferEntry.class);
-        assertEquals(TestTransfers.TEST_ENTRY.serverID, entry.serverID, "ServerID is the same");
+        String serverID = entry.serverID;
+        assertEquals(TestTransfers.TEST_ENTRY.serverID,serverID, "ServerID is the same");
     }
 
     @Test
     @Order(2)
     public void testUpdateEntry() throws IOException {
-        TestTransfers.TEST_ENTRY.serverID = "Test2";
+        TestTransfers.TEST_ENTRY.items = new ItemWrapper[] {new ItemWrapper("<minecraft:apple>")};
         HTTPRequests.put("api/transfer/" + TestTransfers.TEST_ENTRY.transferID, TestTransfers.TEST_ENTRY);
         TransferEntry entry = HTTPRequests.get("api/transfer/" + TestTransfers.TEST_ENTRY.transferID, TransferEntry.class);
-        assertEquals(TestTransfers.TEST_ENTRY, entry, "Entries are the same");
+        assertEquals(entry,TestTransfers.TEST_ENTRY, "Entries are the same");
     }
 
     @Test
     @Order(2)
     public void testPatchEntry() throws IOException {
-        TestTransfers.TEST_ENTRY.uuid = "148cf139-dd14-4bf4-97a2-08305dfef0a9";
-        HTTPRequests.patch("api/transfer/" + TestTransfers.TEST_ENTRY.transferID + "/uuid", TestTransfers.TEST_ENTRY);
-        TransferEntry entry = HTTPRequests.get("transfer/" + TestTransfers.TEST_ENTRY.transferID, TransferEntry.class);
-        assertEquals(TestTransfers.TEST_ENTRY.uuid, entry.uuid, "UUID are the same");
+        TestTransfers.TEST_ENTRY.items = new ItemWrapper[] {new ItemWrapper("<minecraft:apple>")};
+        HTTPRequests.patch("api/transfer/" + TestTransfers.TEST_ENTRY.transferID + "/items", TestTransfers.TEST_ENTRY);
+        TransferEntry entry = HTTPRequests.get("api/transfer/" + TestTransfers.TEST_ENTRY.transferID, TransferEntry.class);
+        assertArrayEquals(TestTransfers.TEST_ENTRY.items, entry.items, "Items are the same");
     }
 
     @Test
