@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://www.curseforge.com/minecraft/mc-mods/server-essentials">
-    <img src="https://media.forgecdn.net/avatars/thumbnails/288/599/64/64/637312202164767371.png" alt="Server Essentials logo" width="200" height="200">
+    <img src="https://raw.githubusercontent.com/Wurmcraft/Server-Essentials/dev/Docs/docs/img/favicon.ico" alt="Server Essentials logo" width="200" height="200">
   </a>
 </p>
 
