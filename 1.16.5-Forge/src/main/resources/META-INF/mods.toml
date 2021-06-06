@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[35,)"
+license="GPLv3"
+issueTrackerURL="https://github.com/Wurmcraft/Server-Essentials/issues"
+[[mods]]
+modId="server-essentials"
+version="${file.jarVersion}"
+displayName="Server Essentials"
+#updateJSONURL="https://change.me.example.invalid/updates.json"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/server-essentials"
+logoFile="logo.png"
+credits=""
+authors="Wurmatron"
+description='''
+'''
+[[dependencies.server-essentials]]
+    modId="forge"
+    mandatory=true
+    versionRange="[35,)"
+    ordering="NONE"
+    side="SERVER"
+[[dependencies.server-essentials]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.4,1.17)"
+    ordering="NONE"
+    side="SERVER"
