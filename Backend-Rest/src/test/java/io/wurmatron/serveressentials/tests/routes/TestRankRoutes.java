@@ -54,7 +54,7 @@ public class TestRankRoutes {
     @Order(2)
     public void testGetName() throws IOException {
         String name = HTTPRequests.get("api/rank/" + TestRanks.TEST_RANK.name + "/name", Rank.class).name;
-        assertEquals(TestRanks.TEST_RANK.name, name, "Rank Name is the same");
+        assertTrue(TestRanks.TEST_RANK.name.equalsIgnoreCase(name), "Rank Name is the same");
     }
 
     @Test

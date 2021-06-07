@@ -51,7 +51,7 @@ public class Rank {
         if (this == o) return true;
         if (!(o instanceof Rank)) return false;
         Rank rank = (Rank) o;
-        return rankID.equals(rank.rankID) && prefixPriority.equals(rank.prefixPriority) && suffixPriority.equals(rank.suffixPriority) && colorPriority.equals(rank.colorPriority) && name.equals(rank.name) && Arrays.equals(permissions, rank.permissions) && Arrays.equals(inheritance, rank.inheritance) && Objects.equals(prefix, rank.prefix) && Objects.equals(suffix, rank.suffix) && Objects.equals(color, rank.color);
+        return rankID.equals(rank.rankID) && prefixPriority.equals(rank.prefixPriority) && suffixPriority.equals(rank.suffixPriority) && colorPriority.equals(rank.colorPriority) && name.equalsIgnoreCase(rank.name) && Arrays.equals(permissions, rank.permissions) && Arrays.equals(inheritance, rank.inheritance) && Objects.equals(prefix, rank.prefix) && Objects.equals(suffix, rank.suffix) && Objects.equals(color, rank.color);
     }
 
     @Override

@@ -135,6 +135,7 @@ public class RankRoutes {
                     Field field = rank.getClass().getDeclaredField(fieldName);
                     field.set(rank, field.get(inputData));
                     if(isValidRank(ctx, rank)) {
+                        SQLCacheRank.update(rank,new String[] {fieldName});
                         ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, rank)));
                     }
                   } catch (JsonParseException e) {
@@ -348,7 +349,7 @@ public class RankRoutes {
         else if (data.equalsIgnoreCase("suffix"))
             return "suffix";
         else if (data.equalsIgnoreCase("suffix-priority") || data.equalsIgnoreCase("suffixPriority"))
-            return "prefixPriority";
+            return "suffixPriority";
         else if (data.equalsIgnoreCase("color"))
             return "color";
         else if (data.equalsIgnoreCase("color-priority") || data.equalsIgnoreCase("colorPriority"))
