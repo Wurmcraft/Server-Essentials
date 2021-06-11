@@ -140,6 +140,9 @@ public class RouteLoader {
             case "WS": {
                 javalin.ws(route.path(), (Consumer<WsHandler>) field.get(field.getClass()), roles);
             }
+            case "WS/BEFORE": {
+                javalin.wsBefore(route.path(), (Consumer<WsHandler>) field.get(field.getClass()));
+            }
         }
     }
 }
