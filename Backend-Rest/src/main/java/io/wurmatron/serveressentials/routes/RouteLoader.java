@@ -3,6 +3,7 @@ package io.wurmatron.serveressentials.routes;
 import io.javalin.Javalin;
 import io.javalin.core.security.Role;
 import io.javalin.http.Handler;
+import io.javalin.websocket.WsHandler;
 import io.wurmatron.serveressentials.utils.HttpUtils;
 import org.reflections8.Reflections;
 import org.reflections8.scanners.FieldAnnotationsScanner;
@@ -11,6 +12,7 @@ import org.reflections8.scanners.SubTypesScanner;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static io.wurmatron.serveressentials.ServerEssentialsRest.LOG;
 
@@ -104,7 +106,9 @@ public class RouteLoader {
     private static void register(Javalin javalin, Field field) throws InstantiationException, IllegalAccessException {
         Route route = field.getAnnotation(Route.class);
         Set<Role> roles = new HashSet<>(Arrays.asList(route.roles()));
-        Handler handler = (Handler) field.get(field.getClass());
+        Handler handler = null;
+        if (!route.method().equalsIgnoreCase("WS"))
+            handler = (Handler) field.get(field.getClass());
         for (Role role : roles)
             if (role.equals(Route.RestRoles.USER))
                 javalin.before(route.path(), userPermCheck);
@@ -132,6 +136,9 @@ public class RouteLoader {
             case "BEFORE": {
                 javalin.before(route.path(), handler);
                 break;
+            }
+            case "WS": {
+                javalin.ws(route.path(), (Consumer<WsHandler>) field.get(field.getClass()), roles);
             }
         }
     }

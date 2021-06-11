@@ -1,5 +1,6 @@
 package io.wurmatron.serveressentials.routes;
 
+import com.google.common.io.Files;
 import com.google.gson.JsonParseException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -10,15 +11,21 @@ import io.wurmatron.serveressentials.models.Account;
 import io.wurmatron.serveressentials.models.AuthUser;
 import io.wurmatron.serveressentials.models.LoginEntry;
 import io.wurmatron.serveressentials.models.MessageResponse;
+import io.wurmatron.serveressentials.routes.data.ServerAuth;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheAccount;
 import io.wurmatron.serveressentials.utils.EncryptionUtils;
+import io.wurmatron.serveressentials.utils.FileUtils;
 import io.wurmatron.serveressentials.utils.PermissionValidator;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.time.Instant;
 
 import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
+import static io.wurmatron.serveressentials.ServerEssentialsRest.SAVE_DIR;
 import static io.wurmatron.serveressentials.routes.RouteUtils.response;
 
 public class EndpointSecurity {
@@ -27,11 +34,14 @@ public class EndpointSecurity {
     public static final SecureRandom RAND = new SecureRandom();
     // Config
     public static final int USER_TOKEN_SIZE = 64;
-    public static final long USER_TIMEOUT = 24 * 60 * 60 * 1000;
-    public static final int SERVER_TOKEN_SIZE = 128;        // 1d
+    public static final long USER_TIMEOUT = 24 * 60 * 60 * 1000;  // 1d
+    public static final int SERVER_TOKEN_SIZE = 128;
     public static final int SERVER_TIMEOUT = 5 * 60 * 1000; // 5m
     // Perm Cache
     public static NonBlockingHashMap<String, String> permCache = new NonBlockingHashMap<>();
+    // Tokens / Security / Internal Managing
+    public static final File INTERNAL_DIR = new File(SAVE_DIR + File.separator + "internal");
+    public static NonBlockingHashMap<String, ServerAuth> serverAuth = new NonBlockingHashMap<>();
 
     /**
      * Gets the permission for a given request
@@ -54,6 +64,39 @@ public class EndpointSecurity {
     }
 
     /**
+     * Loads the server tokens, or create the empty file if it does not exist
+     */
+    private static void loadServerTokens() {
+        File serverTokens = new File(INTERNAL_DIR + File.separator + "servers.json");
+        if (serverTokens.exists()) {
+
+        } else {
+            try {
+                serverTokens.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Loads the pepper value for use within the DB and other encryption uses
+     */
+    private static void loadPepper() {
+        try {
+            File pepper = new File(INTERNAL_DIR + File.separator + "pepper.txt");
+            if (pepper.exists())
+                EncryptionUtils.pepper = Files.readFirstLine(pepper, Charset.defaultCharset());
+            else {
+                String newPepper = generateToken(32);
+                FileUtils.write(pepper, newPepper);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Used by javalin to verify that a request has the permission to access the specific route
      *
      * @param app instance of the routes handler
@@ -66,6 +109,8 @@ public class EndpointSecurity {
             else
                 ctx.contentType("application/json").status(401).result(response("Unauthorized", "You dont have permission to access this!"));
         });
+        loadPepper();
+        loadServerTokens();
     }
 
     @OpenApi(
@@ -105,7 +150,22 @@ public class EndpointSecurity {
                         ctx.status(401).result(response("Bad Credentials", "Authentication Failed"));
                     }
                 } else if (authUser.type.equalsIgnoreCase("SERVER")) {
-                    // TODO Add server auth
+                    if (authUser.token != null && !authUser.token.isEmpty() && authUser.key != null && !authUser.key.isEmpty() && serverAuth.containsKey(authUser.name) && ctx.ip().equalsIgnoreCase(serverAuth.get(authUser.name).ip)) {
+                        ServerAuth auth = serverAuth.get(authUser.name);
+                        if (authUser.key.equals(auth.key) && authUser.token.equals(auth.token) && authUser.name.equals(auth.serverID)) {
+                            // Server will login
+                            String serverToken = generateToken(SERVER_TOKEN_SIZE);
+                            authUser.token = serverToken;
+                            authUser.key = "";
+                            authUser.type = "SERVER";
+                            authUser.perms = new String[]{"*"};
+                            authUser.expiration = Instant.now().toEpochMilli() + SERVER_TIMEOUT;
+                            authTokens.put(serverToken, authUser); // TODO Delete Expired Tokens
+                            ctx.status(200).result(GSON.toJson(authUser));
+                        } else
+                            ctx.status(403).result(response("Bad Credentials", "Invalid ID / Key / Token Combination"));
+                    } else
+                        ctx.status(403).result(response("Bad Credentials", "Invalid ID / Key / Token Combination"));
                 }
             }
         } catch (JsonParseException e) {

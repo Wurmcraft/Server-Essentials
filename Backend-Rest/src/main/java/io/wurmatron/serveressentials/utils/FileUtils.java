@@ -2,6 +2,11 @@ package io.wurmatron.serveressentials.utils;
 
 import me.grison.jtoml.impl.Toml;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+
 import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
 
 /**
@@ -43,5 +48,24 @@ public class FileUtils {
      */
     public static <T> T fromJsonString(String data, Class<T> dataType) {
         return GSON.fromJson(data, dataType);
+    }
+
+    /**
+     * Creates a new file with the provided data
+     *
+     * @param file File to write the data into
+     * @param data data to be saved directly to the file
+     * @return if the file was created without errors
+     */
+    public static boolean write(File file, String data) {
+        if (!file.getParentFile().exists())
+            file.getParentFile().mkdirs();
+        try {
+            Files.write(file.toPath(), data.getBytes(),StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

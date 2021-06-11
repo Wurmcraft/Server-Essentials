@@ -5,8 +5,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class EncryptionUtils {
 
-    // TODO Add to config / auto-generate
-    public static String pepper = "test";
+    public static String pepper = "";
 
     public static final String ALGO = "SHA-512";
 
