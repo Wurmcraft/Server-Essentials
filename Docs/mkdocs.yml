@@ -1,1 +1,62 @@
 site_name: Server Essentials Wiki
+site_url: https://se-wiki.wurmatron.io/
+theme:
+  name: material
+nav:
+    - 'User Guide':
+        - 'Getting Started': 'guides/getting-started.md'
+        - 'Claiming / Protect an Area': 'guides/claiming.md'
+        - 'Discord Bot': 'guides/discord-bot.md'
+        - 'Trading': 'guides/trading.md'
+        - 'Server Transfer': 'guides/transfer.md'
+        - 'Ranks': 'guides/ranks.md'
+    - 'Modules':
+        - 'Core': 'modules/core.md'
+        - 'Discord': 'modules/discord.md'
+        - 'AutoRank': 'modules/autorank.md'
+        - 'General': 'modules/general.md'
+        - 'Donator': 'modules/donator.md'
+        - 'Logging': 'modules/logging.md'
+        - 'Economy': 'modules/Economy.md'
+        - 'Transfer': 'modules/transfer.md'
+        - 'Ban': 'modules/ban.md'
+        - 'Statistics': 'modules/statistics.md'
+        - 'Protect': 'modules/protect.md'
+        - 'Security': 'modules/security.md'
+        - 'Language': 'modules/language.md'
+    - 'Commands': 'commands'
+    - 'Setup Guide':
+        - 'Getting Started': 'guides/setup-guide.md'
+        - 'Creating a Rank': 'guides/rank-creation.md'
+        - 'Creating a Rankup Condition': 'guides/rank-up.md'
+        - 'Creating a Currency': 'guides/currency-creation.md'
+        - 'Creating a trade network': 'guides/inter-server-trade-setup.md'
+        - 'Discord Bot Setup': 'guides/discord-bot-setup.md'
+        - 'Ptredactyl Intergration': 'guides/ptredactyl-intergration.md'
+    - 'Administration Guide':
+        - 'Getting Started': 'guides/admin-guide.md'
+        - 'Collecting Information': 'guides/panel-guide.md'
+        - 'Discord Bot (User-Interactions)': 'guides/discord-bot.md'
+        - 'Network Explination': 'guides/network-explination.md'
+        - 'Common Issues / Fixes': 'guides/common-fixes.md'
+    - 'Panel Guide':
+        - 'Getting Started': 'guides/panel-guide.md'
+    - 'Configuration':
+        - 'Backend': 
+            - 'Internal': 'configuration/internl.md'
+            - 'Logs': 'configuration/logs.md'
+            - 'Config': 'configuration/backend-config.md'
+            - 'Discord': 'configuration/backend-discord.md'
+            - 'Ptredactyl': 'configuration/ptredactyl.md'
+        - 'Mod': 
+            - 'Modules': 'configuration/modules.md'
+            - 'Commands': 'configuration/commands.md'
+            - 'General': 'configuration/general.md'
+            - 'Discord': 'configuration/discord.md'
+    - 'Links':
+        - 'CurseForge': 'https://www.curseforge.com/minecraft/mc-mods/server-essentials/'
+        - 'Github': 'https://github.com/Wurmcraft/Server-Essentials/'
+        - 'Issues': 'https://github.com/Wurmcraft/Server-Essentials/issues/'
+        - 'Ci / Nightly Builds': 'https://ci.wurmatron.io/job/Server%20Essentials/'
+        - 'Donate': 'https://www.paypal.com/cgi-bin/webscr?return=https://www.curseforge.com/projects/270700&cn=Add+special+instructions+to+the+addon+author()&business=wurmatron%40wurmcraft.com&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted&cancel_return=https://www.curseforge.com/projects/270700&lc=US&item_name=Server+Essentials+(from+curseforge.com)&cmd=_donations&rm=1&no_shipping=1&currency_code=USD'
+  
