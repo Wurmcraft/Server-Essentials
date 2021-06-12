@@ -1,0 +1,101 @@
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
+    }
+}
+
+plugins {
+    id "com.github.johnrengelman.shadow" version "2.0.4"
+    id "com.diffplug.gradle.spotless" version "3.28.1"
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+
+String build_number = System.getenv().BUILD_NUMBER
+if (build_number == null) {
+    build_number = "CustomBuild"
+} else {
+    build_number = "Jenkins-${build_number}"
+}
+version = "${mod_version}-${build_number}"
+
+group = 'com.wurmcraft.serveressentials'
+archivesBaseName = 'Server-Essentials'
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+
+minecraft {
+    mappings channel: 'snapshot', version: '20171003-1.12'
+    // makeObfSourceJar = false
+    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+
+        server {
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+    }
+}
+
+repositories {
+    maven {url = "https://www.cursemaven.com"}
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
+    // Libs
+    implementation "org.reflections:reflections:${reflections_version}"
+    implementation "com.boundary:high-scale-lib:${highscalelib_version}"
+    implementation "org.javassist:javassist:${javassist_version}"
+    implementation "com.neovisionaries:nv-websocket-client:${websocket_version}"
+}
+
+shadowJar.archiveName = "${archivesBaseName}-${version}.jar"
+shadowJar {
+    dependencies {
+        // Random Crap
+        exclude('dummy*')
+        exclude('ftb*')
+        // Libs
+        include(dependency("org.reflections:reflections:${reflections_version}"))
+        include(dependency("com.boundary:high-scale-lib:${highscalelib_version}"))
+        include(dependency('org.javassist:javassist::3.12.1.GA'))
+        include(dependency('com.neovisionaries:nv-websocket-client:2.10'))
+    }
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+            "Specification-Title": "server-essentials",
+            "Specification-Vendor": "wurmcraft",
+            "Specification-Version": "1",
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"Wurmatron",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+jar.finalizedBy('spotlessApply')
+jar.finalizedBy('shadowJar')
+jar.finalizedBy('reobfJar')
