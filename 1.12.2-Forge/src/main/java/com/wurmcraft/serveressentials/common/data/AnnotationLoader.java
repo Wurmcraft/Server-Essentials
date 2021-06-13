@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class DataLoader {
+public class AnnotationLoader {
 
     private static final Reflections REFLECTIONS = new Reflections("com.wurmcraft.serveressentials");
 
@@ -43,7 +43,16 @@ public class DataLoader {
      */
     private static boolean isValidModule(Class<?> clazz, String[] modules) {
         Module module = clazz.getDeclaredAnnotation(Module.class);
-        return !module.name().isEmpty() && hasDependencies(module.dependencies(), modules);
+        boolean moduleIsEnabled = false;
+        if (!module.forceAlwaysLoaded()) {
+            for (String enabledModule : ServerEssentials.config.enabledModules)
+                if (module.name().equalsIgnoreCase(enabledModule)) {
+                    moduleIsEnabled = true;
+                    break;
+                }
+        } else
+            moduleIsEnabled = true;
+        return moduleIsEnabled && !module.name().isEmpty() && hasDependencies(module.dependencies(), modules);
     }
 
     /**

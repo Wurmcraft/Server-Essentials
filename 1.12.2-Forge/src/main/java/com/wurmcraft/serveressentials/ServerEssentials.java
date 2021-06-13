@@ -1,8 +1,12 @@
 package com.wurmcraft.serveressentials;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.loading.Module;
-import com.wurmcraft.serveressentials.common.data.DataLoader;
+import com.wurmcraft.serveressentials.api.models.config.ConfigGlobal;
+import com.wurmcraft.serveressentials.common.data.AnnotationLoader;
+import com.wurmcraft.serveressentials.common.data.ConfigLoader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -27,10 +31,14 @@ public class ServerEssentials {
     public static final String VERSION = "@VERSION@";
 
     public static final Logger LOG = LogManager.getLogger(NAME);
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
+    public static ConfigGlobal config;
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent e) {
         LOG.info("Starting Pre-Initialization");
+        config = ConfigLoader.loadGlobalConfig();
         SECore.modules = collectModules();
     }
 
@@ -57,7 +65,7 @@ public class ServerEssentials {
      */
     public static NonBlockingHashMap<String, Object> collectModules() {
         StringBuilder builder = new StringBuilder();
-        List<Object> modules = DataLoader.loadModules();
+        List<Object> modules = AnnotationLoader.loadModules();
         NonBlockingHashMap<String, Object> loadedModules = new NonBlockingHashMap<>();
         for (Object module : modules) {
             Module m = module.getClass().getDeclaredAnnotation(Module.class);
