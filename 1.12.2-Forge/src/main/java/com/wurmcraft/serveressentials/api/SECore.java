@@ -6,6 +6,6 @@ import java.util.HashMap;
 
 public class SECore {
 
-    public NonBlockingHashMap<String, Object> modules = new NonBlockingHashMap<>();
+    public static NonBlockingHashMap<String, Object> modules = new NonBlockingHashMap<>();
 
 }
