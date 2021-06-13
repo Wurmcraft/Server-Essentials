@@ -78,6 +78,9 @@ shadowJar {
 
 spotless {
     java {
+        removeUnusedImports()
+        indentWithSpaces()
+        trimTrailingWhitespace()
         googleJavaFormat()
     }
 }
