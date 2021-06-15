@@ -19,7 +19,10 @@ public class ConfigLoader {
     public static ConfigGlobal loadGlobalConfig() {
         if (GLOBAL_CONFIG.exists()) {
             try {
-                return GSON.fromJson(Strings.join(Files.readAllLines(GLOBAL_CONFIG.toPath()), '\n'), ConfigGlobal.class);
+                ConfigGlobal config = GSON.fromJson(Strings.join(Files.readAllLines(GLOBAL_CONFIG.toPath()), '\n'), ConfigGlobal.class);
+                LOG.info("Storage Type: '" + config.storage.storageType + "'");
+                LOG.info("Debug Mode: " + config.general.debug);
+                return config;
             } catch (IOException e) {
                 e.printStackTrace();
                 LOG.error("Failed to read '" + GLOBAL_CONFIG.getAbsolutePath() + "'");
@@ -27,6 +30,7 @@ public class ConfigLoader {
         } else {
             ConfigGlobal global = new ConfigGlobal();
             save(GLOBAL_CONFIG, global);
+            LOG.info("Global defaults have been set");
             return global;
         }
         return null;
