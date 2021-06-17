@@ -1,4 +1,4 @@
-package com.wurmcraft.serveressentials.common.data;
+package com.wurmcraft.serveressentials.common.data.loader;
 
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
@@ -27,7 +27,7 @@ public class DataLoader {
         }
     }
 
-    private static NonBlockingHashMap<DataType, NonBlockingHashMap<String, Object[]>> storage = new NonBlockingHashMap<>();
+    protected static final NonBlockingHashMap<DataType, NonBlockingHashMap<String, Object[]>> storage = new NonBlockingHashMap<>();
 
     /**
      * Finds, caches and returns the requested data instance based on its key
@@ -46,24 +46,8 @@ public class DataLoader {
                 // Check for data timeout
                 if (timestamp > System.currentTimeMillis())
                     return foundData;
-                else {
+                else
                     storage.get(type).remove(key);
-                    return get(type, key);
-                }
-            } else {
-                Object fetch = fetch(type, key);
-                if (fetch != null) {
-                    storage.get(type).put(key, new Object[]{System.currentTimeMillis() + getTimeout(type), fetch});
-                    return fetch;
-                }
-            }
-        } else {
-            Object fetch = fetch(type, key);
-            if (fetch != null) {
-                NonBlockingHashMap<String, Object[]> newStorage = new NonBlockingHashMap<>();
-                newStorage.put(key, new Object[]{System.currentTimeMillis() + getTimeout(type), fetch});
-                storage.put(type, newStorage);
-                return fetch;
             }
         }
         return null;
@@ -85,15 +69,39 @@ public class DataLoader {
     }
 
     /**
-     * Fetch / pull the requested data for the provided type and key / id
-     *
-     * @param type type of the data to look for
-     * @param key  key / id of the object to look for
+     * @param type
+     * @param key
+     * @param data
      */
-    // TODO Implement
-    @Nullable
-    private static Object fetch(DataType type, String key) {
-        return null;
+    public static void insert(DataType type, String key, Object data) {
+
+    }
+
+    /**
+     * @param type
+     * @param key
+     * @param data
+     */
+    public static boolean update(DataType type, String key, Object data) {
+        return false;
+    }
+
+    /**
+     * @param type
+     * @param key
+     * @param data
+     */
+    public static boolean delete(DataType type, String key, Object data, boolean cacheOnly) {
+        return false;
+    }
+
+    /**
+     * @param type
+     * @param key
+     * @param data
+     */
+    public static boolean delete(DataType type, String key, Object data) {
+        return delete(type, key, data, true);
     }
 
     /**
@@ -102,7 +110,7 @@ public class DataLoader {
      * @param type of data stored
      */
     // TODO Config
-    private static long getTimeout(DataType type) {
+    protected static long getTimeout(DataType type) {
         return 5 * 60 * 1000;    // 5m
     }
 }
