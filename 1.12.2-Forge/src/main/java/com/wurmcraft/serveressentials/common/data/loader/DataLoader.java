@@ -10,16 +10,16 @@ import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 public class DataLoader implements IDataLoader {
 
     public enum DataType {
-        ACTION("api/action", "CRUD", null, Action.class, false),
-        AUTORANK("api/autorank", "ID/PATCH", "autoRankID", AutoRank.class, true),
-        BAN("api/ban", "ID/CRUD", "banID", Ban.class, true),
-        CURRENCY("api/currency", "ID/CRUD", "currencyID", Currency.class, true),
-        DONATOR("api/donator", "CRUD", "transactionID", Donator.class, true),
-        LOG_ENTRY("api/logging", "CRUD", null, LogEntry.class, false),
+        ACTION("api/action", "relatedID;host;action;timestamp", null, Action.class, false),
+        AUTORANK("api/autorank", "CRUD/PATCH", "autoRankID", AutoRank.class, true),
+        BAN("api/ban", "CRUD", "banID", Ban.class, true),
+        CURRENCY("api/currency", "CRUD", "currencyID", Currency.class, true),
+        DONATOR("api/donator", "CRUD", "uuid", Donator.class, true),
+        LOG_ENTRY("api/logging", "serverID;action;x;y;z;dim", null, LogEntry.class, false),
         MARKET("api/market", "CRUD", null, MarketEntry.class, false),
-        RANK("api/rank", "NAME/PATCH", "rankID", Rank.class, true),
-        TRANSFER("api/transfer", "ID/PATCH", "transferID", TransferEntry.class, false),
-        ACCOUNT("api/user", "ID/PATCH", "uuid", Account.class, true);
+        RANK("api/rank", "CRUD/PATCH", "rankID", Rank.class, true),
+        TRANSFER("api/transfer", "CRUD/PATCH", "transferID", TransferEntry.class, false),
+        ACCOUNT("api/user", "CRUD/PATCH", "uuid", Account.class, true);
 
         String path;
         String pathType;
@@ -36,6 +36,7 @@ public class DataLoader implements IDataLoader {
         }
     }
 
+    // key, [timestamp, data]
     protected final NonBlockingHashMap<DataType, NonBlockingHashMap<String, Object[]>> storage = new NonBlockingHashMap<>();
 
     /**
