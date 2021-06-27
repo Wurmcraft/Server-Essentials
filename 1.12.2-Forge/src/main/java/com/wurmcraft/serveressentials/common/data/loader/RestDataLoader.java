@@ -1,6 +1,8 @@
 package com.wurmcraft.serveressentials.common.data.loader;
 
 import com.google.gson.JsonParseException;
+import com.wurmcraft.serveressentials.ServerEssentials;
+import com.wurmcraft.serveressentials.api.models.AuthUser;
 import com.wurmcraft.serveressentials.api.models.MessageResponse;
 import com.wurmcraft.serveressentials.common.utils.RequestGenerator;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
@@ -21,6 +23,7 @@ public class RestDataLoader extends FileDataLoader {
     public static final String KEY_SEPARATOR = ";";
 
     protected static final NonBlockingHashMap<String, String> fieldToQuery = new NonBlockingHashMap<>();
+    private long expiration = -1;
 
     static {
         // Action
@@ -66,6 +69,33 @@ public class RestDataLoader extends FileDataLoader {
         fieldToQuery.put("colorPriority", "color-priority");
         // Transfer Entry
         fieldToQuery.put("startTime", "start-time");
+    }
+
+    private boolean login(String path) {
+        try {
+            RequestGenerator.HttpResponse response = RequestGenerator.post(path, new AuthUser("Server", ServerEssentials.config.general.serverID, new String[0], ServerEssentials.config.storage.token, ServerEssentials.config.storage.key, expiration));
+            if (isValidResponse(response)) {
+                AuthUser user = GSON.fromJson(response.response, AuthUser.class);
+                RequestGenerator.token = user.token;
+                expiration = user.expiration;
+                return true;
+            } else {
+                LOG.fatal("Failed to authenticate with Rest API");
+                handleResponseError(response);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOG.fatal("Failed to login to Rest API");
+        }
+        return false;
+    }
+
+    public boolean reauth() {
+        return login("api/reauth");
+    }
+
+    public boolean login() {
+        return login("api/login");
     }
 
     /**

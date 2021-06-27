@@ -9,6 +9,9 @@ public class AuthUser {
   public String key;
   public long expiration;
 
+  public AuthUser() {
+  }
+
   public AuthUser(
       String type, String name, String[] perms, String token, String key, long expiration) {
     this.type = type;

@@ -1,4 +1,4 @@
-package io.wurmatron.serveressentials.routes.data;
+package io.wurmatron.serveressentials.models;
 
 public class ServerAuth {
 

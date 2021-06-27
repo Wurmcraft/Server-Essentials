@@ -11,7 +11,7 @@ import io.wurmatron.serveressentials.models.Account;
 import io.wurmatron.serveressentials.models.AuthUser;
 import io.wurmatron.serveressentials.models.LoginEntry;
 import io.wurmatron.serveressentials.models.MessageResponse;
-import io.wurmatron.serveressentials.routes.data.ServerAuth;
+import io.wurmatron.serveressentials.models.ServerAuth;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheAccount;
 import io.wurmatron.serveressentials.utils.EncryptionUtils;
 import io.wurmatron.serveressentials.utils.FileUtils;
@@ -26,8 +26,7 @@ import java.time.Instant;
 
 import java.util.*;
 
-import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
-import static io.wurmatron.serveressentials.ServerEssentialsRest.SAVE_DIR;
+import static io.wurmatron.serveressentials.ServerEssentialsRest.*;
 import static io.wurmatron.serveressentials.routes.RouteUtils.response;
 
 public class EndpointSecurity {
@@ -81,6 +80,7 @@ public class EndpointSecurity {
                     String ip = new String(Base64.getDecoder().decode(split[3]));
                     ServerAuth auth = new ServerAuth(serverID, token, key, ip);
                     serverAuth.put(serverID, auth);
+                    LOG.info("Loading auth for server '" + auth.serverID + "'");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
