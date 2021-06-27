@@ -20,7 +20,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -30,7 +29,8 @@ import java.util.List;
         name = ServerEssentials.NAME,
         version = ServerEssentials.VERSION,
         dependencies = "",
-        serverSideOnly = true)
+        serverSideOnly = true,
+        acceptableRemoteVersions = "*")
 public class ServerEssentials {
 
     public static final String MODID = "server-essentials";

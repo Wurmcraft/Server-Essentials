@@ -4,6 +4,8 @@ import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.loading.Module;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
+import com.wurmcraft.serveressentials.common.modules.core.event.PlayerDataTrackerEvent;
+import net.minecraftforge.common.MinecraftForge;
 
 @Module(name = "Core", forceAlwaysLoaded = true)
 public class ModuleCore {
@@ -15,6 +17,7 @@ public class ModuleCore {
             else
                 ServerEssentials.LOG.fatal("Failed to login to Rest API");
         }
+        MinecraftForge.EVENT_BUS.register(new PlayerDataTrackerEvent());
     }
 
     public void reload() {

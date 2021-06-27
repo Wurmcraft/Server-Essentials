@@ -143,6 +143,7 @@ public class FileDataLoader extends DataLoader {
     public boolean register(DataType type, String key, Object data) {
         if (super.register(type, key, data)) {
             File file = getFile(type, key);
+            file.getParentFile().mkdirs();
             if (!file.exists()) {
                 try {
                     if (file.createNewFile()) {
