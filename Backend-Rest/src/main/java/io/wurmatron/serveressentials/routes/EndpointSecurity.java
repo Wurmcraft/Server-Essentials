@@ -24,6 +24,8 @@ import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.time.Instant;
 
+import java.util.*;
+
 import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
 import static io.wurmatron.serveressentials.ServerEssentialsRest.SAVE_DIR;
 import static io.wurmatron.serveressentials.routes.RouteUtils.response;
@@ -69,7 +71,20 @@ public class EndpointSecurity {
     private static void loadServerTokens() {
         File serverTokens = new File(INTERNAL_DIR + File.separator + "servers.json");
         if (serverTokens.exists()) {
-
+            try {
+                List<String> lines = Files.readLines(serverTokens, Charset.defaultCharset());
+                for (String line : lines) {
+                    String[] split = line.split(":");
+                    String serverID = split[0];
+                    String token = new String(Base64.getDecoder().decode(split[1]));
+                    String key = new String(Base64.getDecoder().decode(split[2]));
+                    String ip = new String(Base64.getDecoder().decode(split[3]));
+                    ServerAuth auth = new ServerAuth(serverID, token, key, ip);
+                    serverAuth.put(serverID, auth);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
             try {
                 serverTokens.createNewFile();
