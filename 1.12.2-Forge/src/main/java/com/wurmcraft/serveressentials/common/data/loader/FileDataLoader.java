@@ -15,7 +15,7 @@ import static com.wurmcraft.serveressentials.common.data.ConfigLoader.SAVE_DIR;
 
 public class FileDataLoader extends DataLoader {
 
-    public static final String SAVE_FOLDER = "Storage-Cache";
+    public static String SAVE_FOLDER = "Storage";
 
     /**
      * Loads the requested folder if its not in cache

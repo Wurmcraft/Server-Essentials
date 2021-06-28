@@ -22,7 +22,14 @@ public class ConfigLoader {
                 ConfigGlobal config = GSON.fromJson(Strings.join(Files.readAllLines(GLOBAL_CONFIG.toPath()), '\n'), ConfigGlobal.class);
                 LOG.info("Storage Type: '" + config.storage.storageType + "'");
                 LOG.info("Debug Mode: " + config.general.debug);
-                return config;
+                ConfigGlobal defaultConfig = new ConfigGlobal();
+                if (defaultConfig.configVersion.equals(config.configVersion))
+                    return config;
+                else {
+                    LOG.warn("Config version does not match the defaults, adding defaults!");
+                    save(GLOBAL_CONFIG, config);
+                    return config;
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 LOG.error("Failed to read '" + GLOBAL_CONFIG.getAbsolutePath() + "'");

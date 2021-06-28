@@ -69,6 +69,7 @@ public class RestDataLoader extends FileDataLoader {
         fieldToQuery.put("colorPriority", "color-priority");
         // Transfer Entry
         fieldToQuery.put("startTime", "start-time");
+        SAVE_FOLDER = "Cache";
     }
 
     private boolean login(String path) {
