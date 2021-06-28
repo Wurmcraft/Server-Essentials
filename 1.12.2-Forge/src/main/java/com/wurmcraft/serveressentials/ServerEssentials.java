@@ -23,6 +23,8 @@ import org.cliffc.high_scale_lib.NonBlockingHashMap;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 @Mod(
         modid = ServerEssentials.MODID,
@@ -41,6 +43,7 @@ public class ServerEssentials {
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static ConfigGlobal config;
+    public static ScheduledExecutorService scheduledService;
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent e) {
@@ -48,6 +51,7 @@ public class ServerEssentials {
         config = ConfigLoader.loadGlobalConfig();
         SECore.modules = collectModules();
         SECore.dataLoader = getDataLoader();
+        scheduledService = Executors.newScheduledThreadPool(config.performance.maxThreads);
     }
 
     @Mod.EventHandler

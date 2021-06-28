@@ -4,11 +4,13 @@ public class ConfigGlobal {
 
     public General general;
     public Storage storage;
+    public Performance performance;
     public String[] enabledModules;
 
     public ConfigGlobal() {
         this.general = new General();
         this.storage = new Storage();
+        this.performance = new Performance();
         this.enabledModules = new String[]{"General"};
     }
 
@@ -53,6 +55,22 @@ public class ConfigGlobal {
             this.token = "";
             this.key = "";
             this.baseURL = "https://localhost:8080/";
+        }
+    }
+
+    public static class Performance {
+
+        public int maxThreads;
+        public int playerCacheTimeout;
+
+        public Performance(int maxThreads, int playerCacheTimeout) {
+            this.maxThreads = maxThreads;
+            this.playerCacheTimeout = playerCacheTimeout;
+        }
+
+        public Performance() {
+            this.maxThreads = 4;
+            this.playerCacheTimeout = 300;
         }
     }
 }
