@@ -62,15 +62,21 @@ public class ConfigGlobal {
 
         public int maxThreads;
         public int playerCacheTimeout;
+        public int playerSyncInterval;
+        public boolean useWebsocket;
 
-        public Performance(int maxThreads, int playerCacheTimeout) {
+        public Performance(int maxThreads, int playerCacheTimeout, int playerSyncInterval, boolean useWebsocket) {
             this.maxThreads = maxThreads;
             this.playerCacheTimeout = playerCacheTimeout;
+            this.playerSyncInterval = playerSyncInterval;
+            this.useWebsocket = useWebsocket;
         }
 
         public Performance() {
             this.maxThreads = 4;
             this.playerCacheTimeout = 300;
+            this.playerSyncInterval = 90;
+            this.useWebsocket = false;
         }
     }
 }
