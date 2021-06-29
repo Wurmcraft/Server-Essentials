@@ -107,7 +107,7 @@ public class RestDataLoader extends FileDataLoader {
      */
     @Override
     public <T> NonBlockingHashMap<String, T> getFromKey(DataType key, T type) {
-        if (storage.containsKey(key))
+        if (storage.containsKey(key) || key.path == null)
             return super.getFromKey(key, type);
         else {
             try {
@@ -204,6 +204,8 @@ public class RestDataLoader extends FileDataLoader {
             } else
                 storage.get(type).remove(key);
         }
+        if (type.path == null)
+            return super.get(type, key);
         // Not in cache
         try {
             RequestGenerator.HttpResponse response = findAndExecutePath(type, key);
@@ -283,6 +285,8 @@ public class RestDataLoader extends FileDataLoader {
     public boolean register(DataType type, String key, Object data) {
         if (storage.containsKey(type) && storage.get(type).containsKey(key))
             return false;
+        if (type.path == null)
+            return super.register(type, key, data);
         // New / Register / Send to Rest API
         try {
             RequestGenerator.HttpResponse response = RequestGenerator.post(type.path, data);
@@ -305,6 +309,8 @@ public class RestDataLoader extends FileDataLoader {
     public boolean update(DataType type, String key, Object data) {
         if (!storage.containsKey(type) || !storage.get(type).containsKey(key))
             return false;
+        if(type.path == null)
+            return super.update(type,key,data);
         // Existing in cache, updating
         try {
             String path = type.path;
@@ -327,7 +333,7 @@ public class RestDataLoader extends FileDataLoader {
 
     @Override
     public boolean delete(DataType type, String key, boolean cacheOnly) {
-        if (cacheOnly)
+        if (cacheOnly || type.path == null)
             return super.delete(type, key, cacheOnly);
         try {
             String path = type.path;

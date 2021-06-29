@@ -1,6 +1,7 @@
 package com.wurmcraft.serveressentials.common.data.loader;
 
 import com.wurmcraft.serveressentials.api.models.*;
+import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import javax.annotation.Nullable;
@@ -19,7 +20,8 @@ public class DataLoader implements IDataLoader {
         MARKET("api/market", "CRUD", null, MarketEntry.class, false),
         RANK("api/rank", "CRUD/PATCH", "rankID", Rank.class, true),
         TRANSFER("api/transfer", "CRUD/PATCH", "transferID", TransferEntry.class, false),
-        ACCOUNT("api/user", "CRUD/PATCH", "uuid", Account.class, true);
+        ACCOUNT("api/user", "CRUD/PATCH", "uuid", Account.class, true),
+        LOCAL_ACCOUNT(null,null,"uuid", LocalAccount.class, true);
 
         String path;
         String pathType;

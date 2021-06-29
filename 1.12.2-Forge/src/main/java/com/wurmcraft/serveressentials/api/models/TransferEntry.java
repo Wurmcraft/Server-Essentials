@@ -1,6 +1,7 @@
 package com.wurmcraft.serveressentials.api.models;
 
 import com.wurmcraft.serveressentials.api.models.transfer.ItemWrapper;
+
 import java.util.Arrays;
 
 public class TransferEntry {
