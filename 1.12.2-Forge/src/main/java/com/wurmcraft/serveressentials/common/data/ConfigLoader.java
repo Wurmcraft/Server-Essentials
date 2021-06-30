@@ -31,6 +31,7 @@ public class ConfigLoader {
                     return config;
                 else {
                     LOG.warn("Config version does not match the defaults, adding defaults!");
+                    config.configVersion = defaultConfig.configVersion;
                     save(GLOBAL_CONFIG, config);
                     return config;
                 }
