@@ -20,8 +20,6 @@ import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
 public class RestDataLoader extends FileDataLoader {
 
-    public static final String KEY_SEPARATOR = ";";
-
     protected static final NonBlockingHashMap<String, String> fieldToQuery = new NonBlockingHashMap<>();
     private long expiration = -1;
 
@@ -107,9 +105,13 @@ public class RestDataLoader extends FileDataLoader {
      */
     @Override
     public <T> NonBlockingHashMap<String, T> getFromKey(DataType key, T type) {
-        if (storage.containsKey(key) || key.path == null)
-            return super.getFromKey(key, type);
-        else {
+        if (storage.containsKey(key) || key.path == null) {
+            if (key.path == null)
+                SAVE_FOLDER = "Storage";
+            NonBlockingHashMap<String, T> data = super.getFromKey(key, type);
+            SAVE_FOLDER = "Cache";
+            return data;
+        } else {
             try {
                 RequestGenerator.HttpResponse response = RequestGenerator.get(key.path);
                 if (isValidResponse(response)) {
@@ -185,11 +187,14 @@ public class RestDataLoader extends FileDataLoader {
 
     private void updateOrCreateFileCache(DataType type, String key, Object data) {
         if (type.fileCache && key != null && !key.isEmpty()) {
+            if (type.path == null)
+                SAVE_FOLDER = "Storage";
             File file = getFile(type, key);
-            if (file.exists()) // Update existing entry
+            if (file.exists())  // Update existing entry
                 super.update(type, key, data);
             else    // New entry
                 super.register(type, key, data);
+            SAVE_FOLDER = "Cache";
         }
     }
 
@@ -204,8 +209,12 @@ public class RestDataLoader extends FileDataLoader {
             } else
                 storage.get(type).remove(key);
         }
-        if (type.path == null)
-            return super.get(type, key);
+        if (type.path == null) {
+            SAVE_FOLDER = "Storage";
+            Object obj = super.get(type, key);
+            SAVE_FOLDER = "Cache";
+            return obj;
+        }
         // Not in cache
         try {
             RequestGenerator.HttpResponse response = findAndExecutePath(type, key);
@@ -285,8 +294,12 @@ public class RestDataLoader extends FileDataLoader {
     public boolean register(DataType type, String key, Object data) {
         if (storage.containsKey(type) && storage.get(type).containsKey(key))
             return false;
-        if (type.path == null)
-            return super.register(type, key, data);
+        if (type.path == null) {
+            SAVE_FOLDER = "Storage";
+            boolean reg = super.register(type, key, data);
+            SAVE_FOLDER = "Cache";
+            return reg;
+        }
         // New / Register / Send to Rest API
         try {
             RequestGenerator.HttpResponse response = RequestGenerator.post(type.path, data);
@@ -309,8 +322,12 @@ public class RestDataLoader extends FileDataLoader {
     public boolean update(DataType type, String key, Object data) {
         if (!storage.containsKey(type) || !storage.get(type).containsKey(key))
             return false;
-        if(type.path == null)
-            return super.update(type,key,data);
+        if (type.path == null) {
+            SAVE_FOLDER = "Storage";
+            boolean update = super.update(type, key, data);
+            SAVE_FOLDER = "Cache";
+            return update;
+        }
         // Existing in cache, updating
         try {
             String path = type.path;
@@ -333,17 +350,26 @@ public class RestDataLoader extends FileDataLoader {
 
     @Override
     public boolean delete(DataType type, String key, boolean cacheOnly) {
-        if (cacheOnly || type.path == null)
-            return super.delete(type, key, cacheOnly);
+        if (cacheOnly || type.path == null) {
+            if (type.path == null)
+                SAVE_FOLDER = "Storage";
+            boolean del = super.delete(type, key, cacheOnly);
+            SAVE_FOLDER = "Cache";
+            return del;
+        }
         try {
             String path = type.path;
             if (type.key != null)
                 path = path + "/" + key;
             Object obj = get(type, key);
             RequestGenerator.HttpResponse response = RequestGenerator.delete(path, obj);
-            if (isValidResponse(response))
-                return super.delete(type, key, cacheOnly);
-            else
+            if (isValidResponse(response)) {
+                if (type.path == null)
+                    SAVE_FOLDER = "Storage";
+                boolean del = super.delete(type, key, cacheOnly);
+                SAVE_FOLDER = "Cache";
+                return del;
+            } else
                 handleResponseError(response);
         } catch (IOException e) {
             LOG.debug("Failed to delete '" + type.path + "' for '" + key + "'");
