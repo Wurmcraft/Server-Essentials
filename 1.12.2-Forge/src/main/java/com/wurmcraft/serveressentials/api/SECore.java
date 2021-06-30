@@ -6,6 +6,7 @@ import org.cliffc.high_scale_lib.NonBlockingHashMap;
 public class SECore {
 
     public static NonBlockingHashMap<String, Object> modules = new NonBlockingHashMap<>();
+    public static NonBlockingHashMap<String, Object> moduleConfigs = new NonBlockingHashMap<>();
     public static IDataLoader dataLoader;
 
 }

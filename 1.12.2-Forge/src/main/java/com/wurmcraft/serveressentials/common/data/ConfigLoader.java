@@ -1,12 +1,16 @@
 package com.wurmcraft.serveressentials.common.data;
 
+import com.wurmcraft.serveressentials.api.loading.ModuleConfig;
 import com.wurmcraft.serveressentials.api.models.config.ConfigGlobal;
 import org.apache.logging.log4j.util.Strings;
+import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.Collections;
+import java.util.List;
 
 import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
@@ -52,5 +56,50 @@ public class ConfigLoader {
             e.printStackTrace();
             LOG.error("Failed to save '" + file.getAbsolutePath() + "'");
         }
+    }
+
+    public static NonBlockingHashMap<String, Object> loadModuleConfigs() {
+        List<Object> moduleConfigs = AnnotationLoader.loadModuleConfigs();
+        NonBlockingHashMap<String, Object> instances = new NonBlockingHashMap<>();
+        for (Object configInstance : moduleConfigs) {
+            String moduleName = configInstance.getClass().getDeclaredAnnotation(ModuleConfig.class).module();
+            if (!moduleName.isEmpty())
+                instances.put(moduleName, loadModuleConfig(moduleName, configInstance));
+        }
+        LOG.info(moduleConfigs.size() + " module config(s) have been loaded");
+        return instances;
+    }
+
+    /**
+     * Loads a module, creating a new config file if needed
+     *
+     * @param moduleName     name of the module / name of the config file
+     * @param configInstance default instance of the config module instance
+     */
+    private static Object loadModuleConfig(String moduleName, Object configInstance) {
+        File configFile = new File(SAVE_DIR + File.separator + "Modules" + File.separator + moduleName + ".json");
+        if (configFile.exists()) {
+            try {
+                List<String> json = Files.readAllLines(configFile.toPath());
+                return GSON.fromJson(String.join("\n", json.toArray(new String[0])), configInstance.getClass());
+            } catch (IOException e) {
+                e.printStackTrace();
+                LOG.warn("Failed to load module config '" + moduleName + "' (" + configFile.getAbsolutePath() + ")");
+            }
+        } else {
+            if (!configFile.getParentFile().exists())
+                if (!configFile.getParentFile().mkdirs())
+                    LOG.warn("Failed to create directory for module config's (" + configFile.getParentFile().getAbsolutePath() + ")");
+            try {
+                if (configFile.createNewFile()) {
+                    Files.write(configFile.toPath(), Collections.singleton(GSON.toJson(configInstance)));
+                    LOG.debug("Creating default config file for module '" + moduleName + "' (" + configFile.getAbsolutePath() + ")");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                LOG.warn("Failed to create module '" + moduleName + "' config (" + configFile.getAbsolutePath() + ")");
+            }
+        }
+        return configInstance;
     }
 }

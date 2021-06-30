@@ -51,6 +51,7 @@ public class ServerEssentials {
         config = ConfigLoader.loadGlobalConfig();
         SECore.modules = collectModules();
         SECore.dataLoader = getDataLoader();
+        SECore.moduleConfigs = ConfigLoader.loadModuleConfigs();
         scheduledService = Executors.newScheduledThreadPool(config.performance.maxThreads);
     }
 
@@ -89,7 +90,6 @@ public class ServerEssentials {
     public void onServerStart(FMLServerStartingEvent e) {
         LOG.info("Server Starting has begun");
     }
-
 
     /**
      * Creates a hashmap with the loaded modules

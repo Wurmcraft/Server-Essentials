@@ -2,6 +2,7 @@ package com.wurmcraft.serveressentials.common.data;
 
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.loading.Module;
+import com.wurmcraft.serveressentials.api.loading.ModuleConfig;
 import org.reflections.Reflections;
 
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ public class AnnotationLoader {
         for (Class<?> clazz : clazzes)
             if (isValidModule(clazz, modules)) {
                 try {
-                    // TODO Check config to load
                     Object instance = clazz.newInstance();
                     loadedModules.add(instance);
                 } catch (Exception e) {
@@ -32,6 +32,24 @@ public class AnnotationLoader {
             } else
                 ServerEssentials.LOG.info("Module '" + clazz.getDeclaredAnnotation(Module.class).name() + "' has not been loaded!");
         return loadedModules;
+    }
+
+    /**
+     * Load module config instances
+     */
+    public static List<Object> loadModuleConfigs() {
+        Set<Class<?>> clazzes = REFLECTIONS.getTypesAnnotatedWith(ModuleConfig.class);
+        List<Object> moduleConfigs = new ArrayList<>();
+        for (Class<?> clazz : clazzes) {
+            try {
+                Object instance = clazz.newInstance();
+                moduleConfigs.add(instance);
+            } catch (Exception e) {
+                e.printStackTrace();
+                ServerEssentials.LOG.error("Failed to initialize config for module '" + clazz.getDeclaredAnnotation(ModuleConfig.class).module() + "'");
+            }
+        }
+        return moduleConfigs;
     }
 
     /**
