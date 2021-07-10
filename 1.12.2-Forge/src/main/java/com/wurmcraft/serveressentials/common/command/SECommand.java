@@ -5,14 +5,19 @@ import com.wurmcraft.serveressentials.api.command.Command;
 import com.wurmcraft.serveressentials.api.command.CommandArgument;
 import com.wurmcraft.serveressentials.api.command.CommandConfig;
 import com.wurmcraft.serveressentials.api.models.Account;
+import com.wurmcraft.serveressentials.api.models.Currency;
+import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.api.models.ServerPlayer;
+import com.wurmcraft.serveressentials.api.models.local.Home;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
+import com.wurmcraft.serveressentials.api.models.local.Location;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import javax.annotation.Nullable;
@@ -24,23 +29,34 @@ import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 public class SECommand extends CommandBase {
 
     public CommandConfig config;
-    public Class<SECommand> instance;
+    public Class<?> instance;
     // Generated
     public Map<String, String> usageCache;    // lang-key, usage
-    public Set<String[]> autoCompleteCache;
     public HashMap<CommandArgument[], Method> arguments;
 
-    public SECommand(CommandConfig config, Class<SECommand> instance) throws NullPointerException {
+    public SECommand(CommandConfig config, Class<?> instance) throws NullPointerException {
         this.config = config;
         this.instance = instance;
         if (config == null || config.name == null || config.name.isEmpty())
             throw new NullPointerException("Invalid Command Name, Unable to make command");
         if (instance == null)   // TODO Check for valid command instance
             throw new NullPointerException("Invalid Command Class, Unable to make command");
+        if (!isValidArguments(instance.getDeclaredAnnotation(Command.class).args()))
+            throw new NullPointerException("Invalid Command Arguments");
         // TODO Implement Generation
         usageCache = new NonBlockingHashMap<>();
-        autoCompleteCache = new HashSet<>();
+        // Generate Command Arguments
         arguments = new HashMap<>();
+        for (Method method : instance.getDeclaredMethods())
+            if (method.isAnnotationPresent(Command.class))
+                arguments.put(method.getDeclaredAnnotation(Command.class).args(), method);
+    }
+
+    public static boolean isValidArguments(CommandArgument[] arguments) {
+        for (int index = 0; index < arguments.length; index++)
+            if (arguments[index] == CommandArgument.STRING_ARR && index != arguments.length - 1)
+                return false;
+        return true;
     }
 
     @Override
@@ -97,11 +113,15 @@ public class SECommand extends CommandBase {
      */
     private boolean runMethod(ServerPlayer player, String[] args) {
         Object[] converted = new Object[args.length];
-        Method method = findMethod(args);
+        Method method = findMethod(player, args);
         if (method != null) {
             Command command = method.getDeclaredAnnotation(Command.class);
-            for (int index = 0; index < command.args().length; index++)
-                converted[index] = convert(args[index], command.args()[index]);
+            for (int index = 0; index < command.args().length; index++) {
+                // String arr must be the last argument
+                if (command.args()[index] == CommandArgument.STRING_ARR)
+                    converted[index] = Arrays.copyOfRange(args, index, args.length);
+                converted[index] = convert(player, args[index], command.args()[index]);
+            }
             try {
                 Object output = method.invoke(this, player, converted);
                 if (output instanceof Boolean)
@@ -118,12 +138,92 @@ public class SECommand extends CommandBase {
         return false;
     }
 
-    private Method findMethod(String[] args) {
+    private Method findMethod(ServerPlayer player, String[] args) {
+        // Empty Case
+        if (args.length == 0 && arguments.containsKey(new CommandArgument[0]))
+            return arguments.get(new CommandArgument[0]);
+        for (CommandArgument[] testArgs : arguments.keySet()) {
+            // Size Match or has String Array
+            if (testArgs.length == args.length || testArgs[testArgs.length - 1] == CommandArgument.STRING_ARR) {
+                Object[] convertedArgs = convertArguments(player, testArgs, args);
+                if (convertedArgs != null)
+                    return arguments.get(testArgs);
+            }
+        }
         return null;
     }
 
-    private Object convert(String arg, CommandArgument type) {
-        return type;
+    private Object[] convertArguments(ServerPlayer player, CommandArgument[] args, String[] userArgs) {
+        try {
+            if (args[args.length - 1] == CommandArgument.STRING_ARR) {
+                List<Object> converted = new ArrayList<>();
+                for (int index = 0; index < args.length; index++) {
+                    if (args[index] != CommandArgument.STRING_ARR)
+                        converted.add(convert(player, userArgs[index], args[index]));
+                    else
+                        converted.add(Arrays.copyOfRange(userArgs, index, userArgs.length));
+                }
+                return converted.toArray(new Object[0]);
+            } else {
+                Object[] converted = new Object[args.length];
+                for (int index = 0; index < args.length; index++)
+                    converted[index] = convert(player, userArgs[index], args[index]);
+                return converted;
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    private Object convert(ServerPlayer player, String arg, CommandArgument type) {
+        if (type == CommandArgument.INTEGER) {
+            return Integer.parseInt(arg);
+        } else if (type == CommandArgument.DOUBLE) {
+            return Double.parseDouble(arg);
+        } else if (type == CommandArgument.PLAYER) {
+            return getPlayer(arg);
+        } else if (type == CommandArgument.STRING || type == CommandArgument.MODULE) {
+            return arg;
+        } else if (type == CommandArgument.RANK) {
+            return SECore.dataLoader.get(DataLoader.DataType.RANK, arg, new Rank());
+        } else if (type == CommandArgument.HOME) {
+            return getHome(player, arg);
+        } else if (type == CommandArgument.WARP) {
+            return getWarp(arg);
+        } else if (type == CommandArgument.CURRENCY) {
+            return getCurrency(arg);
+        }
+        return null;
+    }
+
+    public EntityPlayer getPlayer(String name) {
+        for (EntityPlayer player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers())
+            if (player.getDisplayNameString().equalsIgnoreCase(name))
+                return player;
+        // TODO Get based on nick
+        return null;
+    }
+
+    // TODO Implement
+    public Home getHome(ServerPlayer player, String name) {
+        return null;
+    }
+
+    // TODO Implement
+    public Location getWarp(String name) {
+        return null;
+    }
+
+    public Currency getCurrency(String name) {
+        // Attempt to get currency (match)
+        for (String currency : SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency()).keySet())
+            if (name.equalsIgnoreCase(currency))
+                return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, currency, new Currency());
+        // Attempt to find based on starting match
+        for (String currency : SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency()).keySet())
+            if (currency.startsWith(name))
+                return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, currency, new Currency());
+        return null;
     }
 
     @Override
@@ -147,10 +247,10 @@ public class SECommand extends CommandBase {
     @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
         if (sender instanceof EntityPlayer) {
-            if(config.secure) {
+            if (config.secure) {
                 // TODO Check if is secure user
             }
-            Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT,((EntityPlayer) sender).getGameProfile().getId().toString(),new Account());
+            Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, ((EntityPlayer) sender).getGameProfile().getId().toString(), new Account());
             return RankUtils.hasPermission(account, "command." + config.name);
         }
         return !config.secure;
