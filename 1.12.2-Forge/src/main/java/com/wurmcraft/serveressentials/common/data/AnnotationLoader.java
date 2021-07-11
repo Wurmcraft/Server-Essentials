@@ -1,10 +1,13 @@
 package com.wurmcraft.serveressentials.common.data;
 
 import com.wurmcraft.serveressentials.ServerEssentials;
+import com.wurmcraft.serveressentials.api.command.Command;
+import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.loading.Module;
 import com.wurmcraft.serveressentials.api.loading.ModuleConfig;
 import org.reflections.Reflections;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -107,5 +110,36 @@ public class AnnotationLoader {
         for (Class<?> module : modules)
             moduleNames.add(module.getDeclaredAnnotation(Module.class).name());
         return moduleNames.toArray(new String[0]);
+    }
+
+    public static boolean isValidCommand(Class<?> clazz, String[] modules) {
+        // Check if required module is loaded
+        String requiredModule = clazz.getDeclaredAnnotation(ModuleCommand.class).module();
+        boolean found = false;
+        for (String module : modules)
+            if (requiredModule.equalsIgnoreCase(module))
+                found = true;
+        if (!found)
+            return false;
+        // Check if a method with @Command exists
+        boolean hasMethod = false;
+        for (Method method : clazz.getDeclaredMethods())
+            if (method.isAnnotationPresent(Command.class))
+                hasMethod = true;
+        if (!hasMethod)
+            return false;
+        return true;
+    }
+
+    public static List<Class<?>> loadCommands() {
+        Set<Class<?>> clazzes = REFLECTIONS.getTypesAnnotatedWith(ModuleCommand.class);
+        String[] commands = getModuleNames(clazzes);
+        List<Class<?>> loadedCommands = new ArrayList<>();
+        for (Class<?> clazz : clazzes)
+            if (isValidCommand(clazz, commands)) {
+                loadedCommands.add(clazz);
+            } else
+                ServerEssentials.LOG.debug("Command '" + clazz.getDeclaredAnnotation(ModuleCommand.class).name() + "' has not been loaded! requires, '" + clazz.getDeclaredAnnotation(ModuleCommand.class).module() + "'");
+        return loadedCommands;
     }
 }

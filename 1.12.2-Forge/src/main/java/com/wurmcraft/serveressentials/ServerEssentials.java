@@ -3,8 +3,12 @@ package com.wurmcraft.serveressentials;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wurmcraft.serveressentials.api.SECore;
+import com.wurmcraft.serveressentials.api.command.CommandConfig;
+import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.loading.Module;
 import com.wurmcraft.serveressentials.api.models.config.ConfigGlobal;
+import com.wurmcraft.serveressentials.common.command.CommandUtils;
+import com.wurmcraft.serveressentials.common.command.SECommand;
 import com.wurmcraft.serveressentials.common.data.AnnotationLoader;
 import com.wurmcraft.serveressentials.common.data.ConfigLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
@@ -22,6 +26,7 @@ import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -44,6 +49,7 @@ public class ServerEssentials {
 
     public static ConfigGlobal config;
     public static ScheduledExecutorService scheduledService;
+    public static HashMap<Class<?>, CommandConfig> commandClasses;
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent e) {
@@ -84,11 +90,28 @@ public class ServerEssentials {
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent e) {
         LOG.info("Starting Post-Initialization");
+        commandClasses = loadCommands();
+    }
+
+    private HashMap<Class<?>, CommandConfig> loadCommands() {
+        List<Class<?>> commands = AnnotationLoader.loadCommands();
+        commandClasses = new HashMap<>();
+        for (Class<?> command : commands) {
+            String name = command.getDeclaredAnnotation(ModuleCommand.class).name();
+            CommandConfig config = CommandUtils.loadConfig(name);
+            if (config != null)
+                commandClasses.put(command, config);
+            else
+                LOG.warn("Failed to load config for command '" + name + "'");
+        }
+        return commandClasses;
     }
 
     @Mod.EventHandler
     public void onServerStart(FMLServerStartingEvent e) {
         LOG.info("Server Starting has begun");
+        for(Class<?> command : commandClasses.keySet())
+            e.registerServerCommand(new SECommand(commandClasses.get(command),command));
     }
 
     /**
