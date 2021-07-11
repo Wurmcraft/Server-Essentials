@@ -1,6 +1,7 @@
 package com.wurmcraft.serveressentials.common.data;
 
 import com.wurmcraft.serveressentials.ServerEssentials;
+import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.command.Command;
 import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.loading.Module;
@@ -133,10 +134,10 @@ public class AnnotationLoader {
 
     public static List<Class<?>> loadCommands() {
         Set<Class<?>> clazzes = REFLECTIONS.getTypesAnnotatedWith(ModuleCommand.class);
-        String[] commands = getModuleNames(clazzes);
+        String[] modules = SECore.modules.keySet().toArray(new String[0]);
         List<Class<?>> loadedCommands = new ArrayList<>();
         for (Class<?> clazz : clazzes)
-            if (isValidCommand(clazz, commands)) {
+            if (isValidCommand(clazz, modules)) {
                 loadedCommands.add(clazz);
             } else
                 ServerEssentials.LOG.debug("Command '" + clazz.getDeclaredAnnotation(ModuleCommand.class).name() + "' has not been loaded! requires, '" + clazz.getDeclaredAnnotation(ModuleCommand.class).module() + "'");

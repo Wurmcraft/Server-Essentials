@@ -110,8 +110,13 @@ public class ServerEssentials {
     @Mod.EventHandler
     public void onServerStart(FMLServerStartingEvent e) {
         LOG.info("Server Starting has begun");
-        for(Class<?> command : commandClasses.keySet())
-            e.registerServerCommand(new SECommand(commandClasses.get(command),command));
+        for (Class<?> command : commandClasses.keySet())
+            try {
+                e.registerServerCommand(new SECommand(commandClasses.get(command), command));
+            } catch (Exception f) {
+                f.printStackTrace();
+                LOG.warn("Failed to register command '" + command.getDeclaredAnnotation(ModuleCommand.class).name() + "'");
+            }
     }
 
     /**

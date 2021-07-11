@@ -29,20 +29,21 @@ import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 public class SECommand extends CommandBase {
 
     public CommandConfig config;
-    public Class<?> instance;
+    public Object instance;
     // Generated
     public Map<String, String> usageCache;    // lang-key, usage
     public HashMap<CommandArgument[], Method> arguments;
 
-    public SECommand(CommandConfig config, Class<?> instance) throws NullPointerException {
+    public SECommand(CommandConfig config, Class<?> instance) throws NullPointerException, InstantiationException, IllegalAccessException {
         this.config = config;
-        this.instance = instance;
+        this.instance = instance.newInstance();
         if (config == null || config.name == null || config.name.isEmpty())
             throw new NullPointerException("Invalid Command Name, Unable to make command");
         if (instance == null)   // TODO Check for valid command instance
             throw new NullPointerException("Invalid Command Class, Unable to make command");
-        if (!isValidArguments(instance.getDeclaredAnnotation(Command.class).args()))
-            throw new NullPointerException("Invalid Command Arguments");
+        for (Method method : instance.getDeclaredMethods())
+            if (!isValidArguments(method.getDeclaredAnnotation(Command.class).args()))
+                throw new NullPointerException("Invalid Command Arguments");
         // TODO Implement Generation
         usageCache = new NonBlockingHashMap<>();
         // Generate Command Arguments
@@ -97,7 +98,8 @@ public class SECommand extends CommandBase {
                         return;
                     }
             }
-        }
+        } else
+            userData = new ServerPlayer(sender);
         if (runMethod(userData, args)) {
             if (!config.currencyCost.isEmpty()) {
                 // TODO Consume Currency
@@ -112,25 +114,28 @@ public class SECommand extends CommandBase {
      * @return if the command has been executed successfully
      */
     private boolean runMethod(ServerPlayer player, String[] args) {
-        Object[] converted = new Object[args.length];
+        Object[] converted = new Object[args.length + 1];
+        converted[0] = player;
         Method method = findMethod(player, args);
         if (method != null) {
             Command command = method.getDeclaredAnnotation(Command.class);
-            for (int index = 0; index < command.args().length; index++) {
+            for (int index = 1; index < command.args().length + 1; index++) {
                 // String arr must be the last argument
-                if (command.args()[index] == CommandArgument.STRING_ARR)
+                if (command.args()[index - 1] == CommandArgument.STRING_ARR)
                     converted[index] = Arrays.copyOfRange(args, index, args.length);
-                converted[index] = convert(player, args[index], command.args()[index]);
+                converted[index] = convert(player, args[index - 1], command.args()[index - 1]);
             }
             try {
-                Object output = method.invoke(this, player, converted);
+                Object[] params = method.getParameterTypes();
+                Object output = method.invoke(instance, converted);
                 if (output instanceof Boolean)
                     return (boolean) output;
                 if (output == null)
                     return true;
             } catch (Exception e) {
+                LOG.info("Command: /" + getName() + " " + String.join(" ", args));
                 e.printStackTrace();
-                LOG.info("Failed to execute command");
+                LOG.warn("Failed to execute command");
                 // TODO Print Command Errored
                 return false;
             }

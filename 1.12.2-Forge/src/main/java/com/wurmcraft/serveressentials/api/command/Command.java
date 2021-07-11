@@ -13,4 +13,6 @@ public @interface Command {
      * Arguments required for the requested command
      */
     CommandArgument[] args();
+
+    String[] usage();
 }
