@@ -57,6 +57,27 @@ public class AnnotationLoader {
     }
 
     /**
+     * Get the instance of a modules config based on the modules name
+     *
+     * @param name name of the module to attempt to find the config for
+     * @return instance of the config, new instance, not loaded from config
+     */
+    public static Object getModuleConfigInstance(String name) {
+        Set<Class<?>> clazzes = REFLECTIONS.getTypesAnnotatedWith(ModuleConfig.class);
+        for (Class<?> clazz : clazzes) {
+            if (clazz.getDeclaredAnnotation(ModuleConfig.class).module().equalsIgnoreCase(name)) {
+                try {
+                    return clazz.newInstance();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ServerEssentials.LOG.error("Failed to initialize config for module '" + clazz.getDeclaredAnnotation(ModuleConfig.class).module() + "'");
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Verify if a module can be loaded or not, Check name and dependencies
      *
      * @param clazz   class of the module, to be checked

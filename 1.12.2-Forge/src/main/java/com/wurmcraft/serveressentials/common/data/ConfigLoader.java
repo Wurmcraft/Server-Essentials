@@ -65,7 +65,7 @@ public class ConfigLoader {
         for (Object configInstance : moduleConfigs) {
             String moduleName = configInstance.getClass().getDeclaredAnnotation(ModuleConfig.class).module();
             if (!moduleName.isEmpty())
-                instances.put(moduleName, loadModuleConfig(moduleName, configInstance));
+                instances.put(moduleName.toUpperCase(), loadModuleConfig(moduleName, configInstance));
         }
         LOG.info(moduleConfigs.size() + " module config(s) have been loaded");
         return instances;
@@ -77,7 +77,7 @@ public class ConfigLoader {
      * @param moduleName     name of the module / name of the config file
      * @param configInstance default instance of the config module instance
      */
-    private static Object loadModuleConfig(String moduleName, Object configInstance) {
+    public static Object loadModuleConfig(String moduleName, Object configInstance) {
         File configFile = new File(SAVE_DIR + File.separator + "Modules" + File.separator + moduleName + ".json");
         if (configFile.exists()) {
             try {

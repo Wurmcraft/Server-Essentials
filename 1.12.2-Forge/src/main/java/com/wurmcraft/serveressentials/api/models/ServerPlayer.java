@@ -20,11 +20,12 @@ public class ServerPlayer {
         this.player = null;
         this.local = null;
         this.global = null;
-        this.lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, ((ConfigCore) SECore.moduleConfigs.get("Core")).defaultLang, new Language());
+        this.lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, ((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang, new Language());
     }
 
     public ServerPlayer(EntityPlayer player, LocalAccount local, Account global) {
         this.player = player;
+        this.sender = player;
         this.local = local;
         this.global = global;
         this.lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, global.language, new Language());

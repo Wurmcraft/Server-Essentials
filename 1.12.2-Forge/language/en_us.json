@@ -1,4 +1,9 @@
 {
 	"langKey": "en_us",
-	"COMMAND_BASE_VERSION": "&bServer Essentials Version: &c{@VERSION@}"
+	"SPACER": "&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==",
+	"COMMAND_BASE_VERSION": "&bServer Essentials Version: &c{@VERSION@}",
+	"COMMAND_BASE_MODULES": "&bModules: &c{@MODULES@}",
+	"COMMAND_BASE_STORAGE": "&bStorage: &c{@STORAGE@}",
+	"COMMAND_BASE_RELOAD": "&bModule &c{@MODULE@} &bhas been reloaded!",
+	"COMMAND_BASE_RELOAD_FAIL": "&4Failed to reload module &c{@MODULE@}, &4See console for more details."
 }

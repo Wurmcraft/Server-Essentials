@@ -42,7 +42,7 @@ public class SECommand extends CommandBase {
         if (instance == null)   // TODO Check for valid command instance
             throw new NullPointerException("Invalid Command Class, Unable to make command");
         for (Method method : instance.getDeclaredMethods())
-            if (!isValidArguments(method.getDeclaredAnnotation(Command.class).args()))
+            if (method.isAnnotationPresent(Command.class) && !isValidArguments(method.getDeclaredAnnotation(Command.class).args()))
                 throw new NullPointerException("Invalid Command Arguments");
         // TODO Implement Generation
         usageCache = new NonBlockingHashMap<>();
@@ -252,11 +252,12 @@ public class SECommand extends CommandBase {
     @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
         if (sender instanceof EntityPlayer) {
-            if (config.secure) {
-                // TODO Check if is secure user
-            }
-            Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, ((EntityPlayer) sender).getGameProfile().getId().toString(), new Account());
-            return RankUtils.hasPermission(account, "command." + config.name);
+            return true; // TODO Remove
+//            if (config.secure) {
+//                // TODO Check if is secure user
+//            }
+//            Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, ((EntityPlayer) sender).getGameProfile().getId().toString(), new Account());
+//            return RankUtils.hasPermission(account, "command." + config.name);
         }
         return !config.secure;
     }
