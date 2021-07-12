@@ -1,6 +1,8 @@
 package com.wurmcraft.serveressentials.common.data.loader;
 
 import com.google.gson.JsonParseException;
+import com.wurmcraft.serveressentials.api.event.DataRequestEvent;
+import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.io.FileUtils;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
@@ -16,6 +18,10 @@ import static com.wurmcraft.serveressentials.common.data.ConfigLoader.SAVE_DIR;
 public class FileDataLoader extends DataLoader {
 
     public static String SAVE_FOLDER = "Storage";
+
+    static {
+        MinecraftForge.EVENT_BUS.register(new SpecialDataCollector());
+    }
 
     /**
      * Loads the requested folder if its not in cache
@@ -114,6 +120,13 @@ public class FileDataLoader extends DataLoader {
                 }
             } catch (IOException e) {
                 LOG.error("Failed to read '" + file.getAbsolutePath() + "'!");
+            }
+        } else {
+            DataRequestEvent event = new DataRequestEvent(type, key);
+            MinecraftForge.EVENT_BUS.post(event);
+            if (event.data != null) {
+                register(type, key, event.data);
+                return event.data;
             }
         }
         return null;

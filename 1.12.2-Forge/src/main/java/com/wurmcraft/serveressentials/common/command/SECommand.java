@@ -82,7 +82,7 @@ public class SECommand extends CommandBase {
             return;
         }
         // TODO Check secure status
-        ServerPlayer userData = null;
+        ServerPlayer userData;
         if (sender instanceof EntityPlayer) {
             String uuid = ((EntityPlayer) sender).getGameProfile().getId().toString();
             userData = new ServerPlayer((EntityPlayer) sender, SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, uuid, new LocalAccount()), SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid, new Account()));

@@ -5,13 +5,16 @@ import com.wurmcraft.serveressentials.api.loading.ModuleConfig;
 @ModuleConfig(module = "Core")
 public class ConfigCore {
 
-    public String test;
+    public String defaultLang;
+    public String langStorageURL;
 
-    public ConfigCore(String test) {
-        this.test = test;
+    public ConfigCore(String defaultLang, String langStorageURL) {
+        this.defaultLang = defaultLang;
+        this.langStorageURL = langStorageURL;
     }
 
     public ConfigCore() {
-        this.test = "Test Config";
+        this.defaultLang = "en_us";
+        this.langStorageURL = "https://raw.githubusercontent.com/Wurmcraft/Server-Essentials/dev/1.12.2-Forge/language";
     }
 }
