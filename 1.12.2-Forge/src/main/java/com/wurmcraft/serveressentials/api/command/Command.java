@@ -15,4 +15,8 @@ public @interface Command {
     CommandArgument[] args();
 
     String[] usage();
+
+    boolean isSubCommand() default false;
+
+    String[] subCommandAliases() default "";
 }

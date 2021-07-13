@@ -34,6 +34,7 @@ public class CommandUtils {
             }
         } else {
             name = name.toLowerCase();
+            // TODO Get defaults from @ModuleCommand
             CommandConfig config = new CommandConfig(name, true, "command." + name, "", false, new String[0], new HashMap<>(), new HashMap<>(), new HashMap<>());
             try {
                 Files.write(command.toPath(), GSON.toJson(config).getBytes());

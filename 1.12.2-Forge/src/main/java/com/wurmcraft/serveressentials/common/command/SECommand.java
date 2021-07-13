@@ -33,6 +33,7 @@ public class SECommand extends CommandBase {
     // Generated
     public Map<String, String> usageCache;    // lang-key, usage
     public HashMap<CommandArgument[], Method> arguments;
+    public HashMap<String, Method> subCommandArguments;
 
     public SECommand(CommandConfig config, Class<?> instance) throws NullPointerException, InstantiationException, IllegalAccessException {
         this.config = config;
@@ -48,9 +49,17 @@ public class SECommand extends CommandBase {
         usageCache = new NonBlockingHashMap<>();
         // Generate Command Arguments
         arguments = new HashMap<>();
+        subCommandArguments = new HashMap<>();
         for (Method method : instance.getDeclaredMethods())
-            if (method.isAnnotationPresent(Command.class))
-                arguments.put(method.getDeclaredAnnotation(Command.class).args(), method);
+            if (method.isAnnotationPresent(Command.class)) {
+                Command command = method.getDeclaredAnnotation(Command.class);
+                if (command.isSubCommand()) {
+                    subCommandArguments.put(method.getName(), method);
+                    for (String subAliases : command.subCommandAliases())
+                        subCommandArguments.put(subAliases, method);
+                } else
+                    arguments.put(command.args(), method);
+            }
     }
 
     public static boolean isValidArguments(CommandArgument[] arguments) {
@@ -114,20 +123,16 @@ public class SECommand extends CommandBase {
      * @return if the command has been executed successfully
      */
     private boolean runMethod(ServerPlayer player, String[] args) {
-        Object[] converted = new Object[args.length + 1];
-        converted[0] = player;
         Method method = findMethod(player, args);
         if (method != null) {
             Command command = method.getDeclaredAnnotation(Command.class);
-            for (int index = 1; index < command.args().length + 1; index++) {
-                // String arr must be the last argument
-                if (command.args()[index - 1] == CommandArgument.STRING_ARR)
-                    converted[index] = Arrays.copyOfRange(args, index, args.length);
-                converted[index] = convert(player, args[index - 1], command.args()[index - 1]);
-            }
+            List<Object> converted = new ArrayList<>();
+            converted.add(player);
+            Object[] conv = convertArguments(player, command.args(), command.isSubCommand() ? Arrays.copyOfRange(args, 1, args.length) : args);
+            if (conv != null)
+                converted.addAll(Arrays.asList(conv));
             try {
-                Object[] params = method.getParameterTypes();
-                Object output = method.invoke(instance, converted);
+                Object output = method.invoke(instance, converted.toArray(new Object[0]));
                 if (output instanceof Boolean)
                     return (boolean) output;
                 if (output == null)
@@ -147,6 +152,16 @@ public class SECommand extends CommandBase {
         // Empty Case
         if (args.length == 0 && arguments.containsKey(new CommandArgument[0]))
             return arguments.get(new CommandArgument[0]);
+        // Sub Command Search
+        if (subCommandArguments.size() > 0 && args.length > 0) {
+            for (String arg : subCommandArguments.keySet())
+                if (arg.equalsIgnoreCase(args[0]) && (args.length - 1) == subCommandArguments.get(arg).getDeclaredAnnotation(Command.class).args().length) {
+                    Object[] convertedArgs = convertArguments(player, subCommandArguments.get(arg).getDeclaredAnnotation(Command.class).args(), Arrays.copyOfRange(args, 1, args.length));
+                    if (convertedArgs != null)
+                        return subCommandArguments.get(arg);
+                }
+        }
+        // Default Search
         for (CommandArgument[] testArgs : arguments.keySet()) {
             // Size Match or has String Array
             if (testArgs.length == args.length || testArgs[testArgs.length - 1] == CommandArgument.STRING_ARR) {
@@ -197,6 +212,8 @@ public class SECommand extends CommandBase {
             return getWarp(arg);
         } else if (type == CommandArgument.CURRENCY) {
             return getCurrency(arg);
+        } else if (type == CommandArgument.DATA_TYPE) {
+            return DataLoader.DataType.valueOf(arg.toUpperCase());
         }
         return null;
     }

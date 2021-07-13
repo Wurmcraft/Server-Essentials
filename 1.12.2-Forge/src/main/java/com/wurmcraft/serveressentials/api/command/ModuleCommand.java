@@ -21,4 +21,25 @@ public @interface ModuleCommand {
      * Name of the command, for use as /<name> along with the creation  / loading of the config file
      */
     String name();
+
+    /**
+     * Possible aliases for using this command
+     */
+    String[] defaultAliases() default "";
+
+    /**
+     * Is this command enabled
+     */
+    boolean defaultEnabled() default true;
+
+    /**
+     * Minimum rank required to run this command
+     */
+    String defaultMinRank() default "";
+
+    /**
+     * This command requires the user to be a secure user
+     */
+    boolean defaultSecure() default false;
+
 }

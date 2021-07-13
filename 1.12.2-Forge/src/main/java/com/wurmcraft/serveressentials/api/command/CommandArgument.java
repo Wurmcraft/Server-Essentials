@@ -12,7 +12,8 @@ public enum CommandArgument {
     HOME,
     MODULE,
     CURRENCY,
-    WARP;
+    WARP,
+    DATA_TYPE;
 
     CommandArgument() {
 

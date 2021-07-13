@@ -5,5 +5,9 @@
 	"COMMAND_BASE_MODULES": "&bModules: &c{@MODULES@}",
 	"COMMAND_BASE_STORAGE": "&bStorage: &c{@STORAGE@}",
 	"COMMAND_BASE_RELOAD": "&bModule &c{@MODULE@} &bhas been reloaded!",
-	"COMMAND_BASE_RELOAD_FAIL": "&4Failed to reload module &c{@MODULE@}, &4See console for more details."
+	"COMMAND_BASE_RELOAD_FAIL": "&4Failed to reload module &c{@MODULE@}, &4See console for more details.",
+	"COMMAND_MANAGE_STATUS": "&bStatus: &bExisting",
+	"COMMAND_MANAGE_STATUS_NEG": "&bStatus: &cNot Found",
+	"COMMAND_MANAGE_RELOAD": "&c{@KEY@} &bhas been reloaded for type &c{@DATA_TYPE@}",
+	"COMMAND_MANAGE_RELOAD_FAIL": "&4Failed to reload type {@DATA_TYPE@} with key {@KEY@}"
 }
