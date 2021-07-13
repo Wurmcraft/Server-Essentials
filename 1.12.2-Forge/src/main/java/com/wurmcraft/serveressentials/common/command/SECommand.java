@@ -263,7 +263,9 @@ public class SECommand extends CommandBase {
     }
 
     private static String upperFirstLetter(String str) {
-        return str.substring(0, 1).toUpperCase() + str.substring(2).toLowerCase();
+        if (str.length() > 1)
+            return str.substring(0, 1).toUpperCase() + str.substring(2).toLowerCase();
+        return str;
     }
 
     @Override
@@ -274,7 +276,7 @@ public class SECommand extends CommandBase {
 //                // TODO Check if is secure user
 //            }
 //            Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, ((EntityPlayer) sender).getGameProfile().getId().toString(), new Account());
-//            return RankUtils.hasPermission(account, "command." + config.name);
+//            return RankUtils.hasPermission(account, config.permissionNode);
         }
         return !config.secure;
     }

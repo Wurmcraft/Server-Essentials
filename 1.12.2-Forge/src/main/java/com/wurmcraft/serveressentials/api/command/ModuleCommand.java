@@ -42,4 +42,23 @@ public @interface ModuleCommand {
      */
     boolean defaultSecure() default false;
 
+    /**
+     * How long it takes to run this command again
+     * Format: <name>;<cost/time>
+     */
+    String[] defaultCooldown() default "";
+
+    /**
+     * How long it takes to run this command (startup)
+     * Format: <name>;<cost/time>
+     */
+    String[] defaultDelay() default "";
+
+    /**
+     * How long it takes to run this command (startup
+     * Format: <name>;<cost/time>
+     */
+    String[] defaultCost() default "";
+
+
 }

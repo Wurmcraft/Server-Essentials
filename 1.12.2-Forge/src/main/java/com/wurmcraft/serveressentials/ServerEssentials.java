@@ -97,12 +97,12 @@ public class ServerEssentials {
         List<Class<?>> commands = AnnotationLoader.loadCommands();
         commandClasses = new HashMap<>();
         for (Class<?> command : commands) {
-            String name = command.getDeclaredAnnotation(ModuleCommand.class).name();
-            CommandConfig config = CommandUtils.loadConfig(name);
+           ModuleCommand instance= command.getDeclaredAnnotation(ModuleCommand.class);
+            CommandConfig config = CommandUtils.loadConfig(instance);
             if (config != null)
                 commandClasses.put(command, config);
             else
-                LOG.warn("Failed to load config for command '" + name + "'");
+                LOG.warn("Failed to load config for command '" + instance.name() + "'");
         }
         return commandClasses;
     }
