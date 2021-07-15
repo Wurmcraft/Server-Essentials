@@ -35,10 +35,10 @@ public class FileDataLoader extends DataLoader {
         File saveDir = new File(SAVE_DIR + File.separator + SAVE_FOLDER + File.separator + key.name().toLowerCase());
         if (saveDir.exists()) {
             // Check if the cache data count is the same (don't check for same entries only the same count)
-            if (saveDir.list() != null && Objects.requireNonNull(saveDir.list()).length == cachedData.size())
+            if (saveDir.list() != null && cachedData != null &&  saveDir.list().length == cachedData.size())
                 return cachedData;
             // Load each file
-            for (File file : Objects.requireNonNull(saveDir.listFiles())) {
+            for (File file : saveDir.listFiles()) {
                 try {
                     T fileInstance = (T) load(file, type.getClass());
                     if (fileInstance != null)

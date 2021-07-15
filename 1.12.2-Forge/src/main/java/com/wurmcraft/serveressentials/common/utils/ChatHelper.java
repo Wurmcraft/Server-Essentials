@@ -3,6 +3,9 @@ package com.wurmcraft.serveressentials.common.utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+
+import java.util.regex.Pattern;
 
 public class ChatHelper {
 
@@ -11,7 +14,10 @@ public class ChatHelper {
     }
 
     public static void send(ICommandSender sender, String message) {
-        // TODO Fix '&' replacement for valid color codes only
-        send(sender, new TextComponentString(message.replaceAll("&", "\u00a7")));
+        send(sender, new TextComponentString(replaceColor(message)));
+    }
+
+    public static String replaceColor(String message) {
+        return message.replaceAll("[&]([0-9A-Fa-fK-ORk-or])", "\u00a7$1");
     }
 }

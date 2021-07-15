@@ -19,12 +19,12 @@ public class SpecialDataCollector {
     public void onLanguageRequest(DataRequestEvent e) {
         if (e.type == DataLoader.DataType.LANGUAGE) {
             try {
-                String langJson = URLUtils.get(((ConfigCore) SECore.moduleConfigs.get("Core")).langStorageURL + "/" + e.key + ".json");
+                String langJson = URLUtils.get(((ConfigCore) SECore.moduleConfigs.get("CORE")).langStorageURL + "/" + e.key + ".json");
                 if (langJson.length() > 0)
                     e.data = GSON.fromJson(langJson, Language.class);
             } catch (Exception f) {
                 f.printStackTrace();
-                LOG.warn("Language '" + e.key + " has been requested, but the server was unable to access / it does not exist!");
+                LOG.warn("Language '" + e.key + "' has been requested, but the server was unable to access / it does not exist!");
             }
         }
     }
