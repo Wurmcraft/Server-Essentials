@@ -22,7 +22,8 @@ public class DataLoader implements IDataLoader {
         TRANSFER("api/transfer", "CRUD/PATCH", "transferID", TransferEntry.class, false),
         ACCOUNT("api/user", "CRUD/PATCH", "uuid", Account.class, true),
         LOCAL_ACCOUNT(null,null,"uuid", LocalAccount.class, true),
-        LANGUAGE(null,null,"langKey", Language.class, true);;
+        LANGUAGE(null,null,"langKey", Language.class, true),
+        CHANNEL(null,null,"name", Channel.class, true);
 
         String path;
         String pathType;
