@@ -12,19 +12,19 @@ save advanced features such as inter-server trading and discord integration.
 
 ## Modules
 
-  * [Core](modules/core.md)
-  * [Discord](modules/discord.md)
-  * [AutoRank](modules/autorank.md)
-  * [General](modules/general.md)
-  * [Donator](modules/donator.md)
-  * [Logging](modules/logging.md)
-  * [Economy](modules/economy.md)
-  * [Transfer](modules/transfer.md)
-  * [Ban](modules/ban.md)
-  * [Statistics](modules/statistics.md)
-  * [Protect](modules/protect.md)
-  * [Security](modules/security.md)
-  * [Language](modules/language.md)
+  * [Core](/modules/core)
+  * [Discord](/modules/discord)
+  * [AutoRank](/modules/autorank)
+  * [General](/modules/general)
+  * [Donator](/modules/donator)
+  * [Logging](/modules/logging)
+  * [Economy](/modules/economy)
+  * [Transfer](/modules/transfer)
+  * [Ban](/modules/ban)
+  * [Statistics](/modules/statistics)
+  * [Protect](/modules/protect)
+  * [Security](/modules/security)
+  * [Language](/modules/language)
 
 ## Guides
   * [User Guides](guides/user-guides.md)

@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
-@ModuleCommand(name = "se", module = "Core", defaultCooldown = {"*;5"})
+@ModuleCommand(name = "se", module = "Core",defaultAliases = {"Server-Essentials", "ServerEssentials"},defaultCooldown = {"*;5"})
 public class BaseCommand {
 
     @Command(args = {CommandArgument.STRING}, usage = {"version, modules, storage"})
