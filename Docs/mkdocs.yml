@@ -12,6 +12,8 @@ nav:
         - 'Ranks': 'guides/ranks.md'
     - 'Modules':
         - 'Core': 'modules/core.md'
+        - 'Chat': 'modules/chat.md'
+        - 'Rank': 'modules/rank.md'
         - 'Discord': 'modules/discord.md'
         - 'AutoRank': 'modules/autorank.md'
         - 'General': 'modules/general.md'
@@ -42,13 +44,13 @@ nav:
     - 'Panel Guide':
         - 'Getting Started': 'guides/panel-guide.md'
     - 'Configuration':
-        - 'Backend': 
+        - 'Backend':
             - 'Internal': 'configuration/internl.md'
             - 'Logs': 'configuration/logs.md'
             - 'Config': 'configuration/backend-config.md'
             - 'Discord': 'configuration/backend-discord.md'
             - 'Ptredactyl': 'configuration/ptredactyl.md'
-        - 'Mod': 
+        - 'Mod':
             - 'Modules': 'configuration/modules.md'
             - 'Commands': 'configuration/commands.md'
             - 'General': 'configuration/general.md'
@@ -59,4 +61,3 @@ nav:
         - 'Issues': 'https://github.com/Wurmcraft/Server-Essentials/issues/'
         - 'Ci / Nightly Builds': 'https://ci.wurmatron.io/job/Server%20Essentials/'
         - 'Donate': 'https://www.paypal.com/cgi-bin/webscr?return=https://www.curseforge.com/projects/270700&cn=Add+special+instructions+to+the+addon+author()&business=wurmatron%40wurmcraft.com&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted&cancel_return=https://www.curseforge.com/projects/270700&lc=US&item_name=Server+Essentials+(from+curseforge.com)&cmd=_donations&rm=1&no_shipping=1&currency_code=USD'
-  

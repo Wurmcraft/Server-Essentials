@@ -13,6 +13,8 @@ save advanced features such as inter-server trading and discord integration.
 ## Modules
 
   * [Core](/modules/core)
+  * [Chat](/modules/chat)
+  * [Rank](/modules/rank)
   * [Discord](/modules/discord)
   * [AutoRank](/modules/autorank)
   * [General](/modules/general)
