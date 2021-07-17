@@ -4,6 +4,8 @@ public class Language {
 
     public String langKey;
 
+    public String DISABLED;
+
     // Chat
     public String SPACER;
 

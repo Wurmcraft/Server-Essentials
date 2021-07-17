@@ -12,12 +12,17 @@ import com.wurmcraft.serveressentials.api.models.local.Home;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.api.models.local.Location;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
+import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
+import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import org.apache.logging.log4j.util.Strings;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import javax.annotation.Nullable;
@@ -26,12 +31,14 @@ import java.util.*;
 
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
+import java.util.*;
+
 public class SECommand extends CommandBase {
 
     public CommandConfig config;
     public Object instance;
     // Generated
-    public Map<String, String> usageCache;    // lang-key, usage
+    public String[] usage;
     public HashMap<CommandArgument[], Method> arguments;
     public HashMap<String, Method> subCommandArguments;
 
@@ -45,8 +52,6 @@ public class SECommand extends CommandBase {
         for (Method method : instance.getDeclaredMethods())
             if (method.isAnnotationPresent(Command.class) && !isValidArguments(method.getDeclaredAnnotation(Command.class).args()))
                 throw new NullPointerException("Invalid Command Arguments");
-        // TODO Implement Generation
-        usageCache = new NonBlockingHashMap<>();
         // Generate Command Arguments
         arguments = new HashMap<>();
         subCommandArguments = new HashMap<>();
@@ -60,6 +65,33 @@ public class SECommand extends CommandBase {
                 } else
                     arguments.put(command.args(), method);
             }
+        // Create Usage
+        List<String> usageArr = new ArrayList<>();
+        for (CommandArgument[] arg : arguments.keySet()) {
+            String temp = "/" + getName();
+            for (int index = 0; index < arg.length; index++) {
+                CommandArgument a = arg[index];
+                Command command = arguments.get(arg).getDeclaredAnnotation(Command.class);
+                if (a.equals(CommandArgument.STRING) && command.usage().length > index)
+                    temp = temp + " <" + command.usage()[index] + ">";
+                else
+                    temp = temp + " <" + a.name().toLowerCase() + ">";
+            }
+            usageArr.add(temp);
+        }
+        // Sub Command Usage
+        for (String sub : subCommandArguments.keySet()) {
+            String temp = "/" + getName() + " " + sub;
+            Method method = subCommandArguments.get(sub);
+            Command command = method.getDeclaredAnnotation(Command.class);
+            for (int index = 0; index < command.args().length; index++)
+                if (command.args()[index].equals(CommandArgument.STRING) && command.usage().length > index)
+                    temp = temp + " <" + command.usage()[index] + ">";
+                else
+                    temp = temp + " <" + command.args()[index].name().toLowerCase() + ">";
+            usageArr.add(temp);
+        }
+        usage = usageArr.toArray(new String[0]);
     }
 
     public static boolean isValidArguments(CommandArgument[] arguments) {
@@ -76,28 +108,24 @@ public class SECommand extends CommandBase {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        String userLang = "en_us"; // TODO Get from sender
-        String usage = usageCache.get(userLang);
-        if (usage == null) {
-            // TODO Find and generate usage
-        }
-        return usage;
+        return Strings.join(Arrays.asList(usage), '\n');
     }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
-        if (!config.enabled) {
-            // TODO Send Disabled
-            return;
-        }
         // TODO Check secure status
         ServerPlayer userData;
         if (sender instanceof EntityPlayer) {
             String uuid = ((EntityPlayer) sender).getGameProfile().getId().toString();
             userData = new ServerPlayer((EntityPlayer) sender, SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, uuid, new LocalAccount()), SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid, new Account()));
+            if (!config.enabled) {
+                ChatHelper.send(sender, userData.lang.DISABLED);
+                return;
+            }
             // Check Min Rank
             if (!config.minRank.isEmpty() && !RankUtils.isGreaterThan(config.minRank, userData.global.rank)) {
-                // TODO Send perm error
+                ChatHelper.send(sender, new TextComponentTranslation("commands.generic.permission"));
+                return;
             }
             // Currency Check
             if (!config.currencyCost.isEmpty()) {
@@ -107,13 +135,20 @@ public class SECommand extends CommandBase {
                         return;
                     }
             }
-        } else
+        } else {
             userData = new ServerPlayer(sender);
+            if (!config.enabled) {
+                ChatHelper.send(sender, userData.lang.DISABLED);
+                return;
+            }
+        }
         if (runMethod(userData, args)) {
             if (!config.currencyCost.isEmpty()) {
                 // TODO Consume Currency
                 // TODO Set cooldown
             }
+        } else {
+            ChatHelper.send(sender, getUsage(sender));
         }
     }
 

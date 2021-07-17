@@ -1,6 +1,7 @@
 {
 	"langKey": "en_us",
 	"SPACER": "&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==",
+	"DISABLED": "&cCommand is &l&ldisabled",
 	"COMMAND_BASE_VERSION": "&bServer Essentials Version: &c{@VERSION@}",
 	"COMMAND_BASE_MODULES": "&bModules: &c{@MODULES@}",
 	"COMMAND_BASE_STORAGE": "&bStorage: &c{@STORAGE@}",
