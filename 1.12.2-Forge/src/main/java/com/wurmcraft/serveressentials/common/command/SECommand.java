@@ -318,6 +318,31 @@ public class SECommand extends CommandBase {
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-        return super.getTabCompletions(server, sender, args, targetPos);
+        int currentIndex = 0;
+        CommandArgument arg;
+        if (!args[0].isEmpty())
+            for (int index = 0; index < args.length; index++)
+                if (args[index].isEmpty())
+                    currentIndex = index;
+        List<String> tabComplete = new ArrayList<>();
+        // Autofill arguments
+        for (CommandArgument[] a : arguments.keySet()) {
+            Command command = arguments.get(a).getDeclaredAnnotation(Command.class);
+            if (a.length > currentIndex) {
+                arg = command.args()[currentIndex];
+                tabComplete.addAll(CommandUtils.predict(args[currentIndex], CommandUtils.generatePossibleAutoFill(sender, arg, command.usage()[currentIndex])));
+            }
+        }
+        if (args[0].isEmpty()) {
+            for (String sub : subCommandArguments.keySet())
+                tabComplete.addAll(CommandUtils.predict(args[0], Collections.singletonList(sub)));
+        } else if(subCommandArguments.containsKey(args[0].toLowerCase())) {
+            Command command = subCommandArguments.get(args[0].toLowerCase()).getDeclaredAnnotation(Command.class);
+            if (command.args().length > (currentIndex - 1)) {
+                arg = command.args()[currentIndex - 1];
+                tabComplete.addAll(CommandUtils.predict(args[currentIndex], CommandUtils.generatePossibleAutoFill(sender, arg, command.usage()[currentIndex - 1])));
+            }
+        }
+        return tabComplete;
     }
 }
