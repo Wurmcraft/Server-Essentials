@@ -10,5 +10,10 @@
 	"COMMAND_MANAGE_STATUS": "&bStatus: &bExisting",
 	"COMMAND_MANAGE_STATUS_NEG": "&bStatus: &cNot Found",
 	"COMMAND_MANAGE_RELOAD": "&c{@KEY@} &bhas been reloaded for type &c{@DATA_TYPE@}",
-	"COMMAND_MANAGE_RELOAD_FAIL": "&4Failed to reload type {@DATA_TYPE@} with key {@KEY@}"
+	"COMMAND_MANAGE_RELOAD_FAIL": "&4Failed to reload type {@DATA_TYPE@} with key {@KEY@}",
+	"COMMAND_MUTE": "&b{@PLAYER@} has been muted for {@TIME@}",
+	"COMMAND_MUTE_MUTED": "&cYou have been muted for &b{@TIME@}",
+	"COMMAND_MUTE_UNDO": "&b{@PLAYER@} has been unmuted.",
+	"COMMAND_MUTE_MUTED_UNDO": "&bYou have been unmuted.",
+	"COMMAND_MUTE_LESS_THEN_0": "&cTime must be equal or greater than 0, Example: 1d 5m 27m"
 }

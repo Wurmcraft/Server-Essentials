@@ -19,5 +19,10 @@ public class Language {
     public String COMMAND_MANAGE_STATUS_NEG;
     public String COMMAND_MANAGE_RELOAD;
     public String COMMAND_MANAGE_RELOAD_FAIL;
+    public String COMMAND_MUTE_MUTED;
+    public String COMMAND_MUTE;
+    public String COMMAND_MUTE_UNDO;
+    public String COMMAND_MUTE_MUTED_UNDO;
+    public String COMMAND_MUTE_LESS_THEN_0;
 
 }

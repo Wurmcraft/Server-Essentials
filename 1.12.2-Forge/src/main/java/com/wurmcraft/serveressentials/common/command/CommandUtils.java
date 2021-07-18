@@ -141,4 +141,95 @@ public class CommandUtils {
         return autofill;
     }
 
+    public static long convertToTime(String[] times) throws NumberFormatException {
+        long calculatedTime = 0L;
+        for (String time : times)
+            calculatedTime += convertToTime(time);
+        return calculatedTime;
+    }
+
+    public static long convertToTime(String time) throws NumberFormatException {
+        time = time.trim().toLowerCase();
+        // Days
+        if (time.endsWith("d"))
+            return Long.parseLong(time.substring(0, time.length() - 1)) * 86400;
+        if (time.endsWith("day"))
+            return Long.parseLong(time.substring(0, time.length() - 4)) * 86400;
+        if (time.endsWith("days"))
+            return Long.parseLong(time.substring(0, time.length() - 5)) * 86400;
+        // Hours
+        if (time.endsWith("h"))
+            return Long.parseLong(time.substring(0, time.length() - 1)) * 3600;
+        if (time.endsWith("hour"))
+            return Long.parseLong(time.substring(0, time.length() - 5)) * 3600;
+        if (time.endsWith("hours"))
+            return Long.parseLong(time.substring(0, time.length() - 6)) * 3600;
+        // Minutes
+        if (time.endsWith("m"))
+            return Long.parseLong(time.substring(0, time.length() - 1)) * 60;
+        if (time.endsWith("min"))
+            return Long.parseLong(time.substring(0, time.length() - 4)) * 60;
+        if (time.endsWith("minute"))
+            return Long.parseLong(time.substring(0, time.length() - 7)) * 60;
+        if (time.endsWith("mins"))
+            return Long.parseLong(time.substring(0, time.length() - 5)) * 60;
+        if (time.endsWith("minutes"))
+            return Long.parseLong(time.substring(0, time.length() - 8));
+        if (time.endsWith("s"))
+            return Long.parseLong(time.substring(0, time.length() - 1));
+        if (time.endsWith("sec"))
+            return Long.parseLong(time.substring(0, time.length() - 4));
+        return 0L;
+    }
+
+    public static String displayTime(long muteTime) {
+        int year = 0;
+        int month = 0;
+        int day = 0;
+        int hour = 0;
+        int min = 0;
+        int sec = 0;
+        while (true) {
+            if (muteTime >= 31556952) {  // 1y
+                muteTime -= 31556952;
+                year++;
+            } else if (muteTime >= 2629746) {// 1m
+                muteTime -= 2629746;
+                month++;
+            } else if (muteTime >= 86400) { // 1d
+                muteTime -= 86400;
+                day++;
+            } else if (muteTime >= 3600) {  // 1h
+                muteTime -= 3600;
+                hour++;
+            } else if (muteTime >= 60) { // 1m
+                muteTime -= 60;
+                min++;
+            } else {
+                sec = (int) muteTime;
+                break;
+            }
+        }
+        StringBuilder builder = new StringBuilder();
+        if(year > 0)
+            builder.append(year).append("Y ");
+        if(month > 0)
+            builder.append(month).append("M ");
+        if (day > 0)
+            builder.append(day).append("D " );
+        if(hour > 0)
+            builder.append(hour).append("h ");
+        if(min > 0)
+            builder.append(min).append("m ");
+        builder.append(sec).append("s ");
+        return builder.toString();
+    }
+
+    public static boolean isUUID(String str) {
+        try {
+            UUID.fromString(str);
+            return true;
+        } catch (Exception e) {}
+        return false;
+    }
 }
