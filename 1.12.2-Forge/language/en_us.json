@@ -15,5 +15,6 @@
 	"COMMAND_MUTE_MUTED": "&cYou have been muted for &b{@TIME@}",
 	"COMMAND_MUTE_UNDO": "&b{@PLAYER@} has been unmuted.",
 	"COMMAND_MUTE_MUTED_UNDO": "&bYou have been unmuted.",
-	"COMMAND_MUTE_LESS_THEN_0": "&cTime must be equal or greater than 0, Example: 1d 5m 27m"
+	"COMMAND_MUTE_LESS_THEN_0": "&cTime must be equal or greater than 0, Example: 1d 5m 27m",
+	"COMMAND_CHANNEL_CHANGED": "&bYou have changed to channel &c{@CHANNEL@}"
 }

@@ -13,7 +13,8 @@ public enum CommandArgument {
     MODULE,
     CURRENCY,
     WARP,
-    DATA_TYPE;
+    DATA_TYPE,
+    CHANNEL;
 
     CommandArgument() {
 

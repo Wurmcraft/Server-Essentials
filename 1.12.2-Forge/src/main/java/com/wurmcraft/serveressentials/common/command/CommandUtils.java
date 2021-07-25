@@ -1,10 +1,10 @@
 package com.wurmcraft.serveressentials.common.command;
 
 import com.wurmcraft.serveressentials.api.SECore;
-import com.wurmcraft.serveressentials.api.command.Command;
 import com.wurmcraft.serveressentials.api.command.CommandArgument;
 import com.wurmcraft.serveressentials.api.command.CommandConfig;
 import com.wurmcraft.serveressentials.api.command.ModuleCommand;
+import com.wurmcraft.serveressentials.api.models.Channel;
 import com.wurmcraft.serveressentials.api.models.Currency;
 import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
@@ -13,12 +13,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.logging.log4j.util.Strings;
 
-import java.util.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
@@ -135,9 +136,13 @@ public class CommandUtils {
                 autofill.add(currency.displayName);
         else if (arg == CommandArgument.WARP) {
             // TODO Autofill warps (user access only)
-        } else if (arg == CommandArgument.DATA_TYPE)
+        } else if (arg == CommandArgument.DATA_TYPE) {
             for (DataLoader.DataType type : DataLoader.DataType.values())
                 autofill.add(type.name().toLowerCase());
+        } else if (arg == CommandArgument.CHANNEL) {
+            for (Channel ch : SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel()).values())
+                autofill.add(ch.name);
+        }
         return autofill;
     }
 
@@ -211,15 +216,15 @@ public class CommandUtils {
             }
         }
         StringBuilder builder = new StringBuilder();
-        if(year > 0)
+        if (year > 0)
             builder.append(year).append("Y ");
-        if(month > 0)
+        if (month > 0)
             builder.append(month).append("M ");
         if (day > 0)
-            builder.append(day).append("D " );
-        if(hour > 0)
+            builder.append(day).append("D ");
+        if (hour > 0)
             builder.append(hour).append("h ");
-        if(min > 0)
+        if (min > 0)
             builder.append(min).append("m ");
         builder.append(sec).append("s ");
         return builder.toString();
@@ -229,7 +234,8 @@ public class CommandUtils {
         try {
             UUID.fromString(str);
             return true;
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         return false;
     }
 }

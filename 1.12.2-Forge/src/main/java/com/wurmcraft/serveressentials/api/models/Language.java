@@ -24,5 +24,6 @@ public class Language {
     public String COMMAND_MUTE_UNDO;
     public String COMMAND_MUTE_MUTED_UNDO;
     public String COMMAND_MUTE_LESS_THEN_0;
+    public String COMMAND_CHANNEL_CHANGED;
 
 }

@@ -4,10 +4,8 @@ import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.command.Command;
 import com.wurmcraft.serveressentials.api.command.CommandArgument;
 import com.wurmcraft.serveressentials.api.command.CommandConfig;
-import com.wurmcraft.serveressentials.api.models.Account;
+import com.wurmcraft.serveressentials.api.models.*;
 import com.wurmcraft.serveressentials.api.models.Currency;
-import com.wurmcraft.serveressentials.api.models.Rank;
-import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.api.models.local.Home;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.api.models.local.Location;
@@ -185,8 +183,12 @@ public class SECommand extends CommandBase {
 
     private Method findMethod(ServerPlayer player, String[] args) {
         // Empty Case
-        if (args.length == 0 && arguments.containsKey(new CommandArgument[0]))
-            return arguments.get(new CommandArgument[0]);
+        if (args.length == 0) {
+            for (CommandArgument[] a : arguments.keySet())
+                if (a == null || a.length == 0)
+                    return arguments.get(a);
+            return null;
+        }
         // Sub Command Search
         if (subCommandArguments.size() > 0 && args.length > 0) {
             for (String arg : subCommandArguments.keySet())
@@ -249,6 +251,8 @@ public class SECommand extends CommandBase {
             return getCurrency(arg);
         } else if (type == CommandArgument.DATA_TYPE) {
             return DataLoader.DataType.valueOf(arg.toUpperCase());
+        } else if (type == CommandArgument.CHANNEL) {
+            return getChannel(arg);
         }
         return null;
     }
@@ -280,6 +284,22 @@ public class SECommand extends CommandBase {
         for (String currency : SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency()).keySet())
             if (currency.startsWith(name))
                 return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, currency, new Currency());
+        return null;
+    }
+
+    public Channel getChannel(String name) {
+        // Direct Match
+        Channel ch = SECore.dataLoader.get(DataLoader.DataType.CHANNEL, name, new Channel());
+        if (ch != null)
+            return ch;
+        // Attempt to get currency (match)
+        for (String channel : SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel()).keySet())
+            if (name.equalsIgnoreCase(channel))
+                return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, channel, new Channel());
+        // Attempt to find based on starting match
+        for (String channel : SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel()).keySet())
+            if (channel.startsWith(name))
+                return SECore.dataLoader.get(DataLoader.DataType.CHANNEL, channel, new Channel());
         return null;
     }
 
@@ -336,7 +356,7 @@ public class SECommand extends CommandBase {
         if (args[0].isEmpty()) {
             for (String sub : subCommandArguments.keySet())
                 tabComplete.addAll(CommandUtils.predict(args[0], Collections.singletonList(sub)));
-        } else if(subCommandArguments.containsKey(args[0].toLowerCase())) {
+        } else if (subCommandArguments.containsKey(args[0].toLowerCase())) {
             Command command = subCommandArguments.get(args[0].toLowerCase()).getDeclaredAnnotation(Command.class);
             if (command.args().length > (currentIndex - 1)) {
                 arg = command.args()[currentIndex - 1];
