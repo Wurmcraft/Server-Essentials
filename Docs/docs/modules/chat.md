@@ -10,6 +10,8 @@ Requirements: `Core`
 
 | Name        | Permission Node            | Description                                                                 | Default Aliases                         | Recommended Security  |
 | ----------- | ---------------------------|-----------------------------------------------------------------------------|-----------------------------------------|-----------------------|
+| Channel     | command.channel            | Change your current selected channel                                        | `ch`, `chan`                            |  Low                  |
+| Mute        | command.mute               | Mute or unmute a specific used, timed or untimed                            |                                         |  Medium               |
 
 ### Non-Command Permission
 
