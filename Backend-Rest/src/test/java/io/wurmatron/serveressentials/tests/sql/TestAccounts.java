@@ -7,6 +7,7 @@ import io.wurmatron.serveressentials.models.account.BankAccount;
 import io.wurmatron.serveressentials.models.account.ServerTime;
 import io.wurmatron.serveressentials.sql.SQLGenerator;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheAccount;
+import io.wurmatron.serveressentials.sql.routes.SQLCacheUsername;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
 import org.junit.jupiter.api.*;
 
@@ -99,5 +100,12 @@ public class TestAccounts {
     public void checkForMiscAccount() {
         Account account = SQLCacheAccount.get("fc074365-07af-43a5-bd37-c780b6b8a497"); // Valid UUID, Invalid Name
         assertNull(account, "Invalid account should be null");
+    }
+
+    @Test
+    @Order(2)
+    public void testGetUsername() {
+        String username = SQLCacheUsername.get(TEST_ACCOUNT.uuid);
+        assertEquals(TEST_ACCOUNT.username,username,"Username failed to lookup correctly");
     }
 }
