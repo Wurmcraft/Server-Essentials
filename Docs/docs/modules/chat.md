@@ -12,6 +12,7 @@ Requirements: `Core`
 | ----------- | ---------------------------|-----------------------------------------------------------------------------|-----------------------------------------|-----------------------|
 | Channel     | command.channel            | Change your current selected channel                                        | `ch`, `chan`                            |  Low                  |
 | Mute        | command.mute               | Mute or unmute a specific used, timed or untimed                            |                                         |  Medium               |
+| Broadcast   | command.broadcast          | Send a message to everyone on the given server                              | `bc`                                    |  Medium               |
 
 ### Non-Command Permission
 
