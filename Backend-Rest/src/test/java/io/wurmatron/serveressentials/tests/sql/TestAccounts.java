@@ -105,7 +105,14 @@ public class TestAccounts {
     @Test
     @Order(2)
     public void testGetUsername() {
-        String username = SQLCacheUsername.get(TEST_ACCOUNT.uuid);
+        String username = SQLCacheUsername.getUsername(TEST_ACCOUNT.uuid);
         assertEquals(TEST_ACCOUNT.username,username,"Username failed to lookup correctly");
+    }
+
+    @Test
+    @Order(2)
+    public void testGetUUID() {
+        String uuid = SQLCacheUsername.getUUID(TEST_ACCOUNT.username);
+        assertEquals(TEST_ACCOUNT.username,uuid,"UUID failed to lookup correctly");
     }
 }
