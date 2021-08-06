@@ -11,10 +11,12 @@ import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import com.wurmcraft.serveressentials.common.modules.chat.ConfigChat;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
+import com.wurmcraft.serveressentials.common.utils.RequestGenerator;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.time.Instant;
 
+import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 import static com.wurmcraft.serveressentials.common.command.CommandUtils.convertToTime;
 import static com.wurmcraft.serveressentials.common.command.CommandUtils.isUUID;
@@ -60,26 +62,40 @@ public class MuteCommand {
     public static void muteOffworld(ServerPlayer player, String uuid, String[] inputs) {
         if (SECore.dataLoader.getClass().isInstance(RestDataLoader.class)) {
             if (isUUID(uuid)) {
-                Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid, new Account());
-                account.muted = !account.muted;
-                long muteTime = convertToTime(inputs);
-                account.muteTime = Instant.now().getEpochSecond() + muteTime;
-                boolean updated = SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, uuid, account);
-                if (account.muted) {
-                    if (updated) {
-                        ChatHelper.send(player.sender, player.lang.COMMAND_MUTE.replaceAll("\\{@TIME@}", CommandUtils.displayTime(muteTime)).replaceAll("\\{@PLAYER@}", uuid));
-                    } else
-                        LOG.warn("Failed to update user's mute (" + uuid + ")");
-                } else {
-                    if (updated) {
-                        ChatHelper.send(player.sender, player.lang.COMMAND_MUTE_UNDO.replaceAll("\\{@TIME@}", CommandUtils.displayTime(muteTime)).replaceAll("\\{@PLAYER@}", uuid));
-                    } else
-                        LOG.warn("Failed to update user's mute (" + uuid + ")");
-                }
+                muteRemote(player, uuid, inputs);
             } else { // Username?
-                // TODO Reverse Username lookup for UUID via Rest API, account database
+                try {
+                    RequestGenerator.HttpResponse response = RequestGenerator.get("api/lookup/uuid/" + uuid);
+                    if(response.status == 200) {
+                        Account account = GSON.fromJson(response.response, Account.class);
+                        muteRemote(player, account.uuid, inputs);
+                    }  else {
+                        // TODO Send Not Found Error
+                    }
+                } catch (Exception e) {
+                    LOG.warn("Failed to get response from API, (" + e.getMessage() + ")");
+                }
             }
         } else
             ChatHelper.send(player.sender, player.lang.DISABLED);
+    }
+
+    private static void muteRemote(ServerPlayer player, String uuid, String[] inputs) {
+        Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid, new Account());
+        account.muted = !account.muted;
+        long muteTime = convertToTime(inputs);
+        account.muteTime = Instant.now().getEpochSecond() + muteTime;
+        boolean updated = SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, uuid, account);
+        if (account.muted) {
+            if (updated) {
+                ChatHelper.send(player.sender, player.lang.COMMAND_MUTE.replaceAll("\\{@TIME@}", CommandUtils.displayTime(muteTime)).replaceAll("\\{@PLAYER@}", uuid));
+            } else
+                LOG.warn("Failed to update user's mute (" + uuid + ")");
+        } else {
+            if (updated) {
+                ChatHelper.send(player.sender, player.lang.COMMAND_MUTE_UNDO.replaceAll("\\{@TIME@}", CommandUtils.displayTime(muteTime)).replaceAll("\\{@PLAYER@}", uuid));
+            } else
+                LOG.warn("Failed to update user's mute (" + uuid + ")");
+        }
     }
 }
