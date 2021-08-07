@@ -83,7 +83,7 @@ public class FileDataLoader extends DataLoader {
             storage.get(type).put(key, new Object[]{System.currentTimeMillis(), data});
         } else {
             NonBlockingHashMap<String, Object[]> newCache = new NonBlockingHashMap<>();
-            newCache.put(key, new Object[]{System.currentTimeMillis(), data});
+            newCache.put(key, new Object[]{System.currentTimeMillis() + getTimeout(type), data});
             storage.put(type, newCache);
         }
     }

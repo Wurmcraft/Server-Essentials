@@ -3,6 +3,7 @@ package com.wurmcraft.serveressentials.common.modules.chat.event;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Channel;
+import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.command.EcoUtils;
@@ -15,6 +16,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.commons.codec.language.bm.Lang;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -57,11 +59,18 @@ public class PlayerChatEvent {
         LocalAccount local = SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, e.getPlayer().getGameProfile().getId().toString(), new LocalAccount());
         Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, e.getPlayer().getGameProfile().getId().toString(), new Account());
         if (isMuted(account)) {
-            // TODO Send muted message
+            Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.language, new Language());
+            ChatHelper.send(e.getPlayer(), lang.MUTED);
             e.setCanceled(true);
             return;
         }
         Channel ch = SECore.dataLoader.get(DataLoader.DataType.CHANNEL, local.channel, new Channel());
+        if (!ch.enabled && !RankUtils.hasPermission(account, "chat.pause.bypass")) {
+            Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.language, new Language());
+            ChatHelper.send(e.getPlayer(), lang.CHANNEL_DISABLED);
+            e.setCanceled(true);
+            return;
+        }
         TextComponentString message = new TextComponentString(format(e.getPlayer(), ch, account, e.getMessage()));
         e.setComponent(message);
         ChatHelper.sendFrom(e.getPlayer(), ch, message);

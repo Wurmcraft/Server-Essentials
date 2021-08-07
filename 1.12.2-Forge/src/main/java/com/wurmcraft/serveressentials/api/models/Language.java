@@ -7,8 +7,11 @@ public class Language {
     public String DISABLED;
     public String PLAYER_NOT_FOUND;
 
+
     // Chat
     public String SPACER;
+    public String CHANNEL_DISABLED;
+    public String MUTED;
 
     // Command
     public String COMMAND_BASE_VERSION;
@@ -33,5 +36,9 @@ public class Language {
     public String COMMAND_NICK_RESET;
     public String COMMAND_NICK_OTHER;
     public String COMMAND_NICK_OTHER_RESET;
+    public String COMMAND_PAUSECHAT_DISABLED;
+    public String COMMAND_PAUSECHAT_ENABLED;
+    public String COMMAND_PAUSECHAT_ANNOUCMENT_ENABLED;
+    public String COMMAND_PAUSECHAT_ANNOUCMENT_DISABLED;
 
 }

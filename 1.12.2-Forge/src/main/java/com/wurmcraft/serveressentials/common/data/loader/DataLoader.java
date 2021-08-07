@@ -127,7 +127,7 @@ public class DataLoader implements IDataLoader {
             }
         } else {
             NonBlockingHashMap<String, Object[]> newDataStorage = new NonBlockingHashMap<>();
-            newDataStorage.put(key, new Object[]{System.currentTimeMillis(), data});
+            newDataStorage.put(key, new Object[]{System.currentTimeMillis() + getTimeout(type), data});
             storage.put(type, newDataStorage);
             LOG.debug("Creating new cached storage for '" + type.name() + "' with key '" + key + "'");
             return true;
@@ -145,7 +145,7 @@ public class DataLoader implements IDataLoader {
     public boolean update(DataType type, String key, Object data) {
         if (storage.containsKey(type)) {
             if (storage.get(type).containsKey(key)) {
-                storage.get(type).put(key, new Object[]{System.currentTimeMillis(), data});
+                storage.get(type).put(key, new Object[]{System.currentTimeMillis() +  + getTimeout(type), data});
                 LOG.trace("Entry on '" + type + "' has been cached (update) with key ' " + key + "'");
                 return true;
             } else {

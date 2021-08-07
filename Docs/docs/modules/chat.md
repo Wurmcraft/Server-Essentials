@@ -16,13 +16,16 @@ Requirements: `Core`
 | Ignore      | command.ignore             | Adds a user to the ignored list preventing messages from the given user     | `i`                                     |  Low                  |
 | Nick        | command.nick.self          | Change your own nickname                                                    | `nickname`                              |  Low                  |
 | Nick        | command.nick.other         | Change someone else's nickname                                              | `nickname`                              |  Medium               |
+| PauseChat   | command.pausechat     | Prevents all users in a given channel from typing in chat                        | `pc`                                    |  Medium               |
 
 ### Non-Command Permission
 
-| Description                                                                                                                                              | Permission Node    |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------- |--------------------|
-| Can a user use color codes in chat using the `&` sign, See [Formatting Codes](https://minecraft.fandom.com/wiki/Formatting_codes) for a full list        | `chat.color`       |
-| Can a user use replacement to print info related to themselves, see [#formatting](/modules/chat#formatting) for a full list or possible replacements     | `chat.replacment`  |
+| Description                                                                                                                                              | Permission Node     |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------- |---------------------|
+| Can a user use color codes in chat using the `&` sign, See [Formatting Codes](https://minecraft.fandom.com/wiki/Formatting_codes) for a full list        | `chat.color`        |
+| Can a user use replacement to print info related to themselves, see [#formatting](/modules/chat#formatting) for a full list or possible replacements     | `chat.replacment`   |
+| Allows the user to bypass ignore status from other players                                                                                               | `chat.ignore.bypass`|
+| Allows the user to bypass / talk in chat when it has been muted / paused                                                                                 | `chat.pause.bypass` |
 
 ### Config
 

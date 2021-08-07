@@ -1,8 +1,10 @@
 package com.wurmcraft.serveressentials.common.utils;
 
 import com.wurmcraft.serveressentials.api.SECore;
+import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Channel;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
+import com.wurmcraft.serveressentials.common.command.RankUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,7 +42,8 @@ public class ChatHelper {
         HashMap<EntityPlayer, LocalAccount> playersInChannel = getInChannel(ch);
         for (EntityPlayer player : playersInChannel.keySet()) {
             LocalAccount local = playersInChannel.get(player);
-            if (!isIgnored(local, sender.getGameProfile().getId().toString()))
+            boolean ignored = isIgnored(local, sender.getGameProfile().getId().toString());
+            if (!ignored || RankUtils.hasPermission(SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, local.uuid, new Account()), "chat.ignore.bypass"))
                 send(player, message);
         }
     }
