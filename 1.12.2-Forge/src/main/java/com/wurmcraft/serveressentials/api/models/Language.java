@@ -5,6 +5,7 @@ public class Language {
     public String langKey;
 
     public String DISABLED;
+    public String PLAYER_NOT_FOUND;
 
     // Chat
     public String SPACER;
@@ -25,5 +26,8 @@ public class Language {
     public String COMMAND_MUTE_MUTED_UNDO;
     public String COMMAND_MUTE_LESS_THEN_0;
     public String COMMAND_CHANNEL_CHANGED;
+    public String COMMAND_IGNORE_IGNORED;
+    public String COMMAND_IGNORE_UNDO;
+    public String COMMAND_IGNORE_SELF;
 
 }

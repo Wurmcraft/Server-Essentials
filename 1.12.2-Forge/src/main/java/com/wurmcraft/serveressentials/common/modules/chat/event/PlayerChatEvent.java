@@ -64,8 +64,14 @@ public class PlayerChatEvent {
         Channel ch = SECore.dataLoader.get(DataLoader.DataType.CHANNEL, local.channel, new Channel());
         TextComponentString message = new TextComponentString(format(e.getPlayer(), ch, account, e.getMessage()));
         e.setComponent(message);
+        ChatHelper.sendFrom(e.getPlayer(), ch, message);
         if (ch.logChat)
             logChat(ch, message.getText());
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onChatCancel(ServerChatEvent e) {
+        e.setCanceled(true);
     }
 
     private void logChat(Channel ch, String message) {

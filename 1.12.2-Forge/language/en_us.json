@@ -2,6 +2,7 @@
 	"langKey": "en_us",
 	"SPACER": "&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==&a-&6==",
 	"DISABLED": "&cCommand is &l&ldisabled",
+	"PLAYER_NOT_FOUND":  "&cUnable to locate player '{@PLAYER@}",
 	"COMMAND_BASE_VERSION": "&bServer Essentials Version: &c{@VERSION@}",
 	"COMMAND_BASE_MODULES": "&bModules: &c{@MODULES@}",
 	"COMMAND_BASE_STORAGE": "&bStorage: &c{@STORAGE@}",
@@ -16,5 +17,8 @@
 	"COMMAND_MUTE_UNDO": "&b{@PLAYER@} has been unmuted.",
 	"COMMAND_MUTE_MUTED_UNDO": "&bYou have been unmuted.",
 	"COMMAND_MUTE_LESS_THEN_0": "&cTime must be equal or greater than 0, Example: 1d 5m 27m",
-	"COMMAND_CHANNEL_CHANGED": "&bYou have changed to channel &c{@CHANNEL@}"
+	"COMMAND_CHANNEL_CHANGED": "&bYou have changed to channel &c{@CHANNEL@}",
+	"COMMAND_IGNORE_IGNORED": "&bYou are now ignoring '{@USERNAME@}', you will no longer see messages / tpa requests from this user",
+	"COMMAND_IGNORE_UNDO": "&bYou are no longer ignoring '{@USERNAME@}'",
+	"COMMAND_IGNORE_SELF": "&cYou cannot ignore yourself!"
 }
