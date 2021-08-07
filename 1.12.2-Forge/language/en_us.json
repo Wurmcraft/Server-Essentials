@@ -20,5 +20,9 @@
 	"COMMAND_CHANNEL_CHANGED": "&bYou have changed to channel &c{@CHANNEL@}",
 	"COMMAND_IGNORE_IGNORED": "&bYou are now ignoring '{@USERNAME@}', you will no longer see messages / tpa requests from this user",
 	"COMMAND_IGNORE_UNDO": "&bYou are no longer ignoring '{@USERNAME@}'",
-	"COMMAND_IGNORE_SELF": "&cYou cannot ignore yourself!"
+	"COMMAND_IGNORE_SELF": "&cYou cannot ignore yourself!",
+	"COMMAND_NICK": "&bYour nickname has been set to '{@NICK@}'",
+	"COMMAND_NICK_RESET": "&bYour nickname has been reset",
+	"COMMAND_NICK_OTHER": "&bYou have changed '{@PLAYER@}' to '{@NICK@}'",
+	"COMMAND_NICK_OTHER_RESET": "&b{@PLAYER@} nickname has been reset"
 }

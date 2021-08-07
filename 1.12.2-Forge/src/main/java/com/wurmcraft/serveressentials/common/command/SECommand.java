@@ -201,7 +201,7 @@ public class SECommand extends CommandBase {
         // Default Search
         for (CommandArgument[] testArgs : arguments.keySet()) {
             // Size Match or has String Array
-            if (testArgs.length == args.length || testArgs[testArgs.length - 1] == CommandArgument.STRING_ARR) {
+            if (testArgs.length == args.length || testArgs.length > 0 && testArgs[testArgs.length - 1] == CommandArgument.STRING_ARR) {
                 Object[] convertedArgs = convertArguments(player, testArgs, args);
                 if (convertedArgs != null)
                     return arguments.get(testArgs);

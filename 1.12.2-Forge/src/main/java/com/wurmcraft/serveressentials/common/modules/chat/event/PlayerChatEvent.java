@@ -159,7 +159,7 @@ public class PlayerChatEvent {
         if (account.displayName == null || account.displayName.isEmpty())
             return player.getDisplayNameString();
         else
-            return account.displayName;
+            return ((ConfigChat) SECore.moduleConfigs.get("CHAT")).nickFormat.replaceAll("%NICK%", account.displayName).replaceAll("%USERNAME%", player.getDisplayNameString());
     }
 
     public static List<Rank> getRanks(Account account) {

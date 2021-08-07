@@ -29,5 +29,9 @@ public class Language {
     public String COMMAND_IGNORE_IGNORED;
     public String COMMAND_IGNORE_UNDO;
     public String COMMAND_IGNORE_SELF;
+    public String COMMAND_NICK;
+    public String COMMAND_NICK_RESET;
+    public String COMMAND_NICK_OTHER;
+    public String COMMAND_NICK_OTHER_RESET;
 
 }

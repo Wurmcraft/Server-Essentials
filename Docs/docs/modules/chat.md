@@ -13,6 +13,9 @@ Requirements: `Core`
 | Channel     | command.channel            | Change your current selected channel                                        | `ch`, `chan`                            |  Low                  |
 | Mute        | command.mute               | Mute or unmute a specific used, timed or untimed                            |                                         |  Medium               |
 | Broadcast   | command.broadcast          | Send a message to everyone on the given server                              | `bc`                                    |  Medium               |
+| Ignore      | command.ignore             | Adds a user to the ignored list preventing messages from the given user     | `i`                                     |  Low                  |
+| Nick        | command.nick.self          | Change your own nickname                                                    | `nickname`                              |  Low                  |
+| Nick        | command.nick.other         | Change someone else's nickname                                              | `nickname`                              |  Medium               |
 
 ### Non-Command Permission
 
@@ -29,6 +32,7 @@ File: `Modules/Chat.json`
 |-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `defaultChannel`  | Channel to set new users to upon login.                                                                                                                                 |
 | `chatFormat`      | Formatting for how to display chat, See [#formatting](/modules/chat#formatting) for a full list of possible formatting codes                                            |
+| `nickFormat`      | Formatting for how to display a nickname, See [#formatting](/modules/chat#formatting) for a full list of possible formatting codes                                      |
 
 
 ### Formatting
