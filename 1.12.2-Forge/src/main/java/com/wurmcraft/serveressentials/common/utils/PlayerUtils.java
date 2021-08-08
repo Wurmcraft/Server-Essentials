@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -97,15 +98,25 @@ public class PlayerUtils {
         try {
             UUID uuid = UUID.fromString(input);
             String username = validateUsername(uuid.toString());
-            if(username == null && SECore.dataLoader.getClass().equals(RestDataLoader.class))
+            if (username == null && SECore.dataLoader.getClass().equals(RestDataLoader.class))
                 return validateUsernameRemote(uuid.toString());
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         // Validate Username
         String username = validateUsername(input);
-        if(username != null)
+        if (username != null)
             return username;
-        else if(SECore.dataLoader.getClass().equals(RestDataLoader.class))
+        else if (SECore.dataLoader.getClass().equals(RestDataLoader.class))
             return validateUsernameRemote(validateUUIDRemote(input));
+        return null;
+    }
+
+    public static EntityPlayer getFromUUID(String uuid) {
+        try {
+            return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(UUID.fromString(uuid));
+        } catch (Exception e) {
+
+        }
         return null;
     }
 }

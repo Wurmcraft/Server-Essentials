@@ -5,6 +5,7 @@
 	"PLAYER_NOT_FOUND":  "&cUnable to locate player '{@PLAYER@}",
 	"CHANNEL_DISABLED": "&cYour current channel is disabled, you are unable to talk",
 	"MUTED": "&cYou are currently muted!",
+	"MESSAGE_COLOR": "&e",
 	"COMMAND_BASE_VERSION": "&bServer Essentials Version: &c{@VERSION@}",
 	"COMMAND_BASE_MODULES": "&bModules: &c{@MODULES@}",
 	"COMMAND_BASE_STORAGE": "&bStorage: &c{@STORAGE@}",
@@ -30,5 +31,6 @@
 	"COMMAND_PAUSECHAT_ENABLED": "&b{@CHANNEL@} has been enabled!",
 	"COMMAND_PAUSECHAT_DISABLED": "&b{@CHANNEL@} has been disabled!",
 	"COMMAND_PAUSECHAT_ANNOUCMENT_ENABLED": "&bYour current channel ({@CHANNEL@}) has been enabled, you can talk again!",
-	"COMMAND_PAUSECHAT_ANNOUCMENT_DISABLED": "&cYour current channel ({@CHANNEL@}) has been disabled, you are unable to talk!"
+	"COMMAND_PAUSECHAT_ANNOUCMENT_DISABLED": "&cYour current channel ({@CHANNEL@}) has been disabled, you are unable to talk!",
+	"COMMAND_REPLY_INVALID": "&bYou have to message or receive a message first"
 }

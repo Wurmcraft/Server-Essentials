@@ -7,11 +7,11 @@ public class Language {
     public String DISABLED;
     public String PLAYER_NOT_FOUND;
 
-
     // Chat
     public String SPACER;
     public String CHANNEL_DISABLED;
     public String MUTED;
+    public String MESSAGE_COLOR;
 
     // Command
     public String COMMAND_BASE_VERSION;
@@ -40,5 +40,6 @@ public class Language {
     public String COMMAND_PAUSECHAT_ENABLED;
     public String COMMAND_PAUSECHAT_ANNOUCMENT_ENABLED;
     public String COMMAND_PAUSECHAT_ANNOUCMENT_DISABLED;
+    public String COMMAND_REPLY_INVALID;
 
 }

@@ -8,12 +8,14 @@ public class ConfigChat {
     public String defaultChannel;
     public String chatFormat;
     public String nickFormat;
+    public String messageFormat;
     public String defaultMuteDuration;
 
-    public ConfigChat(String defaultChannel, String chatFormat, String nickFormat, String defaultMuteDuration) {
+    public ConfigChat(String defaultChannel, String chatFormat, String nickFormat, String messageFormat, String defaultMuteDuration) {
         this.defaultChannel = defaultChannel;
         this.chatFormat = chatFormat;
         this.nickFormat = nickFormat;
+        this.messageFormat = messageFormat;
         this.defaultMuteDuration = defaultMuteDuration;
     }
 
@@ -22,5 +24,6 @@ public class ConfigChat {
         this.chatFormat = "%CHANNEL_PREFIX% %RANK_PREFIX% %NAME% %RANK_SUFFIX%: %MESSAGE%";
         this.defaultMuteDuration = "10m";
         this.nickFormat = "*%NICK%";
+        this.messageFormat = "%NAME% {->, <-} %MSG%";
     }
 }

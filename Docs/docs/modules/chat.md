@@ -16,7 +16,9 @@ Requirements: `Core`
 | Ignore      | command.ignore             | Adds a user to the ignored list preventing messages from the given user     | `i`                                     |  Low                  |
 | Nick        | command.nick.self          | Change your own nickname                                                    | `nickname`                              |  Low                  |
 | Nick        | command.nick.other         | Change someone else's nickname                                              | `nickname`                              |  Medium               |
-| PauseChat   | command.pausechat     | Prevents all users in a given channel from typing in chat                        | `pc`                                    |  Medium               |
+| PauseChat   | command.pausechat          | Prevents all users in a given channel from typing in chat                   | `pc`                                    |  Medium               |
+| Dm          | command.dm                 | Send a message to another user                                              | `msg`, `m` `pm`                         |  Low                  |
+| Reply       | command.reply              | Reply to a message send to you from another user without mentioning them    | `r`                                     |  Low                  |
 
 ### Non-Command Permission
 
@@ -31,11 +33,12 @@ Requirements: `Core`
 
 File: `Modules/Chat.json`
 
-| Name              | Description                                                                                                                                                             |
-|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `defaultChannel`  | Channel to set new users to upon login.                                                                                                                                 |
-| `chatFormat`      | Formatting for how to display chat, See [#formatting](/modules/chat#formatting) for a full list of possible formatting codes                                            |
-| `nickFormat`      | Formatting for how to display a nickname, See [#formatting](/modules/chat#formatting) for a full list of possible formatting codes                                      |
+| Name              | Description                                                                                                                                                                             |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `defaultChannel`  | Channel to set new users to upon login.                                                                                                                                                 |
+| `chatFormat`      | Formatting for how to display chat, See [#formatting](/modules/chat#formatting) for a full list of possible formatting codes                                                            |
+| `nickFormat`      | Formatting for how to display a nickname, See [#formatting](/modules/chat#formatting) for a full list of possible formatting codes                                                      |
+| `messageFormat`   | Controls how the private messages via /dm /msg and /r are displayed, values within the {} are seperated via , and swaped depending on the side the message is being displayed from      |
 
 
 ### Formatting

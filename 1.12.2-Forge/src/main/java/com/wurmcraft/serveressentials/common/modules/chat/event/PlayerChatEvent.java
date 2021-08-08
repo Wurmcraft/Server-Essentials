@@ -29,6 +29,7 @@ import java.util.*;
 
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 import static com.wurmcraft.serveressentials.common.data.ConfigLoader.SAVE_DIR;
+import static com.wurmcraft.serveressentials.common.utils.ChatHelper.getName;
 
 public class PlayerChatEvent {
     public static final String[] REPLACE_LIST = new String[]{
@@ -162,13 +163,6 @@ public class PlayerChatEvent {
                     val = rank.color;
                 }
         return val;
-    }
-
-    public static String getName(EntityPlayer player, Account account) {
-        if (account.displayName == null || account.displayName.isEmpty())
-            return player.getDisplayNameString();
-        else
-            return ((ConfigChat) SECore.moduleConfigs.get("CHAT")).nickFormat.replaceAll("%NICK%", account.displayName).replaceAll("%USERNAME%", player.getDisplayNameString());
     }
 
     public static List<Rank> getRanks(Account account) {
