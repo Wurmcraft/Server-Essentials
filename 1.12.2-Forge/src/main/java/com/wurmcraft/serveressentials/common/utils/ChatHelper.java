@@ -4,6 +4,7 @@ import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Channel;
 import com.wurmcraft.serveressentials.api.models.Language;
+import com.wurmcraft.serveressentials.api.models.local.Bulletin;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.command.RankUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
@@ -102,5 +103,13 @@ public class ChatHelper {
             return player.getDisplayNameString();
         else
             return ((ConfigChat) SECore.moduleConfigs.get("CHAT")).nickFormat.replaceAll("%NICK%", account.displayName).replaceAll("%USERNAME%", player.getDisplayNameString());
+    }
+
+    public static void send(EntityPlayer player, Bulletin bulletin) {
+        Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account()).language, new Language());
+        send(player, lang.SPACER);
+        send(player, bulletin.title);         // TODO Center Title
+        send(player, bulletin.message);
+        send(player, lang.SPACER);
     }
 }

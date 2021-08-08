@@ -19,6 +19,8 @@ Requirements: `Core`
 | PauseChat   | command.pausechat          | Prevents all users in a given channel from typing in chat                   | `pc`                                    |  Medium               |
 | Dm          | command.dm                 | Send a message to another user                                              | `msg`, `m` `pm`                         |  Low                  |
 | Reply       | command.reply              | Reply to a message send to you from another user without mentioning them    | `r`                                     |  Low                  |
+| SocialSpy   | command.socialspy          | Enables the viewing of DM's from others on the network                      | `ss`                                    |  Medium               |
+| Bulletin    | command.bulletin           | Send a message to everyone that joins the server within a timeframe         | `offlineannouncement`                   |  Medium               |
 
 ### Non-Command Permission
 

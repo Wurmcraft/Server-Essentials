@@ -1,6 +1,7 @@
 package com.wurmcraft.serveressentials.common.data.loader;
 
 import com.wurmcraft.serveressentials.api.models.*;
+import com.wurmcraft.serveressentials.api.models.local.Bulletin;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
@@ -23,7 +24,8 @@ public class DataLoader implements IDataLoader {
         ACCOUNT("api/user", "CRUD/PATCH", "uuid", Account.class, true),
         LOCAL_ACCOUNT(null,null,"uuid", LocalAccount.class, true),
         LANGUAGE(null,null,"langKey", Language.class, true),
-        CHANNEL(null,null,"name", Channel.class, true);
+        CHANNEL(null,null,"name", Channel.class, true),
+        BULLETIN (null, null,"title", Bulletin.class, true);
 
         String path;
         String pathType;
