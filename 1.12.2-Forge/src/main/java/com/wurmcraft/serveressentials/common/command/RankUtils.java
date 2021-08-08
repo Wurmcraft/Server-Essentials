@@ -60,6 +60,6 @@ public class RankUtils {
 
     // TODO Implement
     public static boolean hasPermission(Account account, String perm) {
-        return false;
+        return true;
     }
 }

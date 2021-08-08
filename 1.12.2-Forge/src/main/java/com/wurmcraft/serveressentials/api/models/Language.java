@@ -45,5 +45,6 @@ public class Language {
     public String COMMAND_SOCIALSPY_ENABLED;
     public String COMMAND_SOCIALSPY_DISABLED;
     public String COMMAND_BULLETIN;
+    public String COMMAND_MOTD;
 
 }

@@ -36,5 +36,6 @@
 	"COMMAND_REPLY_INVALID": "&bYou have to message or receive a message first",
 	"COMMAND_SOCIALSPY_ENABLED": "&bSocial Spy has been enabled",
 	"COMMAND_SOCIALSPY_DISABLED": "&bSocial Spy has been disabled",
-	"COMMAND_BULLETIN": "&bBulletin {@TITLE@} created, expires in {@TIME@}"
+	"COMMAND_BULLETIN": "&bBulletin {@TITLE@} created, expires in {@TIME@}",
+	"COMMAND_MOTD": "&bMOTD has been updated"
 }

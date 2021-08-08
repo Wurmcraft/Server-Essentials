@@ -4,9 +4,11 @@ import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.event.PlayerLoadEvent;
 import com.wurmcraft.serveressentials.api.models.local.Bulletin;
+import com.wurmcraft.serveressentials.common.command.RankUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.modules.chat.ConfigChat;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
@@ -33,6 +35,9 @@ public class NewChatPlayer {
                     SECore.dataLoader.update(DataLoader.DataType.BULLETIN, bulletin.title, bulletin);
                 }
             }
+        if(RankUtils.hasPermission(e.account,"command.motd")) {
+            FMLCommonHandler.instance().getMinecraftServerInstance().commandManager.executeCommand(e.player, "motd");
+        }
     }
 
     @SubscribeEvent

@@ -21,6 +21,8 @@ Requirements: `Core`
 | Reply       | command.reply              | Reply to a message send to you from another user without mentioning them    | `r`                                     |  Low                  |
 | SocialSpy   | command.socialspy          | Enables the viewing of DM's from others on the network                      | `ss`                                    |  Medium               |
 | Bulletin    | command.bulletin           | Send a message to everyone that joins the server within a timeframe         | `offlineannouncement`                   |  Medium               |
+| Motd        | command.motd               | Display a preset message when the command is run                            |                                         |  Low                  |
+| Motd        | command.motd.set           | Set the motd                                                                |                                         |  Medium               |
 
 ### Non-Command Permission
 
@@ -41,6 +43,7 @@ File: `Modules/Chat.json`
 | `chatFormat`      | Formatting for how to display chat, See [#formatting](/modules/chat#formatting) for a full list of possible formatting codes                                                            |
 | `nickFormat`      | Formatting for how to display a nickname, See [#formatting](/modules/chat#formatting) for a full list of possible formatting codes                                                      |
 | `messageFormat`   | Controls how the private messages via /dm /msg and /r are displayed, values within the {} are seperated via , and swaped depending on the side the message is being displayed from      |
+| `motd`            | The server's motd for displaying upon joining or running /motd                                                                                                                          |
 
 
 ### Formatting
