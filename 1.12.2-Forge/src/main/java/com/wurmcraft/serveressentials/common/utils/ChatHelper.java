@@ -22,6 +22,7 @@ import java.util.*;
 public class ChatHelper {
 
     public static NonBlockingHashMap<UUID, UUID> lastMessageCache = new NonBlockingHashMap<>();
+    public static List<EntityPlayer> socialSpy = new ArrayList<>();
 
     public static void send(ICommandSender sender, ITextComponent component) {
         sender.sendMessage(component);
@@ -58,13 +59,23 @@ public class ChatHelper {
         if (isIgnored(SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, receiver.getGameProfile().getId().toString(), new LocalAccount()), sender.getGameProfile().getId().toString())) {
             return;
         }
-        String format = replaceColor(SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, ((ConfigCore)SECore.moduleConfigs.get("CORE")).defaultLang, new Language()).MESSAGE_COLOR + ((ConfigChat) SECore.moduleConfigs.get("CHAT")).messageFormat.replaceAll("%MSG%", msg));
+        String msgColor = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, ((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang, new Language()).MESSAGE_COLOR;
+        String format = replaceColor(msgColor + ((ConfigChat) SECore.moduleConfigs.get("CHAT")).messageFormat.replaceAll("%MSG%", msg));
         String dir = format.substring(format.indexOf("{") + 1, format.indexOf("}"));
         String[] split = dir.split(",");
-        format = format.substring(0, format.indexOf("{")) + " {REPLACE} " + format.substring(format.indexOf("}")+1);
-        send(receiver, new TextComponentString(format.replace("{REPLACE}", split[0].trim()).replaceAll("%NAME%", getName(sender, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, sender.getGameProfile().getId().toString(), new Account())).trim()).replaceAll("%USERNAME%", sender.getDisplayNameString())));
-        send(sender, new TextComponentString(format.replace("{REPLACE}", split[1].trim()).replaceAll("%NAME%", getName(receiver, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, receiver.getGameProfile().getId().toString(), new Account())).trim()).replaceAll("%USERNAME%", receiver.getDisplayNameString())));
+        format = format.substring(0, format.indexOf("{")) + " {REPLACE} " + format.substring(format.indexOf("}") + 1);
+        send(receiver, format.replace("{REPLACE}", split[0].trim()).replaceAll("%NAME%", getName(sender, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, sender.getGameProfile().getId().toString(), new Account())).trim()).replaceAll("%USERNAME%", sender.getDisplayNameString()));
+        String sentMessage = format.replace("{REPLACE}", split[1].trim()).replaceAll("%NAME%", getName(receiver, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, receiver.getGameProfile().getId().toString(), new Account())).trim()).replaceAll("%USERNAME%", receiver.getDisplayNameString());
+        send(sender, sentMessage);
         lastMessageCache.put(receiver.getGameProfile().getId(), sender.getGameProfile().getId());
+        if (socialSpy.size() > 0) {
+            for (EntityPlayer spy : ChatHelper.socialSpy) {
+                if (spy.getGameProfile().getId().toString().equals(sender.getGameProfile().getId().toString()) || spy.getGameProfile().getId().toString().equals(receiver.getGameProfile().getId().toString()))
+                    continue;
+                Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, spy.getGameProfile().getId().toString(), new Account()).language, new Language());
+                send(spy, lang.SOCIAL_SPY_TAG + " " + msgColor + sender.getDisplayNameString() + " " + sentMessage);
+            }
+        }
     }
 
     public static boolean isIgnored(LocalAccount current, String senderUUID) {

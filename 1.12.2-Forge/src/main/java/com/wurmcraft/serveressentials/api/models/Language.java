@@ -12,6 +12,7 @@ public class Language {
     public String CHANNEL_DISABLED;
     public String MUTED;
     public String MESSAGE_COLOR;
+    public String SOCIAL_SPY_TAG;
 
     // Command
     public String COMMAND_BASE_VERSION;
@@ -41,5 +42,7 @@ public class Language {
     public String COMMAND_PAUSECHAT_ANNOUCMENT_ENABLED;
     public String COMMAND_PAUSECHAT_ANNOUCMENT_DISABLED;
     public String COMMAND_REPLY_INVALID;
+    public String COMMAND_SOCIALSPY_ENABLED;
+    public String COMMAND_SOCIALSPY_DISABLED;
 
 }
