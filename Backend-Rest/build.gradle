@@ -38,6 +38,8 @@ dependencies {
     // Unit Testing
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junit_version}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junit_version}"
+    // Discord
+    implementation "com.discord4j:discord4j-core:${discord4j_version}"
 }
 
 shadowJar.archiveName = "${archivesBaseName}-${version}.jar"

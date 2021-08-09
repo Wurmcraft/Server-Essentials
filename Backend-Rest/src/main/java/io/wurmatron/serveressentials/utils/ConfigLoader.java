@@ -1,9 +1,6 @@
 package io.wurmatron.serveressentials.utils;
 
-import io.wurmatron.serveressentials.config.Config;
-import io.wurmatron.serveressentials.config.DatabaseConfig;
-import io.wurmatron.serveressentials.config.GeneralConfig;
-import io.wurmatron.serveressentials.config.ServerConfig;
+import io.wurmatron.serveressentials.config.*;
 import me.grison.jtoml.impl.Toml;
 
 import java.io.File;
@@ -88,7 +85,8 @@ public class ConfigLoader {
                     toml.getBoolean("config.server.forceLowercase"),
                     toml.getBoolean("config.server.swaggerEnabled"),
                     Math.toIntExact(toml.getLong("config.server.cacheTime")));
-            return new Config(generalConfig, dbConfig, sererConfig);
+            DiscordConfig discordConfig = new DiscordConfig(toml.getString("config.discord.token"));
+            return new Config(generalConfig, dbConfig, sererConfig, discordConfig);
         } catch (Exception e) {
             e.printStackTrace();
             LOG.error("Failed to read toml config file");

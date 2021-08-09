@@ -9,6 +9,7 @@ import io.javalin.plugin.openapi.OpenApiPlugin;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
 import io.wurmatron.serveressentials.config.Config;
+import io.wurmatron.serveressentials.discord.DiscordBot;
 import io.wurmatron.serveressentials.routes.EndpointSecurity;
 import io.wurmatron.serveressentials.routes.RouteLoader;
 import io.wurmatron.serveressentials.sql.DatabaseConnection;
@@ -68,6 +69,8 @@ public class ServerEssentialsRest {
         EndpointSecurity.addSecurityManaging(javalin);
         RouteLoader.registerRoutes(javalin);
         javalin.start(config.server.host.isEmpty() ? null : config.server.host, config.server.port);
+        if(!config.discord.token.isEmpty())
+            DiscordBot.start();
     }
 
     public static void displaySystemInfo() {
