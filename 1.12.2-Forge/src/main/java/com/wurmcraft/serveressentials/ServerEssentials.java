@@ -15,6 +15,7 @@ import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.FileDataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.IDataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
+import com.wurmcraft.serveressentials.common.data.ws.SocketController;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -24,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -116,6 +118,14 @@ public class ServerEssentials {
             } catch (Exception f) {
                 f.printStackTrace();
                 LOG.warn("Failed to register command '" + command.getDeclaredAnnotation(ModuleCommand.class).name() + "'");
+            }
+        // Startup WSS if Rest is enabled
+        if(SECore.dataLoader.getClass().equals(RestDataLoader.class))
+            try {
+                SocketController.connect();
+            } catch (Exception f) {
+                f.printStackTrace();
+                LOG.warn("Failed to start web-socket for data connection!");
             }
     }
 

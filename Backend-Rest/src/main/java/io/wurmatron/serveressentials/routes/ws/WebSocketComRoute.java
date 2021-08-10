@@ -25,7 +25,7 @@ public class WebSocketComRoute {
 
         ws.onConnect(ctx -> {
             String token = ctx.cookie("authentication");
-            if (!activeConnections.containsKey(token)) {
+            if (!activeConnections.containsValue(token)) {
                 if (EndpointSecurity.authTokens.containsKey(token)) {
                     AuthUser serverPerms = EndpointSecurity.authTokens.get(token);
                     if (serverPerms.type.equalsIgnoreCase("SERVER")) {
@@ -40,7 +40,8 @@ public class WebSocketComRoute {
 
         ws.onMessage(ctx -> {
             if (activeConnections.containsKey(ctx)) {
-
+                WSWrapper message = GSON.fromJson(ctx.message(), WSWrapper.class);
+                LOG.info(message.type + " " + message.data.data);
             } else
                 ctx.send(GSON.toJson(new WSWrapper(400, WSWrapper.Type.MESSAGE, new DataWrapper(MessageResponse.class.getTypeName(), response("No Auth", "Failed to authenticate")))));
         });

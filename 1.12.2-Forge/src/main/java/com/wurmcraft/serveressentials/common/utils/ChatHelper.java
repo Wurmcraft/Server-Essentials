@@ -1,13 +1,12 @@
 package com.wurmcraft.serveressentials.common.utils;
 
 import com.wurmcraft.serveressentials.api.SECore;
-import com.wurmcraft.serveressentials.api.models.Account;
-import com.wurmcraft.serveressentials.api.models.Channel;
-import com.wurmcraft.serveressentials.api.models.Language;
+import com.wurmcraft.serveressentials.api.models.*;
 import com.wurmcraft.serveressentials.api.models.local.Bulletin;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.command.RankUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
+import com.wurmcraft.serveressentials.common.data.ws.SocketController;
 import com.wurmcraft.serveressentials.common.modules.chat.ConfigChat;
 import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
 import net.minecraft.command.ICommandSender;
@@ -53,6 +52,11 @@ public class ChatHelper {
             boolean ignored = isIgnored(local, sender.getGameProfile().getId().toString());
             if (!ignored || RankUtils.hasPermission(SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, local.uuid, new Account()), "chat.ignore.bypass"))
                 send(player, message);
+        }
+        try {
+            SocketController.send(new WSWrapper(200, WSWrapper.Type.MESSAGE, new DataWrapper("chat", message.getText())));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

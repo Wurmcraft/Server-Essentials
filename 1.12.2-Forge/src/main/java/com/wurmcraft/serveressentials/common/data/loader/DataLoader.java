@@ -12,24 +12,25 @@ import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 public class DataLoader implements IDataLoader {
 
     public enum DataType {
-        ACTION("api/action", "relatedID;host;action;timestamp", null, Action.class, false),
-        AUTORANK("api/autorank", "CRUD/PATCH", "autoRankID", AutoRank.class, true),
-        BAN("api/ban", "CRUD", "banID", Ban.class, true),
-        CURRENCY("api/currency", "CRUD", "currencyID", Currency.class, true),
-        DONATOR("api/donator", "CRUD", "uuid", Donator.class, true),
-        LOG_ENTRY("api/logging", "serverID;action;x;y;z;dim", null, LogEntry.class, false),
-        MARKET("api/market", "CRUD", null, MarketEntry.class, false),
-        RANK("api/rank", "CRUD/PATCH", "rankID", Rank.class, true),
-        TRANSFER("api/transfer", "CRUD/PATCH", "transferID", TransferEntry.class, false),
-        ACCOUNT("api/user", "CRUD/PATCH", "uuid", Account.class, true),
-        LOCAL_ACCOUNT(null,null,"uuid", LocalAccount.class, true),
-        LANGUAGE(null,null,"langKey", Language.class, true),
-        CHANNEL(null,null,"name", Channel.class, true),
-        BULLETIN (null, null,"title", Bulletin.class, true);
+        ACTION("api/action", "relatedID;host;action;timestamp", null, Action.class,Action[].class, false),
+        AUTORANK("api/autorank", "CRUD/PATCH", "autoRankID", AutoRank.class,AutoRank[].class, true),
+        BAN("api/ban", "CRUD", "banID", Ban.class, Ban[].class, true),
+        CURRENCY("api/currency", "CRUD", "currencyID", Currency.class,Currency[].class, true),
+        DONATOR("api/donator", "CRUD", "uuid", Donator.class, Donator[].class, true),
+        LOG_ENTRY("api/logging", "serverID;action;x;y;z;dim", null, LogEntry.class, LogEntry[].class, false),
+        MARKET("api/market", "CRUD", null, MarketEntry.class,MarketEntry[].class, false),
+        RANK("api/rank", "CRUD/PATCH", "name", Rank.class,Rank[].class, true),
+        TRANSFER("api/transfer", "CRUD/PATCH", "transferID", TransferEntry.class,TransferEntry[].class, false),
+        ACCOUNT("api/user", "CRUD/PATCH", "uuid", Account.class,Account[].class, true),
+        LOCAL_ACCOUNT(null,null,"uuid", LocalAccount.class,LocalAccount[].class, true),
+        LANGUAGE(null,null,"langKey", Language.class, Language[].class, true),
+        CHANNEL(null,null,"name", Channel.class,Channel[].class, true),
+        BULLETIN (null, null,"title", Bulletin.class, Bulletin[].class, true);
 
         String path;
         String pathType;
         Class<?> instanceType;
+        Class<?> instanceTypeArr;
         boolean fileCache;
         String key;
 
@@ -39,6 +40,15 @@ public class DataLoader implements IDataLoader {
             this.key = key;
             this.instanceType = instanceType;
             this.fileCache = fileCache;
+        }
+
+        DataType(String path, String pathType, String key, Class<?> instanceType, Class<?> instanceTypeArr, boolean fileCache) {
+            this.path = path;
+            this.pathType = pathType;
+            this.instanceType = instanceType;
+            this.instanceTypeArr = instanceTypeArr;
+            this.fileCache = fileCache;
+            this.key = key;
         }
     }
 

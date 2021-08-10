@@ -23,11 +23,14 @@ public class ModuleRank {
     }
 
     public void setupDefaultRanks() {
-        Rank defaultRank = new Rank(0,((ConfigRank) SECore.moduleConfigs.get("RANK")).defaultRank,new String[] {"command.help", "command.home", "command.sethome", "command.tpa", "command.tpaccept", "command.tpadeny", "command.spawn"},new String[] {}, "&8[&7Default&8]", 0,"&7",0,"&3", 0);
-        Rank member = new Rank(0,"Member",new String[] {"command.warp", "command.enderchest"},new String[] {((ConfigRank) SECore.moduleConfigs.get("RANK")).defaultRank}, "&8[&eMember&8]", 1,"&7",1,"&b", 1);
-        Rank admin = new Rank(0,"Admin",new String[] {"*"},new String[] {"Member"}, "&c[&4Admin&c]", 2,"&7",2,"&b", 2);
-        SECore.dataLoader.register(DataLoader.DataType.RANK,defaultRank.name, defaultRank);
-        SECore.dataLoader.register(DataLoader.DataType.RANK,member.name, member);
-        SECore.dataLoader.register(DataLoader.DataType.RANK,admin.name, admin);
+        Rank defaultRank = new Rank(0, ((ConfigRank) SECore.moduleConfigs.get("RANK")).defaultRank, new String[]{"command.help", "command.home", "command.sethome", "command.tpa", "command.tpaccept", "command.tpadeny", "command.spawn"}, new String[]{}, "&8[&7Default&8]", 0, "&7", 0, "&3", 0);
+        Rank member = new Rank(0, "Member", new String[]{"command.warp", "command.enderchest"}, new String[]{((ConfigRank) SECore.moduleConfigs.get("RANK")).defaultRank}, "&8[&eMember&8]", 1, "&7", 1, "&b", 1);
+        Rank admin = new Rank(0, "Admin", new String[]{"*"}, new String[]{"Member"}, "&c[&4Admin&c]", 2, "&7", 2, "&b", 2);
+        if (SECore.dataLoader.get(DataLoader.DataType.RANK, defaultRank.name) == null)
+            SECore.dataLoader.register(DataLoader.DataType.RANK, defaultRank.name, defaultRank);
+        if (SECore.dataLoader.get(DataLoader.DataType.RANK, member.name) == null)
+            SECore.dataLoader.register(DataLoader.DataType.RANK, member.name, member);
+        if (SECore.dataLoader.get(DataLoader.DataType.RANK, admin.name) == null)
+            SECore.dataLoader.register(DataLoader.DataType.RANK, admin.name, admin);
     }
 }

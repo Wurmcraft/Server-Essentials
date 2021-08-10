@@ -1,22 +1,28 @@
 package com.wurmcraft.serveressentials.common.data.loader;
 
 import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.models.AuthUser;
 import com.wurmcraft.serveressentials.api.models.MessageResponse;
+import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.common.utils.RequestGenerator;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
+
+import java.util.*;
 
 public class RestDataLoader extends FileDataLoader {
 
@@ -115,9 +121,8 @@ public class RestDataLoader extends FileDataLoader {
             try {
                 RequestGenerator.HttpResponse response = RequestGenerator.get(key.path);
                 if (isValidResponse(response)) {
-                    // Yes, this is the best way i found to convert class -> class[] (j8)
                     // Object[] data = GSON.fromJson(response.response,  key.instanceType.arrayType());
-                    Object[] data = GSON.fromJson(response.response, Collections.singletonList(key.instanceType).toArray().getClass());
+                    Object[] data = (Object[]) GSON.fromJson(response.response, key.instanceTypeArr);
                     if (data != null)
                         for (Object d : data) {
                             String dataKey = getKey(key, d);
@@ -152,6 +157,10 @@ public class RestDataLoader extends FileDataLoader {
             Object instance = field.get(data);
             if (instance instanceof String)
                 return (String) instance;
+            else if (instance  instanceof Long)
+                return Long.toString((long) instance);
+            else if (instance  instanceof Integer)
+                return Integer.toString((int) instance);
         } catch (Exception e) {
             e.printStackTrace();
             LOG.warn("Failed to find key for '" + type.name() + "'");
@@ -221,6 +230,7 @@ public class RestDataLoader extends FileDataLoader {
             if (isValidResponse(response)) {
                 Object data = GSON.fromJson(response.response, type.instanceType);
                 cache(type, key, data);
+                return data;
             } else {
                 handleResponseError(response);
             }
@@ -233,7 +243,7 @@ public class RestDataLoader extends FileDataLoader {
 
     private String getKey(Object data) {
         for (DataType type : DataType.values())
-            if (type.instanceType.getDeclaringClass().equals(data.getClass())) {
+            if (type.instanceType.equals(data.getClass())) {
                 if (type.key != null) {
                     try {
                         Field field = data.getClass().getDeclaredField(type.key);

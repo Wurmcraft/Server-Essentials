@@ -140,7 +140,7 @@ public class EndpointSecurity {
                     @OpenApiResponse(status = "403", content = {@OpenApiContent(from = MessageResponse.class)}, description = "Invalid Credentials, Same as 401 however its details are more precise, such as lock account or already logged in"),
             }
     )
-    @Route(path = "api/login", method = "POST", roles = {Route.RestRoles.ANONYMOUS})
+    @Route(path = "api/login", method = "POST", roles = {Route.RestRoles.ANONYMOUS, Route.RestRoles.DEV})
     public static Handler login = ctx -> {
         try {
             AuthUser authUser = GSON.fromJson(ctx.body(), AuthUser.class);
@@ -159,7 +159,7 @@ public class EndpointSecurity {
                             authTokens.put(userToken, authUser); // TODO Delete Expired Tokens
                             ctx.status(200).result(GSON.toJson(authUser));
                         } else {
-                            ctx.status(403).result(response("Bad Credentials", "Invalid User / Password Combination"));
+                            ctx.status(401).result(response("Bad Credentials", "Invalid User / Password Combination"));
                         }
                     } else {
                         ctx.status(401).result(response("Bad Credentials", "Authentication Failed"));
@@ -232,17 +232,17 @@ public class EndpointSecurity {
      */
     private static boolean validateLogin(Context ctx, AuthUser user) {
         // Validate login type
-        if (!user.type.equalsIgnoreCase("USER") && !user.type.equalsIgnoreCase("SERVER")) {
+        if (user.type == null || !user.type.equalsIgnoreCase("USER") && !user.type.equalsIgnoreCase("SERVER")) {
             ctx.status(400).result(response("Bad Request", "Invalid User Login Type"));
             return false;
         }
         // Validate username
-        if (user.name.trim().isEmpty()) {
+        if (user.name == null || user.name.trim().isEmpty()) {
             ctx.status(400).result(response("Bad Request", "Invalid / Empty Name"));
             return false;
         }
         // Validate password / token
-        if (user.token.trim().isEmpty()) {
+        if (user.token == null || user.token.trim().isEmpty()) {
             ctx.status(400).result(response("Bad Request", "Token must not be empty!"));
             return false;
         }

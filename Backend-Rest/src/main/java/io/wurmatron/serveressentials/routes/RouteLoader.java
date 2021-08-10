@@ -18,7 +18,7 @@ import static io.wurmatron.serveressentials.ServerEssentialsRest.LOG;
 
 public class RouteLoader {
 
-    public static final String[] SUPPORTED_ROUTE_METHODS = {"GET", "POST", "PUT", "DELETE", "PATCH", "BEFORE"};
+    public static final String[] SUPPORTED_ROUTE_METHODS = {"GET", "POST", "PUT", "DELETE", "PATCH", "BEFORE", "WS", "WS/BEFORE"};
     public static final Reflections REFLECTIONS = new Reflections(RouteLoader.class.getPackage().getName(), new MethodAnnotationsScanner(), new SubTypesScanner(), new FieldAnnotationsScanner());
 
     /**
