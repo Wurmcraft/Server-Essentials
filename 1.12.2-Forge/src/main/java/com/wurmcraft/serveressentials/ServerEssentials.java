@@ -25,7 +25,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -99,7 +98,7 @@ public class ServerEssentials {
         List<Class<?>> commands = AnnotationLoader.loadCommands();
         commandClasses = new HashMap<>();
         for (Class<?> command : commands) {
-           ModuleCommand instance= command.getDeclaredAnnotation(ModuleCommand.class);
+            ModuleCommand instance = command.getDeclaredAnnotation(ModuleCommand.class);
             CommandConfig config = CommandUtils.loadConfig(instance);
             if (config != null)
                 commandClasses.put(command, config);
@@ -120,7 +119,7 @@ public class ServerEssentials {
                 LOG.warn("Failed to register command '" + command.getDeclaredAnnotation(ModuleCommand.class).name() + "'");
             }
         // Startup WSS if Rest is enabled
-        if(SECore.dataLoader.getClass().equals(RestDataLoader.class))
+        if (SECore.dataLoader.getClass().equals(RestDataLoader.class))
             try {
                 SocketController.connect();
             } catch (Exception f) {

@@ -32,8 +32,10 @@ public class WebSocketComRoute {
                         activeConnections.put(ctx, serverPerms.name);
                         ctx.send(GSON.toJson(new WSWrapper(200, WSWrapper.Type.UPDATE, new DataWrapper(AuthUser.class.getTypeName(), GSON.toJson(serverPerms)))));
                         LOG.info(activeConnections.get(ctx) + " has connected to the Web Socket");
-                    } else
+                    } else {
                         ctx.send(GSON.toJson(new WSWrapper(409, WSWrapper.Type.MESSAGE, new DataWrapper(MessageResponse.class.getTypeName(), response("Invalid Type", "Only servers can access the live data stream")))));
+                        ctx.session.close();
+                    }
                 }
             }
         });
@@ -42,8 +44,10 @@ public class WebSocketComRoute {
             if (activeConnections.containsKey(ctx)) {
                 WSWrapper message = GSON.fromJson(ctx.message(), WSWrapper.class);
                 LOG.info(message.type + " " + message.data.data);
-            } else
+            } else {
                 ctx.send(GSON.toJson(new WSWrapper(400, WSWrapper.Type.MESSAGE, new DataWrapper(MessageResponse.class.getTypeName(), response("No Auth", "Failed to authenticate")))));
+                ctx.session.close();
+            }
         });
 
         ws.onClose(ctx -> {
@@ -54,7 +58,7 @@ public class WebSocketComRoute {
         });
 
         ws.onError(ctx -> {
-
+            System.out.println("Error: " + ctx.error().getMessage());
         });
     };
 }

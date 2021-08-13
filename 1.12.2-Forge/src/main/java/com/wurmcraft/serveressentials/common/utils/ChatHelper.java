@@ -53,11 +53,12 @@ public class ChatHelper {
             if (!ignored || RankUtils.hasPermission(SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, local.uuid, new Account()), "chat.ignore.bypass"))
                 send(player, message);
         }
-        try {
-            SocketController.send(new WSWrapper(200, WSWrapper.Type.MESSAGE, new DataWrapper("chat", message.getText())));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // TODO uncomment
+//        try {
+//            SocketController.send(new WSWrapper(200, WSWrapper.Type.MESSAGE, new DataWrapper("chat", message.getUnformattedComponentText())));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static void send(EntityPlayer sender, EntityPlayer receiver, String msg) {

@@ -15,21 +15,25 @@ public class SocketController {
 
     private static WebSocket ws;
 
-    public static void connect() throws IOException, WebSocketException {
-        String connectionURL = createURL();
-        ws = new WebSocketFactory().createSocket(connectionURL).addHeader("cookie", "authentication=" + RequestGenerator.token);
-        ws.addListener(new WebSocketAdapter() {
-            @Override
-            public void onTextMessage(WebSocket websocket, String text) throws Exception {
-                try {
-                    WSWrapper wrapper = GSON.fromJson(text, WSWrapper.class);
-                    handle(wrapper);
-                } catch (Exception e) {
-                    e.printStackTrace();
+    public static synchronized void connect() throws IOException, WebSocketException {
+        if(ws == null) {
+            String connectionURL = createURL();
+            ws = new WebSocketFactory().createSocket(connectionURL).addHeader("cookie", "authentication=" + RequestGenerator.token);
+            ws.addListener(new WebSocketAdapter() {
+                @Override
+                public void onTextMessage(WebSocket websocket, String text) throws Exception {
+                    try {
+                        WSWrapper wrapper = GSON.fromJson(text, WSWrapper.class);
+                        handle(wrapper);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
-        ws.connect();
+            });
+            ws.connect();
+            ws.setPingInterval(60 * 1000);  // TODO Replace with Status update
+        } else
+            ws.recreate().connect();
     }
 
     private static String createURL() {
@@ -37,8 +41,8 @@ public class SocketController {
         return (https ? "wss://" : "ws://") + RequestGenerator.BASE_URL.replaceAll((https ? "https://" : "http://"), "") + "api/live";
     }
 
-    public static void send(WSWrapper wrapper) throws IOException, WebSocketException {
-        if (ws == null)
+    public static synchronized void send(WSWrapper wrapper) throws IOException, WebSocketException {
+        if (ws == null || !ws.isOpen())
             connect();
         ws.sendText(GSON.toJson(wrapper));
     }
