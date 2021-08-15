@@ -1,7 +1,9 @@
 package com.wurmcraft.serveressentials.common.utils;
 
+import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.*;
+import com.wurmcraft.serveressentials.api.models.data_wrapper.ChatMessage;
 import com.wurmcraft.serveressentials.api.models.local.Bulletin;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.command.RankUtils;
@@ -18,6 +20,9 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import java.util.*;
+
+import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
+import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
 public class ChatHelper {
 
@@ -53,12 +58,12 @@ public class ChatHelper {
             if (!ignored || RankUtils.hasPermission(SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, local.uuid, new Account()), "chat.ignore.bypass"))
                 send(player, message);
         }
-        // TODO uncomment
-//        try {
-//            SocketController.send(new WSWrapper(200, WSWrapper.Type.MESSAGE, new DataWrapper("chat", message.getUnformattedComponentText())));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            SocketController.send(new WSWrapper(200, WSWrapper.Type.MESSAGE, new DataWrapper("chat", GSON.toJson(new ChatMessage("Minecraft", ServerEssentials.config.general.serverID, getName(sender, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, sender.getGameProfile().getId().toString(), new Account())), message.getText(), ch.name)))));
+        } catch (Exception e) {
+            LOG.warn("Failed to send message via webSocket!");
+            e.printStackTrace();
+        }
     }
 
     public static void send(EntityPlayer sender, EntityPlayer receiver, String msg) {

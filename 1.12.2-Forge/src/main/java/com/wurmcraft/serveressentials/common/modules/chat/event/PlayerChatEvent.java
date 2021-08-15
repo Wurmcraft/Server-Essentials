@@ -1,5 +1,6 @@
 package com.wurmcraft.serveressentials.common.modules.chat.event;
 
+import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Channel;
@@ -16,7 +17,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.apache.commons.codec.language.bm.Lang;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.*;
 
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
@@ -38,7 +37,8 @@ public class PlayerChatEvent {
             "%DIMENSION%",
             "%RANK_PREFIX%",
             "%RANK_SUFFIX%",
-            "%CHANNEL_PREFIX%"
+            "%CHANNEL_PREFIX%",
+            "%SERVER_ID%"
     };
 
     public static final String[] PLAYER_REPLACEMENT = new String[]{
@@ -104,7 +104,7 @@ public class PlayerChatEvent {
     }
 
     public static String format(EntityPlayer player, Channel channel, Account account, String msg) {
-        String format = ChatHelper.replaceColor(((ConfigChat) SECore.moduleConfigs.get("CHAT")).chatFormat);
+        String format = channel.chatFormat.isEmpty() ? ChatHelper.replaceColor(((ConfigChat) SECore.moduleConfigs.get("CHAT")).defaultChatFormat) : ChatHelper.replaceColor(channel.chatFormat);
         List<Rank> ranks = getRanks(account);
         format = StringUtils.replaceEach(format, REPLACE_LIST, new String[]{
                 ChatHelper.replaceColor(getRankValue("color", ranks)) + player.getGameProfile().getName(),
@@ -112,7 +112,8 @@ public class PlayerChatEvent {
                 player.dimension + "",
                 ChatHelper.replaceColor(getRankValue("prefix", ranks)),
                 ChatHelper.replaceColor(getRankValue("suffix", ranks)),
-                ChatHelper.replaceColor(channel.prefix)
+                ChatHelper.replaceColor(channel.prefix),
+                ServerEssentials.config.general.serverID
         });
         // Channel Specific
         if (channel.chatReplacment != null && channel.chatReplacment.size() > 0)
