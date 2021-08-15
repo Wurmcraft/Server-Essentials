@@ -56,7 +56,8 @@ File: `Modules/Chat.json`
 | `%DIMENSION%`   | The Dimension the user is currently in                                                                                                                              | 0                 |
 | `%RANK_PREFIX%` | The users rank prefix with the highest display priority                                                                                                             |[Default]          |
 | `%RANK_SUFFIX%` | The users rank suffix with the highest display priority                                                                                                             | &3                |
-| `%CHANNEL_PREFIX%` | The users rank suffix with the highest display priority                                                                                                          | Local             |
+| `%CHANNEL_PREFIX%` | The channels prefix                                                                                                                                              | Local             |
+| `%SERVER_ID%`   | The id of the server the message was created on                                                                                                                     | ATMR              |
 
 #### Chat Replacements
 | Find            | Replace                                                                                                                                                             | Example           |
