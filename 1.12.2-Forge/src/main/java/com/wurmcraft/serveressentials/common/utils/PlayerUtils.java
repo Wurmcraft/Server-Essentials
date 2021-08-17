@@ -3,6 +3,8 @@ package com.wurmcraft.serveressentials.common.utils;
 import com.google.gson.Gson;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.Account;
+import com.wurmcraft.serveressentials.api.models.local.Home;
+import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -118,5 +120,17 @@ public class PlayerUtils {
 
         }
         return null;
+    }
+
+    public static Home getHome(LocalAccount local, String name) {
+        for (Home home : local.homes)
+            if (name.equalsIgnoreCase(home.name))
+                return home;
+        return null;
+    }
+
+    // TODO Implement
+    public static int maxHomes(Account global) {
+        return 1;
     }
 }

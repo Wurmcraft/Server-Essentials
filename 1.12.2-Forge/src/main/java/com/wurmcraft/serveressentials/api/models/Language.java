@@ -6,6 +6,7 @@ public class Language {
 
     public String DISABLED;
     public String PLAYER_NOT_FOUND;
+    public String TELEPORT_TIMER;
 
     // Chat
     public String SPACER;
@@ -13,6 +14,7 @@ public class Language {
     public String MUTED;
     public String MESSAGE_COLOR;
     public String SOCIAL_SPY_TAG;
+    public String HOME_OVER;
 
     // Command
     public String COMMAND_BASE_VERSION;
@@ -46,5 +48,9 @@ public class Language {
     public String COMMAND_SOCIALSPY_DISABLED;
     public String COMMAND_BULLETIN;
     public String COMMAND_MOTD;
+    public String COMMAND_HOME;
+    public String COMMAND_HOME_NONE;
+    public String COMMAND_HOME_EXIST;
+    public String COMMAND_SETHOME;
 
 }
