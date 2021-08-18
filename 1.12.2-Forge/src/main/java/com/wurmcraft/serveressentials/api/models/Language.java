@@ -52,5 +52,9 @@ public class Language {
     public String COMMAND_HOME_NONE;
     public String COMMAND_HOME_EXIST;
     public String COMMAND_SETHOME;
+    public String COMMAND_SETHOME_OTHER;
+    public String COMMAND_SETHOME_MAX;
+    public String COMMAND_DELHOME;
+    public String COMMAND_DELHOME_OTHER;
 
 }

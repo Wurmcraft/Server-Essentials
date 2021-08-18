@@ -43,5 +43,9 @@
   "COMMAND_HOME": "&bYou have been teleported to '{@NAME@}'",
   "COMMAND_HOME_NONE": "&bNo Homes exist! set one via /sethome <name>",
   "COMMAND_HOME_EXIST": "&bHome {@NAME@} does not exist!",
-  "COMMAND_SETHOME": "&b{@NAME@} home has been created"
+  "COMMAND_SETHOME": "&b{@NAME@} home has been created",
+  "COMMAND_SETHOME_OTHER": "&b{@NAME@} has been created for {@PLAYER@}",
+  "COMMAND_SETHOME_MAX": "&cYou may only have a maximum of {@MAX@} homes!",
+  "COMMAND_DELHOME": "&b{@NAME@} has been deleted",
+  "COMMAND_DELHOME_OTHER": "&bHome {@NAME@} has been deleted for {@PLAYER@}"
 }

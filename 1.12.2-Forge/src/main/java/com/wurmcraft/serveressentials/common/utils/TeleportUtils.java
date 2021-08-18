@@ -16,14 +16,14 @@ public class TeleportUtils {
     }
 
     public static boolean teleportTo(EntityPlayerMP player, LocalAccount local, Location location, boolean checkTimer) {
-        if(local.teleportTimer <= System.currentTimeMillis())
+        if(local.teleportTimer >= System.currentTimeMillis())
             return false;
         // Update Teleport info
-        local.teleportTimer = System.currentTimeMillis();
+        local.teleportTimer = System.currentTimeMillis() + 1000;
         local.lastLocation = new Location(player.posX, player.posY, player.posZ, player.dimension, player.rotationPitch, player.rotationYaw);
         // Check for dimension change
         if (player.dimension == location.dim) {
-            player.setPositionAndRotation(location.x, location.y, location.z, (float) location.pitch, (float) location.yaw);
+            player.connection.setPlayerLocation(location.x, location.y, location.z, (float) location.pitch, (float) location.yaw);
         } else {    // Update Player's dimension
             // Remove from existing world
             int oldDim = player.dimension;
@@ -35,12 +35,11 @@ public class TeleportUtils {
             // Spawn into other dimension
             if (player.isEntityAlive()) {
                 serverWorld.spawnEntity(player);
-                player.setLocationAndAngles(location.x + .5, location.y + 1, location.z + .5, (float) location.yaw, (float) location.pitch);
                 serverWorld.updateEntityWithOptionalForce(player, false);
                 player.setWorld(serverWorld);
             }
             player.mcServer.getPlayerList().preparePlayer(player, serverWorld);
-            player.connection.setPlayerLocation(location.x, location.y, location.z, (float) location.yaw, (float) location.pitch);
+            player.connection.setPlayerLocation(location.x, location.y, location.z, (float) location.pitch, (float) location.yaw);
             player.interactionManager.setWorld(serverWorld);
         }
         SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT,local.uuid, local);

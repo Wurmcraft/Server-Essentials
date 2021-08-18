@@ -123,9 +123,10 @@ public class PlayerUtils {
     }
 
     public static Home getHome(LocalAccount local, String name) {
-        for (Home home : local.homes)
-            if (name.equalsIgnoreCase(home.name))
-                return home;
+        if (local.homes != null)
+            for (Home home : local.homes)
+                if (name.equalsIgnoreCase(home.name))
+                    return home;
         return null;
     }
 

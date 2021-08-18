@@ -9,6 +9,7 @@ import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.api.models.local.Home;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.command.CommandUtils;
+import com.wurmcraft.serveressentials.common.command.RankUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.modules.general.ConfigGeneral;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
@@ -18,6 +19,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 @ModuleCommand(module = "General", name = "Home", defaultAliases = {"h"}, defaultCooldown = "10s", defaultDelay = {"2s"})
@@ -73,27 +77,30 @@ public class HomeCommand {
 
     @Command(args = {CommandArgument.STRING, CommandArgument.STRING}, usage = {"player", "name list"})
     public void homeOtherOffline(ServerPlayer player, String otherPlayer, String arg) {
-        String targetUUID = PlayerUtils.getUUIDForInput(otherPlayer);
-        if (targetUUID != null) {
-            LocalAccount local = SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, targetUUID, new LocalAccount());
-            if (local != null) {
-                if (arg.equalsIgnoreCase("list") || arg.equalsIgnoreCase("l")) {
-                    displayHomes(local.homes, player.sender, player.lang);
-                } else {
-                    for (Home home : local.homes)
-                        if (arg.equalsIgnoreCase(home.name)) {
-                            if (TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, home, true)) {
-                                ChatHelper.send(player.sender, player.lang.COMMAND_HOME.replaceAll("%NAME%", home.name));
-                            } else
-                                ChatHelper.send(player.sender, player.lang.TELEPORT_TIMER.replaceAll("%TIME%", CommandUtils.displayTime((System.currentTimeMillis() - player.local.teleportTimer) / 1000)));
-                            return;
-                        }
-                    ChatHelper.send(player.sender, player.lang.COMMAND_HOME_EXIST);
-                }
+        if (RankUtils.hasPermission(player.global, "command.home.other")) {
+            String targetUUID = PlayerUtils.getUUIDForInput(otherPlayer);
+            if (targetUUID != null) {
+                LocalAccount local = SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, targetUUID, new LocalAccount());
+                if (local != null) {
+                    if (arg.equalsIgnoreCase("list") || arg.equalsIgnoreCase("l")) {
+                        displayHomes(local.homes, player.sender, player.lang);
+                    } else {
+                        for (Home home : local.homes)
+                            if (arg.equalsIgnoreCase(home.name)) {
+                                if (TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, home, true)) {
+                                    ChatHelper.send(player.sender, player.lang.COMMAND_HOME.replaceAll("%NAME%", home.name));
+                                } else
+                                    ChatHelper.send(player.sender, player.lang.TELEPORT_TIMER.replaceAll("%TIME%", CommandUtils.displayTime((System.currentTimeMillis() - player.local.teleportTimer) / 1000)));
+                                return;
+                            }
+                        ChatHelper.send(player.sender, player.lang.COMMAND_HOME_EXIST);
+                    }
+                } else
+                    ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
             } else
                 ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
         } else
-            ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
+            ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
 
     private static void displayHomes(Home[] homes, ICommandSender sender, Language lang) {
@@ -104,7 +111,13 @@ public class HomeCommand {
     }
 
     private static TextComponentString homeInfo(Home home, Language lang) {
-        TextComponentString homeInfo = new TextComponentString(home.name);
+        TextComponentString homeInfo = new TextComponentString(ChatHelper.replaceColor(lang.MESSAGE_COLOR + home.name));
+        homeInfo.setStyle(homeInfo.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(
+                lang.HOME_OVER.replaceAll("\\{@X@}", Integer.toString((int) Math.round(home.x))).
+                        replaceAll("\\{@Y@}", Integer.toString((int) Math.round(home.y))).
+                        replaceAll("\\{@Z@}", Integer.toString((int) Math.round(home.z))).
+                        replaceAll("\\{@DIM@}", Integer.toString(home.dim)))))
+                .setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/home " + home.name)));
         return homeInfo;
     }
 }
