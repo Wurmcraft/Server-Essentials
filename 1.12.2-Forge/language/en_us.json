@@ -53,5 +53,7 @@
   "COMMAND_TPACCEPT_NONE": "&bYou dont have any active tpa requests!",
   "COMMAND_TPACCEPT": "&bYou have accepted to tpa requested from {@PLAYER@}",
   "COMMAND_TPACCEPT_OTHER": "&b{@PLAYER@} has accepted your tpa request",
-  "COMMAND_TPDENY": "&bYou have canceled a tpa request from {@PLAYER@}"
+  "COMMAND_TPDENY": "&bYou have canceled a tpa request from {@PLAYER@}",
+  "COMMAND_SPAWN": "&bYou have been teleported to spawn",
+  "COMMAND_SETSPAWN": "&bSpawn for {@NAME@} has been set at your current location"
 }

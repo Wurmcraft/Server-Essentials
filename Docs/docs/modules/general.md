@@ -19,6 +19,9 @@ Requirements: `Core`
 | Tpa         | command.tpa                | Request to teleport to another user                                         |                                         | Low                   |
 | TpaAccept   | command.tpaaccept          | Accept another players request to teleport to your location                 | `TpAccept`                              | Low                   |
 | TpaDeny     | command.tpadeny            | Deny the request for another player to teleport to your location            | `TpDeny`                                | Low                   |
+| Spawn       | command.spawn              | Teleport to your highest rank spawn                                         | `Spwn`, `S`                             | Low                   |
+| Spawn       | command.spawn.<spawnName>  | Teleport you to a specific spawn (for a given rank / name)                  | `Spwn`, `S`                             | Low                   |
+| SetSpawn    | command.setspawn           | Set a spawn for a specific rank                                             |                                         | Low                   |
 
 ### Non-Command Permission
 

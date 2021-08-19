@@ -3,17 +3,25 @@ package com.wurmcraft.serveressentials.common.utils;
 import com.google.gson.Gson;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.Account;
+import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.api.models.local.Home;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
+import com.wurmcraft.serveressentials.api.models.local.Location;
+import com.wurmcraft.serveressentials.common.command.RankUtils;
+import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
+import com.wurmcraft.serveressentials.common.modules.general.ConfigGeneral;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
+
+import java.util.*;
 
 public class PlayerUtils {
 
@@ -133,5 +141,29 @@ public class PlayerUtils {
     // TODO Implement
     public static int maxHomes(Account global) {
         return 1;
+    }
+
+    public static Location getSpawn(String[] ranks) {
+        HashMap<String, Location> spawnPos = ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).spawn;
+        // Simple Match (if possible)
+        if(ranks.length == 1)
+            return spawnPos.getOrDefault(ranks[0], null);
+        // Highest Rank
+        List<Rank> userRanks = new ArrayList<>();
+        for (String name : ranks) {
+            Rank rank = SECore.dataLoader.get(DataLoader.DataType.RANK, name, new Rank());
+            if (rank != null && spawnPos.containsKey(rank.name))
+                userRanks.add(rank);
+        }
+        if (userRanks.size() > 0) {
+            Rank highestRank = userRanks.get(0);
+            for (Rank rank : userRanks)
+                if (RankUtils.isGreaterThan(rank, highestRank))
+                    highestRank = rank;
+            return spawnPos.get(highestRank.name);
+        }
+        if (spawnPos.containsKey("*"))
+            return spawnPos.get("*");
+        return null;
     }
 }

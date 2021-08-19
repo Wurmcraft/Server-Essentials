@@ -62,5 +62,7 @@ public class Language {
     public String COMMAND_TPACCEPT;
     public String COMMAND_TPACCEPT_OTHER;
     public String COMMAND_TPDENY;
+    public String COMMAND_SPAWN;
+    public String COMMAND_SETSPAWN;
 
 }
