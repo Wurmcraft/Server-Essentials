@@ -47,5 +47,11 @@
   "COMMAND_SETHOME_OTHER": "&b{@NAME@} has been created for {@PLAYER@}",
   "COMMAND_SETHOME_MAX": "&cYou may only have a maximum of {@MAX@} homes!",
   "COMMAND_DELHOME": "&b{@NAME@} has been deleted",
-  "COMMAND_DELHOME_OTHER": "&bHome {@NAME@} has been deleted for {@PLAYER@}"
+  "COMMAND_DELHOME_OTHER": "&bHome {@NAME@} has been deleted for {@PLAYER@}",
+  "COMMAND_TPA": "&bYou have sent a tpa request to {@PLAYER@}",
+  "COMMAND_TPA_OTHER": "&b{@PLAYER@} has request to teleport to your location",
+  "COMMAND_TPACCEPT_NONE": "&bYou dont have any active tpa requests!",
+  "COMMAND_TPACCEPT": "&bYou have accepted to tpa requested from {@PLAYER@}",
+  "COMMAND_TPACCEPT_OTHER": "&b{@PLAYER@} has accepted your tpa request",
+  "COMMAND_TPDENY": "&bYou have canceled a tpa request from {@PLAYER@}"
 }

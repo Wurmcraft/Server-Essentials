@@ -16,6 +16,9 @@ Requirements: `Core`
 | Sethome     | command.sethome.other      | Set the home for another user                                               |                                         | Medium                |
 | DelHome     | command.delhome            | Delete an existing home                                                     |                                         | Low                   |
 | DelHome     | command.delhome.other      | Delete another users existing home                                          |                                         | Medium                |
+| Tpa         | command.tpa                | Request to teleport to another user                                         |                                         | Low                   |
+| TpaAccept   | command.tpaaccept          | Accept another players request to teleport to your location                 | `TpAccept`                              | Low                   |
+| TpaDeny     | command.tpadeny            | Deny the request for another player to teleport to your location            | `TpDeny`                                | Low                   |
 
 ### Non-Command Permission
 
@@ -30,4 +33,4 @@ File: `Modules/General.json`
 |-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `defaultHomeName` | Name of the home to use as the default home when one is not specified                                                                                                   |
 | `minHomes`        | The minimum amount of homes a user may have                                                                                                                             |
-| `maxHomes`        | The maximum amount of homes a user may have                                                                                                                             | 
+| `maxHomes`        | The maximum amount of homes a user may have                                                                                                                             |
