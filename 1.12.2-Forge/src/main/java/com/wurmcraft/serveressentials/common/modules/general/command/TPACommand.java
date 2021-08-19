@@ -7,6 +7,7 @@ import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.ServerPlayer;
+import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,9 +21,11 @@ public class TPACommand {
 
     @Command(args = {CommandArgument.PLAYER}, usage = "player")
     public void tpPlayer(ServerPlayer player, EntityPlayerMP otherPlayer) {
-        activeRequests.put(otherPlayer, player.player);
         ChatHelper.send(player.player, player.lang.COMMAND_TPA.replaceAll("\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
-        Language otherLang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, ((Account) SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString())).language, new Language());
-        ChatHelper.send(otherPlayer, otherLang.COMMAND_TPA_OTHER.replaceAll("\\{@PLAYER@}", player.player.getDisplayNameString()));
+        if (!ChatHelper.isIgnored(SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new LocalAccount()), player.player.getGameProfile().getId().toString())) {
+            activeRequests.put(otherPlayer, player.player);
+            Language otherLang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, ((Account) SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString())).language, new Language());
+            ChatHelper.send(otherPlayer, otherLang.COMMAND_TPA_OTHER.replaceAll("\\{@PLAYER@}", player.player.getDisplayNameString()));
+        }
     }
 }
