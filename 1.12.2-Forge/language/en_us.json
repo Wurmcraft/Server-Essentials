@@ -59,5 +59,7 @@
   "COMMAND_TPAHERE": "&bYou have requested {@PLAYER@} to teleport to your location.",
   "COMMAND_TPAHERE_OTHER": "&b&b{@PLAYER@} has requested you teleport to there location!",
   "COMMAND_TPACCEPT_HERE": "&bYou have accepted to teleport to {@PLAYER@}, you will be teleported",
-  "COMMAND_TPACCEPT_HERE_OTHER": "&b{@PLAYER@} has accepted your requested to be teleported to you."
+  "COMMAND_TPACCEPT_HERE_OTHER": "&b{@PLAYER@} has accepted your requested to be teleported to you.",
+  "COMMAND_TPHERE": "&bYou have teleported {@PLAYER@} to your location",
+  "COMMAND_TPHERE_OTHER": "&bYou have been forcefully teleported"
 }

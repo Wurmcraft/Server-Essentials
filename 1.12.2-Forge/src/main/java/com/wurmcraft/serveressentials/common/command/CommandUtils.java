@@ -4,9 +4,7 @@ import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.command.CommandArgument;
 import com.wurmcraft.serveressentials.api.command.CommandConfig;
 import com.wurmcraft.serveressentials.api.command.ModuleCommand;
-import com.wurmcraft.serveressentials.api.models.Channel;
-import com.wurmcraft.serveressentials.api.models.Currency;
-import com.wurmcraft.serveressentials.api.models.Rank;
+import com.wurmcraft.serveressentials.api.models.*;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -237,5 +235,9 @@ public class CommandUtils {
         } catch (Exception e) {
         }
         return false;
+    }
+
+    public static Language getPlayerLang(EntityPlayer otherPlayer) {
+        return SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account()).language, new Language());
     }
 }
