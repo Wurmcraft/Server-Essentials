@@ -72,5 +72,7 @@ public class Language {
     public String COMMAND_TPHERE_OTHER;
     public String COMMAND_TPPOS;
     public String COMMAND_TPPOS_OTHER;
+    public String COMMAND_TP;
+    public String COMMAND_TP_OTHER;
 
 }

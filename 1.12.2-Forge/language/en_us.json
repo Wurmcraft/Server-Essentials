@@ -63,5 +63,7 @@
   "COMMAND_TPHERE": "&bYou have teleported {@PLAYER@} to your location",
   "COMMAND_TPHERE_OTHER": "&bYou have been forcefully teleported",
   "COMMAND_TPPOS": "&bYou have been teleported",
-  "COMMAND_TPPOS_OTHER": "&bYou have teleported {@PLAYER@}"
+  "COMMAND_TPPOS_OTHER": "&bYou have teleported {@PLAYER@}",
+  "COMMAND_TP": "&bYou have teleported to {@PLAYER@}",
+  "COMMAND_TP_OTHER": "&bYou have teleported {@PLAYER@} to {@PLAYER2@}"
 }
