@@ -41,6 +41,4 @@ public class SetSpawnCommand {
             e.printStackTrace();
         }
     }
-
-
 }

@@ -64,5 +64,9 @@ public class Language {
     public String COMMAND_TPDENY;
     public String COMMAND_SPAWN;
     public String COMMAND_SETSPAWN;
+    public String COMMAND_TPAHERE;
+    public String COMMAND_TPAHERE_OTHER;
+    public String COMMAND_TPACCEPT_HERE;
+    public String COMMAND_TPACCEPT_HERE_OTHER;
 
 }
