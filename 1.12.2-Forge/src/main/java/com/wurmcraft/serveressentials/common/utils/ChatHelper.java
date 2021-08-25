@@ -26,7 +26,7 @@ import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
 public class ChatHelper {
 
-    public static NonBlockingHashMap<UUID, UUID> lastMessageCache = new NonBlockingHashMap<>();
+    public static NonBlockingHashMap<String, String> lastMessageCache = new NonBlockingHashMap<>();
     public static List<EntityPlayer> socialSpy = new ArrayList<>();
 
     public static void send(ICommandSender sender, ITextComponent component) {
@@ -80,7 +80,7 @@ public class ChatHelper {
         send(receiver, format.replace("{REPLACE}", split[0].trim()).replaceAll("%NAME%", getName(sender, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, sender.getGameProfile().getId().toString(), new Account())).trim()).replaceAll("%USERNAME%", sender.getDisplayNameString()));
         String sentMessage = format.replace("{REPLACE}", split[1].trim()).replaceAll("%NAME%", getName(receiver, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, receiver.getGameProfile().getId().toString(), new Account())).trim()).replaceAll("%USERNAME%", receiver.getDisplayNameString());
         send(sender, sentMessage);
-        lastMessageCache.put(receiver.getGameProfile().getId(), sender.getGameProfile().getId());
+        lastMessageCache.put(receiver.getGameProfile().getId().toString(), sender.getGameProfile().getId().toString());
         if (socialSpy.size() > 0) {
             for (EntityPlayer spy : ChatHelper.socialSpy) {
                 if (spy.getGameProfile().getId().toString().equals(sender.getGameProfile().getId().toString()) || spy.getGameProfile().getId().toString().equals(receiver.getGameProfile().getId().toString()))
