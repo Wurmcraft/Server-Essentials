@@ -9,7 +9,7 @@ import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 @ModuleCommand(module = "Chat", name = "Broadcast", defaultAliases = "Bc")
 public class BroadcastCommand {
 
-    @Command(args = {CommandArgument.STRING_ARR}, usage = {"msg"})
+    @Command(args = {CommandArgument.STRING_ARR}, usage = {"msg"}, canConsoleUse = true)
     public void broadcastMessage(ServerPlayer player, String[] arr) {
         String message = String.join(" ", arr);
         ChatHelper.sendToAll(message);

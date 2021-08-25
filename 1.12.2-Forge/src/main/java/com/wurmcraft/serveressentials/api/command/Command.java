@@ -19,4 +19,6 @@ public @interface Command {
     boolean isSubCommand() default false;
 
     String[] subCommandAliases() default "";
+
+    boolean canConsoleUse() default false;
 }

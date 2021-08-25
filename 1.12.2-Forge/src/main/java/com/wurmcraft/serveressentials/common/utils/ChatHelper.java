@@ -48,6 +48,7 @@ public class ChatHelper {
     public static void sendToAll(String msg) {
         for (EntityPlayer player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers())
             sendTo(player, msg);
+        LOG.info("[Broadcast]: " + msg);
     }
 
     public static void sendFrom(EntityPlayerMP sender, Channel ch, TextComponentString message) {
@@ -58,6 +59,7 @@ public class ChatHelper {
             if (!ignored || RankUtils.hasPermission(SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, local.uuid, new Account()), "chat.ignore.bypass"))
                 send(player, message);
         }
+        LOG.info("[Chat]: " + message.getFormattedText());
         try {
             SocketController.send(new WSWrapper(200, WSWrapper.Type.MESSAGE, new DataWrapper("chat", GSON.toJson(new ChatMessage("Minecraft", ServerEssentials.config.general.serverID, getName(sender, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, sender.getGameProfile().getId().toString(), new Account())), message.getText(), ch.name)))));
         } catch (Exception e) {
@@ -87,6 +89,7 @@ public class ChatHelper {
                 send(spy, lang.SOCIAL_SPY_TAG + " " + msgColor + sender.getDisplayNameString() + " " + sentMessage);
             }
         }
+        LOG.info("[SocialSpy]: " + ChatHelper.replaceColor(sender.getDisplayNameString() + " " + sentMessage));
     }
 
     public static boolean isIgnored(LocalAccount current, String senderUUID) {

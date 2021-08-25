@@ -21,4 +21,7 @@ public class DMCommand {
     }
 
     // TODO Send message to remote users
+    public void sendMessage(ServerPlayer player, String otherPlayer, String msg) {
+
+    }
 }

@@ -7,6 +7,8 @@ public class Language {
     public String DISABLED;
     public String PLAYER_NOT_FOUND;
     public String TELEPORT_TIMER;
+    public String INVALID_TIME;
+    public String INVALID_BOOLEAN;
 
     // Chat
     public String SPACER;
@@ -32,6 +34,17 @@ public class Language {
     public String COMMAND_MUTE_MUTED_UNDO;
     public String COMMAND_MUTE_LESS_THEN_0;
     public String COMMAND_CHANNEL_CHANGED;
+    public String COMMAND_CHANNEL_EXISTS;
+    public String COMMAND_CHANNEL_CREATED;
+    public String COMMAND_CHANNEL_DELETED;
+    public String COMMAND_CHANNEL_DEFAULT;
+    public String COMMAND_CHANNEL_INFO_NAME;
+    public String COMMAND_CHANNEL_INFO_PREFIX;
+    public String COMMAND_CHANNEL_INFO_LOGGING;
+    public String COMMAND_CHANNEL_INFO_FORMAT;
+    public String COMMAND_CHANNEL_MODIFY_PREFIX;
+    public String COMMAND_CHANNEL_MODIFY_LOG;
+    public String COMMAND_CHANNEL_MODIFY_ENABLED;
     public String COMMAND_IGNORE_IGNORED;
     public String COMMAND_IGNORE_UNDO;
     public String COMMAND_IGNORE_SELF;
@@ -74,5 +87,6 @@ public class Language {
     public String COMMAND_TPPOS_OTHER;
     public String COMMAND_TP;
     public String COMMAND_TP_OTHER;
+
 
 }

@@ -240,4 +240,12 @@ public class CommandUtils {
     public static Language getPlayerLang(EntityPlayer otherPlayer) {
         return SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account()).language, new Language());
     }
+
+    public static Boolean convertBoolean(String value) {
+        if (value.equalsIgnoreCase("True") || value.equalsIgnoreCase("T") || value.equalsIgnoreCase("Yes") || value.equalsIgnoreCase("Y") || value.equalsIgnoreCase("1"))
+            return true;
+        else if (value.equalsIgnoreCase("False") || value.equalsIgnoreCase("F") || value.equalsIgnoreCase("No") || value.equalsIgnoreCase("N") || value.equalsIgnoreCase("0"))
+            return false;
+        return null;
+    }
 }

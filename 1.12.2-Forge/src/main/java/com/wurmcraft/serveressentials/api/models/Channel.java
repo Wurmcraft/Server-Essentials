@@ -14,11 +14,11 @@ public class Channel {
     public Channel() {
     }
 
-    public Channel(String name, String prefix, boolean logChat, Map<String, String> chatReplacment, boolean enabled, String chatFormat) {
+    public Channel(String name, String prefix, boolean logChat, Map<String, String> chatReplacement, boolean enabled, String chatFormat) {
         this.name = name;
         this.prefix = prefix;
         this.logChat = logChat;
-        this.chatReplacment = chatReplacment;
+        this.chatReplacment = chatReplacement;
         this.enabled = enabled;
         this.chatFormat = chatFormat;
     }
