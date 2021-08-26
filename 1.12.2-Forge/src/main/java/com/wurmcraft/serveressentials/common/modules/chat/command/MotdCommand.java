@@ -21,14 +21,14 @@ import static com.wurmcraft.serveressentials.common.data.ConfigLoader.SAVE_DIR;
 @ModuleCommand(module = "Chat", name = "Motd")
 public class MotdCommand {
 
-    @Command(args = {}, usage = {})
+    @Command(args = {}, usage = {}, canConsoleUse = true)
     public void displayMotd(ServerPlayer player) {
         String[] motd = ((ConfigChat) SECore.moduleConfigs.get("CHAT")).motd;
         for (String line : motd)
             ChatHelper.send(player.sender, line.replaceAll("%NAME%", ChatHelper.getName(player.player, player.global)));
     }
 
-    @Command(args = {CommandArgument.STRING_ARR}, usage = {"motd"})
+    @Command(args = {CommandArgument.STRING_ARR}, usage = {"motd"}, canConsoleUse = true)
     public void setMotd(ServerPlayer player, String[] newMotd) {
         if (RankUtils.hasPermission(player.global, "command.motd.set")) {
             String[] motd = String.join(" ", newMotd).split(";");

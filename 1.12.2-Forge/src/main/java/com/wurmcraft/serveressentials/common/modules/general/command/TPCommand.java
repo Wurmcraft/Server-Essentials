@@ -24,7 +24,7 @@ public class TPCommand {
         ChatHelper.send(player.player, player.lang.COMMAND_TP.replaceAll("\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
     }
 
-    @Command(args = {CommandArgument.PLAYER, CommandArgument.PLAYER}, usage = {"teleportPlayer", "target"})
+    @Command(args = {CommandArgument.PLAYER, CommandArgument.PLAYER}, usage = {"teleportPlayer", "target"}, canConsoleUse = true)
     public void teleportPlayer2Player(ServerPlayer player, EntityPlayer teleportee, EntityPlayer target) {
         TeleportUtils.teleportTo((EntityPlayerMP) teleportee, SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, teleportee.getGameProfile().getId().toString(), new LocalAccount()), new Location(target.posX, target.posY, target.posZ, target.dimension, teleportee.rotationPitch, teleportee.rotationYaw));
         ChatHelper.send(player.player, player.lang.COMMAND_TP_OTHER.replaceAll("\\{@PLAYER@}", teleportee.getDisplayNameString()).replaceAll("\\{@PLAYER2@}", target.getDisplayNameString()));

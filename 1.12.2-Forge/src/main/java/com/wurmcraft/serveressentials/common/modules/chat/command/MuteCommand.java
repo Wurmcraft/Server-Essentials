@@ -24,7 +24,7 @@ import static com.wurmcraft.serveressentials.common.command.CommandUtils.isUUID;
 @ModuleCommand(module = "Chat", name = "Mute")
 public class MuteCommand {
 
-    @Command(args = {CommandArgument.PLAYER, CommandArgument.STRING_ARR}, usage = {"player", "time"})
+    @Command(args = {CommandArgument.PLAYER, CommandArgument.STRING_ARR}, usage = {"player", "time"}, canConsoleUse = true)
     public static void mute(ServerPlayer player, EntityPlayer muted, String[] inputs) {
         long muteTime = convertToTime(inputs);
         if (muteTime > 0) {
@@ -53,12 +53,12 @@ public class MuteCommand {
             ChatHelper.send(player.sender, player.lang.COMMAND_MUTE_LESS_THEN_0);
     }
 
-    @Command(args = {CommandArgument.PLAYER}, usage = {"player"})
+    @Command(args = {CommandArgument.PLAYER}, usage = {"player"}, canConsoleUse = true)
     public static void mute(ServerPlayer player, EntityPlayer muted) {
         mute(player, muted, ((ConfigChat) SECore.moduleConfigs.get("CHAT")).defaultMuteDuration.split(" "));
     }
 
-    @Command(args = {CommandArgument.STRING, CommandArgument.STRING_ARR}, usage = {"playerUUID", "time"})
+    @Command(args = {CommandArgument.STRING, CommandArgument.STRING_ARR}, usage = {"playerUUID", "time"}, canConsoleUse = true)
     public static void muteOffworld(ServerPlayer player, String uuid, String[] inputs) {
         if (SECore.dataLoader.getClass().isInstance(RestDataLoader.class)) {
             if (isUUID(uuid)) {

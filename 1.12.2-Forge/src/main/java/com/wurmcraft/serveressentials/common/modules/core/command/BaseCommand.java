@@ -19,7 +19,7 @@ import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 @ModuleCommand(name = "se", module = "Core",defaultAliases = {"Server-Essentials", "ServerEssentials"},defaultCooldown = {"*;5"})
 public class BaseCommand {
 
-    @Command(args = {CommandArgument.STRING}, usage = {"version, modules, storage"})
+    @Command(args = {CommandArgument.STRING}, usage = {"version, modules, storage"}, canConsoleUse = true)
     public void info(ServerPlayer player, String arg) {
         if (arg.equalsIgnoreCase("version"))
             ChatHelper.send(player.sender, player.lang.COMMAND_BASE_VERSION.replaceAll("\\{@VERSION@}", ServerEssentials.VERSION));
@@ -29,7 +29,7 @@ public class BaseCommand {
             ChatHelper.send(player.sender, player.lang.COMMAND_BASE_STORAGE.replaceAll("\\{@STORAGE@}", ServerEssentials.config.storage.storageType.toUpperCase() + (ServerEssentials.config.storage.storageType.equalsIgnoreCase("Rest") ? "(" + ServerEssentials.config.storage.baseURL + ")" : "")));
     }
 
-    @Command(args = {CommandArgument.STRING, CommandArgument.MODULE}, usage = {"reload, info", "module"})
+    @Command(args = {CommandArgument.STRING, CommandArgument.MODULE}, usage = {"reload, info", "module"}, canConsoleUse = true)
     public void status(ServerPlayer player, String arg, String module) {
         if (arg.equalsIgnoreCase("reload") && !module.isEmpty()) {
             for (String m : SECore.modules.keySet())

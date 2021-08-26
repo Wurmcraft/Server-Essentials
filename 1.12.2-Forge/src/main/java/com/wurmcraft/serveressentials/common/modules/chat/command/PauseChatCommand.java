@@ -15,14 +15,14 @@ import net.minecraft.entity.player.EntityPlayer;
 @ModuleCommand(module = "Chat", name = "PauseChat", defaultAliases = "Pc")
 public class PauseChatCommand {
 
-    @Command(args = {}, usage = {})
+    @Command(args = {}, usage = {}, canConsoleUse = true)
     public void pauseAllChat(ServerPlayer player) {
         Channel[] channels = SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel()).values().toArray(new Channel[0]);
         for (Channel ch : channels)
             pauseChannel(player, ch);
     }
 
-    @Command(args = {CommandArgument.CHANNEL}, usage = {"channel"})
+    @Command(args = {CommandArgument.CHANNEL}, usage = {"channel"}, canConsoleUse = true)
     public void pauseChannel(ServerPlayer player, Channel ch) {
         if (ch.enabled) {
             ch.enabled = false;

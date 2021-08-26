@@ -159,6 +159,10 @@ public class SECommand extends CommandBase {
         Method method = findMethod(player, args);
         if (method != null) {
             Command command = method.getDeclaredAnnotation(Command.class);
+            if (!command.canConsoleUse() && player.player == null) {
+                ChatHelper.send(player.sender, player.lang.PLAYER_ONLY);
+                return false;
+            }
             List<Object> converted = new ArrayList<>();
             converted.add(player);
             Object[] conv = convertArguments(player, command.args(), command.isSubCommand() ? Arrays.copyOfRange(args, 1, args.length) : args);

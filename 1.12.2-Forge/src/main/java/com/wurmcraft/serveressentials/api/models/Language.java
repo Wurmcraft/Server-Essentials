@@ -9,6 +9,7 @@ public class Language {
     public String TELEPORT_TIMER;
     public String INVALID_TIME;
     public String INVALID_BOOLEAN;
+    public String PLAYER_ONLY;
 
     // Chat
     public String SPACER;

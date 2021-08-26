@@ -44,7 +44,7 @@ public class NickCommand {
         }
     }
 
-    @Command(args = {CommandArgument.PLAYER, CommandArgument.STRING}, usage = {"player", "nick"})
+    @Command(args = {CommandArgument.PLAYER, CommandArgument.STRING}, usage = {"player", "nick"}, canConsoleUse = true)
     public void nickOther(ServerPlayer player, EntityPlayer otherPlayer, String nick) {
         if (RankUtils.hasPermission(player.global, "command.nick.other")) {
             Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account());
@@ -56,7 +56,7 @@ public class NickCommand {
         }
     }
 
-    @Command(args = {CommandArgument.PLAYER}, usage = "player")
+    @Command(args = {CommandArgument.PLAYER}, usage = "player", canConsoleUse = true)
     public void nickOtherReset(ServerPlayer player, EntityPlayer otherPlayer) {
         if (RankUtils.hasPermission(player.global, "command.nick.other")) {
             Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account());
