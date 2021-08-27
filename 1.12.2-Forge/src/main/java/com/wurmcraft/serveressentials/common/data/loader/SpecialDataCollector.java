@@ -9,6 +9,8 @@ import com.wurmcraft.serveressentials.common.utils.URLUtils;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.lang.reflect.Field;
+
 import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
@@ -20,8 +22,14 @@ public class SpecialDataCollector {
         if (e.type == DataLoader.DataType.LANGUAGE) {
             try {
                 String langJson = URLUtils.get(((ConfigCore) SECore.moduleConfigs.get("CORE")).langStorageURL + "/" + e.key + ".json");
-                if (langJson.length() > 0)
+                if (langJson.length() > 0) {
                     e.data = GSON.fromJson(langJson, Language.class);
+                    // Override null entries with error warning
+                    for (Field field : e.data.getClass().getDeclaredFields()) {
+                        if (field.get(e.data) == null)
+                            field.set(e.data, "&cAn Error has occurred loading this language entry");
+                    }
+                }
             } catch (Exception f) {
                 f.printStackTrace();
                 LOG.warn("Language '" + e.key + "' has been requested, but the server was unable to access / it does not exist!");

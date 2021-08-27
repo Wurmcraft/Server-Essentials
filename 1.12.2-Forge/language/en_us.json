@@ -7,6 +7,7 @@
   "INVALID_TIME": "&cTime must be greater than 0 seconds",
   "INVALID_BOOLEAN": "&cValue must be a valid boolean value, (Yes / No, True/ False)",
   "PLAYER_ONLY": "&cOnly a player can run this command",
+  "INVALID_DIMENSION": "&cInvalid Dimension",
   "CHANNEL_DISABLED": "&cYour current channel is disabled, you are unable to talk",
   "MUTED": "&cYou are currently muted!",
   "MESSAGE_COLOR": "&e",
@@ -79,5 +80,8 @@
   "COMMAND_TPPOS": "&bYou have been teleported",
   "COMMAND_TPPOS_OTHER": "&bYou have teleported {@PLAYER@}",
   "COMMAND_TP": "&bYou have teleported to {@PLAYER@}",
-  "COMMAND_TP_OTHER": "&bYou have teleported {@PLAYER@} to {@PLAYER2@}"
+  "COMMAND_TP_OTHER": "&bYou have teleported {@PLAYER@} to {@PLAYER2@}",
+  "COMMAND_WEATHER_SUN": "&bThe sun starts to appear though the clouds. Its bright!",
+  "COMMAND_WEATHER_RAIN": "&bClouds are starting to form, Now the sky is crying",
+  "COMMAND_WEATHER_STORM": "&bLarge dark clouds start to form, then suddenly you hear a sky quake, its a sky earthquake!"
 }

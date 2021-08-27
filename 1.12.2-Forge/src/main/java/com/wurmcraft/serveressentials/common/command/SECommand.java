@@ -161,7 +161,7 @@ public class SECommand extends CommandBase {
             Command command = method.getDeclaredAnnotation(Command.class);
             if (!command.canConsoleUse() && player.player == null) {
                 ChatHelper.send(player.sender, player.lang.PLAYER_ONLY);
-                return false;
+                return true;
             }
             List<Object> converted = new ArrayList<>();
             converted.add(player);

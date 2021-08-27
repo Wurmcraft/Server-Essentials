@@ -10,6 +10,7 @@ public class Language {
     public String INVALID_TIME;
     public String INVALID_BOOLEAN;
     public String PLAYER_ONLY;
+    public String INVALID_DIMENSION;
 
     // Chat
     public String SPACER;
@@ -88,6 +89,8 @@ public class Language {
     public String COMMAND_TPPOS_OTHER;
     public String COMMAND_TP;
     public String COMMAND_TP_OTHER;
-
+    public String COMMAND_WEATHER_SUN;
+    public String COMMAND_WEATHER_RAIN;
+    public String COMMAND_WEATHER_STORM;
 
 }
