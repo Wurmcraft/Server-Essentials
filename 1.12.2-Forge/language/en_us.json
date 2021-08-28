@@ -83,5 +83,11 @@
   "COMMAND_TP_OTHER": "&bYou have teleported {@PLAYER@} to {@PLAYER2@}",
   "COMMAND_WEATHER_SUN": "&bThe sun starts to appear though the clouds. Its bright!",
   "COMMAND_WEATHER_RAIN": "&bClouds are starting to form, Now the sky is crying",
-  "COMMAND_WEATHER_STORM": "&bLarge dark clouds start to form, then suddenly you hear a sky quake, its a sky earthquake!"
+  "COMMAND_WEATHER_STORM": "&bLarge dark clouds start to form, then suddenly you hear a sky quake, its a sky earthquake!",
+  "COMMAND_PING": "&bNep Nep NepNep Nep",
+  "COMMAND_BACK": "&bYou have been sent back to your last location",
+  "COMMAND_JUMP": "&bYou have teleported to where you where looking",
+  "COMMAND_JUMP_MISS": "&bYou must be looking at a block or entity",
+  "COMMAND_RTP": "&bYou have been teleported to a random location",
+  "COMMAND_RTP_DIM": "&bYou cannot use RTP in this dimension!"
 }

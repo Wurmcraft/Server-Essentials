@@ -92,5 +92,11 @@ public class Language {
     public String COMMAND_WEATHER_SUN;
     public String COMMAND_WEATHER_RAIN;
     public String COMMAND_WEATHER_STORM;
+    public String COMMAND_PING;
+    public String COMMAND_BACK;
+    public String COMMAND_JUMP_MISS;
+    public String COMMAND_JUMP;
+    public String COMMAND_RTP;
+    public String COMMAND_RTP_DIM;
 
 }
