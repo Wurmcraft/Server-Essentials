@@ -198,7 +198,7 @@ public class SECommand extends CommandBase {
             for (String arg : subCommandArguments.keySet())
                 if (arg.equalsIgnoreCase(args[0]) && (args.length - 1) == subCommandArguments.get(arg).getDeclaredAnnotation(Command.class).args().length) {
                     Object[] convertedArgs = convertArguments(player, subCommandArguments.get(arg).getDeclaredAnnotation(Command.class).args(), Arrays.copyOfRange(args, 1, args.length));
-                    if (convertedArgs != null)
+                    if (convertedArgs != null || subCommandArguments.get(arg).getDeclaredAnnotation(Command.class).args().length == 0)
                         return subCommandArguments.get(arg);
                 }
         }
@@ -274,8 +274,11 @@ public class SECommand extends CommandBase {
         return null;
     }
 
-    // TODO Implement
-    public Location getWarp(String name) {
+    public Warp getWarp(String name) {
+        Warp[] warps = SECore.dataLoader.getFromKey(DataLoader.DataType.WARP, new Warp[0]).values().toArray(new Warp[0]);
+        for(Warp warp : warps)
+            if(warp.name.startsWith(name))
+                return warp;
         return null;
     }
 

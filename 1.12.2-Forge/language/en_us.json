@@ -89,5 +89,10 @@
   "COMMAND_JUMP": "&bYou have teleported to where you where looking",
   "COMMAND_JUMP_MISS": "&bYou must be looking at a block or entity",
   "COMMAND_RTP": "&bYou have been teleported to a random location",
-  "COMMAND_RTP_DIM": "&bYou cannot use RTP in this dimension!"
+  "COMMAND_RTP_DIM": "&bYou cannot use RTP in this dimension!",
+  "COMMAND_SETWARP": "&bWarp '{@NAME@}' created",
+  "COMMAND_SETWARP_INVALID": "&bInvalid Warp name '{@NAME@}'",
+  "COMMAND_DELWARP": "&bWarp '{@NAME@}' deleted!",
+  "COMMAND_WARP": "&bYou have been teleported to warp '{@NAME@}",
+  "COMMAND_WARP_LIST": "&bWarps: {@LIST@}"
 }

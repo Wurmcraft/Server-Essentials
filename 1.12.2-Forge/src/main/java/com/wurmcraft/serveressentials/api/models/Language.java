@@ -98,5 +98,10 @@ public class Language {
     public String COMMAND_JUMP;
     public String COMMAND_RTP;
     public String COMMAND_RTP_DIM;
+    public String COMMAND_SETWARP;
+    public String COMMAND_SETWARP_INVALID;
+    public String COMMAND_DELWARP;
+    public String COMMAND_WARP;
+    public String COMMAND_WARP_LIST;
 
 }
