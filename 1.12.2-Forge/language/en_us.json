@@ -94,5 +94,8 @@
   "COMMAND_SETWARP_INVALID": "&bInvalid Warp name '{@NAME@}'",
   "COMMAND_DELWARP": "&bWarp '{@NAME@}' deleted!",
   "COMMAND_WARP": "&bYou have been teleported to warp '{@NAME@}",
-  "COMMAND_WARP_LIST": "&bWarps: {@LIST@}"
+  "COMMAND_WARP_LIST": "&bWarps: {@LIST@}",
+  "COMMAND_TPOFFLINE": "&bYou have teleported to the last known location of {@PLAYER@}",
+  "COMMAND_EXP": "&bYou have been given {@LVL@} levels.",
+  "COMMAND_EXP_OTHER": "&bYou have given {@PLAYER@} {@LVL@} levels."
 }

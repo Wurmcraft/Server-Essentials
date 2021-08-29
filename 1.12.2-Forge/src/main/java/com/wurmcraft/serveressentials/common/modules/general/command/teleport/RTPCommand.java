@@ -67,7 +67,7 @@ public class RTPCommand {
         }
     }
 
-    public boolean isSafeLocation(World world, int x, int y, int z) {
+    public static boolean isSafeLocation(World world, int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z);
         return world.getBlockState(pos).getBlock().equals(Blocks.AIR) && world.getBlockState(pos.up()).getBlock().equals(Blocks.AIR) && !world.getBlockState(pos.down()).getBlock().equals(Blocks.AIR) && world.getBlockState(pos.down()).isBlockNormalCube();
     }

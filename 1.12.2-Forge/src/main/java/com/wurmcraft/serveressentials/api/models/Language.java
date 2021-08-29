@@ -103,5 +103,9 @@ public class Language {
     public String COMMAND_DELWARP;
     public String COMMAND_WARP;
     public String COMMAND_WARP_LIST;
+    public String COMMAND_TOP;
+    public String COMMAND_TPOFFLINE;
+    public String COMMAND_EXP;
+    public String COMMAND_EXP_OTHER;
 
 }
