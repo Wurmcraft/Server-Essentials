@@ -12,7 +12,7 @@ public class BackCommand {
 
     @Command(args = {}, usage = {})
     public void back(ServerPlayer player) {
-        if(player.local.lastLocation != null) {
+        if (player.local.lastLocation != null) {
             TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, player.local.lastLocation);
             ChatHelper.send(player.sender, player.lang.COMMAND_BACK);
         }

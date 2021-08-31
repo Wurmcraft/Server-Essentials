@@ -19,13 +19,12 @@ public class TopCommand {
             if (TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, new Location(player.player.posX, WorldUtils.findTop(player.player.world, (int) player.player.posX, (int) player.player.posZ), player.player.posZ, player.player.dimension, player.player.rotationPitch, player.player.rotationYaw)))
                 ChatHelper.send(player.sender, player.lang.COMMAND_TOP);
         } else {
-            for (int y = (int) player.player.posY; y < player.player.posY + 256; y++) {
-                if (RTPCommand.isSafeLocation(player.player.world, (int) player.player.posX, y, (int) player.player.posZ))
-                    if (TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, new Location(player.player.posX, WorldUtils.findTop(player.player.world, (int) player.player.posX, (int) player.player.posZ), player.player.posZ, player.player.dimension, player.player.rotationPitch, player.player.rotationYaw))) {
-                        ChatHelper.send(player.sender, player.lang.COMMAND_TOP);
-                        break;
-                    }
-            }
+            for (int y = (int) player.player.posY; y < player.player.posY + 256; y++)
+                if (RTPCommand.isSafeLocation(player.player.world, (int) player.player.posX, y, (int) player.player.posZ) &&
+                        TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, new Location(player.player.posX, WorldUtils.findTop(player.player.world, (int) player.player.posX, (int) player.player.posZ), player.player.posZ, player.player.dimension, player.player.rotationPitch, player.player.rotationYaw))) {
+                    ChatHelper.send(player.sender, player.lang.COMMAND_TOP);
+                    break;
+                }
         }
     }
 }

@@ -16,7 +16,7 @@ public class SocketController {
     private static WebSocket ws;
 
     public static synchronized void connect() throws IOException, WebSocketException {
-        if(ws == null) {
+        if (ws == null) {
             String connectionURL = createURL();
             ws = new WebSocketFactory().createSocket(connectionURL).addHeader("cookie", "authentication=" + RequestGenerator.token);
             ws.addListener(new WebSocketAdapter() {

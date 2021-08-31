@@ -29,7 +29,7 @@ public class SetSpawnCommand {
     @Command(args = {CommandArgument.STRING}, usage = {"rank"})
     public void setSpawn(ServerPlayer player, String rank) {
         HashMap<String, Location> spawnLocations = ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).spawn;
-        if(spawnLocations == null)
+        if (spawnLocations == null)
             spawnLocations = new HashMap<>();
         spawnLocations.put(rank, new Location(player.player.posX, player.player.posY, player.player.posZ, player.player.dimension, player.player.rotationPitch, player.player.rotationYaw));
         ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).spawn = spawnLocations;

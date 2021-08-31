@@ -1,28 +1,21 @@
 package com.wurmcraft.serveressentials.common.data.loader;
 
 import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.models.AuthUser;
 import com.wurmcraft.serveressentials.api.models.MessageResponse;
-import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.common.utils.RequestGenerator;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
-
-import java.util.*;
 
 public class RestDataLoader extends FileDataLoader {
 
@@ -157,9 +150,9 @@ public class RestDataLoader extends FileDataLoader {
             Object instance = field.get(data);
             if (instance instanceof String)
                 return (String) instance;
-            else if (instance  instanceof Long)
+            else if (instance instanceof Long)
                 return Long.toString((long) instance);
-            else if (instance  instanceof Integer)
+            else if (instance instanceof Integer)
                 return Integer.toString((int) instance);
         } catch (Exception e) {
             e.printStackTrace();

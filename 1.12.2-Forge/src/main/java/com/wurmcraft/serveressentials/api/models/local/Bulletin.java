@@ -1,6 +1,6 @@
 package com.wurmcraft.serveressentials.api.models.local;
 
-import java.util.*;
+import java.util.List;
 
 public class Bulletin {
 

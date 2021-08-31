@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
-@ModuleCommand(name = "se", module = "Core",defaultAliases = {"Server-Essentials", "ServerEssentials"},defaultCooldown = {"*;5"})
+@ModuleCommand(name = "se", module = "Core", defaultAliases = {"Server-Essentials", "ServerEssentials"}, defaultCooldown = {"*;5"})
 public class BaseCommand {
 
     @Command(args = {CommandArgument.STRING}, usage = {"version, modules, storage"}, canConsoleUse = true)
@@ -37,7 +37,7 @@ public class BaseCommand {
                     reloadModule(player, module, m);
                     return;
                 }
-        } else if(arg.equalsIgnoreCase("info")) {
+        } else if (arg.equalsIgnoreCase("info")) {
             for (String m : SECore.modules.keySet())
                 if (m.equalsIgnoreCase(module)) {
                     displayModuleInfo(player, m);

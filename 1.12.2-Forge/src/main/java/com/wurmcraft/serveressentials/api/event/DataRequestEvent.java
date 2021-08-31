@@ -13,7 +13,7 @@ public class DataRequestEvent extends Event {
      * Used to collect unique data
      *
      * @param type type of data that is being requested
-     * @param key Id of the key being requested
+     * @param key  Id of the key being requested
      */
     public DataRequestEvent(DataLoader.DataType type, String key) {
         this.type = type;

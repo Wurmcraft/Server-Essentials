@@ -14,11 +14,11 @@ public class JumpCommand {
 
     @Command(args = {}, usage = {})
     public void jump(ServerPlayer player) {
-        RayTraceResult result = player.player.rayTrace(128,0);
-        if(result != null && result.typeOfHit != RayTraceResult.Type.MISS) {
-            Location location = new Location(result.hitVec.x, result.hitVec.y, result.hitVec.z,player.player.dimension, player.player.rotationPitch,player.player.rotationYaw);
-            if(TeleportUtils.teleportTo((EntityPlayerMP) player.player,player.local, location))
-                ChatHelper.send(player.sender,player.lang.COMMAND_JUMP);
+        RayTraceResult result = player.player.rayTrace(128, 0);
+        if (result != null && result.typeOfHit != RayTraceResult.Type.MISS) {
+            Location location = new Location(result.hitVec.x, result.hitVec.y, result.hitVec.z, player.player.dimension, player.player.rotationPitch, player.player.rotationYaw);
+            if (TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, location))
+                ChatHelper.send(player.sender, player.lang.COMMAND_JUMP);
         } else
             ChatHelper.send(player.sender, player.lang.COMMAND_JUMP_MISS);
     }

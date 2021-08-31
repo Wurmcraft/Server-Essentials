@@ -17,13 +17,13 @@ import java.util.ArrayList;
 @ModuleCommand(module = "Chat", name = "Bulletin", defaultAliases = {"OfflineAnnouncement"})
 public class BulletinCommand {
 
-    @Command(args = {CommandArgument.STRING,CommandArgument.STRING, CommandArgument.STRING}, usage = {"time", "title", "msg"}, canConsoleUse = true)
+    @Command(args = {CommandArgument.STRING, CommandArgument.STRING, CommandArgument.STRING}, usage = {"time", "title", "msg"}, canConsoleUse = true)
     public void create(ServerPlayer player, String time, String title, String msg) {
         long t = CommandUtils.convertToTime(time);
-        if(t > 0) {
+        if (t > 0) {
             Bulletin bulletin = new Bulletin(System.currentTimeMillis() + (t * 1000), title, msg, new ArrayList<>());
             SECore.dataLoader.register(DataLoader.DataType.BULLETIN, title, bulletin);
-            ChatHelper.send(player.sender, player.lang.COMMAND_BULLETIN.replaceAll("\\{@TITLE@}", title).replaceAll("\\{@TIME@}", CommandUtils.displayTime((bulletin.expiration - System.currentTimeMillis())/1000)));
+            ChatHelper.send(player.sender, player.lang.COMMAND_BULLETIN.replaceAll("\\{@TITLE@}", title).replaceAll("\\{@TIME@}", CommandUtils.displayTime((bulletin.expiration - System.currentTimeMillis()) / 1000)));
             // Send to all online players
             for (EntityPlayer online : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
                 ChatHelper.send(online, bulletin);

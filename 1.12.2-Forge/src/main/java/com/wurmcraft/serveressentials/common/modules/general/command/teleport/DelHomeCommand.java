@@ -15,7 +15,9 @@ import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentTranslation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @ModuleCommand(module = "General", name = "delHome", defaultAliases = {})
 public class DelHomeCommand {
@@ -28,8 +30,8 @@ public class DelHomeCommand {
     @Command(args = {CommandArgument.HOME}, usage = {"home"})
     public void delHome(ServerPlayer player, Home home) {
         List<Home> validHomes = new ArrayList<>();
-        for(Home h : player.local.homes)
-            if(!h.name.equalsIgnoreCase(home.name))
+        for (Home h : player.local.homes)
+            if (!h.name.equalsIgnoreCase(home.name))
                 validHomes.add(h);
         player.local.homes = validHomes.toArray(new Home[0]);
         SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, player.local.uuid, player.local);

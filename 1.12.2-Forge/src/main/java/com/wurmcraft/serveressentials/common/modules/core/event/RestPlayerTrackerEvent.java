@@ -32,7 +32,7 @@ public class RestPlayerTrackerEvent {
     @SubscribeEvent
     public void onPlayerUnload(PlayerUnloadEvent e) {
         if (!ServerEssentials.config.performance.useWebsocket && userSync.containsKey(e.account.uuid))
-            if(userSync.get(e.account.uuid).cancel(true))
+            if (userSync.get(e.account.uuid).cancel(true))
                 LOG.debug("Removing Sync for User '" + UsernameCache.getLastKnownUsername(UUID.fromString(e.account.uuid)) + "' (" + e.account.uuid + ")");
     }
 }

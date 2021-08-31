@@ -32,7 +32,7 @@ public class ConfigGeneral {
         this.maxHomes = -1;
         this.spawn = new HashMap<>();
         this.rtpRadius = 3000;
-        this.rtpBiomeBlacklist = new String[] {"ocean"};
-        this.rtpDimensionWhitelist = new int[] {0,-1};
+        this.rtpBiomeBlacklist = new String[]{"ocean"};
+        this.rtpDimensionWhitelist = new int[]{0, -1};
     }
 }

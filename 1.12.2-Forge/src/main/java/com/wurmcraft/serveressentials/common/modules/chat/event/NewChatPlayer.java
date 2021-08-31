@@ -35,7 +35,7 @@ public class NewChatPlayer {
                     SECore.dataLoader.update(DataLoader.DataType.BULLETIN, bulletin.title, bulletin);
                 }
             }
-        if(RankUtils.hasPermission(e.account,"command.motd")) {
+        if (RankUtils.hasPermission(e.account, "command.motd")) {
             FMLCommonHandler.instance().getMinecraftServerInstance().commandManager.executeCommand(e.player, "motd");
         }
     }

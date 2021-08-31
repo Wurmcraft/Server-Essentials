@@ -4,13 +4,11 @@ import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.command.Command;
 import com.wurmcraft.serveressentials.api.command.CommandArgument;
 import com.wurmcraft.serveressentials.api.command.CommandConfig;
-import com.wurmcraft.serveressentials.api.models.*;
 import com.wurmcraft.serveressentials.api.models.Currency;
+import com.wurmcraft.serveressentials.api.models.*;
 import com.wurmcraft.serveressentials.api.models.local.Home;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
-import com.wurmcraft.serveressentials.api.models.local.Location;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
-import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -18,18 +16,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.logging.log4j.util.Strings;
-import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.*;
 
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
-
-import java.util.*;
 
 public class SECommand extends CommandBase {
 
@@ -276,8 +270,8 @@ public class SECommand extends CommandBase {
 
     public Warp getWarp(String name) {
         Warp[] warps = SECore.dataLoader.getFromKey(DataLoader.DataType.WARP, new Warp[0]).values().toArray(new Warp[0]);
-        for(Warp warp : warps)
-            if(warp.name.startsWith(name))
+        for (Warp warp : warps)
+            if (warp.name.startsWith(name))
                 return warp;
         return null;
     }

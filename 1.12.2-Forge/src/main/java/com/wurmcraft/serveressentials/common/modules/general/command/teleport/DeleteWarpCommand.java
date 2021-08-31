@@ -14,7 +14,7 @@ public class DeleteWarpCommand {
 
     @Command(args = {CommandArgument.WARP}, usage = {"name"}, canConsoleUse = true)
     public void delWarp(ServerPlayer player, Warp warp) {
-        if(SECore.dataLoader.delete(DataLoader.DataType.WARP,warp.name, false))
+        if (SECore.dataLoader.delete(DataLoader.DataType.WARP, warp.name, false))
             ChatHelper.send(player.sender, player.lang.COMMAND_DELWARP.replaceAll("\\{@NAME@}", warp.name));
     }
 }

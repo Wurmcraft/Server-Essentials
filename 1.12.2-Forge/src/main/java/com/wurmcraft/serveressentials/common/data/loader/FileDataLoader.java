@@ -9,7 +9,6 @@ import org.cliffc.high_scale_lib.NonBlockingHashMap;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
@@ -35,7 +34,7 @@ public class FileDataLoader extends DataLoader {
         File saveDir = new File(SAVE_DIR + File.separator + SAVE_FOLDER + File.separator + key.name().toLowerCase());
         if (saveDir.exists()) {
             // Check if the cache data count is the same (don't check for same entries only the same count)
-            if (saveDir.list() != null && cachedData != null &&  saveDir.list().length == cachedData.size())
+            if (saveDir.list() != null && cachedData != null && saveDir.list().length == cachedData.size())
                 return cachedData;
             // Load each file
             for (File file : saveDir.listFiles()) {

@@ -66,10 +66,10 @@ public class MuteCommand {
             } else { // Username?
                 try {
                     RequestGenerator.HttpResponse response = RequestGenerator.get("api/lookup/uuid/" + uuid);
-                    if(response.status == 200) {
+                    if (response.status == 200) {
                         Account account = GSON.fromJson(response.response, Account.class);
                         muteRemote(player, account.uuid, inputs);
-                    }  else {
+                    } else {
                         // TODO Send Not Found Error
                     }
                 } catch (Exception e) {

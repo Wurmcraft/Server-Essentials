@@ -27,6 +27,6 @@ public class ConfigChat {
         this.defaultMuteDuration = "10m";
         this.nickFormat = "*%NICK%";
         this.messageFormat = "%NAME% {->, <-} %MSG%";
-        this.motd = new String[] {"&bWelcome %NAME%,", "&bThis server is running with Server Essentials"};
+        this.motd = new String[]{"&bWelcome %NAME%,", "&bThis server is running with Server Essentials"};
     }
 }
