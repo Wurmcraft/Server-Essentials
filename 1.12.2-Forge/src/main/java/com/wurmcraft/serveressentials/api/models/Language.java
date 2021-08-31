@@ -107,5 +107,10 @@ public class Language {
     public String COMMAND_TPOFFLINE;
     public String COMMAND_EXP;
     public String COMMAND_EXP_OTHER;
+    public String COMMAND_SUICIDE;
+    public String COMMAND_WHOIS_UUID;
+    public String COMMAND_WHOIS_NAME;
+    public String COMMAND_WHOIS_DISPLAYNAME;
+    public String COMMAND_SKULL;
 
 }

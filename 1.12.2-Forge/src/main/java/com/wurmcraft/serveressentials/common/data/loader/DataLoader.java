@@ -28,7 +28,7 @@ public class DataLoader implements IDataLoader {
         BULLETIN(null, null, "title", Bulletin.class, Bulletin[].class, true),
         WARP(null, null, "name", Warp.class, Warp[].class, true);
 
-        String path;
+        public String path;
         String pathType;
         Class<?> instanceType;
         Class<?> instanceTypeArr;

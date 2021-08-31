@@ -97,5 +97,10 @@
   "COMMAND_WARP_LIST": "&bWarps: {@LIST@}",
   "COMMAND_TPOFFLINE": "&bYou have teleported to the last known location of {@PLAYER@}",
   "COMMAND_EXP": "&bYou have been given {@LVL@} levels.",
-  "COMMAND_EXP_OTHER": "&bYou have given {@PLAYER@} {@LVL@} levels."
+  "COMMAND_EXP_OTHER": "&bYou have given {@PLAYER@} {@LVL@} levels.",
+  "COMMAND_SUICIDE": "&bYou are already dead! (Omae wa mou shindeiru)",
+  "COMMAND_WHOIS_UUID": "&bUUID: {@UUID@}",
+  "COMMAND_WHOIS_NAME": "&bName: {@NAME@}",
+  "COMMAND_WHOIS_DISPLAYNAME": "&bNick: {@NICK@}",
+  "COMMAND_SKULL": "&bYou where given a skull for {@PLAYER@}"
 }

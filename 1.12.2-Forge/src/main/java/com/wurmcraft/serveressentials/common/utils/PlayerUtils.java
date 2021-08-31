@@ -1,6 +1,5 @@
 package com.wurmcraft.serveressentials.common.utils;
 
-import com.google.gson.Gson;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Rank;
@@ -16,12 +15,13 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
-
-import java.util.*;
+import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
 public class PlayerUtils {
 
@@ -165,5 +165,19 @@ public class PlayerUtils {
         if (spawnPos.containsKey("*"))
             return spawnPos.get("*");
         return null;
+    }
+
+    public static Account getLatestAccount(String uuid) {
+        if (SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
+            try {
+                RequestGenerator.HttpResponse response = RequestGenerator.get(DataLoader.DataType.ACCOUNT.path + "/" + uuid, new HashMap<>());
+                return GSON.fromJson(response.response, Account.class);
+            } catch (Exception e) {
+                LOG.warn("Failed to get updated account for '" + uuid + "'");
+                e.printStackTrace();
+                return null;
+            }
+        } else
+            return SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid, new Account());
     }
 }
