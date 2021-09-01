@@ -102,5 +102,13 @@
   "COMMAND_WHOIS_UUID": "&bUUID: {@UUID@}",
   "COMMAND_WHOIS_NAME": "&bName: {@NAME@}",
   "COMMAND_WHOIS_DISPLAYNAME": "&bNick: {@NICK@}",
-  "COMMAND_SKULL": "&bYou where given a skull for {@PLAYER@}"
+  "COMMAND_SKULL": "&bYou where given a skull for {@PLAYER@}",
+  "COMMAND_ADVENTURE": "&bYour gamemode has been changed to adventure",
+  "COMMAND_ADVENTURE_OTHER": "&bYou have changed {@PLAYER@}'s gamemode to adventure.",
+  "COMMAND_CREATIVE": "&bYour gamemode has been changed to creative",
+  "COMMAND_CREATIVE_OTHER": "&bYou have changed {@PLAYER@}'s gamemode to creative.",
+  "COMMAND_SPECTATOR": "&bYour gamemode has been changed to creative",
+  "COMMAND_SPECTATOR_OTHER": "&bYou have changed {@PLAYER@}'s gamemode to spectator.",
+  "COMMAND_SURVIVAL": "&bYour gamemode has been changed to survival",
+  "COMMAND_SURVIVAL_OTHER": "&bYou have changed {@PLAYER@}'s gamemode to survival."
 }

@@ -112,5 +112,13 @@ public class Language {
     public String COMMAND_WHOIS_NAME;
     public String COMMAND_WHOIS_DISPLAYNAME;
     public String COMMAND_SKULL;
+    public String COMMAND_ADVENTURE;
+    public String COMMAND_ADVENTURE_OTHER;
+    public String COMMAND_CREATIVE;
+    public String COMMAND_CREATIVE_OTHER;
+    public String COMMAND_SPECTATOR;
+    public String COMMAND_SPECTATOR_OTHER;
+    public String COMMAND_SURVIVAL;
+    public String COMMAND_SURVIVAL_OTHER;
 
 }
