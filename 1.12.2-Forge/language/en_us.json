@@ -128,5 +128,8 @@
   "COMMAND_FIRE": "&bYou have burned {@PLAYER@} for {@TIME@}s",
   "COMMAND_DELETECHUNK": "&bChunk at {@X@}, {@Z@} has been deleted",
   "COMMAND_DELETEPLAYERFILE": "&bPlayer file for {@PLAYER@} has been deleted!",
-  "COMMAND_DELETEPLAYERFILE_DISCONNECT": "&cYour player file has been deleted!"
+  "COMMAND_DELETEPLAYERFILE_DISCONNECT": "&cYour player file has been deleted!",
+  "COMMAND_KILL": "&bYou have killed {@PLAYER@}",
+  "COMMAND_SUDO": "&bYou have forced {@PLAYER@} to run {@COMMAND@}",
+  "COMMAND_TIME": "&bTime has been set to {@TIME@}"
 }

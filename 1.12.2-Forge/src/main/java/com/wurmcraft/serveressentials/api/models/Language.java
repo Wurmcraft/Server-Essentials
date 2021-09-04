@@ -142,4 +142,7 @@ public class Language {
     public String COMMAND_DELETECHUNK;
     public String COMMAND_DELETEPLAYERFILE;
     public String COMMAND_DELETEPLAYERFILE_DISCONNECT;
+    public String COMMAND_KILL;
+    public String COMMAND_SUDO;
+    public String COMMAND_TIME;
 }
