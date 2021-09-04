@@ -128,4 +128,12 @@ public class Language {
     public String COMMAND_FLY_ON;
     public String COMMAND_FLY_ON_OTHER;
     public String COMMAND_FLY_OFF_OTHER;
+    public String COMMAND_HEAL;
+    public String COMMAND_HEAL_OTHER;
+    public String COMMAND_RENAME;
+    public String COMMAND_RENAME_WIPE;
+    public String COMMAND_GOD_OFF;
+    public String COMMAND_GOD_ON;
+    public String COMMAND_GOD_OFF_OTHER;
+    public String COMMAND_GOD_ON_OTHER;
 }
