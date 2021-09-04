@@ -74,7 +74,8 @@ public class ConfigLoader {
                     Math.toIntExact(toml.getLong("config.database.port")),
                     toml.getString("config.database.host"),
                     toml.getString("config.database.database"),
-                    toml.getString("config.database.sqlParams"));
+                    toml.getString("config.database.sqlParams"),
+                    toml.getString("config.database.connector"));
             GeneralConfig generalConfig = new GeneralConfig(
                     toml.getBoolean("config.general.testing"));
             ServerConfig sererConfig = new ServerConfig(

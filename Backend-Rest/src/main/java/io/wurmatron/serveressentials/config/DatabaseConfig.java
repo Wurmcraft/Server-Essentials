@@ -8,14 +8,16 @@ public class DatabaseConfig  {
     public String host;
     public String database;
     public String sqlParams;
+    public String connector;
 
-    public DatabaseConfig(String username, String password, int port, String host, String database, String sqlParams) {
+    public DatabaseConfig(String username, String password, int port, String host, String database, String sqlParams, String connector) {
         this.username = username;
         this.password = password;
         this.port = port;
         this.host = host;
         this.database = database;
         this.sqlParams = sqlParams;
+        this.connector = connector;
     }
 
     public DatabaseConfig() {
@@ -25,5 +27,6 @@ public class DatabaseConfig  {
         this.host = "localhost";
         this.database = "server-essentials";
         this.sqlParams = "useSSL=false";
+        this.connector = "mysql";
     }
 }

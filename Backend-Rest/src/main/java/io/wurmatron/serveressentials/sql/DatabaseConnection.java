@@ -14,7 +14,7 @@ public class DatabaseConnection {
     }
 
     private static String createConnectionURL() {
-        return "jdbc:mysql://" +
+        return "jdbc:" + config.database.connector + "://" +
                 config.database.host + ":" +
                 config.database.port + "/" +
                 config.database.database + "?" +
