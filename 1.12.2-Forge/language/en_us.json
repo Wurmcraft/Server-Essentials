@@ -110,5 +110,13 @@
   "COMMAND_SPECTATOR": "&bYour gamemode has been changed to creative",
   "COMMAND_SPECTATOR_OTHER": "&bYou have changed {@PLAYER@}'s gamemode to spectator.",
   "COMMAND_SURVIVAL": "&bYour gamemode has been changed to survival",
-  "COMMAND_SURVIVAL_OTHER": "&bYou have changed {@PLAYER@}'s gamemode to survival."
+  "COMMAND_SURVIVAL_OTHER": "&bYou have changed {@PLAYER@}'s gamemode to survival.",
+  "COMMAND_REPAIR": "&bYour item has been repaired!",
+  "COMMAND_REPAIR_NONE": "&bYou must be holding an item to get repaired!",
+  "COMMAND_FEED": "&bYou have been feed",
+  "COMMAND_FEED_OTHER": "&bYou have feed {@PLAYER@}",
+  "COMMAND_FLY_OFF": "&bFlying has been disabled",
+  "COMMAND_FLY_ON": "&bFlying has been enabled",
+  "COMMAND_FLY_ON_OTHER": "&bFlying for {@PLAYER@} has been enabled",
+  "COMMAND_FLY_OFF_OTHER": "&bFlying for {@PLAYER@} has been disabled"
 }

@@ -120,5 +120,12 @@ public class Language {
     public String COMMAND_SPECTATOR_OTHER;
     public String COMMAND_SURVIVAL;
     public String COMMAND_SURVIVAL_OTHER;
-
+    public String COMMAND_REPAIR_NONE;
+    public String COMMAND_REPAIR;
+    public String COMMAND_FEED;
+    public String COMMAND_FEED_OTHER;
+    public String COMMAND_FLY_OFF;
+    public String COMMAND_FLY_ON;
+    public String COMMAND_FLY_ON_OTHER;
+    public String COMMAND_FLY_OFF_OTHER;
 }
