@@ -118,5 +118,9 @@
   "COMMAND_FLY_OFF": "&bFlying has been disabled",
   "COMMAND_FLY_ON": "&bFlying has been enabled",
   "COMMAND_FLY_ON_OTHER": "&bFlying for {@PLAYER@} has been enabled",
-  "COMMAND_FLY_OFF_OTHER": "&bFlying for {@PLAYER@} has been disabled"
+  "COMMAND_FLY_OFF_OTHER": "&bFlying for {@PLAYER@} has been disabled",
+  "COMMAND_HEAL": "&bYou have been healed",
+  "COMMAND_HEAL_OTHER": "&bYou have healed {@PLAYER@}",
+  "COMMAND_RENAME": "&bItem has been renamed to {@NAME@}",
+  "COMMAND_RENAME_WIPE": "&bItem name has been reset"
 }
