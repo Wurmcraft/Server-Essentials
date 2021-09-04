@@ -8,6 +8,9 @@ import com.wurmcraft.serveressentials.api.models.*;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.logging.log4j.util.Strings;
 
@@ -246,6 +249,17 @@ public class CommandUtils {
             return true;
         else if (value.equalsIgnoreCase("False") || value.equalsIgnoreCase("F") || value.equalsIgnoreCase("No") || value.equalsIgnoreCase("N") || value.equalsIgnoreCase("0"))
             return false;
+        return null;
+    }
+
+    public static BlockPos getRayTracedPos(EntityPlayer player, int distance) {
+        Vec3d lookAt = player.getLook(1);
+        Vec3d pos = new Vec3d(player.posX, player.posY + (player.getEyeHeight() - player.getDefaultEyeHeight()), player.posZ);
+        Vec3d a = pos.addVector(0, player.getEyeHeight(), 0);
+        Vec3d b = a.addVector(lookAt.x * distance, lookAt.y * distance, lookAt.z * distance);
+        RayTraceResult result = player.world.rayTraceBlocks(a, b);
+        if (result != null && result.typeOfHit != RayTraceResult.Type.MISS)
+            return result.getBlockPos();
         return null;
     }
 }

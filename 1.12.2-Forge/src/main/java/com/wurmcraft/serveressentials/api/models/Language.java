@@ -136,4 +136,10 @@ public class Language {
     public String COMMAND_GOD_ON;
     public String COMMAND_GOD_OFF_OTHER;
     public String COMMAND_GOD_ON_OTHER;
+    public String COMMAND_BREAK;
+    public String COMMAND_BREAK_MULTI;
+    public String COMMAND_FIRE;
+    public String COMMAND_DELETECHUNK;
+    public String COMMAND_DELETEPLAYERFILE;
+    public String COMMAND_DELETEPLAYERFILE_DISCONNECT;
 }

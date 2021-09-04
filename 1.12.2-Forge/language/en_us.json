@@ -122,5 +122,11 @@
   "COMMAND_HEAL": "&bYou have been healed",
   "COMMAND_HEAL_OTHER": "&bYou have healed {@PLAYER@}",
   "COMMAND_RENAME": "&bItem has been renamed to {@NAME@}",
-  "COMMAND_RENAME_WIPE": "&bItem name has been reset"
+  "COMMAND_RENAME_WIPE": "&bItem name has been reset",
+  "COMMAND_BREAK": "&bYou have broke the block your were facing",
+  "COMMAND_BREAK_MULTI": "&bYou have broke the block your were facing along with similar blocks",
+  "COMMAND_FIRE": "&bYou have burned {@PLAYER@} for {@TIME@}s",
+  "COMMAND_DELETECHUNK": "&bChunk at {@X@}, {@Z@} has been deleted",
+  "COMMAND_DELETEPLAYERFILE": "&bPlayer file for {@PLAYER@} has been deleted!",
+  "COMMAND_DELETEPLAYERFILE_DISCONNECT": "&cYour player file has been deleted!"
 }
