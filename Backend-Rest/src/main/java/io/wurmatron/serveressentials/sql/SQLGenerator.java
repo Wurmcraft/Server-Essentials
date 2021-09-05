@@ -53,7 +53,7 @@ public class SQLGenerator {
      * @throws IllegalArgumentException Issue with reflection to add data to the object instance
      */
     protected static <T> T get(String columns, String table, String key, String data, T dataType) throws SQLException, IllegalAccessException, IllegalArgumentException {
-        PreparedStatement statement = connection.createPrepared("SELECT " + columns + " FROM `" + table + "` WHERE " + key + "=?;");
+        PreparedStatement statement = connection.createPrepared("SELECT " + columns + " FROM '" + table + "' WHERE " + key + "=?;");
         statement.setString(1, data);
         LOG.trace("GET: " + statement);
         return to(statement.executeQuery(), dataType, true);
@@ -74,7 +74,7 @@ public class SQLGenerator {
      * @throws InstantiationException   Issues with reflection, trying to copy requested object instance to fill in data
      */
     protected static <T> List<T> getArray(String columns, String table, String key, String data, T dataType) throws SQLException, IllegalAccessException, InstantiationException {
-        String sql = "SELECT " + columns + " FROM `" + table + "`";
+        String sql = "SELECT " + columns + " FROM '" + table + "'";
         if (!key.isEmpty() && !data.isEmpty())
             sql = sql + " WHERE " + key + "=?;";
         PreparedStatement statement = connection.createPrepared(sql);
@@ -142,7 +142,7 @@ public class SQLGenerator {
      * @see PreparedStatement#execute()
      */
     protected static <T> int insert(String table, String[] columns, T data, boolean generatedKey) throws SQLException, IllegalAccessException, IllegalArgumentException, NoSuchFieldException {
-        PreparedStatement statement = connection.createPrepared("INSERT INTO `" + table + "` (`" + String.join("`, `", columns) + "`) VALUES (" + argumentGenerator(columns.length, 0, columns) + ")", generatedKey ? Statement.RETURN_GENERATED_KEYS : 0);
+        PreparedStatement statement = connection.createPrepared("INSERT INTO '" + table + "' ('" + String.join("', '", columns) + "') VALUES (" + argumentGenerator(columns.length, 0, columns) + ")", generatedKey ? Statement.RETURN_GENERATED_KEYS : 0);
         addArguments(statement, columns, data);
         LOG.info("INSERT: " + statement);
         statement.executeUpdate();
@@ -170,7 +170,7 @@ public class SQLGenerator {
      * @see PreparedStatement#execute()
      */
     protected static <T> boolean update(String table, String[] columnsToUpdate, String key, String value, T data) throws SQLException, NoSuchFieldException, IllegalAccessException {
-        PreparedStatement statement = connection.createPrepared("UPDATE `" + table + "` SET " + argumentGenerator(columnsToUpdate.length, 1, columnsToUpdate) + " WHERE " + key + "=?;");
+        PreparedStatement statement = connection.createPrepared("UPDATE '" + table + "' SET " + argumentGenerator(columnsToUpdate.length, 1, columnsToUpdate) + " WHERE " + key + "=?;");
         addArguments(statement, columnsToUpdate, data);
         statement.setString(columnsToUpdate.length + 1, value);
         LOG.trace("UPDATE: " + statement);
@@ -193,7 +193,7 @@ public class SQLGenerator {
      * @see PreparedStatement#execute()
      */
     protected static <T> boolean update(String table, String[] columnsToUpdate, String[] key, String[] value, T data) throws SQLException, NoSuchFieldException, IllegalAccessException {
-        StringBuilder sql = new StringBuilder("UPDATE `" + table + "` SET " + argumentGenerator(columnsToUpdate.length, 1, columnsToUpdate) + " WHERE ");
+        StringBuilder sql = new StringBuilder("UPDATE '" + table + "' SET " + argumentGenerator(columnsToUpdate.length, 1, columnsToUpdate) + " WHERE ");
         for (int x = 0; x < key.length; x++)
             sql.append(key[x]).append("=? ").append("AND ");
         String slq = sql.substring(0, sql.length() - 4).toString();

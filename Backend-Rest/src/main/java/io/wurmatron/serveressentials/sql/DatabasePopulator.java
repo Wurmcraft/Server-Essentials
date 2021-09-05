@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.util.stream.Collectors;
 
 import static io.wurmatron.serveressentials.ServerEssentialsRest.LOG;
+import static io.wurmatron.serveressentials.ServerEssentialsRest.config;
 
 public class DatabasePopulator {
 
@@ -21,7 +22,7 @@ public class DatabasePopulator {
      */
     public static void setupDB(Connection c) {
         for (String table : tables)
-            if (!checkIfExists(c,table)) {
+            if (!checkIfExists(c, table)) {
                 LOG.info("SQL Table '" + table + "' does not exist!, Creating... ");
                 createTable(c, table);
             }
@@ -35,7 +36,13 @@ public class DatabasePopulator {
      */
     private static boolean checkIfExists(Connection c, String tableName) {
         try {
-            ResultSet set = c.createStatement().executeQuery("SELECT * FROM information_schema.tables where table_name='" + tableName + "' AND table_schema='" + ServerEssentialsRest.config.database.database + "'");
+            String sqlStatment = "";
+            if (config.database.connector.equalsIgnoreCase("mysql"))
+                 sqlStatment = "SELECT * FROM information_schema.tables where table_name='" + tableName + "' AND table_schema='" + ServerEssentialsRest.config.database.database + "'";
+            else if(config.database.connector.equalsIgnoreCase("postgresql")) {
+                sqlStatment = "SELECT * FROM information_schema.tables where table_name='" + tableName + "' AND table_schema='public'";
+            }
+            ResultSet set = c.createStatement().executeQuery(sqlStatment);
             if (!set.next())
                 return false;
         } catch (Exception e) {
@@ -50,7 +57,7 @@ public class DatabasePopulator {
      * @param tableName name of the table to be created
      */
     public static void createTable(Connection c, String tableName) {
-        String tableSQL = readSQLSetupFile("sql" + File.separator + tableName + ".sql");
+        String tableSQL = readSQLSetupFile("sql" + File.separator + config.database.connector + File.separator + tableName + ".sql");
         try {
             c.createStatement().execute(tableSQL);
             LOG.info("Table '" + tableName + "' Created!");
