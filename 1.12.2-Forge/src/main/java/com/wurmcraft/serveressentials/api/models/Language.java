@@ -20,6 +20,16 @@ public class Language {
     public String SOCIAL_SPY_TAG;
     public String HOME_OVER;
 
+    // Display
+    public String DISPLAY_VAULT;
+
+    // Item GUI
+    public String ITEM_PREV;
+    public String ITEM_NEXT;
+    public String ITEM_OPTIONS;
+    public String ITEM_INFO;
+    public String ITEM_UPGRADE;
+
     // Command
     public String COMMAND_BASE_VERSION;
     public String COMMAND_BASE_MODULES;
@@ -145,4 +155,7 @@ public class Language {
     public String COMMAND_KILL;
     public String COMMAND_SUDO;
     public String COMMAND_TIME;
+    public String COMMAND_VAULT_NONE;
+    public String COMMAND_VAULT_DELETE;
+    public String COMMAND_VAULT_INVALID;
 }

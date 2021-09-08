@@ -13,6 +13,12 @@
   "MESSAGE_COLOR": "&e",
   "SOCIAL_SPY_TAG": "&5[Social Spy]",
   "HOME_OVER": "&b{@X@}, {@Y@}, {@Z@}, {@DIM@}",
+  "DISPLAY_VAULT": "&6Vault: {@NAME@}",
+  "ITEM_PREV": "&6<- Previous",
+  "ITEM_NEXT": "&6Next ->",
+  "ITEM_OPTIONS": "&6Options",
+  "ITEM_INFO": "&6Information",
+  "ITEM_UPGRADE": "&bUpgrade / Purchase",
   "COMMAND_BASE_VERSION": "&bServer Essentials Version: &c{@VERSION@}",
   "COMMAND_BASE_MODULES": "&bModules: &c{@MODULES@}",
   "COMMAND_BASE_STORAGE": "&bStorage: &c{@STORAGE@}",
@@ -131,5 +137,8 @@
   "COMMAND_DELETEPLAYERFILE_DISCONNECT": "&cYour player file has been deleted!",
   "COMMAND_KILL": "&bYou have killed {@PLAYER@}",
   "COMMAND_SUDO": "&bYou have forced {@PLAYER@} to run {@COMMAND@}",
-  "COMMAND_TIME": "&bTime has been set to {@TIME@}"
+  "COMMAND_TIME": "&bTime has been set to {@TIME@}",
+  "COMMAND_VAULT_NONE": "&bVault {@NAME@} does not exist!",
+  "COMMAND_VAULT_DELETE": "&bVault {@NAME@} deleted!",
+  "COMMAND_VAULT_INVALID": "&bInvalid Vault Name"
 }
