@@ -26,7 +26,8 @@ public class DataLoader implements IDataLoader {
         LANGUAGE(null, null, "langKey", Language.class, Language[].class, true),
         CHANNEL(null, null, "name", Channel.class, Channel[].class, true),
         BULLETIN(null, null, "title", Bulletin.class, Bulletin[].class, true),
-        WARP(null, null, "name", Warp.class, Warp[].class, true);
+        WARP(null, null, "name", Warp.class, Warp[].class, true),
+        KIT(null, null, "name", Kit.class, Kit[].class, true);
 
         public String path;
         String pathType;

@@ -14,7 +14,8 @@ public enum CommandArgument {
     CURRENCY,
     WARP,
     DATA_TYPE,
-    CHANNEL;
+    CHANNEL,
+    KIT;
 
     CommandArgument() {
 

@@ -251,7 +251,17 @@ public class SECommand extends CommandBase {
             return DataLoader.DataType.valueOf(arg.toUpperCase());
         } else if (type == CommandArgument.CHANNEL) {
             return getChannel(arg);
+        } else if (type == CommandArgument.KIT) {
+            return getKit(arg);
         }
+        return null;
+    }
+
+    private Kit getKit(String arg) {
+        Kit[] kits = SECore.dataLoader.getFromKey(DataLoader.DataType.KIT, new Kit()).values().toArray(new Kit[0]);
+        for (Kit kit : kits)
+            if (kit.name.equalsIgnoreCase(arg))
+                return kit;
         return null;
     }
 
@@ -263,8 +273,11 @@ public class SECommand extends CommandBase {
         return null;
     }
 
-    // TODO Implement
     public Home getHome(ServerPlayer player, String name) {
+        Home[] homes = player.local.homes;
+        for (Home home : homes)
+            if (home.name.equalsIgnoreCase(name))
+                return home;
         return null;
     }
 

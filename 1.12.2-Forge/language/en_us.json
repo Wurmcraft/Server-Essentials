@@ -140,5 +140,13 @@
   "COMMAND_TIME": "&bTime has been set to {@TIME@}",
   "COMMAND_VAULT_NONE": "&bVault {@NAME@} does not exist!",
   "COMMAND_VAULT_DELETE": "&bVault {@NAME@} deleted!",
-  "COMMAND_VAULT_INVALID": "&bInvalid Vault Name"
+  "COMMAND_VAULT_INVALID": "&bInvalid Vault Name",
+  "COMMAND_GIVEITEM": "&bYou have been given {@COUNT@}x, {@NAME@}",
+  "COMMAND_GIVEITEM_NONE": "&cInvalid Item",
+  "COMMAND_CONVERT_HAND": "&bItem: {@ITEM@}",
+  "COMMAND_KIT_INVALID": "&b{@NAME@} is not a valid kit name",
+  "COMMAND_KIT_LIST": "&bKits: {@NAME@}",
+  "COMMAND_KIT_DELETE": "&bKit {@NAME@} has been deleted",
+  "COMMAND_KIT_TIMER": "&bYou must wait another {@TIME@}",
+  "COMMAND_KIT_CREATED": "&bKit {@NAME@} created"
 }

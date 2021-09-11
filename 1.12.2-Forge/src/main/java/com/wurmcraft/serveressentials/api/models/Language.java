@@ -158,4 +158,12 @@ public class Language {
     public String COMMAND_VAULT_NONE;
     public String COMMAND_VAULT_DELETE;
     public String COMMAND_VAULT_INVALID;
+    public String COMMAND_GIVEITEM;
+    public String COMMAND_GIVEITEM_NONE;
+    public String COMMAND_CONVERT_HAND;
+    public String COMMAND_KIT_INVALID;
+    public String COMMAND_KIT_LIST;
+    public String COMMAND_KIT_DELETE;
+    public String COMMAND_KIT_TIMER;
+    public String COMMAND_KIT_CREATED;
 }

@@ -143,6 +143,9 @@ public class CommandUtils {
         } else if (arg == CommandArgument.CHANNEL) {
             for (Channel ch : SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel()).values())
                 autofill.add(ch.name);
+        } else if (arg == CommandArgument.KIT) {
+            for (Kit kit : SECore.dataLoader.getFromKey(DataLoader.DataType.KIT, new Kit()).values())
+                autofill.add(kit.name);
         }
         return autofill;
     }
@@ -261,5 +264,26 @@ public class CommandUtils {
         if (result != null && result.typeOfHit != RayTraceResult.Type.MISS)
             return result.getBlockPos();
         return null;
+    }
+
+    public static long getTimeFromConfig(String[] ranks, String[] configValues) {
+        HashMap<String, Long> timings = new HashMap<>();
+        for (String val : configValues) {
+            String[] split = val.split(":");
+            if (split.length == 2) {
+                String rank = split[0].toLowerCase();
+                String timeStr = split[1];
+                try {
+                    long time = Long.parseLong(timeStr);
+                    timings.put(rank, time);
+                } catch (NumberFormatException e) {
+                }
+            }
+        }
+        long lowest = Long.MAX_VALUE;
+        for (String rank : ranks)
+            if (timings.containsKey(rank.toLowerCase()) && timings.get(rank.toLowerCase()) < lowest)
+                lowest = timings.get(rank.toLowerCase());
+        return lowest * 1000;
     }
 }
