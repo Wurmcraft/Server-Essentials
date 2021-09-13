@@ -22,6 +22,7 @@ public class Language {
 
     // Display
     public String DISPLAY_VAULT;
+    public String DISPLAY_TRASHCAN;
 
     // Item GUI
     public String ITEM_PREV;
@@ -166,4 +167,9 @@ public class Language {
     public String COMMAND_KIT_DELETE;
     public String COMMAND_KIT_TIMER;
     public String COMMAND_KIT_CREATED;
+    public String COMMAND_HAT;
+    public String COMMAND_SPEED_WALK;
+    public String COMMAND_SPEED_FLY;
+    public String COMMAND_SPEED_WALK_OTHER;
+    public String COMMAND_SPEED_FLY_OTHER;
 }

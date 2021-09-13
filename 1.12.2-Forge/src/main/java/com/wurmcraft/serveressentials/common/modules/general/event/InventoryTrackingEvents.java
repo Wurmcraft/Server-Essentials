@@ -16,5 +16,4 @@ public class InventoryTrackingEvents {
         if (openPlayerInventory.size() > 0 && openPlayerInventory.containsKey(e.player))
             openPlayerInventory.get(e.player).update();
     }
-
 }

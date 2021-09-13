@@ -148,5 +148,11 @@
   "COMMAND_KIT_LIST": "&bKits: {@NAME@}",
   "COMMAND_KIT_DELETE": "&bKit {@NAME@} has been deleted",
   "COMMAND_KIT_TIMER": "&bYou must wait another {@TIME@}",
-  "COMMAND_KIT_CREATED": "&bKit {@NAME@} created"
+  "COMMAND_KIT_CREATED": "&bKit {@NAME@} created",
+  "DISPLAY_TRASHCAN": "&bTrash Can",
+  "COMMAND_HAT": "&bYou are now wearing your held item as a hat!",
+  "COMMAND_SPEED_WALK": "&bYou walking speed has been changed to {@SPEED@}",
+  "COMMAND_SPEED_FLY": "&bYour flying speed has been changed to {@SPEED@}",
+  "COMMAND_SPEED_WALK_OTHER": "&b{@NAME@}'s walking speed has been set tp {@SPEED@}",
+  "COMMAND_SPEED_FLY_OTHER": "&b{@NAME@}'s flying speed has been set tp {@SPEED@}"
 }

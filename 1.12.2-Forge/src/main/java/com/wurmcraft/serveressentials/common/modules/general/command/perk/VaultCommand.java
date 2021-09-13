@@ -21,7 +21,7 @@ import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 @ModuleCommand(module = "General", name = "Vault", defaultAliases = {"Storage"})
 public class VaultCommand {
 
-    public static final String[] INVALID_VAULT_NAMES = new String[]{"list", "create", "make", "c", "delete", "del", "d", "remove", "rem", "r"};
+    public static final String[] INVALID_VAULT_NAMES = new String[]{"list", "create", "make", "c", "delete", "del", "d", "remove", "rem", "r", "mailbox"};
 
     @Command(args = {}, usage = {})
     public void defaultVault(ServerPlayer player) {
