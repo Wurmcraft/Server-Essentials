@@ -16,8 +16,11 @@ public class ConfigGeneral {
     public String[] rtpBiomeBlacklist;
     public int[] rtpDimensionWhitelist;
     public String defaultVaultName;
+    public int afkCheckTimer;
+    public String afkTimer;
+    public String playTimeSync;
 
-    public ConfigGeneral(String defaultHomeName, int minHomes, int maxHomes, HashMap<String, Location> spawn, int rtpRadius, String[] rtpBiomeBlacklist, int[] rtpDimensionWhitelist, String defaultVaultName) {
+    public ConfigGeneral(String defaultHomeName, int minHomes, int maxHomes, HashMap<String, Location> spawn, int rtpRadius, String[] rtpBiomeBlacklist, int[] rtpDimensionWhitelist, String defaultVaultName, int afkCheckTimer, String afkTimer, String playTimeSync) {
         this.defaultHomeName = defaultHomeName;
         this.minHomes = minHomes;
         this.maxHomes = maxHomes;
@@ -26,6 +29,9 @@ public class ConfigGeneral {
         this.rtpBiomeBlacklist = rtpBiomeBlacklist;
         this.rtpDimensionWhitelist = rtpDimensionWhitelist;
         this.defaultVaultName = defaultVaultName;
+        this.afkCheckTimer = afkCheckTimer;
+        this.afkTimer = afkTimer;
+        this.playTimeSync = playTimeSync;
     }
 
     public ConfigGeneral() {
@@ -37,5 +43,8 @@ public class ConfigGeneral {
         this.rtpBiomeBlacklist = new String[]{"ocean"};
         this.rtpDimensionWhitelist = new int[]{0, -1};
         this.defaultVaultName = "default";
+        this.afkCheckTimer = 30;
+        this.afkTimer = "5m";
+        this.playTimeSync = "5m";
     }
 }

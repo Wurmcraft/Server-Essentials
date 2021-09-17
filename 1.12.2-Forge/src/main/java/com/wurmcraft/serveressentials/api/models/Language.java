@@ -24,6 +24,10 @@ public class Language {
     public String DISPLAY_VAULT;
     public String DISPLAY_TRASHCAN;
 
+    // Announcement
+    public String ANNOUNCEMENT_AFK_ENABLED;
+    public String ANNOUNCEMENT_AFK_DISABLED;
+
     // Item GUI
     public String ITEM_PREV;
     public String ITEM_NEXT;
