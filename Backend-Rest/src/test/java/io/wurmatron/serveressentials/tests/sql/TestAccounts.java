@@ -58,27 +58,27 @@ public class TestAccounts {
         // Test Account
         assertNotNull(account, "Cache has the account");
         assertEquals(TEST_ACCOUNT.uuid, account.uuid, "UUID's are the same");
-        assertEquals(TEST_ACCOUNT.rewardPoints, account.rewardPoints, "Reward Point's are the same");
+        assertEquals(TEST_ACCOUNT.reward_points, account.reward_points, "Reward Point's are the same");
         assertArrayEquals(TEST_ACCOUNT.rank, account.rank, "Ranks are the same");
-        assertArrayEquals(TEST_ACCOUNT.trackedTime, account.trackedTime, "Tracked Time is the same");
+        assertArrayEquals(TEST_ACCOUNT.tracked_time, account.tracked_time, "Tracked Time is the same");
         assertArrayEquals(TEST_ACCOUNT.wallet, account.wallet, "Wallet is the same");
     }
 
     @Test
     @Order(2)
     public void testUpdateAccount() {
-        TEST_ACCOUNT.language = "en_us";
-        boolean updated = SQLCacheAccount.update(TEST_ACCOUNT, new String[]{"language"});
+        TEST_ACCOUNT.lang = "en_us";
+        boolean updated = SQLCacheAccount.update(TEST_ACCOUNT, new String[]{"lang"});
         assertTrue(updated, "Account has been successfully updated without errors");
         // Check for updates
         Account account = SQLCacheAccount.get(TEST_ACCOUNT.uuid);
         assertNotNull(account, "Account Exists");
-        assertEquals(TEST_ACCOUNT.language, account.language, "Language has been updated");
+        assertEquals(TEST_ACCOUNT.lang, account.lang, "Language has been updated");
         // Invalidate Cache and try again
         SQLCacheAccount.invalidate(TEST_ACCOUNT.uuid);
         account = SQLCacheAccount.get(TEST_ACCOUNT.uuid);
         assertNotNull(account, "Account Exists");
-        assertEquals(TEST_ACCOUNT.language, account.language, "Language has been updated");
+        assertEquals(TEST_ACCOUNT.lang, account.lang, "Language has been updated");
     }
 
     @Test
@@ -113,6 +113,6 @@ public class TestAccounts {
     @Order(2)
     public void testGetUUID() {
         String uuid = SQLCacheUsername.getUUID(TEST_ACCOUNT.username);
-        assertEquals(TEST_ACCOUNT.username,uuid,"UUID failed to lookup correctly");
+        assertEquals(TEST_ACCOUNT.uuid,uuid,"UUID failed to lookup correctly");
     }
 }

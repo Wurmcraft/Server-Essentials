@@ -79,8 +79,8 @@ public class TestUserRoute {
     @Test
     @Order(2)
     public void testGetLanguage() throws IOException {
-        String language = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/language", Account.class).language;
-        assertEquals(TestAccounts.TEST_ACCOUNT.language, language, "Language is the same");
+        String language = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/language", Account.class).lang;
+        assertEquals(TestAccounts.TEST_ACCOUNT.lang, language, "Language is the same");
     }
 
     @Test
@@ -93,29 +93,29 @@ public class TestUserRoute {
     @Test
     @Order(2)
     public void testGetMutedTime() throws IOException {
-        long muteTime = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/mute-time", Account.class).muteTime;
-        assertEquals(TestAccounts.TEST_ACCOUNT.muteTime, muteTime, "Mute Time is the same");
+        long muteTime = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/mute-time", Account.class).mute_time;
+        assertEquals(TestAccounts.TEST_ACCOUNT.mute_time, muteTime, "Mute Time is the same");
     }
 
     @Test
     @Order(2)
     public void testGetDisplayName() throws IOException {
-        String displayName = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/display-name", Account.class).displayName;
-        assertEquals(TestAccounts.TEST_ACCOUNT.displayName, displayName, "DisplayName is the same");
+        String displayName = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/display-name", Account.class).display_name;
+        assertEquals(TestAccounts.TEST_ACCOUNT.display_name, displayName, "DisplayName is the same");
     }
 
     @Test
     @Order(2)
     public void testGetDiscordID() throws IOException {
-        String discordID = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/discord-id", Account.class).discordID;
-        assertEquals(TestAccounts.TEST_ACCOUNT.discordID, discordID, "DiscordID is the same");
+        String discordID = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/discord-id", Account.class).discord_id;
+        assertEquals(TestAccounts.TEST_ACCOUNT.discord_id, discordID, "DiscordID is the same");
     }
 
     @Test
     @Order(2)
     public void testGetTrackedTime() throws IOException {
-        ServerTime[] playTime = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/playtime", Account.class).trackedTime;
-        assertEquals(TestAccounts.TEST_ACCOUNT.trackedTime, playTime, "Tracked-Time is the same");
+        ServerTime[] playTime = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/playtime", Account.class).tracked_time;
+        assertEquals(TestAccounts.TEST_ACCOUNT.tracked_time, playTime, "Tracked-Time is the same");
     }
 
     @Test
@@ -128,21 +128,21 @@ public class TestUserRoute {
     @Test
     @Order(2)
     public void testGetRewardPoints() throws IOException {
-        int points = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/reward-points", Account.class).rewardPoints;
-        assertEquals(TestAccounts.TEST_ACCOUNT.rewardPoints, points, "Reward Points are the same");
+        int points = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/reward-points", Account.class).reward_points;
+        assertEquals(TestAccounts.TEST_ACCOUNT.reward_points, points, "Reward Points are the same");
     }
 
     @Test
     @Order(2)
     public void testSystemPerms() throws IOException {
-        String[] systemPerms = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/system-perms", Account.class).systemPerms;
-        assertEquals(TestAccounts.TEST_ACCOUNT.systemPerms, systemPerms, "System Perms are the same");
+        String[] systemPerms = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/system-perms", Account.class).system_perms;
+        assertEquals(TestAccounts.TEST_ACCOUNT.system_perms, systemPerms, "System Perms are the same");
     }
 
     @Test
     @Order(2)
     public void testFullUpdate() throws IOException {
-        TestAccounts.TEST_ACCOUNT.displayName = "TestFullUpdate";
+        TestAccounts.TEST_ACCOUNT.display_name = "TestFullUpdate";
         int status = HTTPRequests.put("api/user/" + TestAccounts.TEST_ACCOUNT.uuid, TestAccounts.TEST_ACCOUNT);
         assertEquals(HttpURLConnection.HTTP_OK, status, "Account has been updated");
         // Make sure its updated
@@ -153,12 +153,12 @@ public class TestUserRoute {
     @Test
     @Order(2)
     public void testPatch() throws IOException {
-        TestAccounts.TEST_ACCOUNT.language = "en_au";
+        TestAccounts.TEST_ACCOUNT.lang = "en_au";
         int status = HTTPRequests.patch("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/language", TestAccounts.TEST_ACCOUNT);
         assertEquals(HttpURLConnection.HTTP_OK, status, "Account has been updated");
         // Make sure its updated
-        String updatedLang = HTTPRequests.get("api/user", Account.class).language;
-        assertEquals(TestAccounts.TEST_ACCOUNT.language, updatedLang, "Language has been updated / changed");
+        String updatedLang = HTTPRequests.get("api/user", Account.class).lang;
+        assertEquals(TestAccounts.TEST_ACCOUNT.lang, updatedLang, "Language has been updated / changed");
     }
 
     // TODO Test for /user #GetAccounts

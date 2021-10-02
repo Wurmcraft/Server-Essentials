@@ -195,24 +195,24 @@ public class AccountRoutes {
             return account;
         Account clone = account.clone();
         if (role.equals(RestRoles.SERVER)) {
-            clone.passwordHash = null;
-            clone.passwordSalt = null;
-            clone.systemPerms = null;
+            clone.password_hash = null;
+            clone.password_salt = null;
+            clone.system_perms = null;
             return clone;
         }
         if (role.equals(RestRoles.USER)) {
             // TODO Based on SystemPerms
         }
-        clone.discordID = null;
+        clone.discord_id = null;
         clone.perms = null;
         clone.perks = null;
-        clone.muteTime = null;
-        clone.trackedTime = null;
+        clone.mute_time = null;
+        clone.tracked_time = null;
         clone.wallet = null;
-        clone.rewardPoints = null;
-        clone.passwordHash = null;
-        clone.passwordSalt = null;
-        clone.systemPerms = null;
+        clone.reward_points = null;
+        clone.password_hash = null;
+        clone.password_salt = null;
+        clone.system_perms = null;
         return clone;
     }
 
@@ -439,7 +439,7 @@ public class AccountRoutes {
                     errors.add(new MessageResponse("Bad Request", perk + " is not a perk!"));
 
         // Validate Language
-        if (account.language == null || account.language.trim().isEmpty()) {
+        if (account.lang == null || account.lang.trim().isEmpty()) {
             errors.add(new MessageResponse("Bad Request", "Language must not be empty"));
         }
         // TODO Check for valid language

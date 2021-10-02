@@ -14,17 +14,17 @@ public class Account {
     public String[] rank;
     public String[] perms;
     public String[] perks;
-    public String language;
+    public String lang;
     public Boolean muted;
-    public Long muteTime;
-    public String displayName;
-    public String discordID;
-    public ServerTime[] trackedTime;
+    public Long mute_time;
+    public String display_name;
+    public String discord_id;
+    public ServerTime[] tracked_time;
     public BankAccount[] wallet;
-    public Integer rewardPoints;
-    public String passwordHash;
-    public String passwordSalt;
-    public String[] systemPerms;
+    public Integer reward_points;
+    public String password_hash;
+    public String password_salt;
+    public String[] system_perms;
 
     /**
      * @param uuid         uuid of the given user
@@ -50,17 +50,17 @@ public class Account {
         this.rank = rank;
         this.perms = perms;
         this.perks = perks;
-        this.language = language;
+        this.lang = language;
         this.muted = muted;
-        this.muteTime = muteTime;
-        this.displayName = displayName;
-        this.discordID = discordID;
-        this.trackedTime = trackedTime;
+        this.mute_time = muteTime;
+        this.display_name = displayName;
+        this.discord_id = discordID;
+        this.tracked_time = trackedTime;
         this.wallet = wallet;
-        this.rewardPoints = rewardPoints;
-        this.passwordHash = passwordHash;
-        this.passwordSalt = passwordSalt;
-        this.systemPerms = systemPerms;
+        this.reward_points = rewardPoints;
+        this.password_hash = passwordHash;
+        this.password_salt = passwordSalt;
+        this.system_perms = systemPerms;
     }
 
     public Account() {
@@ -77,6 +77,20 @@ public class Account {
         if (this == o) return true;
         if (!(o instanceof Account)) return false;
         Account account = (Account) o;
-        return Objects.equals(uuid, account.uuid) && Objects.equals(username, account.username) && Arrays.equals(rank, account.rank) && Arrays.equals(perms, account.perms) && Arrays.equals(perks, account.perks) && Objects.equals(language, account.language) && Objects.equals(muted, account.muted) && Objects.equals(muteTime, account.muteTime) && Objects.equals(displayName, account.displayName) && Objects.equals(discordID, account.discordID) && Arrays.equals(trackedTime, account.trackedTime) && Arrays.equals(wallet, account.wallet) && Objects.equals(rewardPoints, account.rewardPoints) && Objects.equals(passwordHash, account.passwordHash) && Objects.equals(passwordSalt, account.passwordSalt) && Arrays.equals(systemPerms, account.systemPerms);
+        return Objects.equals(uuid, account.uuid)  &&
+                Objects.equals(username, account.username) &&
+                Arrays.equals(rank, account.rank) &&
+                Arrays.equals(perms, account.perms) &&
+                Arrays.equals(perks, account.perks) && Objects.equals(lang, account.lang)
+                && Objects.equals(muted, account.muted) &&
+                Objects.equals(mute_time, account.mute_time) &&
+                Objects.equals(display_name, account.display_name) &&
+                Objects.equals(discord_id, account.discord_id) &&
+                Arrays.equals(tracked_time, account.tracked_time) &&
+                Arrays.equals(wallet, account.wallet) &&
+                Objects.equals(reward_points, account.reward_points) &&
+                Objects.equals(password_hash, account.password_hash)&&
+                Objects.equals(password_salt, account.password_salt) ;//&&
+//                Arrays.equals(system_perms, account.system_perms);
     }
 }

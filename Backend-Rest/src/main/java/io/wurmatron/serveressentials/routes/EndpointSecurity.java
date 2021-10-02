@@ -148,13 +148,13 @@ public class EndpointSecurity {
                 if (authUser.type.equalsIgnoreCase("USER")) {
                     Account account = SQLCacheAccount.get(authUser.name);
                     if (account != null) {
-                        if (EncryptionUtils.isSame(account.passwordHash, account.passwordSalt, authUser.token)) {
+                        if (EncryptionUtils.isSame(account.password_hash, account.password_salt, authUser.token)) {
                             // User will now login
                             String userToken = generateToken(USER_TOKEN_SIZE);
                             authUser.token = userToken;
                             authUser.key = "";
                             authUser.type = "USER";
-                            authUser.perms = account.systemPerms;
+                            authUser.perms = account.system_perms;
                             authUser.expiration = Instant.now().toEpochMilli() + USER_TIMEOUT;
                             authTokens.put(userToken, authUser); // TODO Delete Expired Tokens
                             ctx.status(200).result(GSON.toJson(authUser));

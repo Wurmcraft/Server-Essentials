@@ -7,10 +7,16 @@ import static io.wurmatron.serveressentials.ServerEssentialsRest.config;
 public class DatabaseConnection {
 
     private final Connection connection;
+    public String databaseType;
 
     public DatabaseConnection() throws SQLException {
         connection = DriverManager.getConnection(createConnectionURL(), config.database.username, config.database.password);
         DatabasePopulator.setupDB(connection);
+        if(config.database.connector.equalsIgnoreCase("mysql")) {
+            databaseType = "mysql";
+        } else if(config.database.connector.equalsIgnoreCase("postgresql")) {
+            databaseType = "postgress";
+        }
     }
 
     private static String createConnectionURL() {

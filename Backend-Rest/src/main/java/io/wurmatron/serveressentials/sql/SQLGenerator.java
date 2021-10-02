@@ -1,6 +1,7 @@
 package io.wurmatron.serveressentials.sql;
 
 import joptsimple.internal.Strings;
+import org.postgresql.util.PGobject;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -31,7 +32,7 @@ public class SQLGenerator {
     protected static final String[] RANKS_COLUMNS = new String[]{"rankID", "name", "permissions", "inheritance", "prefix", "prefixPriority", "suffix", "suffixPriority", "color", "colorPriority"};
     protected static final String[] STATISTICS_COLUMNS = new String[]{"serverID", "uuid", "timestamp", "eventType", "eventData"};
     protected static final String[] TRANSFERS_COLUMNS = new String[]{"transferID", "uuid", "startTime", "items", "serverID"};
-    protected static final String[] USERS_COLUMNS = new String[]{"uuid", "username", "rank", "perms", "perks", "language", "muted", "muteTime", "displayName", "discordID", "trackedTime", "wallet", "rewardPoints", "passwordHash", "passwordSalt", "systemPerms"};
+    protected static final String[] USERS_COLUMNS = new String[]{"uuid", "username", "rank", "perms", "perks", "lang", "muted", "mute_time", "display_name", "discord_id", "tracked_time", "wallet", "reward_points", "password_hash", "password_salt", "system_perms"};
 
     protected static DatabaseConnection connection;
 
@@ -53,7 +54,12 @@ public class SQLGenerator {
      * @throws IllegalArgumentException Issue with reflection to add data to the object instance
      */
     protected static <T> T get(String columns, String table, String key, String data, T dataType) throws SQLException, IllegalAccessException, IllegalArgumentException {
-        PreparedStatement statement = connection.createPrepared("SELECT " + columns + " FROM '" + table + "' WHERE " + key + "=?;");
+        String sql = "";
+        if (connection.databaseType.equalsIgnoreCase("mysql"))
+            sql = "SELECT " + columns + " FROM `" + table + "` WHERE " + key + "=?;";
+        else if (connection.databaseType.equalsIgnoreCase("postgress"))
+            sql = "SELECT " + columns + " FROM " + table + " WHERE " + key + "=?;";
+        PreparedStatement statement = connection.createPrepared(sql);
         statement.setString(1, data);
         LOG.trace("GET: " + statement);
         return to(statement.executeQuery(), dataType, true);
@@ -105,7 +111,7 @@ public class SQLGenerator {
         String slq = sql.substring(0, sql.length() - 4);
         PreparedStatement statement = connection.createPrepared(slq + ";");
         for (int x = 1; x < key.length + 1; x++)
-            statement.setString(x, data[x-1]);
+            statement.setString(x, data[x - 1]);
         LOG.trace("GET ARR: " + statement);
         return toArray(statement.executeQuery(), dataType);
     }
@@ -142,7 +148,12 @@ public class SQLGenerator {
      * @see PreparedStatement#execute()
      */
     protected static <T> int insert(String table, String[] columns, T data, boolean generatedKey) throws SQLException, IllegalAccessException, IllegalArgumentException, NoSuchFieldException {
-        PreparedStatement statement = connection.createPrepared("INSERT INTO '" + table + "' ('" + String.join("', '", columns) + "') VALUES (" + argumentGenerator(columns.length, 0, columns) + ")", generatedKey ? Statement.RETURN_GENERATED_KEYS : 0);
+        String sql = "";
+        if (connection.databaseType.equalsIgnoreCase("mysql"))
+            sql = "INSERT INTO `" + table + "` (`" + String.join("`, `", columns) + "`) VALUES (" + argumentGenerator(columns.length, 0, columns) + ")";
+        else if (connection.databaseType.equalsIgnoreCase("postgress"))
+            sql = "INSERT INTO " + table + " (" + String.join(", ", columns) + ") VALUES (" + argumentGenerator(columns.length, 0, columns) + ")";
+        PreparedStatement statement = connection.createPrepared(sql, generatedKey ? Statement.RETURN_GENERATED_KEYS : 0);
         addArguments(statement, columns, data);
         LOG.info("INSERT: " + statement);
         statement.executeUpdate();
@@ -170,7 +181,7 @@ public class SQLGenerator {
      * @see PreparedStatement#execute()
      */
     protected static <T> boolean update(String table, String[] columnsToUpdate, String key, String value, T data) throws SQLException, NoSuchFieldException, IllegalAccessException {
-        PreparedStatement statement = connection.createPrepared("UPDATE '" + table + "' SET " + argumentGenerator(columnsToUpdate.length, 1, columnsToUpdate) + " WHERE " + key + "=?;");
+        PreparedStatement statement = connection.createPrepared("UPDATE `" + table + "` SET " + argumentGenerator(columnsToUpdate.length, 1, columnsToUpdate) + " WHERE " + key + "=?;");
         addArguments(statement, columnsToUpdate, data);
         statement.setString(columnsToUpdate.length + 1, value);
         LOG.trace("UPDATE: " + statement);
@@ -240,7 +251,7 @@ public class SQLGenerator {
         String slq = sql.substring(0, sql.length() - 4);
         PreparedStatement statement = connection.createPrepared(slq + ";");
         for (int x = 1; x < key.length + 1; x++)
-            statement.setString(x, value[x-1]);
+            statement.setString(x, value[x - 1]);
         LOG.trace("DELETE: " + statement);
         return statement.execute();
     }
@@ -258,50 +269,56 @@ public class SQLGenerator {
     protected static <T> T to(ResultSet result, T dataType, boolean next) throws SQLException, IllegalAccessException, IllegalArgumentException {
         if (!next || result.next()) {
             for (Field field : dataType.getClass().getDeclaredFields()) {
-                Object obj = result.getObject(field.getName());
-                Class<?> fieldType = field.getType();
-                boolean isArray = fieldType.isArray();
-                boolean str = obj instanceof String;
-                if (str && isArray && fieldType.equals(String[].class)) {
-                    String[] data = ((String) obj).split(",");
-                    for (int index = 0; index < data.length; index++)
-                        data[index] = data[index].trim();
-                    field.set(dataType, data);
-                } else if (str && fieldType.equals(long.class) || str && fieldType.equals(Long.class))
-                    field.set(dataType, Long.parseLong((String) obj));
-                else if (str && fieldType.equals(int.class) || str && fieldType.equals(Integer.class))
-                    field.set(dataType, Integer.parseInt((String) obj));
-                else if (str && fieldType.equals(float.class) || str && fieldType.equals(Float.class))
-                    field.set(dataType, Float.parseFloat((String) obj));
-                else if (str && fieldType.equals(double.class) || str && fieldType.equals(Double.class) || str && fieldType.equals(BigDecimal.class))
-                    field.set(dataType, Double.parseDouble((String) obj));
-                else if (str && isJson(fieldType))
-                    field.set(dataType, GSON.fromJson((String) obj, fieldType));
-                else if (obj instanceof BigDecimal && fieldType.equals(Double.class))
-                    field.set(dataType, ((BigDecimal) obj).doubleValue());
-                else if (fieldType.equals(Long.class)) {
-                    if (obj instanceof Integer) {
+                try {
+                    Object obj = result.getObject(field.getName());
+                    Class<?> fieldType = field.getType();
+                    boolean isArray = fieldType.isArray();
+                    boolean str = obj instanceof String;
+                    if (str && isArray && fieldType.equals(String[].class)) {
+                        String[] data = ((String) obj).split(",");
+                        for (int index = 0; index < data.length; index++)
+                            data[index] = data[index].trim();
+                        field.set(dataType, data);
+                    } else if (str && fieldType.equals(long.class) || str && fieldType.equals(Long.class))
+                        field.set(dataType, Long.parseLong((String) obj));
+                    else if (str && fieldType.equals(int.class) || str && fieldType.equals(Integer.class))
+                        field.set(dataType, Integer.parseInt((String) obj));
+                    else if (str && fieldType.equals(float.class) || str && fieldType.equals(Float.class))
+                        field.set(dataType, Float.parseFloat((String) obj));
+                    else if (str && fieldType.equals(double.class) || str && fieldType.equals(Double.class) || str && fieldType.equals(BigDecimal.class))
+                        field.set(dataType, Double.parseDouble((String) obj));
+                    else if (str && isJson(fieldType))
+                        field.set(dataType, GSON.fromJson((String) obj, fieldType));
+                    else if (obj instanceof BigDecimal && fieldType.equals(Double.class))
+                        field.set(dataType, ((BigDecimal) obj).doubleValue());
+                    else if (fieldType.equals(Long.class)) {
+                        if (obj instanceof Integer) {
+                            int data = (int) obj;
+                            field.set(dataType, (long) data);
+                        } else {
+                            long data = (long) obj;
+                            field.set(dataType, (long) data);
+                        }
+                    } else if (fieldType.equals(Integer.class)) {
                         int data = (int) obj;
-                        field.set(dataType, (long) data);
-                    } else {
-                        long data = (long) obj;
-                        field.set(dataType, (long) data);
-                    }
-                } else if (fieldType.equals(Integer.class)) {
-                    int data = (int) obj;
-                    field.set(dataType, data);
-                } else if (fieldType.equals(Double.class)) {
-                    if (obj instanceof Integer) {
-                        int data = (int) obj;
-                        field.set(dataType, (double) data);
-                    } else if (obj instanceof BigDecimal) {
-                        BigDecimal bigDec = (BigDecimal) obj;
-                        field.set(dataType, bigDec.doubleValue());
-                    } else {
+                        field.set(dataType, data);
+                    } else if (fieldType.equals(Double.class)) {
+                        if (obj instanceof Integer) {
+                            int data = (int) obj;
+                            field.set(dataType, (double) data);
+                        } else if (obj instanceof BigDecimal) {
+                            BigDecimal bigDec = (BigDecimal) obj;
+                            field.set(dataType, bigDec.doubleValue());
+                        } else {
+                            field.set(dataType, obj);
+                        }
+                    } else if (isJson(fieldType) && connection.databaseType.equalsIgnoreCase("postgress") && obj instanceof PGobject) {
+                        field.set(dataType, GSON.fromJson(((PGobject) obj).getValue(), fieldType));
+                    } else
                         field.set(dataType, obj);
-                    }
-                } else
-                    field.set(dataType, obj);
+                } catch (Exception e) {
+                    LOG.warn("Failed to convert! (" + e.getMessage() + ")");
+                }
             }
             return dataType;
         } else
@@ -391,7 +408,10 @@ public class SQLGenerator {
                 continue;
             }
             if (fieldData instanceof SQLJson[] || fieldData instanceof SQLJson) {
-                pStatement.setObject(index + 1, GSON.toJson(fieldData).replaceAll("\n", "").replaceAll(" ", ""));
+                PGobject json = new PGobject();
+                json.setType("json");
+                json.setValue(GSON.toJson(fieldData).replaceAll("\n", "").replaceAll(" ", ""));
+                pStatement.setObject(index + 1, json);
                 continue;
             }
             // Not a special case
