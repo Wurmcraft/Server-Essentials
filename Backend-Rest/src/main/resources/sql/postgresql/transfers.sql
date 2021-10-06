@@ -1,8 +1,8 @@
 CREATE TABLE transfers (
-  transferID SERIAL NOT NULL,
+  transfer_id SERIAL NOT NULL,
   uuid text NOT NULL,
-  startTime text NOT NULL,
+  start_time text NOT NULL,
   items json NOT NULL,
-  serverID text NOT NULL,
-  PRIMARY KEY (transferID)
+  server_id text NOT NULL,
+  PRIMARY KEY (transfer_id)
 );

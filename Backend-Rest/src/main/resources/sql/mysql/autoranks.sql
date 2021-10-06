@@ -1,10 +1,8 @@
 CREATE TABLE `autoranks` (
-  `autoRankID` smallint(6) NOT NULL,
   `rank` tinytext NOT NULL,
-  `nextRank` tinytext NOT NULL,
-  `playTime` smallint(6) NOT NULL,
-  `currencyName` tinytext NOT NULL,
-  `currencyAmount` int(11) NOT NULL,
-  `specialEvents` json NOT NULL,
-   PRIMARY KEY (`autoRankID`)
+  `next_rank` tinytext NOT NULL,
+  `play_time` smallint(6) NOT NULL,
+  `currency_name` tinytext NOT NULL,
+  `currency_amount` int(11) NOT NULL,
+  `special_events` json NOT NULL
 );

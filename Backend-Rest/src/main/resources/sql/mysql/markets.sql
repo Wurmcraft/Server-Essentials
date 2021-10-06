@@ -1,11 +1,11 @@
 CREATE TABLE `markets` (
-  `serverID` tinytext NOT NULL,
-  `sellerUUID` tinytext NOT NULL,
+  `server_id` tinytext NOT NULL,
+  `seller_uuid` tinytext NOT NULL,
   `item` json NOT NULL,
-  `currencyName` tinytext NOT NULL,
-  `currencyAmount` decimal(65,4) NOT NULL,
+  `currency_name` tinytext NOT NULL,
+  `currency_amount` decimal(65,4) NOT NULL,
   `timestamp` tinytext NOT NULL,
-  `marketType` tinytext NOT NULL,
-  `marketData` tinytext NOT NULL,
-  `transferID` text
+  `market_type` tinytext NOT NULL,
+  `market_data` tinytext NOT NULL,
+  `transfer_id` text
 );

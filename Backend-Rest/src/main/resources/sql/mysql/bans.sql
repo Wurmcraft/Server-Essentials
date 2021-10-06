@@ -1,14 +1,14 @@
 CREATE TABLE `bans` (
-  `banID` int(11) NOT NULL AUTO_INCREMENT,
+  `ban_id` int(11) NOT NULL AUTO_INCREMENT,
   `uuid` tinytext NOT NULL,
   `ip` text NOT NULL,
-  `discordID` text,
-  `bannedBy` tinytext NOT NULL,
-  `bannedByType` text NOT NULL,
-  `banReason` text NOT NULL,
+  `discord_id` text,
+  `banned_by` tinytext NOT NULL,
+  `banned_by_type` text NOT NULL,
+  `ban_reason` text NOT NULL,
   `timestamp` tinytext NOT NULL,
-  `banType` tinytext NOT NULL,
-  `banData` tinytext NOT NULL,
-  `banStatus` tinyint(1) NOT NULL DEFAULT '1',
+  `ban_type` tinytext NOT NULL,
+  `ban_data` tinytext NOT NULL,
+  `ban_status` tinyint(1) NOT NULL DEFAULT '1',
    PRIMARY KEY (`banID`)
 );

@@ -1,8 +1,8 @@
 CREATE TABLE logging (
-  serverID text NOT NULL,
+  server_id text NOT NULL,
   timestamp text NOT NULL,
-  actionType text NOT NULL,
-  actionData json NOT NULL,
+  action_type text NOT NULL,
+  action_data json NOT NULL,
   uuid text NOT NULL,
   x int NOT NULL,
   y int NOT NULL,

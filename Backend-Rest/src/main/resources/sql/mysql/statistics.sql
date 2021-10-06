@@ -1,7 +1,7 @@
 CREATE TABLE `statistics` (
-  `serverID` tinytext NOT NULL,
+  `server_id` tinytext NOT NULL,
   `uuid` tinytext NOT NULL,
   `timestamp` tinytext NOT NULL,
-  `eventType` tinytext NOT NULL,
-  `eventData` json NOT NULL
+  `event_type` tinytext NOT NULL,
+  `event_data` json NOT NULL
 );

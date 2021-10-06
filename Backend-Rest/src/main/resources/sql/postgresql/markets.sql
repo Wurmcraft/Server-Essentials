@@ -1,11 +1,11 @@
 CREATE TABLE markets (
-  serverID text NOT NULL,
-  sellerUUID text NOT NULL,
+  server_id text NOT NULL,
+  seller_uuid text NOT NULL,
   item json NOT NULL,
-  currencyName text NOT NULL,
-  currencyAmount decimal(65,4) NOT NULL,
+  currency_name text NOT NULL,
+  currency_amount decimal(65,4) NOT NULL,
   timestamp text NOT NULL,
-  marketType text NOT NULL,
-  marketData text NOT NULL,
-  transferID text
+  market_type text NOT NULL,
+  market_data text NOT NULL,
+  transfer_id text
 );

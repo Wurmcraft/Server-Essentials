@@ -1,10 +1,8 @@
 CREATE TABLE autoranks (
-  autoRankID int NOT NULL,
   rank text NOT NULL,
-  nextRank text NOT NULL,
-  playTime int NOT NULL,
-  currencyName text NOT NULL,
-  currencyAmount int NOT NULL,
-  specialEvents json NOT NULL,
-   PRIMARY KEY (autoRankID)
+  next_rank text NOT NULL,
+  play_time int NOT NULL,
+  currency_name text NOT NULL,
+  currency_amount int NOT NULL,
+  special_events json NOT NULL,
 );

@@ -1,14 +1,14 @@
 CREATE TABLE bans (
-  banID SERIAL NOT NULL,
+  ban_id SERIAL NOT NULL,
   uuid text NOT NULL,
   ip text NOT NULL,
-  discordID text,
-  bannedBy text NOT NULL,
-  bannedByType text NOT NULL,
-  banReason text NOT NULL,
+  discord_id text,
+  banned_by text NOT NULL,
+  banned_by_type text NOT NULL,
+  ban_reason text NOT NULL,
   timestamp text NOT NULL,
-  banType text NOT NULL,
-  banData text NOT NULL,
-  banStatus int NOT NULL DEFAULT '1',
+  ban_type text NOT NULL,
+  ban_data text NOT NULL,
+  ban_status int NOT NULL DEFAULT '1',
   PRIMARY KEY (banID)
 );

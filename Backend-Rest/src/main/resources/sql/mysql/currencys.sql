@@ -1,8 +1,6 @@
 CREATE TABLE `currencys` (
-  `currencyID` tinyint(4) NOT NULL AUTO_INCREMENT,
-  `displayName` tinytext NOT NULL,
-  `globalWorth` decimal(10,4) NOT NULL,
-  `sellWorth` decimal(10,4) NOT NULL,
-  `tax` decimal(10,2) NOT NULL,
-   PRIMARY KEY (`currencyID`)
+  `display_name` tinytext NOT NULL,
+  `global_worth` decimal(10,4) NOT NULL,
+  `sell_worth` decimal(10,4) NOT NULL,
+  `tax` decimal(10,2) NOT NULL
 );
