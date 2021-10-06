@@ -36,7 +36,7 @@ public class SQLGenerator {
 
     protected static DatabaseConnection connection;
 
-    public static DatabaseConnection create() throws SQLException {
+    public static DatabaseConnection create() throws Exception {
         return connection = new DatabaseConnection();
     }
 

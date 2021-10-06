@@ -9,7 +9,7 @@ public class DatabaseConnection {
     private final Connection connection;
     public String databaseType;
 
-    public DatabaseConnection() throws SQLException {
+    public DatabaseConnection() throws Exception {
         connection = DriverManager.getConnection(createConnectionURL(), config.database.username, config.database.password);
         DatabasePopulator.setupDB(connection);
         if(config.database.connector.equalsIgnoreCase("mysql")) {

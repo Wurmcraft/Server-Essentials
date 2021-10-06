@@ -20,12 +20,9 @@
     </Appenders>
 
     <Loggers>
-        <root level="debug">
+        <Root level="all">
             <appender-ref ref="Console" level="info"/>
-        </root>
-        <Logger name="io.wurmatron.serveressentials" level="DEBUG"
-                additivity="false">
-            <Appender-ref ref="File" level="DEBUG"/>
-        </Logger>
+            <appender-ref ref="File" level="debug"/>
+        </Root>
     </Loggers>
 </Configuration>

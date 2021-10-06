@@ -53,7 +53,6 @@ public class ConfigLoader {
             String toml = FileUtils.toString(config, "toml");
             Files.write(configFile.toPath(), toml.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
             LOG.info("Default config created at '" + configFile.getAbsolutePath() + "'");
-            LOG.error("Unable to save config file ('config.json')");
         }
         return null;
     }

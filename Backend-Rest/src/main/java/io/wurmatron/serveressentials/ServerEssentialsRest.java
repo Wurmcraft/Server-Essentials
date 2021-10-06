@@ -40,7 +40,14 @@ public class ServerEssentialsRest {
     public static void main(String[] args) throws SQLException, IOException {
         displaySystemInfo();
         config = ConfigLoader.setupAndHandleConfig();
-        dbConnection = SQLGenerator.create();
+        try {
+            dbConnection = SQLGenerator.create();
+        } catch (Exception e) {
+            LOG.warn("Failed to connect to SQL Server!");
+            LOG.warn(e.getMessage());
+            LOG.info("Please check your SQL server and settings for connectivity!");
+            System.exit(-2);
+        }
         javalin = Javalin.create((cfg) -> {
             // Config
             cfg.precompressStaticFiles = true;
@@ -69,7 +76,7 @@ public class ServerEssentialsRest {
         EndpointSecurity.addSecurityManaging(javalin);
         RouteLoader.registerRoutes(javalin);
         javalin.start(config.server.host.isEmpty() ? null : config.server.host, config.server.port);
-        if(!config.discord.token.isEmpty())
+        if (!config.discord.token.isEmpty())
             DiscordBot.start();
     }
 
