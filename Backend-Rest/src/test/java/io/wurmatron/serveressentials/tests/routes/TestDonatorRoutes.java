@@ -31,7 +31,7 @@ public class TestDonatorRoutes {
         Donator newEntry = HTTPRequests.postWithReturn("api/donator", TestDonators.TEST_DONATOR, Donator.class);
         assertNotNull(newEntry, "Entry was created successfully");
         // Make sure the donation entry was created
-        Donator[] entries = HTTPRequests.get("api/donator?transaction=" + TestDonators.TEST_DONATOR.transactionID, Donator[].class);
+        Donator[] entries = HTTPRequests.get("api/donator?transaction=" + TestDonators.TEST_DONATOR.transaction_id, Donator[].class);
         boolean exists = false;
         for (Donator entry : entries)
             if (TestDonators.TEST_DONATOR.equals(entry)) {

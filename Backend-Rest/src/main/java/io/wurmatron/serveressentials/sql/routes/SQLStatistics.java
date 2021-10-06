@@ -26,7 +26,7 @@ public class SQLStatistics extends SQLGenerator {
             insert(STATISTICS_TABLE, STATISTICS_COLUMNS, stat, false);
             return stat;
         } catch (Exception e) {
-            LOG.debug("Failed to update stat '" + stat.eventType + "' on '" + stat.serverID + "' (" + e.getMessage() + ")");
+            LOG.debug("Failed to update stat '" + stat.event_type + "' on '" + stat.server_id + "' (" + e.getMessage() + ")");
             LOG.debug("Stat: " + GSON.toJson(stat));
         }
         return null;
@@ -41,10 +41,10 @@ public class SQLStatistics extends SQLGenerator {
      */
     public static boolean update(TrackedStat stat, String[] columnsToUpdate) {
         try {
-            update(STATISTICS_TABLE, columnsToUpdate, new String[]{"serverID", "uuid", "eventType", "timestamp"}, new String[]{stat.serverID, stat.uuid, stat.eventType, "" + stat.timestamp}, stat);
+            update(STATISTICS_TABLE, columnsToUpdate, new String[]{"server_id", "uuid", "event_type", "timestamp"}, new String[]{stat.server_id, stat.uuid, stat.event_type, "" + stat.timestamp}, stat);
             return true;
         } catch (Exception e) {
-            LOG.debug("Failed to update stat ' " + stat.serverID + "' for '" + stat.uuid + "' within '" + stat.eventType + "' (" + e.getMessage() + ")");
+            LOG.debug("Failed to update stat ' " + stat.server_id + "' for '" + stat.uuid + "' within '" + stat.event_type + "' (" + e.getMessage() + ")");
             LOG.debug("Stat: " + GSON.toJson(stat));
         }
         return false;
@@ -74,7 +74,7 @@ public class SQLStatistics extends SQLGenerator {
      */
     public static List<TrackedStat> get(String serverID, String uuid) {
         try {
-            return getArray("*", STATISTICS_TABLE, new String[]{"serverID", "uuid"}, new String[]{serverID, uuid}, new TrackedStat());
+            return getArray("*", STATISTICS_TABLE, new String[]{"server_id", "uuid"}, new String[]{serverID, uuid}, new TrackedStat());
         } catch (Exception e) {
             LOG.debug("Failed to get for uuid '" + uuid + "' on '" + serverID + "' (" + e.getMessage() + ")");
         }
@@ -89,7 +89,7 @@ public class SQLStatistics extends SQLGenerator {
      */
     public static List<TrackedStat> getType(String eventType) {
         try {
-            return getArray("*", STATISTICS_TABLE, "eventType", eventType, new TrackedStat());
+            return getArray("*", STATISTICS_TABLE, "event_type", eventType, new TrackedStat());
         } catch (Exception e) {
             LOG.debug("Failed to get for event '" + eventType + "' (" + e.getMessage() + ")");
         }
@@ -105,7 +105,7 @@ public class SQLStatistics extends SQLGenerator {
      */
     public static List<TrackedStat> getType(String serverID, String eventType) {
         try {
-            return getArray("*", STATISTICS_TABLE, new String[]{"serverID", "eventType"}, new String[]{serverID, eventType}, new TrackedStat());
+            return getArray("*", STATISTICS_TABLE, new String[]{"server_id", "event_type"}, new String[]{serverID, eventType}, new TrackedStat());
         } catch (Exception e) {
             LOG.debug("Failed to get for event '" + eventType + "' on '" + serverID + "' (" + e.getMessage() + ")");
         }
@@ -122,7 +122,7 @@ public class SQLStatistics extends SQLGenerator {
      */
     public static boolean delete(String serverID, String uuid, String eventType) {
         try {
-            delete(STATISTICS_TABLE, new String[]{"serverID", "uuid", "eventType"}, new String[]{serverID, uuid, eventType});
+            delete(STATISTICS_TABLE, new String[]{"server_id", "uuid", "event_type"}, new String[]{serverID, uuid, eventType});
             return true;
         } catch (Exception e) {
             LOG.debug("Failed to delete stat for '" + uuid + "' on '" + serverID + "' of '" + eventType + "' (" + e.getMessage() + ")");

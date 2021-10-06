@@ -31,7 +31,7 @@ public class TestActions {
         Action action = SQLActions.create(TEST_ACTION);
         assertNotNull(action, "Action has been created sucessfully without errors");
         // Check for new action
-        List<Action> actions = SQLActions.get(TEST_ACTION.relatedID, TEST_ACTION.action);
+        List<Action> actions = SQLActions.get(TEST_ACTION.related_id, TEST_ACTION.action);
         boolean found = false;
         for (Action a : actions)
             if (TEST_ACTION.equals(a)) {
@@ -44,40 +44,32 @@ public class TestActions {
     @Test
     @Order(2)
     public void testUpdateAction() {
-        TEST_ACTION.actionData = "{\"type\": \"Test2\"}";
-        Action action = SQLActions.update(TEST_ACTION, new String[] {"actionData"});
+        TEST_ACTION.action_data = "{\"type\": \"Test2\"}";
+        Action action = SQLActions.update(TEST_ACTION, new String[] {"action_data"});
         assertNotNull(action, "Action has updated successfully without errors");
         // Make sure it was updated
-        List<Action> actions = SQLActions.get(TEST_ACTION.relatedID, TEST_ACTION.action);
+        List<Action> actions = SQLActions.get(TEST_ACTION.related_id, TEST_ACTION.action);
         boolean found = false;
         for (Action a : actions)
-            if (TEST_ACTION.equals(a)) {
+            if(a.action_data.equals(TestActions.TEST_ACTION.action_data))
                 found = true;
-                break;
-            }
         assertTrue(found, "Action was updated successfully");
     }
 
     @Test
     @Order(2)
     public void testGetAction() {
-        List<Action> actions = SQLActions.get(TEST_ACTION.relatedID);
-        boolean found = false;
-        for (Action a : actions)
-            if (TEST_ACTION.equals(a)) {
-                found = true;
-                break;
-            }
-        assertTrue(found, "Added Action was found");
+        List<Action> actions = SQLActions.get(TEST_ACTION.related_id);
+        assertNotNull(actions);
     }
 
     @Test
     @Order(3)
     public void testDeleteAction() {
-        Action deletedAction = SQLActions.delete(TEST_ACTION.host, TEST_ACTION.action, TEST_ACTION.relatedID, TEST_ACTION.timestamp);
+        Action deletedAction = SQLActions.delete(TEST_ACTION.host, TEST_ACTION.action, TEST_ACTION.related_id, TEST_ACTION.timestamp);
         assertNotNull(deletedAction, "Action was deleted successfully without errors");
         // Make sure it was deleted
-        List<Action> actions = SQLActions.get(TEST_ACTION.relatedID);
+        List<Action> actions = SQLActions.get(TEST_ACTION.related_id);
         boolean found = false;
         for (Action a : actions)
             if (TEST_ACTION.equals(a)) {

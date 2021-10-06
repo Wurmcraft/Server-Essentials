@@ -22,16 +22,16 @@ import static io.wurmatron.serveressentials.ServerEssentialsRest.LOG;
 public class SQLGenerator {
 
     // Columns
-    protected static final String[] ACTIONS_COLUMNS = new String[]{"relatedID", "host", "action", "actionData", "timestamp"};
-    protected static final String[] AUTORANKS_COLUMNS = new String[]{"autoRankID", "rank", "nextRank", "playTime", "currencyName", "currencyAmount", "specialEvents"};
-    protected static final String[] BANS_COLUMNS = new String[]{"banID", "uuid", "ip", "discordID", "bannedBy", "bannedByType", "banReason", "timestamp", "banType", "banData", "banStatus"};
-    protected static final String[] CURRENCYS_COLUMNS = new String[]{"currencyID", "displayName", "globalWorth", "sellWorth", "tax"};
-    protected static final String[] DONATOR_COLUMNS = new String[]{"store", "transactionID", "amount", "uuid", "timestamp", "type", "typeData"};
-    protected static final String[] LOGGING_COLUMNS = new String[]{"serverID", "timestamp", "actionType", "actionData", "uuid", "x", "y", "z", "dim"};
-    protected static final String[] MARKETS_COLUMNS = new String[]{"serverID", "sellerUUID", "item", "currencyName", "currencyAmount", "timestamp", "marketType", "marketData", "transferID"};
-    protected static final String[] RANKS_COLUMNS = new String[]{"rankID", "name", "permissions", "inheritance", "prefix", "prefixPriority", "suffix", "suffixPriority", "color", "colorPriority"};
-    protected static final String[] STATISTICS_COLUMNS = new String[]{"serverID", "uuid", "timestamp", "eventType", "eventData"};
-    protected static final String[] TRANSFERS_COLUMNS = new String[]{"transferID", "uuid", "startTime", "items", "serverID"};
+    protected static final String[] ACTIONS_COLUMNS = new String[]{"related_id", "host", "action", "action_data", "timestamp"};
+    protected static final String[] AUTORANKS_COLUMNS = new String[]{"autorank_id", "rank", "next_rank", "playtime", "currency_name", "currency_amount", "special_events"};
+    protected static final String[] BANS_COLUMNS = new String[]{"ban_id", "uuid", "ip", "discord_id", "banned_by", "banned_by_type", "ban_reason", "timestamp", "ban_type", "ban_data", "ban_status"};
+    protected static final String[] CURRENCYS_COLUMNS = new String[]{"currency_id", "display_name", "global_worth", "sell_worth", "tax"};
+    protected static final String[] DONATOR_COLUMNS = new String[]{"store", "transaction_id", "amount", "uuid", "timestamp", "type", "type_data"};
+    protected static final String[] LOGGING_COLUMNS = new String[]{"server_id", "timestamp", "action_type", "action_data", "uuid", "x", "y", "z", "dim"};
+    protected static final String[] MARKETS_COLUMNS = new String[]{"server_id", "seller_uuid", "item", "currency_name", "currency_amount", "timestamp", "market_type", "market_data", "transfer_id"};
+    protected static final String[] RANKS_COLUMNS = new String[]{"rank_id", "name", "permissions", "inheritance", "prefix", "prefix_priority", "suffix", "suffix_priority", "color", "color_priority"};
+    protected static final String[] STATISTICS_COLUMNS = new String[]{"server_id", "uuid", "timestamp", "event_type", "event_data"};
+    protected static final String[] TRANSFERS_COLUMNS = new String[]{"transfer_id", "uuid", "start_time", "items", "server_id"};
     protected static final String[] USERS_COLUMNS = new String[]{"uuid", "username", "rank", "perms", "perks", "lang", "muted", "mute_time", "display_name", "discord_id", "tracked_time", "wallet", "reward_points", "password_hash", "password_salt", "system_perms"};
 
     protected static DatabaseConnection connection;
@@ -181,7 +181,12 @@ public class SQLGenerator {
      * @see PreparedStatement#execute()
      */
     protected static <T> boolean update(String table, String[] columnsToUpdate, String key, String value, T data) throws SQLException, NoSuchFieldException, IllegalAccessException {
-        PreparedStatement statement = connection.createPrepared("UPDATE `" + table + "` SET " + argumentGenerator(columnsToUpdate.length, 1, columnsToUpdate) + " WHERE " + key + "=?;");
+        String sql = "";
+        if (connection.databaseType.equalsIgnoreCase("mysql"))
+            sql = "UPDATE `" + table + "` SET " + argumentGenerator(columnsToUpdate.length, 1, columnsToUpdate) + " WHERE " + key + "=?;";
+        else if (connection.databaseType.equalsIgnoreCase("postgress"))
+            sql = "UPDATE " + table + " SET " + argumentGenerator(columnsToUpdate.length, 1, columnsToUpdate) + " WHERE " + key + "=?;";
+        PreparedStatement statement = connection.createPrepared(sql);
         addArguments(statement, columnsToUpdate, data);
         statement.setString(columnsToUpdate.length + 1, value);
         LOG.trace("UPDATE: " + statement);
@@ -204,16 +209,21 @@ public class SQLGenerator {
      * @see PreparedStatement#execute()
      */
     protected static <T> boolean update(String table, String[] columnsToUpdate, String[] key, String[] value, T data) throws SQLException, NoSuchFieldException, IllegalAccessException {
-        StringBuilder sql = new StringBuilder("UPDATE '" + table + "' SET " + argumentGenerator(columnsToUpdate.length, 1, columnsToUpdate) + " WHERE ");
+        String sql = "";
+        if (connection.databaseType.equalsIgnoreCase("mysql"))
+            sql = "UPDATE `" + table + "` SET " + argumentGenerator(columnsToUpdate.length, 1, columnsToUpdate) + " WHERE ";
+        else if (connection.databaseType.equalsIgnoreCase("postgress"))
+            sql = "UPDATE " + table + " SET " + argumentGenerator(columnsToUpdate.length, 1, columnsToUpdate) + " WHERE ";
+        StringBuilder sqlBuilder = new StringBuilder(sql);
         for (int x = 0; x < key.length; x++)
-            sql.append(key[x]).append("=? ").append("AND ");
-        String slq = sql.substring(0, sql.length() - 4).toString();
+            sqlBuilder.append(key[x]).append("=? ").append("AND ");
+        String slq = sqlBuilder.substring(0, sqlBuilder.length() - 4).toString();
         PreparedStatement statement = connection.createPrepared(slq + ";");
         addArguments(statement, columnsToUpdate, data);
         for (int x = 1; x < key.length + 1; x++)
             statement.setString(columnsToUpdate.length + x, value[x - 1]);
         LOG.trace("UPDATE: " + statement);
-        statement.executeUpdate();
+        statement.execute();
         return true;
     }
 
@@ -408,10 +418,14 @@ public class SQLGenerator {
                 continue;
             }
             if (fieldData instanceof SQLJson[] || fieldData instanceof SQLJson) {
-                PGobject json = new PGobject();
-                json.setType("json");
-                json.setValue(GSON.toJson(fieldData).replaceAll("\n", "").replaceAll(" ", ""));
-                pStatement.setObject(index + 1, json);
+                if (connection.databaseType.equalsIgnoreCase("postgress")) {
+                    PGobject json = new PGobject();
+                    json.setType("json");
+                    json.setValue(GSON.toJson(fieldData).replaceAll("\n", "").replaceAll(" ", ""));
+                    pStatement.setObject(index + 1, json);
+                    continue;
+                }
+                pStatement.setObject(index + 1, GSON.toJson(fieldData).replaceAll("\n", "").replaceAll(" ", ""));
                 continue;
             }
             // Not a special case

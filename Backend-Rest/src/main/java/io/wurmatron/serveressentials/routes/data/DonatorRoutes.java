@@ -148,7 +148,7 @@ public class DonatorRoutes {
         if (donator.store == null || donator.store.trim().isEmpty())
             errors.add(new MessageResponse("Invalid Store", "Store must be non-null and have a length() > 0"));
         // Check TransactionID
-        if (donator.transactionID == null || donator.transactionID.trim().isEmpty())
+        if (donator.transaction_id == null || donator.transaction_id.trim().isEmpty())
             errors.add(new MessageResponse("Invalid TransactionID", "Transaction ID must be non-null and have a length"));
         // Check amount
         if (donator.amount == null || donator.amount < 0)

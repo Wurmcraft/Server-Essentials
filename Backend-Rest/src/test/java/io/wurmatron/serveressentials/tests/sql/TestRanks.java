@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestRanks {
 
-    public static final Rank TEST_RANK = new Rank(-1, "Test", new String[]{"general.*", "language.*"}, new String[]{"Test"}, "[Test]", 0, "&c", 0, "", 0);
+    public static final Rank TEST_RANK = new Rank("Test", new String[]{"general.*", "language.*"}, new String[]{"Test"}, "[Test]", 0, "&c", 0, "", 0);
 
     @BeforeAll
     public static void setup() throws IOException, SQLException {
@@ -29,8 +29,7 @@ public class TestRanks {
     public void testAddRank() {
         Rank addedRank = SQLCacheRank.create(TEST_RANK);
         assertNotNull(addedRank, "Rank has been successfully updated without errors");
-        TEST_RANK.rankID = addedRank.rankID;
-        addedRank = SQLCacheRank.get(TEST_RANK.rankID);
+        addedRank = SQLCacheRank.get(TEST_RANK.name);
         assertNotNull(addedRank, "Rank exists");
         assertEquals(TEST_RANK, addedRank, "Rank should be the same");
     }
@@ -38,11 +37,11 @@ public class TestRanks {
     @Test
     @Order(2)
     public void testGetRank() {
-        Rank rank = SQLCacheRank.get(TEST_RANK.rankID);
+        Rank rank = SQLCacheRank.get(TEST_RANK.name);
         assertNotNull(rank, "Rank exists");
         // Remove from cache and try again
-        SQLCacheRank.invalidate(TEST_RANK.rankID);
-        rank = SQLCacheRank.get(TEST_RANK.rankID);
+        SQLCacheRank.invalidate(TEST_RANK.name);
+        rank = SQLCacheRank.get(TEST_RANK.name);
         assertNotNull(rank, "Rank exists");
         assertEquals(TEST_RANK, rank, "Rank is the same");
     }
@@ -54,7 +53,7 @@ public class TestRanks {
         assertTrue(ranks.size() > 0, "Ranks exist");
         // Remove from cache and try again
         for (Rank rank : ranks)
-            SQLCacheRank.invalidate(rank.rankID);
+            SQLCacheRank.invalidate(rank.name);
         ranks = SQLCacheRank.get();
         assertTrue(ranks.size() > 0, "Ranks exist");
         boolean found = false;
@@ -72,24 +71,24 @@ public class TestRanks {
         TEST_RANK.name = "Test2";
         boolean updated = SQLCacheRank.update(TEST_RANK, new String[] {"name"});
         assertTrue(updated, "Rank has been updated updated without errors");
-        Rank rank = SQLCacheRank.get(TEST_RANK.rankID);
+        Rank rank = SQLCacheRank.get(TEST_RANK.name);
         assertEquals(TEST_RANK, rank, "Rank is the same");
         // Remove from cache and try again
-        rank = SQLCacheRank.get(TEST_RANK.rankID);
+        rank = SQLCacheRank.get(TEST_RANK.name);
         assertEquals(TEST_RANK, rank, "Rank is the same");
     }
 
     @Test
     @Order(3)
     public void testDeleteRank() {
-        boolean deleted = SQLCacheRank.delete(TEST_RANK.rankID);
+        boolean deleted = SQLCacheRank.delete(TEST_RANK.name);
         assertTrue(deleted, "Rank has been successfully deleted without errors");
         // Make sure it was deleted
-        Rank rank = SQLCacheRank.get(TEST_RANK.rankID);
+        Rank rank = SQLCacheRank.get(TEST_RANK.name);
         assertNull(rank, "Rank does not exist");
         // Invalidate Cache and try again
-        SQLCacheRank.invalidate(TEST_RANK.rankID);
-        rank = SQLCacheRank.get(TEST_RANK.rankID);
+        SQLCacheRank.invalidate(TEST_RANK.name);
+        rank = SQLCacheRank.get(TEST_RANK.name);
         assertNull(rank, "Rank does not exist");
     }
 

@@ -41,12 +41,11 @@ public class SQLActions extends SQLDirect {
     @Nullable
     public static Action update(Action action, String[] columnsToUpdate) {
         try {
-            update(ACTIONS_TABLE, columnsToUpdate, new String[]{"relatedID", "host", "action", "timestamp"}, new String[]{action.relatedID, action.host, action.action, action.timestamp + ""}, action);
-            List<Action> actions = get(action.relatedID, action.action, action.relatedID);
-            if (actions != null)
-                for (Action a : actions)
-                    if (a.timestamp.equals(action.timestamp))
-                        return a;
+            update(ACTIONS_TABLE, columnsToUpdate, new String[]{"related_id", "host", "action", "timestamp"}, new String[]{action.related_id, action.host, action.action, action.timestamp + ""}, action);
+            List<Action> actions = get(action.related_id, action.action, action.related_id);
+            for (Action a : actions)
+                if (a.timestamp.equals(action.timestamp))
+                    return a;
         } catch (Exception e) {
             LOG.debug("Failed to add update action from '" + action.host + "' (" + e.getMessage() + ")");
             LOG.debug("Action: " + GSON.toJson(action));
@@ -62,7 +61,7 @@ public class SQLActions extends SQLDirect {
      */
     public static List<Action> get(String relatedID) {
         try {
-            return queryArray("SELECT * from " + ACTIONS_TABLE + " WHERE relatedID='" + relatedID + "'", new Action());
+            return queryArray("SELECT * from " + ACTIONS_TABLE + " WHERE related_id='" + relatedID + "'", new Action());
         } catch (Exception e) {
             LOG.debug("Failed to add get action from '" + relatedID + "' (" + e.getMessage() + ")");
         }
@@ -78,7 +77,7 @@ public class SQLActions extends SQLDirect {
      */
     public static List<Action> get(String relatedID, String action) {
         try {
-            return queryArray("SELECT * from `" + ACTIONS_TABLE + "` WHERE relatedID='" + relatedID + "' AND action='" + action + "'", new Action());
+            return queryArray("SELECT * from " + ACTIONS_TABLE + " WHERE related_id='" + relatedID + "' AND action='" + action + "'", new Action());
         } catch (Exception e) {
             LOG.debug("Failed to add get action from '" + relatedID + "' (" + e.getMessage() + ")");
         }
@@ -95,7 +94,7 @@ public class SQLActions extends SQLDirect {
      */
     public static List<Action> get(String host, String action, String relatedID) {
         try {
-            return queryArray("SELECT * from " + ACTIONS_TABLE + " WHERE relatedID='" + relatedID + "' AND action='" + action + "' AND host='" + host + "';", new Action());
+            return queryArray("SELECT * from " + ACTIONS_TABLE + " WHERE related_id='" + relatedID + "' AND action='" + action + "' AND host='" + host + "';", new Action());
         } catch (Exception e) {
             LOG.debug("Failed to add get action from '" + relatedID + "' (" + e.getMessage() + ")");
         }
@@ -113,7 +112,7 @@ public class SQLActions extends SQLDirect {
      */
     public static Action delete(String host, String action, String relatedID, long timestamp) {
         try {
-            List<Action> actions = queryArray("SELECT * from " + ACTIONS_TABLE + " WHERE host='" + host + "' AND action='" + action + "' AND relatedID='" + relatedID + "'", new Action());
+            List<Action> actions = queryArray("SELECT * from " + ACTIONS_TABLE + " WHERE host='" + host + "' AND action='" + action + "' AND related_id='" + relatedID + "'", new Action());
             PreparedStatement statement = connection.createPrepared("DELETE FROM " + ACTIONS_TABLE + " WHERE host='" + host + "' AND action='" + action + "' AND relatedID='" + relatedID + "'");
             statement.execute();
             for (Action a : actions)

@@ -6,15 +6,15 @@ import io.wurmatron.serveressentials.models.transfer.ItemWrapper;
 import java.util.Objects;
 
 public class MarketEntry {
-    public String serverID;
-    public String sellerUUID;
+    public String server_id;
+    public String seller_uuid;
     public ItemWrapper item;
-    public String currencyName;
-    public Double currencyAmount;
+    public String currency_name;
+    public Double currency_amount;
     public Long timestamp;
-    public String marketType;
-    public String marketData;
-    public String transferID;
+    public String market_type;
+    public String market_data;
+    public String transfer_id;
 
     /**
      * @param serverID       id of the server, where the trade started
@@ -28,15 +28,15 @@ public class MarketEntry {
      * @param transferID     server's transferID, for use with multi-server market's
      */
     public MarketEntry(String serverID, String sellerUUID, ItemWrapper item, String currencyName, double currencyAmount, long timestamp, String marketType, String marketData, String transferID) {
-        this.serverID = serverID;
-        this.sellerUUID = sellerUUID;
+        this.server_id = serverID;
+        this.seller_uuid = sellerUUID;
         this.item = item;
-        this.currencyName = currencyName;
-        this.currencyAmount = currencyAmount;
+        this.currency_name = currencyName;
+        this.currency_amount = currencyAmount;
         this.timestamp = timestamp;
-        this.marketType = marketType;
-        this.marketData = marketData;
-        this.transferID = transferID;
+        this.market_type = marketType;
+        this.market_data = marketData;
+        this.transfer_id = transferID;
     }
 
     public MarketEntry() {
@@ -47,7 +47,7 @@ public class MarketEntry {
         if (this == o) return true;
         if (!(o instanceof MarketEntry)) return false;
         MarketEntry that = (MarketEntry) o;
-        return Objects.equals(serverID, that.serverID) && Objects.equals(sellerUUID, that.sellerUUID) && Objects.equals(item, that.item) && Objects.equals(currencyName, that.currencyName) && Objects.equals(currencyAmount, that.currencyAmount) && Objects.equals(timestamp, that.timestamp) && Objects.equals(marketType, that.marketType) && Objects.equals(marketData, that.marketData) && Objects.equals(transferID, that.transferID);
+        return Objects.equals(server_id, that.server_id) && Objects.equals(seller_uuid, that.seller_uuid) && Objects.equals(item, that.item) && Objects.equals(currency_name, that.currency_name) && Objects.equals(currency_amount, that.currency_amount) && Objects.equals(timestamp, that.timestamp) && Objects.equals(market_type, that.market_type) && Objects.equals(market_data, that.market_data) && Objects.equals(transfer_id, that.transfer_id);
     }
 
     @Override

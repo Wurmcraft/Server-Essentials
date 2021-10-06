@@ -97,7 +97,7 @@ public class MarketRoutes {
             MarketEntry updateEntry = GSON.fromJson(ctx.body(), MarketEntry.class);
             if (isValidMarketEntry(ctx, updateEntry)) {
                 SQLCacheMarket.update(updateEntry, new String[]{"item", "currencyName", "currencyAmount", "marketData", "transferID"});
-                List<MarketEntry> entries = SQLCacheMarket.get(updateEntry.serverID, updateEntry.sellerUUID);
+                List<MarketEntry> entries = SQLCacheMarket.get(updateEntry.server_id, updateEntry.seller_uuid);
                 for (MarketEntry entry : entries)
                     if (entry.timestamp.equals(updateEntry.timestamp)) {
                         ctx.status(200).result(GSON.toJson(entry));
@@ -129,10 +129,10 @@ public class MarketRoutes {
         try {
             MarketEntry entryToDelete = GSON.fromJson(ctx.body(), MarketEntry.class);
             if (isValidMarketEntry(ctx, entryToDelete)) {
-                List<MarketEntry> entries = SQLCacheMarket.get(entryToDelete.serverID, entryToDelete.sellerUUID);
+                List<MarketEntry> entries = SQLCacheMarket.get(entryToDelete.server_id, entryToDelete.seller_uuid);
                 for (MarketEntry entry : entries)
                     if (entry.timestamp.equals(entryToDelete.timestamp)) {
-                        SQLCacheMarket.delete(entryToDelete.serverID, entryToDelete.sellerUUID, entryToDelete.timestamp);
+                        SQLCacheMarket.delete(entryToDelete.server_id, entryToDelete.seller_uuid, entryToDelete.timestamp);
                         ctx.status(200).result(GSON.toJson(entry));
                         return;
                     }
@@ -145,22 +145,22 @@ public class MarketRoutes {
     public static boolean isValidMarketEntry(Context ctx, MarketEntry entry) {
         List<MessageResponse> errors = new ArrayList<>();
         // Verify ServerID
-        if (entry.serverID == null && entry.serverID.trim().isEmpty())
+        if (entry.server_id == null && entry.server_id.trim().isEmpty())
             errors.add(new MessageResponse("Invalid ServerID", "ServerID must be non-null"));
         // Verify CurrencyName
-        if (entry.currencyName == null && entry.currencyName.trim().isEmpty())
+        if (entry.currency_name == null && entry.currency_name.trim().isEmpty())
             errors.add(new MessageResponse("Invalid Currency", "Currency-Name must be non-null"));
         // Verify MarketType
-        if (entry.marketType == null && entry.marketType.trim().isEmpty())
+        if (entry.market_type == null && entry.market_type.trim().isEmpty())
             errors.add(new MessageResponse("Invalid Market Type", "Market Type must be non-null"));
         // Check Currency Amount
-        if (entry.currencyAmount < 0)
+        if (entry.currency_amount < 0)
             errors.add(new MessageResponse("Invalid Currency Amount", "Amount must be greater or equal to 0"));
-        if (entry.sellerUUID == null || entry.sellerUUID.trim().isEmpty())
+        if (entry.seller_uuid == null || entry.seller_uuid.trim().isEmpty())
             errors.add(new MessageResponse("Invalid UUID", "UUID must be a valid UUID"));
         try {
-            if (entry.sellerUUID != null)
-                UUID.fromString(entry.sellerUUID);
+            if (entry.seller_uuid != null)
+                UUID.fromString(entry.seller_uuid);
         } catch (Exception e) {
             errors.add(new MessageResponse("Invalid UUID", "UUID must be a valid UUID"));
         }

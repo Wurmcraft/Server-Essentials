@@ -37,7 +37,7 @@ public class SQLCacheTransfers extends SQLCache {
                 transferCache.remove(transferID);
         // Not in cache / invalid
         try {
-            TransferEntry entry = get("*", TRANSFERS_TABLE, "transferID", "" + transferID, new TransferEntry());
+            TransferEntry entry = get("*", TRANSFERS_TABLE, "transfer_id", "" + transferID, new TransferEntry());
             if (entry != null) {
                 transferCache.put(transferID, new CacheTransfer(entry));
                 return entry;
@@ -69,8 +69,8 @@ public class SQLCacheTransfers extends SQLCache {
                 // Convert and add to cache's
                 List<String> cacheForUUID = new ArrayList<>();
                 for (TransferEntry entry : entries) {
-                    cacheForUUID.add(entry.transferID + "");
-                    transferCache.put(entry.transferID, new CacheTransfer(entry));
+                    cacheForUUID.add(entry.transfer_id + "");
+                    transferCache.put(entry.transfer_id, new CacheTransfer(entry));
                 }
                 uuidTransferCache.put(uuid, new CacheTransferUUID(cacheForUUID.toArray(new String[0])));
                 return entries;
@@ -119,11 +119,11 @@ public class SQLCacheTransfers extends SQLCache {
     @Nullable
     public static TransferEntry create(TransferEntry entry) {
         try {
-            entry.transferID = (long) insert(TRANSFERS_TABLE, Arrays.copyOfRange(TRANSFERS_COLUMNS, 1, TRANSFERS_COLUMNS.length), entry, true);
-            transferCache.put(entry.transferID, new CacheTransfer(entry));
+            entry.transfer_id = (long) insert(TRANSFERS_TABLE, Arrays.copyOfRange(TRANSFERS_COLUMNS, 1, TRANSFERS_COLUMNS.length), entry, true);
+            transferCache.put(entry.transfer_id, new CacheTransfer(entry));
             return entry;
         } catch (Exception e) {
-            LOG.debug("Failed to add transfer id with id '" + entry.transferID + "' (" + e.getMessage() + ")");
+            LOG.debug("Failed to add transfer id with id '" + entry.transfer_id + "' (" + e.getMessage() + ")");
             LOG.debug("TransferEntry: " + GSON.toJson(entry));
         }
         return null;
@@ -138,16 +138,16 @@ public class SQLCacheTransfers extends SQLCache {
      */
     public static boolean update(TransferEntry entry, String[] columnsToUpdate) {
         try {
-            update(TRANSFERS_TABLE, columnsToUpdate, "transferID", entry.transferID + "", entry);
-            if (transferCache.containsKey(entry.transferID)) {    // Exists in cache, updating
-                transferCache.get(entry.transferID).transferEntry = updateInfoLocal(columnsToUpdate, entry, transferCache.get(entry.transferID).transferEntry);
-                transferCache.get(entry.transferID).lastSync = System.currentTimeMillis();
+            update(TRANSFERS_TABLE, columnsToUpdate, "transfer_id", entry.transfer_id + "", entry);
+            if (transferCache.containsKey(entry.transfer_id)) {    // Exists in cache, updating
+                transferCache.get(entry.transfer_id).transferEntry = updateInfoLocal(columnsToUpdate, entry, transferCache.get(entry.transfer_id).transferEntry);
+                transferCache.get(entry.transfer_id).lastSync = System.currentTimeMillis();
             } else {    // Missing from cache
-                transferCache.put(entry.transferID, new CacheTransfer(entry));
+                transferCache.put(entry.transfer_id, new CacheTransfer(entry));
             }
             return true;
         } catch (Exception e) {
-            LOG.debug("Failed to update transfer entry with id '" + entry.transferID + "' (" + e.getMessage() + ")");
+            LOG.debug("Failed to update transfer entry with id '" + entry.transfer_id + "' (" + e.getMessage() + ")");
             LOG.debug("TransferEntry: " + GSON.toJson(entry));
         }
         return false;
@@ -162,7 +162,7 @@ public class SQLCacheTransfers extends SQLCache {
      */
     public static boolean delete(long transferID) {
         try {
-            delete(TRANSFERS_TABLE, "transferID", transferID + "");
+            delete(TRANSFERS_TABLE, "transfer_id", transferID + "");
             invalidate(transferID);
             return true;
         } catch (Exception e) {
@@ -205,7 +205,7 @@ public class SQLCacheTransfers extends SQLCache {
         List<Long> toBeRemoved = new ArrayList<>();
         for (CacheTransfer entry : transferCache.values())
             if (needsUpdate(entry))
-                toBeRemoved.add(entry.transferEntry.transferID);
+                toBeRemoved.add(entry.transferEntry.transfer_id);
         // UUID Cache
         List<String> toBeRemovedUUID = new ArrayList<>();
         for (String uuid : uuidTransferCache.keySet()) {
@@ -233,11 +233,11 @@ public class SQLCacheTransfers extends SQLCache {
         LOG.info("Cleanup on DB table, '" + TRANSFERS_TABLE + "' has started!");
         try {
             int count = 0;
-            List<TransferEntry> dbData = getAll("transferID, startTime", TRANSFERS_TABLE, new TransferEntry());
+            List<TransferEntry> dbData = getAll("transfer_id, start_time", TRANSFERS_TABLE, new TransferEntry());
             for (TransferEntry entry : dbData)
-                if (entry.startTime + 10000 < Instant.now().getEpochSecond()) {
+                if (entry.start_time + 10000 < Instant.now().getEpochSecond()) {
                     count++;
-                    delete(entry.transferID);
+                    delete(entry.transfer_id);
                 }
             LOG.info("Transfer DB has been cleaned, " + count + " entries have been removed!");
             return;

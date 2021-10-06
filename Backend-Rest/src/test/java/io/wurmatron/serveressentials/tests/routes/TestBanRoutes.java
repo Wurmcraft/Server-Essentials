@@ -29,7 +29,7 @@ public class TestBanRoutes {
     @Order(1)
     public void testAddBanEntry() throws IOException {
         Ban newEntry = HTTPRequests.postWithReturn("api/ban", TestBans.TEST_BAN, Ban.class);
-        TestBans.TEST_BAN.banID = newEntry.banID;
+        TestBans.TEST_BAN.ban_id = newEntry.ban_id;
         assertNotNull(newEntry, "Entry was added successfully");
         // Make sure the ban was added.
     }
@@ -37,7 +37,7 @@ public class TestBanRoutes {
     @Test
     @Order(2)
     public void testGetBanEntry() throws IOException {
-        Ban entry = HTTPRequests.get("api/ban/" + TestBans.TEST_BAN.banID, Ban.class);
+        Ban entry = HTTPRequests.get("api/ban/" + TestBans.TEST_BAN.ban_id, Ban.class);
         assertEquals(TestBans.TEST_BAN, entry, "Entry exists");
     }
 
@@ -57,17 +57,17 @@ public class TestBanRoutes {
     @Test
     @Order(2)
     public void testUpdateBan() throws IOException {
-        TestBans.TEST_BAN.banReason ="Stupidity";
-        HTTPRequests.put("api/ban/" + TestBans.TEST_BAN.banID, TestBans.TEST_BAN);
+        TestBans.TEST_BAN.ban_reason ="Stupidity";
+        HTTPRequests.put("api/ban/" + TestBans.TEST_BAN.ban_id, TestBans.TEST_BAN);
         // Make sure it was updated
-        Ban entry = HTTPRequests.get("api/ban/" + TestBans.TEST_BAN.banID, Ban.class);
+        Ban entry = HTTPRequests.get("api/ban/" + TestBans.TEST_BAN.ban_id, Ban.class);
         assertEquals(TestBans.TEST_BAN, entry, "Entry was updated");
     }
 
     @Test
     @Order(3)
     public void testDeleteBan() throws IOException {
-        Ban deletedBan = HTTPRequests.deleteWithReturn("api/ban/" + TestBans.TEST_BAN.banID,TestBans.TEST_BAN, Ban.class);
+        Ban deletedBan = HTTPRequests.deleteWithReturn("api/ban/" + TestBans.TEST_BAN.ban_id,TestBans.TEST_BAN, Ban.class);
         assertNotNull(deletedBan, "Ban was deleted");
     }
 }

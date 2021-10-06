@@ -6,7 +6,6 @@ import java.util.Objects;
 
 public class AutoRank {
 
-    public Integer autoRankID;
     public String rank;
     public String nextRank;
     public Long playTime;
@@ -15,7 +14,6 @@ public class AutoRank {
     public String specialEvents;
 
     /**
-     * @param autoRankID             id of the given rank (Don't change as this is used internally to track)
      * @param rank           current rank of the user
      * @param nextRank       rank the user will gain after the requirements
      * @param playtime       amount of time (in minutes)
@@ -23,8 +21,7 @@ public class AutoRank {
      * @param currencyAmount amount of the given currency
      * @param specialEvents  special events required to rankup, (Used to extend functionality))
      */
-    public AutoRank(Integer autoRankID, String rank, String nextRank, long playtime, String currencyName, double currencyAmount, String specialEvents) {
-        this.autoRankID = autoRankID;
+    public AutoRank(String rank, String nextRank, long playtime, String currencyName, double currencyAmount, String specialEvents) {
         this.rank = rank;
         this.nextRank = nextRank;
         this.playTime = playtime;
@@ -46,7 +43,7 @@ public class AutoRank {
         if (this == o) return true;
         if (!(o instanceof AutoRank)) return false;
         AutoRank autoRank = (AutoRank) o;
-        return autoRankID.equals(autoRank.autoRankID) && playTime.equals(autoRank.playTime) && Double.compare(autoRank.currencyAmount, currencyAmount) == 0 && Objects.equals(rank, autoRank.rank) && Objects.equals(nextRank, autoRank.nextRank) && Objects.equals(currencyName, autoRank.currencyName) && Objects.equals(specialEvents, autoRank.specialEvents);
+        return playTime.equals(autoRank.playTime) && Double.compare(autoRank.currencyAmount, currencyAmount) == 0 && Objects.equals(rank, autoRank.rank) && Objects.equals(nextRank, autoRank.nextRank) && Objects.equals(currencyName, autoRank.currencyName) && Objects.equals(specialEvents, autoRank.specialEvents);
     }
 
     @Override

@@ -100,7 +100,7 @@ public class LoggingRoutes {
             LogEntry updatedLogEntry = GSON.fromJson(ctx.body(), LogEntry.class);
             if (isValidLogEntry(ctx, updatedLogEntry)) {
                 SQLLogging.update(updatedLogEntry, new String[]{"actionData", "x", "y", "z", "dim"});
-                List<LogEntry> entrys = SQLLogging.get(updatedLogEntry.serverID, updatedLogEntry.actionType, updatedLogEntry.uuid);
+                List<LogEntry> entrys = SQLLogging.get(updatedLogEntry.server_id, updatedLogEntry.action_type, updatedLogEntry.uuid);
                 for (LogEntry e : entrys)
                     if (e.x.equals(updatedLogEntry.x) && e.y.equals(updatedLogEntry.y) && e.z.equals(updatedLogEntry.z) && e.dim.equals(updatedLogEntry.dim)) {
                         ctx.status(200).result(GSON.toJson(e));
@@ -132,10 +132,10 @@ public class LoggingRoutes {
         try {
             LogEntry logEntryToDelete = GSON.fromJson(ctx.body(), LogEntry.class);
             if (isValidLogEntry(ctx, logEntryToDelete)) {
-                List<LogEntry> entrys = SQLLogging.get(logEntryToDelete.serverID, logEntryToDelete.actionType, logEntryToDelete.uuid);
+                List<LogEntry> entrys = SQLLogging.get(logEntryToDelete.server_id, logEntryToDelete.action_type, logEntryToDelete.uuid);
                 for (LogEntry e : entrys)
                     if (e.equals(logEntryToDelete)) {
-                        SQLLogging.delete(logEntryToDelete.serverID, logEntryToDelete.actionType, logEntryToDelete.uuid, logEntryToDelete.timestamp);
+                        SQLLogging.delete(logEntryToDelete.server_id, logEntryToDelete.action_type, logEntryToDelete.uuid, logEntryToDelete.timestamp);
                         ctx.status(200).result(GSON.toJson(e));
                         return;
                     }
@@ -156,10 +156,10 @@ public class LoggingRoutes {
     public static boolean isValidLogEntry(Context ctx, LogEntry entry) {
         List<MessageResponse> errors = new ArrayList<>();
         // Verify ServerID
-        if (entry.serverID == null || entry.serverID.trim().isEmpty())
+        if (entry.server_id == null || entry.server_id.trim().isEmpty())
             errors.add(new MessageResponse("Invalid ServerID", "serverID must be non-null / empty"));
         // Verify actionType
-        if (entry.actionType == null || entry.actionType.trim().isEmpty())
+        if (entry.action_type == null || entry.action_type.trim().isEmpty())
             errors.add(new MessageResponse("Invalid ActionType", "actionType must be non-null / empty"));
         // Verify UUID
         if (entry.uuid == null || entry.uuid.trim().isEmpty())

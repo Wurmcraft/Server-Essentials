@@ -57,7 +57,7 @@ public class TestActionRoutes {
     @Test
     @Order(2)
     public void testUpdateAction() throws IOException {
-        TestActions.TEST_ACTION.actionData = "{\"Test\": true}";
+        TestActions.TEST_ACTION.action_data = "{\"Test\": true}";
         HTTPRequests.put("api/action", TestActions.TEST_ACTION);
         // Check if action was updated
         Action[] actions = HTTPRequests.get("api/action?host=" + TestActions.TEST_ACTION.host, Action[].class);

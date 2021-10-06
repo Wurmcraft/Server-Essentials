@@ -170,7 +170,7 @@ public class TransferRoutes {
             if (isValidTransferEntry(ctx, updateEntry)) {
                 try {
                     long id = Long.parseLong(ctx.pathParam("id"));
-                    if (id != updateEntry.transferID) {
+                    if (id != updateEntry.transfer_id) {
                         ctx.status(400).result(response("ID Mismatch", "ID in Body and Path dont match"));
                         return;
                     }
@@ -272,7 +272,7 @@ public class TransferRoutes {
         if (entry.items == null || entry.items.length == 0)
             errors.add(new MessageResponse("Invalid Items", "Item's must be valid and have a count above 0"));
         // Validate ServerID
-        if (entry.serverID == null || entry.serverID.trim().isEmpty())
+        if (entry.server_id == null || entry.server_id.trim().isEmpty())
             errors.add(new MessageResponse("Invalid ServerID", "ServerID must be non-null"));
         if (errors.size() == 0)
             return true;

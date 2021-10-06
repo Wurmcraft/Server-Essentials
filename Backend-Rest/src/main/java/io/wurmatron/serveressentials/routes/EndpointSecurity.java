@@ -80,7 +80,7 @@ public class EndpointSecurity {
                     String ip = new String(Base64.getDecoder().decode(split[3]));
                     ServerAuth auth = new ServerAuth(serverID, token, key, ip);
                     serverAuth.put(serverID, auth);
-                    LOG.info("Loading auth for server '" + auth.serverID + "'");
+                    LOG.info("Loading auth for server '" + auth.server_id + "'");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -167,7 +167,7 @@ public class EndpointSecurity {
                 } else if (authUser.type.equalsIgnoreCase("SERVER")) {
                     if (authUser.token != null && !authUser.token.isEmpty() && authUser.key != null && !authUser.key.isEmpty() && serverAuth.containsKey(authUser.name) && ctx.ip().equalsIgnoreCase(serverAuth.get(authUser.name).ip)) {
                         ServerAuth auth = serverAuth.get(authUser.name);
-                        if (authUser.key.equals(auth.key) && authUser.token.equals(auth.token) && authUser.name.equals(auth.serverID)) {
+                        if (authUser.key.equals(auth.key) && authUser.token.equals(auth.token) && authUser.name.equals(auth.server_id)) {
                             // Server will login
                             String serverToken = generateToken(SERVER_TOKEN_SIZE);
                             authUser.token = serverToken;

@@ -43,9 +43,9 @@ public class StatisticRoutes {
             TrackedStat newStat = GSON.fromJson(ctx.body(), TrackedStat.class);
             if (isValidStat(ctx, newStat)) {
                 // Check for duplicates
-                List<TrackedStat> sqlStats = SQLStatistics.get(newStat.serverID, newStat.uuid);
+                List<TrackedStat> sqlStats = SQLStatistics.get(newStat.server_id, newStat.uuid);
                 for (TrackedStat stat : sqlStats)
-                    if (stat.eventType.equals(newStat.eventType)) {
+                    if (stat.event_type.equals(newStat.event_type)) {
                         ctx.status(409).result(response("Stat Exists", "Stat with the same event for the provided user exists"));
                         return;
                     }
@@ -79,14 +79,14 @@ public class StatisticRoutes {
             TrackedStat updateStat = GSON.fromJson(ctx.body(), TrackedStat.class);
             if (isValidStat(ctx, updateStat)) {
                 // Check for duplicates
-                List<TrackedStat> sqlStats = SQLStatistics.get(updateStat.serverID, updateStat.uuid);
+                List<TrackedStat> sqlStats = SQLStatistics.get(updateStat.server_id, updateStat.uuid);
                 for (TrackedStat stat : sqlStats)
-                    if (stat.eventType.equals(updateStat.eventType)) {
+                    if (stat.event_type.equals(updateStat.event_type)) {
                         // Update existing
                         SQLStatistics.update(updateStat, new String[]{"eventData"});
-                        sqlStats = SQLStatistics.get(updateStat.serverID, updateStat.uuid);
+                        sqlStats = SQLStatistics.get(updateStat.server_id, updateStat.uuid);
                         for (TrackedStat s : sqlStats)
-                            if (stat.eventType.equals(updateStat.eventType)) {
+                            if (stat.event_type.equals(updateStat.event_type)) {
                                 ctx.status(200).result(GSON.toJson(s));
                                 return;
                             }
@@ -143,10 +143,10 @@ public class StatisticRoutes {
             TrackedStat deleteStat = GSON.fromJson(ctx.body(), TrackedStat.class);
             if (isValidStat(ctx, deleteStat)) {
                 // Check for duplicates
-                List<TrackedStat> sqlStats = SQLStatistics.get(deleteStat.serverID, deleteStat.uuid);
+                List<TrackedStat> sqlStats = SQLStatistics.get(deleteStat.server_id, deleteStat.uuid);
                 for (TrackedStat stat : sqlStats)
-                    if (stat.eventType.equals(deleteStat.eventType)) {
-                        SQLStatistics.delete(deleteStat.serverID, deleteStat.uuid, deleteStat.eventType);
+                    if (stat.event_type.equals(deleteStat.event_type)) {
+                        SQLStatistics.delete(deleteStat.server_id, deleteStat.uuid, deleteStat.event_type);
                         ctx.status(200).result(GSON.toJson(stat));
                         return;
                     }
@@ -167,10 +167,10 @@ public class StatisticRoutes {
     public static boolean isValidStat(Context ctx, TrackedStat stat) {
         List<MessageResponse> errors = new ArrayList<>();
         // Verify EventType
-        if (stat.eventType == null || stat.eventType.trim().isEmpty())
+        if (stat.event_type == null || stat.event_type.trim().isEmpty())
             errors.add(new MessageResponse("Invalid Event Type", "EventType must be non-null"));
         // Verify ServerID
-        if (stat.serverID == null || stat.serverID.trim().isEmpty())
+        if (stat.server_id == null || stat.server_id.trim().isEmpty())
             errors.add(new MessageResponse("Invalid ServerID", "ServerID must be non-null"));
         // Verify UUID
         if (stat.uuid == null || stat.uuid.trim().isEmpty())

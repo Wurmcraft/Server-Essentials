@@ -32,7 +32,7 @@ public class TestLogging {
         LogEntry entry = SQLLogging.create(TEST_ENTRY);
         assertNotNull(entry, "Log Entry has been successfully created without errors");
         // Check if the  entry was added
-        List<LogEntry> logEntries = SQLLogging.get(TEST_ENTRY.serverID, TEST_ENTRY.x, TEST_ENTRY.y, TEST_ENTRY.z, TEST_ENTRY.dim);
+        List<LogEntry> logEntries = SQLLogging.get(TEST_ENTRY.server_id, TEST_ENTRY.x, TEST_ENTRY.y, TEST_ENTRY.z, TEST_ENTRY.dim);
         boolean found = false;
         for (LogEntry log : logEntries)
             if (TEST_ENTRY.equals(log)) {
@@ -45,7 +45,7 @@ public class TestLogging {
     @Test
     @Order(2)
     public void testGetEntry() {
-        List<LogEntry> logEntries = SQLLogging.get(TEST_ENTRY.serverID, TEST_ENTRY.x, TEST_ENTRY.y, TEST_ENTRY.z, TEST_ENTRY.dim);
+        List<LogEntry> logEntries = SQLLogging.get(TEST_ENTRY.server_id, TEST_ENTRY.x, TEST_ENTRY.y, TEST_ENTRY.z, TEST_ENTRY.dim);
         boolean found = false;
         for (LogEntry log : logEntries)
             if (TEST_ENTRY.equals(log)) {
@@ -58,11 +58,11 @@ public class TestLogging {
     @Test
     @Order(2)
     public void testUpdateEntry() {
-        TEST_ENTRY.actionData = "{\"fire\": true}";
+        TEST_ENTRY.action_data = "{\"fire\": true}";
         boolean updated = SQLLogging.update(TEST_ENTRY, new String[]{"actionData"});
         assertTrue(updated, "Log Entry was updated successfully without errors");
         // Check if the entry was updated
-        List<LogEntry> logEntries = SQLLogging.get(TEST_ENTRY.serverID, TEST_ENTRY.x, TEST_ENTRY.y, TEST_ENTRY.z, TEST_ENTRY.dim);
+        List<LogEntry> logEntries = SQLLogging.get(TEST_ENTRY.server_id, TEST_ENTRY.x, TEST_ENTRY.y, TEST_ENTRY.z, TEST_ENTRY.dim);
         boolean found = false;
         for (LogEntry log : logEntries)
             if (TEST_ENTRY.equals(log)) {
@@ -75,10 +75,10 @@ public class TestLogging {
     @Test
     @Order(3)
     public void testDeleteEntry() {
-        boolean deleted = SQLLogging.delete(TEST_ENTRY.serverID, TEST_ENTRY.actionType, TEST_ENTRY.uuid, TEST_ENTRY.timestamp);
+        boolean deleted = SQLLogging.delete(TEST_ENTRY.server_id, TEST_ENTRY.action_type, TEST_ENTRY.uuid, TEST_ENTRY.timestamp);
         assertTrue(deleted, "Log Entry was deleted successfully without any errors");
         // Check to see if it was deleted
-        List<LogEntry> logEntries = SQLLogging.get(TEST_ENTRY.serverID, TEST_ENTRY.x, TEST_ENTRY.y, TEST_ENTRY.z, TEST_ENTRY.dim);
+        List<LogEntry> logEntries = SQLLogging.get(TEST_ENTRY.server_id, TEST_ENTRY.x, TEST_ENTRY.y, TEST_ENTRY.z, TEST_ENTRY.dim);
         boolean found = false;
         for (LogEntry log : logEntries)
             if (TEST_ENTRY.equals(log)) {

@@ -7,11 +7,11 @@ import java.util.Arrays;
 
 public class TransferEntry {
 
-    public Long transferID;
+    public Long transfer_id;
     public String uuid;
-    public Long startTime;
+    public Long start_time;
     public ItemWrapper[] items;
-    public String serverID;
+    public String server_id;
 
     /**
      * @param transferID id of the given transfer (Don't change as this is used internally to track)
@@ -21,11 +21,11 @@ public class TransferEntry {
      * @param serverID   id of the server that the transfer was started on
      */
     public TransferEntry(long transferID, String uuid, long startTime, ItemWrapper[] items, String serverID) {
-        this.transferID = transferID;
+        this.transfer_id = transferID;
         this.uuid = uuid;
-        this.startTime = startTime;
+        this.start_time = startTime;
         this.items = items;
-        this.serverID = serverID;
+        this.server_id = serverID;
     }
 
     public TransferEntry() {
@@ -36,7 +36,7 @@ public class TransferEntry {
         if (this == o) return true;
         if (!(o instanceof TransferEntry)) return false;
         TransferEntry that = (TransferEntry) o;
-        return transferID.equals(that.transferID) && startTime.equals(that.startTime) && uuid.equals(that.uuid) && Arrays.equals(that.items, items) && serverID.equals(that.serverID);
+        return transfer_id.equals(that.transfer_id) && start_time.equals(that.start_time) && uuid.equals(that.uuid) && Arrays.equals(that.items, items) && server_id.equals(that.server_id);
     }
 
     @Override

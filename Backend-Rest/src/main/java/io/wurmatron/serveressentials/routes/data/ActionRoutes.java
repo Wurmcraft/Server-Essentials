@@ -105,7 +105,7 @@ public class ActionRoutes {
             Action updatedAction = GSON.fromJson(ctx.body(), Action.class);
             // Check for Action to update
             Action sqlAction = null;
-            List<Action> sqlActions = SQLActions.get(updatedAction.host, updatedAction.action, updatedAction.relatedID);
+            List<Action> sqlActions = SQLActions.get(updatedAction.host, updatedAction.action, updatedAction.related_id);
             for (Action action : sqlActions)
                 if (action.timestamp.equals(updatedAction.timestamp)) {
                     sqlAction = action;
@@ -142,14 +142,14 @@ public class ActionRoutes {
             Action updatedAction = GSON.fromJson(ctx.body(), Action.class);
             // Check for Action to delete
             Action sqlAction = null;
-            List<Action> sqlActions = SQLActions.get(updatedAction.host, updatedAction.action, updatedAction.relatedID);
+            List<Action> sqlActions = SQLActions.get(updatedAction.host, updatedAction.action, updatedAction.related_id);
             for (Action action : sqlActions)
                 if (action.timestamp.equals(updatedAction.timestamp)) {
                     sqlAction = action;
                     break;
                 }
             if (sqlAction != null) {
-                Action action = SQLActions.delete(updatedAction.host, updatedAction.action, sqlAction.relatedID, sqlAction.timestamp);
+                Action action = SQLActions.delete(updatedAction.host, updatedAction.action, sqlAction.related_id, sqlAction.timestamp);
                 ctx.status(200).result(GSON.toJson(action));
             } else
                 ctx.status(404).result(response("Invalid Action", "Requested Action does not exist"));
@@ -168,7 +168,7 @@ public class ActionRoutes {
     public static boolean isValidAction(Context context, Action action) {
         List<MessageResponse> errors = new ArrayList<>();
         // Validate relatedID
-        if (action.relatedID.trim().isEmpty())
+        if (action.related_id.trim().isEmpty())
             errors.add(new MessageResponse("Invalid Entry", "Invalid / Empty RelatedID"));
         // Validate host
         if (action.host.trim().isEmpty())

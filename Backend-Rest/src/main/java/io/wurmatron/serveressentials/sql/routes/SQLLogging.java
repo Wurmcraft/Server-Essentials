@@ -26,7 +26,7 @@ public class SQLLogging extends SQLGenerator {
             insert(LOGGING_TABLE, LOGGING_COLUMNS, entry, false);
             return entry;
         } catch (Exception e) {
-            LOG.debug("Failed to create log entry for '" + entry.actionType + "' at '" + entry.timestamp + "' (" + e.getMessage() + ")");
+            LOG.debug("Failed to create log entry for '" + entry.action_type + "' at '" + entry.timestamp + "' (" + e.getMessage() + ")");
             LOG.debug("Log Entry: " + GSON.toJson(entry));
         }
         return null;
@@ -41,10 +41,10 @@ public class SQLLogging extends SQLGenerator {
      */
     public static boolean update(LogEntry entry, String[] columnsToUpdate) {
         try {
-            update(LOGGING_TABLE, columnsToUpdate, new String[]{"actionType", "x", "y", "z", "dim", "timestamp", "uuid"}, new String[]{entry.actionType, "" + entry.x, "" + entry.y, "" + entry.z, "" + entry.dim, "" + entry.timestamp, entry.uuid}, entry);
+            update(LOGGING_TABLE, columnsToUpdate, new String[]{"action_type", "x", "y", "z", "dim", "timestamp", "uuid"}, new String[]{entry.action_type, "" + entry.x, "" + entry.y, "" + entry.z, "" + entry.dim, "" + entry.timestamp, entry.uuid}, entry);
             return true;
         } catch (Exception e) {
-            LOG.debug("Failed to update log entry '" + entry.actionType + "' " + entry.x + ", " + entry.y + ", " + entry.z + ", " + entry.dim + "' (" + e.getMessage() + ")");
+            LOG.debug("Failed to update log entry '" + entry.action_type + "' " + entry.x + ", " + entry.y + ", " + entry.z + ", " + entry.dim + "' (" + e.getMessage() + ")");
             LOG.debug("Log Entry: " + GSON.toJson(entry));
         }
         return false;
@@ -62,7 +62,7 @@ public class SQLLogging extends SQLGenerator {
      */
     public static List<LogEntry> get(String serverID, int x, int y, int z, int dim) {
         try {
-            return getArray("*", LOGGING_TABLE, new String[]{"serverID", "x", "y", "z", "dim"}, new String[]{serverID, "" + x, "" + y, "" + z, "" + dim}, new LogEntry());
+            return getArray("*", LOGGING_TABLE, new String[]{"server_id", "x", "y", "z", "dim"}, new String[]{serverID, "" + x, "" + y, "" + z, "" + dim}, new LogEntry());
         } catch (Exception e) {
             LOG.debug("Failed to get log entry for '" + serverID + " '" + x + ", " + y + ", " + z + ", " + dim);
         }
@@ -79,7 +79,7 @@ public class SQLLogging extends SQLGenerator {
      */
     public static List<LogEntry> get(String serverID, String actionType, String uuid) {
         try {
-            return getArray("*", LOGGING_TABLE, new String[]{"serverID", "actionType", "uuid"}, new String[]{serverID, actionType, uuid}, new LogEntry());
+            return getArray("*", LOGGING_TABLE, new String[]{"server_id", "action_type", "uuid"}, new String[]{serverID, actionType, uuid}, new LogEntry());
         } catch (Exception e) {
             LOG.debug("Failed to get log entry for '" + serverID + " with type '" + actionType + "' for '" + uuid + "' (" + e.getMessage() + ")");
         }
@@ -97,7 +97,7 @@ public class SQLLogging extends SQLGenerator {
      */
     public static boolean delete(String serverID, String actionType, String uuid, long timestamp) {
         try {
-            delete(LOGGING_TABLE, new String[]{"serverID", "actionType", "uuid", "timestamp"}, new String[]{serverID, actionType, uuid, "" + timestamp});
+            delete(LOGGING_TABLE, new String[]{"server_id", "action_type", "uuid", "timestamp"}, new String[]{serverID, actionType, uuid, "" + timestamp});
             return true;
         } catch (Exception e) {
             LOG.debug("Failed to delete log entry at '" + timestamp + "' on '" + serverID + "' for type '" + actionType + "'");

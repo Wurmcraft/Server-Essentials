@@ -32,8 +32,7 @@ public class TestCurrencyRoutes {
         Currency currency = HTTPRequests.postWithReturn("api/currency", TestCurrencys.TEST_CURRENCY, Currency.class);
         assertNotNull(currency, "Currency was added successfully");
         // Make sure the currency was added correctly
-        TestCurrencys.TEST_CURRENCY.currencyID = currency.currencyID;
-        currency = HTTPRequests.get("api/currency/" + currency.currencyID, Currency.class);
+        currency = HTTPRequests.get("api/currency/" + currency.displayName, Currency.class);
         assertEquals(TestCurrencys.TEST_CURRENCY, currency, "Currencies are the same");
     }
 
@@ -54,16 +53,16 @@ public class TestCurrencyRoutes {
     @Order(2)
     public void testUpdateCurrency() throws IOException {
         TestCurrencys.TEST_CURRENCY.globalWorth = .001;
-        HTTPRequests.put("api/currency/" + TestCurrencys.TEST_CURRENCY.currencyID, TestCurrencys.TEST_CURRENCY);
+        HTTPRequests.put("api/currency/" + TestCurrencys.TEST_CURRENCY.displayName, TestCurrencys.TEST_CURRENCY);
         // Make sure the currency was updated
-        Currency currency = HTTPRequests.get("api/currency/" + TestCurrencys.TEST_CURRENCY.currencyID, Currency.class);
+        Currency currency = HTTPRequests.get("api/currency/" + TestCurrencys.TEST_CURRENCY.displayName, Currency.class);
         assertEquals(TestCurrencys.TEST_CURRENCY, currency, "Currencies are the same");
     }
 
     @Test
     @Order(3)
     public void testDeleteCurrency() throws IOException {
-        Currency deletedCurrency = HTTPRequests.deleteWithReturn("api/currency/" + TestCurrencys.TEST_CURRENCY.currencyID, TestCurrencys.TEST_CURRENCY, Currency.class);
+        Currency deletedCurrency = HTTPRequests.deleteWithReturn("api/currency/" + TestCurrencys.TEST_CURRENCY.displayName, TestCurrencys.TEST_CURRENCY, Currency.class);
         assertNotNull(deletedCurrency, "Currency was deleted successfully");
         // Make sure the currency was deleted successfully
         Currency[] currencies = HTTPRequests.get("api/currency", Currency[].class);

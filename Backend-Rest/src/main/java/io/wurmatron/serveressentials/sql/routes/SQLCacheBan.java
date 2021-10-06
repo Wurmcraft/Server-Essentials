@@ -38,7 +38,7 @@ public class SQLCacheBan extends SQLCache {
                 invalidate(banID);
         // Not in cache / invalid
         try {
-            Ban ban = get("*", BAN_TABLE, "banID", "" + banID, new Ban());
+            Ban ban = get("*", BAN_TABLE, "ban_id", "" + banID, new Ban());
             if (ban != null) {
                 bansCache.put(banID, new CacheBan(ban));
                 return ban.clone();
@@ -73,8 +73,8 @@ public class SQLCacheBan extends SQLCache {
             List<Ban> bans = getArray("*", BAN_TABLE, "uuid", uuid, new Ban());
             List<Integer> banIDs = new ArrayList<>();
             for (Ban ban : bans) {
-                bansCache.put(ban.banID, new CacheBan(ban));
-                banIDs.add((int) ban.banID);
+                bansCache.put(ban.ban_id, new CacheBan(ban));
+                banIDs.add((int) ban.ban_id);
             }
             uuidCache.put(uuid, new CacheBanIndex(banIDs.stream().mapToInt(x -> x).toArray()));
             return bans.toArray(new Ban[0]);
@@ -104,13 +104,13 @@ public class SQLCacheBan extends SQLCache {
             // Check if cache is complete
             if (bansCache.size() >= count) {
                 for (CacheBan ban : bansCache.values())
-                    bans.add(get(ban.ban.banID));
+                    bans.add(get(ban.ban.ban_id));
                 return bans;
             } else {
                 try {
                     bansCache.clear();
                     for (Ban ban : bans)
-                        bansCache.put(ban.banID, new CacheBan(ban));
+                        bansCache.put(ban.ban_id, new CacheBan(ban));
                     return bans;
                 } catch (Exception e) {
                     LOG.debug("Failed to fetch Ban's (" + e.getMessage() + ")");
@@ -132,15 +132,15 @@ public class SQLCacheBan extends SQLCache {
         try {
             String[] columns = getColumns();
             // Check if discordID exists, if not remove
-            if (ban.discordID.isEmpty()) {
+            if (ban.discord_id.isEmpty()) {
                 List<String> columnList = new ArrayList<>();
                 for(String column : columns)
-                    if(!column.equalsIgnoreCase("discordID"))
+                    if(!column.equalsIgnoreCase("discord_id"))
                         columnList.add(column);
                     columns = columnList.toArray(new String[0]);
             }
-            ban.banID = insert(BAN_TABLE, columns, ban, true);
-            bansCache.put(ban.banID, new CacheBan(ban));
+            ban.ban_id = insert(BAN_TABLE, columns, ban, true);
+            bansCache.put(ban.ban_id, new CacheBan(ban));
             return ban;
         } catch (Exception e) {
             LOG.debug("Failed to create new ban for uuid '" + ban.uuid + "' (" + e.getMessage() + ")");
@@ -159,8 +159,8 @@ public class SQLCacheBan extends SQLCache {
      */
     public static boolean update(Ban ban, String[] columnsToUpdate) {
         try {
-            update(BAN_TABLE, columnsToUpdate, "banID", "" + ban.banID, ban);
-            invalidate(ban.banID);
+            update(BAN_TABLE, columnsToUpdate, "banID", "" + ban.ban_id, ban);
+            invalidate(ban.ban_id);
             return true;
         } catch (Exception e) {
             LOG.debug("Failed to update ban for uuid '" + ban.uuid + "' (" + e.getMessage() + ")");
@@ -215,7 +215,7 @@ public class SQLCacheBan extends SQLCache {
         List<Long> toToRemoved = new ArrayList<>();
         for (CacheBan ban : bansCache.values())
             if (needsUpdate(ban))
-                toToRemoved.add(ban.ban.banID);
+                toToRemoved.add(ban.ban.ban_id);
         // UUID Cache
         List<String> toBeRemovedUUID = new ArrayList<>();
         for (String uuid : uuidCache.keySet())
@@ -243,7 +243,7 @@ public class SQLCacheBan extends SQLCache {
             List<Ban> bans = getArray("*", BAN_TABLE, "", "", new Ban());
             int count = 0;
             for (Ban ban : bans) {
-                if (ban.banStatus && handleBanUpdateCheck(ban))
+                if (ban.ban_status && handleBanUpdateCheck(ban))
                     count++;
             }
             LOG.info(count + " bans have been updated!");

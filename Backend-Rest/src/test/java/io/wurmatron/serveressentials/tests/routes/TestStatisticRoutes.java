@@ -55,7 +55,7 @@ public class TestStatisticRoutes {
     @Test
     @Order(2)
     public void testOverrideStatistic() throws IOException {
-        TestStatistics.TEST_STAT.eventData = "{\"test\": true}";
+        TestStatistics.TEST_STAT.event_data = "{\"test\": true}";
         HTTPRequests.put("api/statistics", TestStatistics.TEST_STAT);
         // Check for update
         TrackedStat[] stats = HTTPRequests.get("api/statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);

@@ -87,11 +87,11 @@ public class CurrencyRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/currency/:id", method = "GET")
-    public static Handler getID = ctx -> {
+    @Route(path = "api/currency/:name", method = "GET")
+    public static Handler getName = ctx -> {
         try {
-            long id = Long.parseLong(ctx.pathParam("id"));
-            Currency currency = SQLCacheCurrency.get(id);
+            String name = ctx.pathParam("name");
+            Currency currency = SQLCacheCurrency.get(name);
             if (currency != null)
                 ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, currency)));
             else
@@ -117,28 +117,20 @@ public class CurrencyRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/currency/:id", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/currency/:name", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler override = ctx -> {
-        try {
-            Currency currencyUpdate = GSON.fromJson(ctx.body(), Currency.class);
-            try {
-                long id = Long.parseLong(ctx.pathParam("id"));
-                Currency currency = SQLCacheCurrency.get(id);
-                if (id != currencyUpdate.currencyID) {
-                    ctx.status(400).result(response("ID Mismatch", "Path and Body ID's dont match!"));
-                    return;
-                }
-                if (currency != null) {
-                    SQLCacheCurrency.update(currencyUpdate, SQLCacheCurrency.getColumns());
-                    ctx.status(200).result(GSON.toJson(SQLCacheCurrency.get(currencyUpdate.currencyID)));
-                } else
-                    ctx.status(404).result(response("Not Found", "Currency with the provided ID does not exist"));
-            } catch (NumberFormatException e) {
-                ctx.status(400).result(response("Bad Request", "ID must be a number, greater or equal to 0"));
-            }
-        } catch (JsonParseException e) {
-            ctx.status(422).result(response("Invalid JSON", "Cannot parse body into Currency"));
+        Currency currencyUpdate = GSON.fromJson(ctx.body(), Currency.class);
+        String name = ctx.pathParam("name");
+        Currency currency = SQLCacheCurrency.get(name);
+        if (!name.equals(currencyUpdate.displayName)) {
+            ctx.status(400).result(response("Name Mismatch", "Path and Body Name's dont match!"));
+            return;
         }
+        if (currency != null) {
+            SQLCacheCurrency.update(currencyUpdate, SQLCacheCurrency.getColumns());
+            ctx.status(200).result(GSON.toJson(SQLCacheCurrency.get(currencyUpdate.displayName)));
+        } else
+            ctx.status(404).result(response("Not Found", "Currency with the provided Name does not exist"));
     };
 
     @OpenApi(
@@ -157,19 +149,15 @@ public class CurrencyRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/currency/:id", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/currency/:name", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler delete = ctx -> {
-        try {
-            long id = Long.parseLong(ctx.pathParam("id"));
-            Currency currency = SQLCacheCurrency.get(id);
+            String name = ctx.pathParam("name");
+            Currency currency = SQLCacheCurrency.get(name);
             if (currency != null) {
-                SQLCacheCurrency.delete(id);
+                SQLCacheCurrency.delete(name);
                 ctx.status(200).result(GSON.toJson(currency));
             } else
-                ctx.status(404).result(response("Not Found", "Currency with the provided ID does not exist"));
-        } catch (NumberFormatException e) {
-            ctx.status(400).result(response("Bad Request", "ID must be a number, greater or equal to 0"));
-        }
+                ctx.status(404).result(response("Not Found", "Currency with the provided Name does not exist"));
     };
 
     /**

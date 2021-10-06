@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestCurrencys {
 
-    public static final Currency TEST_CURRENCY = new Currency(-1, "Test", 1, 1, .1);
+    public static final Currency TEST_CURRENCY = new Currency("Test", 1, 1, .1);
 
     @BeforeAll
     public static void setup() throws IOException, SQLException {
@@ -31,19 +31,18 @@ public class TestCurrencys {
         Currency currency = SQLCacheCurrency.create(TEST_CURRENCY);
         assertNotNull(currency, "Currency has been successfully created without errors");
         // Check for new currency
-        TEST_CURRENCY.currencyID = currency.currencyID;
-        currency = SQLCacheCurrency.get(currency.currencyID);
+        currency = SQLCacheCurrency.get(currency.displayName);
         assertEquals(TEST_CURRENCY, currency, "Added currency should be the same as the one added");
     }
 
     @Test
     @Order(2)
     public void testGetCurrency() {
-        Currency currency = SQLCacheCurrency.get(TEST_CURRENCY.currencyID);
+        Currency currency = SQLCacheCurrency.get(TEST_CURRENCY.displayName);
         assertEquals(TEST_CURRENCY, currency, "The Currency's are equal");
         // Remove from cache and try again
-        SQLCacheCurrency.invalidate(TEST_CURRENCY.currencyID);
-        currency = SQLCacheCurrency.get(TEST_CURRENCY.currencyID);
+        SQLCacheCurrency.invalidate(TEST_CURRENCY.displayName);
+        currency = SQLCacheCurrency.get(TEST_CURRENCY.displayName);
         // Test Currency
         assertNotNull(currency, "Cache has the currency");
         assertEquals(TEST_CURRENCY, currency, "Currency's are the same");
@@ -56,12 +55,12 @@ public class TestCurrencys {
         boolean updated = SQLCacheCurrency.update(TEST_CURRENCY,new String[] {"displayName"});
         assertTrue(updated, "Currency has been successfully updated without errors");
         // Check for updates
-        Currency currency = SQLCacheCurrency.get(TEST_CURRENCY.currencyID);
+        Currency currency = SQLCacheCurrency.get(TEST_CURRENCY.displayName);
         assertNotNull(currency, "Currency Exists");
         assertEquals(TEST_CURRENCY.displayName, currency.displayName, "Display-Name has been updated");
         // Invalidate Cache and try again
-        SQLCacheCurrency.invalidate(TEST_CURRENCY.currencyID);
-        currency = SQLCacheCurrency.get(currency.currencyID);
+        SQLCacheCurrency.invalidate(TEST_CURRENCY.displayName);
+        currency = SQLCacheCurrency.get(currency.displayName);
         assertNotNull(currency, "Currency Exists");
         assertEquals(TEST_CURRENCY.displayName, currency.displayName, "Display-Name has been updated");
     }
@@ -73,7 +72,7 @@ public class TestCurrencys {
         assertTrue(currencies.size() > 0, "Currency exist");
         // Remove from cache and try again
         for (Currency currency : currencies)
-            SQLCacheRank.invalidate(currency.currencyID);
+            SQLCacheRank.invalidate(currency.displayName);
         currencies = SQLCacheCurrency.get();
         assertTrue(currencies.size() > 0, "Currency exist");
         boolean found = false;
@@ -88,14 +87,14 @@ public class TestCurrencys {
     @Test
     @Order(3)
     public void testDeleteCurrency() {
-        boolean deleted = SQLCacheCurrency.delete(TEST_CURRENCY.currencyID);
+        boolean deleted = SQLCacheCurrency.delete(TEST_CURRENCY.displayName);
         assertTrue(deleted, "Currency has been successfully deleted without errors");
         // Make sure it was deleted
-        Currency currency = SQLCacheCurrency.get(TEST_CURRENCY.currencyID);
+        Currency currency = SQLCacheCurrency.get(TEST_CURRENCY.displayName);
         assertNull(currency, "Currency does not exist");
         // Invalidate Cache and try again
-        SQLCacheCurrency.invalidate(TEST_CURRENCY.currencyID);
-        currency = SQLCacheCurrency.get(TEST_CURRENCY.currencyID);
+        SQLCacheCurrency.invalidate(TEST_CURRENCY.displayName);
+        currency = SQLCacheCurrency.get(TEST_CURRENCY.displayName);
         assertNull(currency, "Currency does not exist");
     }
 }

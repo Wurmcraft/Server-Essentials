@@ -43,7 +43,7 @@ public class TestStatistics {
     @Test
     @Order(2)
     public void testUpdateStat() {
-        TEST_STAT.eventData = "{\"x\": 5}";
+        TEST_STAT.event_data = "{\"x\": 5}";
         boolean updated = SQLStatistics.update(TEST_STAT, new String[]{"eventData"});
         assertTrue(updated, "Stat has been successfully updated without issues");
         // Check if it was updated
@@ -58,7 +58,7 @@ public class TestStatistics {
     @Test
     @Order(2)
     public void testGetStat() {
-        List<TrackedStat> stats = SQLStatistics.get(TEST_STAT.serverID, TEST_STAT.uuid);
+        List<TrackedStat> stats = SQLStatistics.get(TEST_STAT.server_id, TEST_STAT.uuid);
         // Check if stat entry exists
         boolean found = false;
         for (TrackedStat ts : stats)
@@ -70,10 +70,10 @@ public class TestStatistics {
     @Test
     @Order(3)
     public void testDeleteStatEntry() {
-        boolean deleted = SQLStatistics.delete(TEST_STAT.serverID, TEST_STAT.uuid, TEST_STAT.eventType);
+        boolean deleted = SQLStatistics.delete(TEST_STAT.server_id, TEST_STAT.uuid, TEST_STAT.event_type);
         assertTrue(deleted, "Tracked Stat has been successfully deleted without errors");
         // Make sure its deleted
-        List<TrackedStat> stats = SQLStatistics.get(TEST_STAT.serverID, TEST_STAT.uuid);
+        List<TrackedStat> stats = SQLStatistics.get(TEST_STAT.server_id, TEST_STAT.uuid);
         // Check if stat entry exists
         boolean found = false;
         for (TrackedStat ts : stats)

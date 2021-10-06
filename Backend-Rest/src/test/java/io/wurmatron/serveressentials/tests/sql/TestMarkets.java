@@ -32,7 +32,7 @@ public class TestMarkets {
         MarketEntry market = SQLCacheMarket.create(TEST_MARKET);
         assertNotNull(market, "Market Entry has been successfully created without errors");
         // Check if entry was added
-        List<MarketEntry> entrys = SQLCacheMarket.get(TEST_MARKET.serverID, TEST_MARKET.sellerUUID);
+        List<MarketEntry> entrys = SQLCacheMarket.get(TEST_MARKET.server_id, TEST_MARKET.seller_uuid);
         boolean found = false;
         for (MarketEntry entry : entrys)
             if (entry.equals(TEST_MARKET)) {
@@ -45,7 +45,7 @@ public class TestMarkets {
     @Test
     @Order(2)
     public void testGetMarketEntry() {
-        List<MarketEntry> entrys = SQLCacheMarket.get(TEST_MARKET.serverID, TEST_MARKET.sellerUUID);
+        List<MarketEntry> entrys = SQLCacheMarket.get(TEST_MARKET.server_id, TEST_MARKET.seller_uuid);
         boolean found = false;
         for (MarketEntry entry : entrys)
             if (entry.equals(TEST_MARKET)) {
@@ -54,8 +54,8 @@ public class TestMarkets {
             }
         assertTrue(found, "Added market-entry exists");
         // Remove from cache and try again
-        SQLCacheMarket.invalidate(TEST_MARKET.sellerUUID);
-        entrys = SQLCacheMarket.get(TEST_MARKET.serverID, TEST_MARKET.sellerUUID);
+        SQLCacheMarket.invalidate(TEST_MARKET.seller_uuid);
+        entrys = SQLCacheMarket.get(TEST_MARKET.server_id, TEST_MARKET.seller_uuid);
         found = false;
         for (MarketEntry entry : entrys)
             if (entry.equals(TEST_MARKET)) {
@@ -68,11 +68,11 @@ public class TestMarkets {
     @Test
     @Order(2)
     public void testUpdateMarketEntry() {
-        TEST_MARKET.transferID = "Test";
+        TEST_MARKET.transfer_id = "Test";
         boolean updated = SQLCacheMarket.update(TEST_MARKET, new String[]{"transferID"});
         assertTrue(updated, "Market Entry has been successfully updated without errors");
         // Check for updates
-        List<MarketEntry> entries = SQLCacheMarket.get(TEST_MARKET.serverID, TEST_MARKET.sellerUUID);
+        List<MarketEntry> entries = SQLCacheMarket.get(TEST_MARKET.server_id, TEST_MARKET.seller_uuid);
         boolean found = false;
         for (MarketEntry entry : entries)
             if (entry.equals(TEST_MARKET)) {
@@ -81,8 +81,8 @@ public class TestMarkets {
             }
         assertTrue(found, "Added market-entry exists");
         // Invalidate Cache and try again
-        SQLCacheMarket.invalidate(TEST_MARKET.sellerUUID);
-        entries = SQLCacheMarket.get(TEST_MARKET.serverID, TEST_MARKET.sellerUUID);
+        SQLCacheMarket.invalidate(TEST_MARKET.seller_uuid);
+        entries = SQLCacheMarket.get(TEST_MARKET.server_id, TEST_MARKET.seller_uuid);
         found = false;
         for (MarketEntry entry : entries)
             if (entry.equals(TEST_MARKET)) {
@@ -95,10 +95,10 @@ public class TestMarkets {
     @Test
     @Order(3)
     public void testDeleteMarketEntry() {
-        boolean deleted = SQLCacheMarket.delete(TEST_MARKET.serverID, TEST_MARKET.sellerUUID, TEST_MARKET.timestamp);
+        boolean deleted = SQLCacheMarket.delete(TEST_MARKET.server_id, TEST_MARKET.seller_uuid, TEST_MARKET.timestamp);
         assertTrue(deleted, "Market Entry has been successfully deleted without errors");
         // Make sure it was deleted
-        List<MarketEntry> entries = SQLCacheMarket.get(TEST_MARKET.serverID, TEST_MARKET.sellerUUID);
+        List<MarketEntry> entries = SQLCacheMarket.get(TEST_MARKET.server_id, TEST_MARKET.seller_uuid);
         boolean found = false;
         for (MarketEntry entry : entries)
             if (entry.equals(TEST_MARKET)) {
@@ -107,8 +107,8 @@ public class TestMarkets {
             }
         assertFalse(found, "Market Entry does not exist");
         // Invalidate Cache and try again
-        SQLCacheMarket.invalidate(TEST_MARKET.serverID);
-        entries = SQLCacheMarket.get(TEST_MARKET.serverID, TEST_MARKET.sellerUUID);
+        SQLCacheMarket.invalidate(TEST_MARKET.server_id);
+        entries = SQLCacheMarket.get(TEST_MARKET.server_id, TEST_MARKET.seller_uuid);
         found = false;
         for (MarketEntry entry : entries)
             if (entry.equals(TEST_MARKET)) {

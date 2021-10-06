@@ -30,7 +30,7 @@ public class SQLCacheMarket extends SQLCache {
                     invalidate(serverID);
                     break;
                 }
-                if (entry.marketEntry.sellerUUID.equals(sellerUUID))
+                if (entry.marketEntry.seller_uuid.equals(sellerUUID))
                     sellerEntries.add(entry.marketEntry.clone());
                 return sellerEntries;
             }
@@ -72,7 +72,7 @@ public class SQLCacheMarket extends SQLCache {
         }
         // Missing / invalid
         try {
-            List<MarketEntry> sqlEntries = getArray("*", MARKET_TABLE, "serverID", serverID, new MarketEntry());
+            List<MarketEntry> sqlEntries = getArray("*", MARKET_TABLE, "server_id", serverID, new MarketEntry());
             List<CacheMarket> sqlCache = new ArrayList<>();
             for (MarketEntry entry : sqlEntries)
                 sqlCache.add(new CacheMarket(entry.clone()));
@@ -111,16 +111,16 @@ public class SQLCacheMarket extends SQLCache {
     public static MarketEntry create(MarketEntry entry) {
         try {
             insert(MARKET_TABLE, MARKETS_COLUMNS, entry, false);
-            if(marketCache.containsKey(entry.serverID)) {
-                marketCache.get(entry.serverID).add(new CacheMarket(entry));
+            if(marketCache.containsKey(entry.server_id)) {
+                marketCache.get(entry.server_id).add(new CacheMarket(entry));
             } else {
                 List<CacheMarket> newEntry = new ArrayList<>();
                 newEntry.add(new CacheMarket(entry));
-                marketCache.put(entry.serverID, newEntry);
+                marketCache.put(entry.server_id, newEntry);
             }
             return entry;
         } catch (Exception e) {
-            LOG.debug("Failed to create new market entry for UUID '" + entry.sellerUUID + "' on server '" + entry.serverID + "' (" + e.getMessage() + ")");
+            LOG.debug("Failed to create new market entry for UUID '" + entry.seller_uuid + "' on server '" + entry.server_id + "' (" + e.getMessage() + ")");
             LOG.debug("MarketEntry: " + GSON.toJson(entry));
         }
         return null;
@@ -135,19 +135,19 @@ public class SQLCacheMarket extends SQLCache {
      */
     public static boolean update(MarketEntry entry, String[] columnsToUpdate) {
         try {
-            update(MARKET_TABLE, columnsToUpdate, new String[]{"sellerUUID", "serverID", "timestamp", "marketType"}, new String[]{entry.sellerUUID, entry.serverID, "" + entry.timestamp, entry.marketType}, entry);
+            update(MARKET_TABLE, columnsToUpdate, new String[]{"seller_uuid", "server_id", "timestamp", "market_type"}, new String[]{entry.seller_uuid, entry.server_id, "" + entry.timestamp, entry.market_type}, entry);
             // Update Cache
             List<CacheMarket> updatedMarketEntries = new ArrayList<>();
-            for (CacheMarket cache : marketCache.get(entry.serverID)) {
-                if (cache.marketEntry.sellerUUID.equals(entry.sellerUUID) && cache.marketEntry.serverID.equals(entry.serverID) && cache.marketEntry.timestamp == entry.timestamp && cache.marketEntry.marketType.equals(entry.marketType)) {
+            for (CacheMarket cache : marketCache.get(entry.server_id)) {
+                if (cache.marketEntry.seller_uuid.equals(entry.seller_uuid) && cache.marketEntry.server_id.equals(entry.server_id) && cache.marketEntry.timestamp == entry.timestamp && cache.marketEntry.market_type.equals(entry.market_type)) {
                     updateInfoLocal(columnsToUpdate, entry, cache.marketEntry);
                 }
                 updatedMarketEntries.add(cache);
             }
-            marketCache.put(entry.serverID, updatedMarketEntries);
+            marketCache.put(entry.server_id, updatedMarketEntries);
             return true;
         } catch (Exception e) {
-            LOG.debug("Failed to update MarketEntry for UUID '" + entry.sellerUUID + "' on server '" + entry.serverID + "' (" + e.getMessage() + ")");
+            LOG.debug("Failed to update MarketEntry for UUID '" + entry.seller_uuid + "' on server '" + entry.server_id + "' (" + e.getMessage() + ")");
             LOG.debug("MarketEntry: " + GSON.toJson(entry));
         }
         return false;
@@ -163,7 +163,7 @@ public class SQLCacheMarket extends SQLCache {
      */
     public static boolean delete(String serverID, String uuid, long timestamp) {
         try {
-            delete(MARKET_TABLE, new String[]{"serverID", "sellerUUID", "timestamp"}, new String[]{serverID, uuid, "" + timestamp});
+            delete(MARKET_TABLE, new String[]{"server_id", "seller_uuid", "timestamp"}, new String[]{serverID, uuid, "" + timestamp});
             invalidate(serverID);
             return true;
         } catch (Exception e) {

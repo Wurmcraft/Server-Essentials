@@ -6,10 +6,10 @@ import java.util.Objects;
 
 public class LogEntry {
 
-    public String serverID;
+    public String server_id;
     public Long timestamp;
-    public String actionType;
-    public String actionData;
+    public String action_type;
+    public String action_data;
     public String uuid;
     public Integer x;
     public Integer y;
@@ -28,10 +28,10 @@ public class LogEntry {
      * @param dim       dimension that this occurred (if applicable)
      */
     public LogEntry(String serverID, long timestamp, String actionType, String actionData, String uuid, int x, int y, int z, int dim) {
-        this.serverID = serverID;
+        this.server_id = serverID;
         this.timestamp = timestamp;
-        this.actionType = actionType;
-        this.actionData = actionData;
+        this.action_type = actionType;
+        this.action_data = actionData;
         this.uuid = uuid;
         this.x = x;
         this.y = y;
@@ -47,7 +47,7 @@ public class LogEntry {
         if (this == o) return true;
         if (!(o instanceof LogEntry)) return false;
         LogEntry logEntry = (LogEntry) o;
-        return timestamp.equals(logEntry.timestamp) && x.equals(logEntry.x) && y.equals(logEntry.y) && z.equals(logEntry.z) && dim.equals(logEntry.dim) && Objects.equals(serverID, logEntry.serverID) && Objects.equals(actionType, logEntry.actionType) && Objects.equals(actionData, logEntry.actionData) && Objects.equals(uuid, logEntry.uuid);
+        return timestamp.equals(logEntry.timestamp) && x.equals(logEntry.x) && y.equals(logEntry.y) && z.equals(logEntry.z) && dim.equals(logEntry.dim) && Objects.equals(server_id, logEntry.server_id) && Objects.equals(action_type, logEntry.action_type) && Objects.equals(action_data, logEntry.action_data) && Objects.equals(uuid, logEntry.uuid);
     }
 
     @Override

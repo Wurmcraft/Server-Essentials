@@ -89,7 +89,7 @@ public class RankRoutes {
                     if(isValidRank(ctx,rank)) {
                         // Update / Override Rank
                         if(SQLCacheRank.update(rank, SQLCacheRank.getColumns()))
-                            ctx.status(200).result(GSON.toJson(SQLCacheRank.get(rank.rankID)));
+                            ctx.status(200).result(GSON.toJson(SQLCacheRank.get(rank.name)));
                         else
                             ctx.status(500).result(response("Rank Failed To Update", "Rank Update has failed!"));
                     }
@@ -272,7 +272,7 @@ public class RankRoutes {
         if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
             Rank rank = SQLCacheRank.get(name);
             if (rank != null) {
-                boolean deleted = SQLCacheRank.delete(rank.rankID);
+                boolean deleted = SQLCacheRank.delete(rank.name);
                 if (deleted)
                     ctx.status(200).result(GSON.toJson(rank));
                 else
@@ -322,7 +322,7 @@ public class RankRoutes {
         if (role.equals(Route.RestRoles.USER)) {
             // TODO Based on SystemPerms
         }
-        clone.rankID = null;
+        clone.name = null;
         return clone;
     }
 

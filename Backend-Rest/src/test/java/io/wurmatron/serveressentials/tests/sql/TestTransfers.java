@@ -33,38 +33,38 @@ public class TestTransfers {
         TransferEntry entry = SQLCacheTransfers.create(TEST_ENTRY);
         assertNotNull(entry, "Transfer Entry has been successfully created without errors");
         // Check if it was added
-        entry = SQLCacheTransfers.getID(TEST_ENTRY.transferID);
+        entry = SQLCacheTransfers.getID(TEST_ENTRY.transfer_id);
         assertEquals(TEST_ENTRY, entry, "Added entry should be the same as the one saved.");
         // Find transferID
-        SQLCacheTransfers.invalidate(entry.transferID);
-        entry = SQLCacheTransfers.getID(TEST_ENTRY.transferID);
+        SQLCacheTransfers.invalidate(entry.transfer_id);
+        entry = SQLCacheTransfers.getID(TEST_ENTRY.transfer_id);
         assertEquals(TEST_ENTRY, entry, "Entry should be the same as the one saved.");
     }
 
     @Test
     @Order(2)
     public void testUpdateTransfer() {
-        TEST_ENTRY.serverID = "Test2";
+        TEST_ENTRY.server_id = "Test2";
         boolean updated = SQLCacheTransfers.update(TEST_ENTRY, new String[]{"serverID"});
         assertTrue(updated, " has been successfully created without errors");
         // Invalidate Cache and try again
-        SQLCacheTransfers.invalidate(TEST_ENTRY.transferID);
-        TransferEntry entry = SQLCacheTransfers.getID(TEST_ENTRY.transferID);
+        SQLCacheTransfers.invalidate(TEST_ENTRY.transfer_id);
+        TransferEntry entry = SQLCacheTransfers.getID(TEST_ENTRY.transfer_id);
         assertNotNull(entry, "Transfer Entry Exists");
-        assertEquals(TEST_ENTRY.serverID, entry.serverID);
+        assertEquals(TEST_ENTRY.server_id, entry.server_id);
     }
 
     @Test
     @Order(2)
     public void testGetTransferID() {
-        TransferEntry transferEntry = SQLCacheTransfers.getID(TEST_ENTRY.transferID);
+        TransferEntry transferEntry = SQLCacheTransfers.getID(TEST_ENTRY.transfer_id);
         assertEquals(TEST_ENTRY, transferEntry, "The TransferEntry are equal");
         // Remove from cache and try again
-        SQLCacheTransfers.invalidate(TEST_ENTRY.transferID);
-        transferEntry = SQLCacheTransfers.getID(TEST_ENTRY.transferID);
+        SQLCacheTransfers.invalidate(TEST_ENTRY.transfer_id);
+        transferEntry = SQLCacheTransfers.getID(TEST_ENTRY.transfer_id);
         // Test Transfer Entry
         assertNotNull(transferEntry, "Cache has the Transfer Entry");
-        assertEquals(TEST_ENTRY.serverID, transferEntry.serverID, "ServerID are the same");
+        assertEquals(TEST_ENTRY.server_id, transferEntry.server_id, "ServerID are the same");
         assertEquals(TEST_ENTRY.uuid, transferEntry.uuid, "uuid are the same");
         assertArrayEquals(TEST_ENTRY.items, transferEntry.items, "items are the same");
     }
@@ -72,10 +72,10 @@ public class TestTransfers {
     @Test
     @Order(2)
     public void testGetTransferUUID() {
-        long TEST_ID = TEST_ENTRY.transferID;
-        TEST_ENTRY.transferID = -1L;
+        long TEST_ID = TEST_ENTRY.transfer_id;
+        TEST_ENTRY.transfer_id = -1L;
         TransferEntry newEntry = SQLCacheTransfers.create(TEST_ENTRY);
-        TEST_ENTRY.transferID = TEST_ID;
+        TEST_ENTRY.transfer_id = TEST_ID;
         assertNotNull(newEntry, "New entry should not be null");
         List<TransferEntry> entries = SQLCacheTransfers.getUUID(TEST_ENTRY.uuid);
         assertTrue(entries.size() >= 2, "Should be at least 2 entries");
@@ -88,14 +88,14 @@ public class TestTransfers {
     @Test
     @Order(3)
     public void testDeleteTransferID() {
-        boolean deleted = SQLCacheTransfers.delete(TEST_ENTRY.transferID);
+        boolean deleted = SQLCacheTransfers.delete(TEST_ENTRY.transfer_id);
         assertTrue(deleted, " has been successfully deleted without errors");
         // Make sure its deleted
-        TransferEntry entry = SQLCacheTransfers.getID(TEST_ENTRY.transferID);
+        TransferEntry entry = SQLCacheTransfers.getID(TEST_ENTRY.transfer_id);
         assertNull(entry, "Entry has been successfully deleted");
         // Delete any still existing transfers
         List<TransferEntry> entries = SQLCacheTransfers.getUUID(TEST_ENTRY.uuid);
         for (TransferEntry e : entries)
-            assertTrue(SQLCacheTransfers.delete(e.transferID), "Entry has been successfully deleted");
+            assertTrue(SQLCacheTransfers.delete(e.transfer_id), "Entry has been successfully deleted");
     }
 }

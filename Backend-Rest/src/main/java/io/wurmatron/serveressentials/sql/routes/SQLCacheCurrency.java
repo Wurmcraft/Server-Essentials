@@ -3,8 +3,6 @@ package io.wurmatron.serveressentials.sql.routes;
 import io.wurmatron.serveressentials.models.Currency;
 import io.wurmatron.serveressentials.sql.SQLCache;
 import io.wurmatron.serveressentials.sql.cache_holder.CacheCurrency;
-import io.wurmatron.serveressentials.sql.cache_holder.CacheID;
-import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -18,37 +16,6 @@ public class SQLCacheCurrency extends SQLCache {
 
     public static String CURRENCY_TABLE = "currencys";
 
-    private static NonBlockingHashMap<String, CacheID> nameCache = new NonBlockingHashMap<>();
-
-    /**
-     * Returns the given instance based on the id, if one exists
-     *
-     * @param id id of the currency
-     * @return instance of the currency, from the db, if exists
-     * @see io.wurmatron.serveressentials.sql.SQLGenerator#get(String, String, String, String, Object)
-     */
-    @Nullable
-    public static Currency get(long id) {
-        // Check if in cache
-        if (currencyCache.containsKey(id)) {
-            if (!needsUpdate(currencyCache.get(id)))
-                return currencyCache.get(id).currency;
-            else
-                invalidate(id);
-        }
-        // Not In cache / invalid
-        try {
-            Currency currency = get("*", CURRENCY_TABLE, "currencyID", "" + id, new Currency());
-            if (currency != null) {
-                currencyCache.put(id, new CacheCurrency(currency));
-                return currency.clone();
-            }
-        } catch (Exception e) {
-            LOG.debug("Failed to GET currency for id '" + id + "' (" + e.getMessage() + ")");
-        }
-        return null;
-    }
-
     /**
      * Returns the given instance based on the name, if one exists
      *
@@ -59,16 +26,16 @@ public class SQLCacheCurrency extends SQLCache {
     @Nullable
     public static Currency get(String name) {
         // Check for name in cache
-        if (nameCache.containsKey(name.toUpperCase()))
-            if (!needsUpdate(nameCache.get(name.toUpperCase())))
-                return get(nameCache.get(name.toUpperCase()).id);
+        if (currencyCache.containsKey(name.toUpperCase()))
+            if (!needsUpdate(currencyCache.get(name.toUpperCase())))
+                return currencyCache.get(name.toUpperCase()).currency;
             else
                 invalidate(name.toUpperCase());
         // Invalid / missing
         try {
             Currency currency = get("*", CURRENCY_TABLE, "displayName", name, new Currency());
             if (currency != null) {
-                currencyCache.put(currency.currencyID, new CacheCurrency(currency));
+                currencyCache.put(currency.displayName.toUpperCase(), new CacheCurrency(currency));
                 return currency.clone();
             }
         } catch (Exception e) {
@@ -102,9 +69,8 @@ public class SQLCacheCurrency extends SQLCache {
     @Nullable
     public static Currency create(Currency currency) {
         try {
-            currency.currencyID = (long) insert(CURRENCY_TABLE, Arrays.copyOfRange(CURRENCYS_COLUMNS, 1, CURRENCYS_COLUMNS.length), currency, true);
-            currencyCache.put(currency.currencyID, new CacheCurrency(currency.clone()));
-            nameCache.put(currency.displayName.toUpperCase(), new CacheID(currency.currencyID));
+            insert(CURRENCY_TABLE, Arrays.copyOfRange(CURRENCYS_COLUMNS, 1, CURRENCYS_COLUMNS.length), currency, false);
+            currencyCache.put(currency.displayName.toUpperCase(), new CacheCurrency(currency.clone()));
             return currency;
         } catch (Exception e) {
             LOG.debug("Failed to create currency '" + currency.displayName + "' (" + e.getMessage() + ")");
@@ -123,15 +89,15 @@ public class SQLCacheCurrency extends SQLCache {
      */
     public static boolean update(Currency currency, String[] columnsToUpdate) {
         try {
-            update(CURRENCY_TABLE, columnsToUpdate, "currencyID", "" + currency.currencyID, currency);
-            if (currencyCache.containsKey(currency.currencyID)) {
-                currencyCache.get(currency.currencyID).currency = updateInfoLocal(columnsToUpdate, currency, currencyCache.get(currency.currencyID).currency);
-                currencyCache.get(currency.currencyID).lastSync = System.currentTimeMillis();
+            update(CURRENCY_TABLE, columnsToUpdate, "displayName", "" + currency.displayName, currency);
+            if (currencyCache.containsKey(currency.displayName.toUpperCase())) {
+                currencyCache.get(currency.displayName).currency = updateInfoLocal(columnsToUpdate, currency, currencyCache.get(currency.displayName).currency);
+                currencyCache.get(currency.displayName).lastSync = System.currentTimeMillis();
             } else
-                currencyCache.put(currency.currencyID, new CacheCurrency(currency));
+                currencyCache.put(currency.displayName.toUpperCase(), new CacheCurrency(currency));
             return true;
         } catch (Exception e) {
-            LOG.debug("Failed to Update currency '" + currency.currencyID + "' with name '" + currency.displayName + "' (" + e.getMessage() + ")");
+            LOG.debug("Failed to Update currency with name '" + currency.displayName + "' (" + e.getMessage() + ")");
             LOG.debug("Currency: " + GSON.toJson(currency));
         }
         return false;
@@ -140,28 +106,18 @@ public class SQLCacheCurrency extends SQLCache {
     /**
      * Delete / Remove a currency from the db
      *
-     * @param id id of the currency to be deleted
+     * @param name Name of the currency to be deleted
      * @return if the currency was deleted successfully
      */
-    public static boolean delete(long id) {
+    public static boolean delete(String name) {
         try {
-            delete(CURRENCY_TABLE, "currencyID", "" + id);
-            invalidate(id);
+            delete(CURRENCY_TABLE, "display_name", "" + name);
+            invalidate(name);
             return true;
         } catch (Exception e) {
-            LOG.debug("Failed to delete currency '" + id + "'");
+            LOG.debug("Failed to delete currency '" + name + "'");
         }
         return false;
-    }
-
-    /**
-     * Invalidates / removes the given currency entry
-     *
-     * @param id id if the currency to remove from the sql cache
-     */
-    public static void invalidate(long id) {
-        currencyCache.remove(id);
-        LOG.debug("Currency '" + id + "' has been invalidated, will update on next request!");
     }
 
     /**
@@ -170,7 +126,7 @@ public class SQLCacheCurrency extends SQLCache {
      * @param name name of the currency to remove from the sql cache
      */
     public static void invalidate(String name) {
-        nameCache.remove(name.toUpperCase());
+        currencyCache.remove(name.toUpperCase());
         LOG.debug("Currency '" + name + "' has been invalidated, will update on next request!");
     }
 
@@ -179,25 +135,14 @@ public class SQLCacheCurrency extends SQLCache {
      */
     public static void cleanupCache() {
         LOG.info("Currency Cache cleanup has begun!");
-        // ID / Main Cache
-        List<Long> toBeRemoved = new ArrayList<>();
-        for (long id : currencyCache.keySet())
-            if (needsUpdate(currencyCache.get(id)))
-                toBeRemoved.add(id);
-        // Name Cache
-        List<String> toBeRemovedName = new ArrayList<>();
-        for (String name : nameCache.keySet())
-            if (needsUpdate(nameCache.get(name)))
-                toBeRemovedName.add(name);
+        List<String> toBeRemoved = new ArrayList<>();
+        for (String name : currencyCache.keySet())
+            if (needsUpdate(currencyCache.get(name)))
+                toBeRemoved.add(name);
         // Remove from Cache
         int count = 0;
-        // ID Cache
-        for (long id : toBeRemoved) {
-            count++;
-            invalidate(id);
-        }
-        // Name Cache
-        for (String name : toBeRemovedName) {
+        //  Cache
+        for (String name : toBeRemoved) {
             count++;
             invalidate(name);
         }

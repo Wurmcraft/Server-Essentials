@@ -160,7 +160,7 @@ public class BanRoutes {
             try {
                 long banID = Long.parseLong(ctx.pathParam("id"));
                 if (banID >= 0) {
-                    if (banID == banUpdate.banID) {
+                    if (banID == banUpdate.ban_id) {
                         SQLCacheBan.update(banUpdate, SQLCacheBan.getColumns());
                         ctx.status(200).result(GSON.toJson(SQLCacheBan.get(banID)));
                     } else
@@ -220,14 +220,14 @@ public class BanRoutes {
             errors.add(new MessageResponse("Bad UUID", "Empty or Invalid UUID"));
         }
         // Check bannedBY
-        if (ban.bannedBy == null || ban.bannedBy.trim().isEmpty())
+        if (ban.banned_by == null || ban.banned_by.trim().isEmpty())
             errors.add(new MessageResponse("Missing Banned-By", "A player must be banned by someone or thing"));
         // Check banned by Type
-        if (ban.bannedByType == null || ban.bannedByType.trim().isEmpty())
+        if (ban.banned_by_type == null || ban.banned_by_type.trim().isEmpty())
             errors.add(new MessageResponse("Invalid Banned-By Type", "A ban must be created by something"));
-        if (ban.banType == null || ban.banType.trim().isEmpty())
+        if (ban.ban_type == null || ban.ban_type.trim().isEmpty())
             errors.add(new MessageResponse("No Ban Type", "You must specify the type of ban"));
-        if (!ban.banStatus)
+        if (!ban.ban_status)
             errors.add(new MessageResponse("Invalid Ban State", "A new ban must be active"));
         if (errors.size() == 0) {
             return true;
@@ -252,10 +252,10 @@ public class BanRoutes {
             // TODO Based on SystemPerms
         }
         ban.ip = null;
-        ban.discordID = null;
-        ban.banData = null;
-        ban.bannedBy = null;
-        ban.bannedByType = null;
+        ban.discord_id = null;
+        ban.ban_data = null;
+        ban.banned_by = null;
+        ban.banned_by_type = null;
         return clone;
     }
 }
