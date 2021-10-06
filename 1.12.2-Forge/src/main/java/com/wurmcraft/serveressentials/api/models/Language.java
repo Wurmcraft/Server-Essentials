@@ -176,4 +176,5 @@ public class Language {
     public String COMMAND_SPEED_FLY;
     public String COMMAND_SPEED_WALK_OTHER;
     public String COMMAND_SPEED_FLY_OTHER;
+    public String COMMAND_SEEN;
 }
