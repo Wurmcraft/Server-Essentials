@@ -8,8 +8,6 @@ import io.wurmatron.serveressentials.sql.routes.SQLCacheTransfers;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
 import org.junit.jupiter.api.*;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
 
@@ -22,7 +20,7 @@ public class TestTransfers {
             Instant.now().toEpochMilli(), new ItemWrapper[]{new ItemWrapper("<minecraft:diamond>"), new ItemWrapper("<61xminecraft:dirt@5>")}, "Test");
 
     @BeforeAll
-    public static void setup() throws IOException, SQLException {
+    public static void setup() throws Exception {
         ServerEssentialsRest.config = ConfigLoader.setupAndHandleConfig();
         ServerEssentialsRest.dbConnection = SQLGenerator.create();
     }

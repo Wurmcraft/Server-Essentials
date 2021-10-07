@@ -8,8 +8,6 @@ import io.wurmatron.serveressentials.sql.routes.SQLCacheMarket;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
 import org.junit.jupiter.api.*;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class TestMarkets {
     public static final MarketEntry TEST_MARKET = new MarketEntry("test", TestAccounts.TEST_ACCOUNT.uuid, new ItemWrapper("<diamond>"), "test", 500, Instant.now().getEpochSecond(), "Sell", "{}", "");
 
     @BeforeAll
-    public static void setup() throws IOException, SQLException {
+    public static void setup() throws Exception {
         ServerEssentialsRest.config = ConfigLoader.setupAndHandleConfig();
         ServerEssentialsRest.dbConnection = SQLGenerator.create();
     }

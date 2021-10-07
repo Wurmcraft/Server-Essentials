@@ -8,8 +8,6 @@ import io.wurmatron.serveressentials.sql.routes.SQLCacheDonator;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
 import org.junit.jupiter.api.*;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +18,7 @@ public class TestDonators {
     public static final Donator TEST_DONATOR = new Donator("test", "1234", 55.99, TestAccounts.TEST_ACCOUNT.uuid, Instant.now().getEpochSecond(), "Rank", "{\"rank\": \"Debug\"}");
 
     @BeforeAll
-    public static void setup() throws IOException, SQLException {
+    public static void setup() throws Exception {
         ServerEssentialsRest.config = ConfigLoader.setupAndHandleConfig();
         ServerEssentialsRest.dbConnection = SQLGenerator.create();
     }

@@ -7,8 +7,6 @@ import io.wurmatron.serveressentials.sql.routes.SQLCacheBan;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
 import org.junit.jupiter.api.*;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
 
@@ -20,7 +18,7 @@ public class TestBans {
     public static final Ban TEST_BAN = new Ban(-1, TestAccounts.TEST_ACCOUNT.uuid,"localhost", "", "148", "Minecraft", "Testing", Instant.now().getEpochSecond(), "PERM", "{}", true);
 
     @BeforeAll
-    public static void setup() throws IOException, SQLException {
+    public static void setup() throws Exception {
         ServerEssentialsRest.config = ConfigLoader.setupAndHandleConfig();
         ServerEssentialsRest.dbConnection = SQLGenerator.create();
     }

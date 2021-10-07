@@ -7,11 +7,8 @@ import io.wurmatron.serveressentials.sql.routes.SQLStatistics;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
 import org.junit.jupiter.api.*;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.time.Instant;
-
-import java.util.*;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +18,7 @@ public class TestStatistics {
     public static final TrackedStat TEST_STAT = new TrackedStat("Test", TestAccounts.TEST_ACCOUNT.uuid, Instant.now().getEpochSecond(), "break", "{}");
 
     @BeforeAll
-    public static void setup() throws IOException, SQLException {
+    public static void setup() throws Exception {
         ServerEssentialsRest.config = ConfigLoader.setupAndHandleConfig();
         ServerEssentialsRest.dbConnection = SQLGenerator.create();
     }

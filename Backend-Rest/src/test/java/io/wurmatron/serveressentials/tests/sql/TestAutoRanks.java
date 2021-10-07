@@ -8,8 +8,6 @@ import io.wurmatron.serveressentials.sql.routes.SQLCacheRank;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
 import org.junit.jupiter.api.*;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +18,7 @@ public class TestAutoRanks {
     public static final AutoRank TEST_AUTORANK = new AutoRank("Test", "Test2", 500,"TesT", 500, "{}");
 
     @BeforeAll
-    public static void setup() throws IOException, SQLException {
+    public static void setup() throws Exception {
         ServerEssentialsRest.config = ConfigLoader.setupAndHandleConfig();
         ServerEssentialsRest.dbConnection = SQLGenerator.create();
     }

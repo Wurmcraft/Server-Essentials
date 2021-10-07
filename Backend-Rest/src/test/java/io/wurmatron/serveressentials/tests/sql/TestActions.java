@@ -7,8 +7,6 @@ import io.wurmatron.serveressentials.sql.routes.SQLActions;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
 import org.junit.jupiter.api.*;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
 
@@ -20,7 +18,7 @@ public class TestActions {
     public static final Action TEST_ACTION = new Action(TestAccounts.TEST_ACCOUNT.uuid, "Test", "Create", "{}", Instant.now().getEpochSecond());
 
     @BeforeAll
-    public static void setup() throws IOException, SQLException {
+    public static void setup() throws Exception {
         ServerEssentialsRest.config = ConfigLoader.setupAndHandleConfig();
         ServerEssentialsRest.dbConnection = SQLGenerator.create();
     }

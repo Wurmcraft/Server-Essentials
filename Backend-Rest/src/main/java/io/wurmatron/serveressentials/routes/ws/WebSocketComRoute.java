@@ -4,13 +4,11 @@ import io.javalin.websocket.WsContext;
 import io.javalin.websocket.WsHandler;
 import io.wurmatron.serveressentials.ServerEssentialsRest;
 import io.wurmatron.serveressentials.discord.DiscordBot;
-import io.wurmatron.serveressentials.models.AuthUser;
-import io.wurmatron.serveressentials.models.DataWrapper;
-import io.wurmatron.serveressentials.models.MessageResponse;
-import io.wurmatron.serveressentials.models.WSWrapper;
+import io.wurmatron.serveressentials.models.*;
 import io.wurmatron.serveressentials.models.data_wrapper.ChatMessage;
 import io.wurmatron.serveressentials.routes.EndpointSecurity;
 import io.wurmatron.serveressentials.routes.Route;
+import io.wurmatron.serveressentials.routes.informational.StatusRoutes;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import java.util.function.Consumer;
@@ -72,9 +70,18 @@ public class WebSocketComRoute {
                     ChatMessage message = GSON.fromJson(dataWrapper.data.data, ChatMessage.class);
                     sendToAllOthers(GSON.toJson(dataWrapper), ctx);
                     // Send on discord bridge
-                    if(!ServerEssentialsRest.config.discord.token.isEmpty()) {
+                    if (!ServerEssentialsRest.config.discord.token.isEmpty()) {
                         DiscordBot.sendMessage(message);
                     }
+                } catch (Exception e) {
+                    LOG.warn("Failed to parse message from '" + activeConnections.get(ctx) + "'");
+                    e.printStackTrace();
+                }
+            } else if (dataWrapper.data.type.equalsIgnoreCase("Status")) {
+                try {
+                    ServerStatus status = GSON.fromJson(dataWrapper.data.data, ServerStatus.class);
+                    StatusRoutes.lastServerStatus.put(status.serverID, status);
+                    sendToAllOthers(GSON.toJson(dataWrapper), ctx);
                 } catch (Exception e) {
                     LOG.warn("Failed to parse message from '" + activeConnections.get(ctx) + "'");
                     e.printStackTrace();

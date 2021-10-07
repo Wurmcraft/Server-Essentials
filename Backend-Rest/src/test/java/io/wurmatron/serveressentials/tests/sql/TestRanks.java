@@ -7,8 +7,6 @@ import io.wurmatron.serveressentials.sql.routes.SQLCacheRank;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
 import org.junit.jupiter.api.*;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,7 +17,7 @@ public class TestRanks {
     public static final Rank TEST_RANK = new Rank("Test", new String[]{"general.*", "language.*"}, new String[]{"Test"}, "[Test]", 0, "&c", 0, "", 0);
 
     @BeforeAll
-    public static void setup() throws IOException, SQLException {
+    public static void setup() throws Exception {
         ServerEssentialsRest.config = ConfigLoader.setupAndHandleConfig();
         ServerEssentialsRest.dbConnection = SQLGenerator.create();
     }
