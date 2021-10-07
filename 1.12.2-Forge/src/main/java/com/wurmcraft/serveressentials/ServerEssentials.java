@@ -16,6 +16,7 @@ import com.wurmcraft.serveressentials.common.data.loader.FileDataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.IDataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import com.wurmcraft.serveressentials.common.data.ws.SocketController;
+import com.wurmcraft.serveressentials.common.modules.general.ModuleGeneral;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -60,12 +61,16 @@ public class ServerEssentials {
         SECore.dataLoader = getDataLoader();
         SECore.moduleConfigs = ConfigLoader.loadModuleConfigs();
         scheduledService = Executors.newScheduledThreadPool(config.performance.maxThreads);
+        if (SECore.moduleConfigs.get("GENERAL") != null && SECore.dataLoader.getClass().equals(RestDataLoader.class))
+            ModuleGeneral.sendStatusUpdate(true, "Pre-Initialization");
     }
 
     @Mod.EventHandler
     public void onInit(FMLInitializationEvent e) {
         LOG.info("Starting Initialization");
         setupModules();
+        if (SECore.moduleConfigs.get("GENERAL") != null && SECore.dataLoader.getClass().equals(RestDataLoader.class))
+            ModuleGeneral.sendStatusUpdate(true, "Initialization");
     }
 
     /**
@@ -92,6 +97,8 @@ public class ServerEssentials {
     public void onPostInit(FMLPostInitializationEvent e) {
         LOG.info("Starting Post-Initialization");
         commandClasses = loadCommands();
+        if (SECore.moduleConfigs.get("GENERAL") != null && SECore.dataLoader.getClass().equals(RestDataLoader.class))
+            ModuleGeneral.sendStatusUpdate(true, "Post-Initialization");
     }
 
     private HashMap<Class<?>, CommandConfig> loadCommands() {
@@ -119,13 +126,16 @@ public class ServerEssentials {
                 LOG.warn("Failed to register command '" + command.getDeclaredAnnotation(ModuleCommand.class).name() + "'");
             }
         // Startup WSS if Rest is enabled
-        if (SECore.dataLoader.getClass().equals(RestDataLoader.class))
+        if (SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
             try {
                 SocketController.connect();
             } catch (Exception f) {
                 f.printStackTrace();
                 LOG.warn("Failed to start web-socket for data connection!");
             }
+            if (SECore.moduleConfigs.get("GENERAL") != null)
+                ModuleGeneral.sendStatusUpdate(true, "Starting");
+        }
     }
 
     /**

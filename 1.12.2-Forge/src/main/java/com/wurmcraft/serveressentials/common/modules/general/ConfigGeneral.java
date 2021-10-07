@@ -19,8 +19,9 @@ public class ConfigGeneral {
     public int afkCheckTimer;
     public String afkTimer;
     public String playTimeSync;
+    public long statusSync;
 
-    public ConfigGeneral(String defaultHomeName, int minHomes, int maxHomes, HashMap<String, Location> spawn, int rtpRadius, String[] rtpBiomeBlacklist, int[] rtpDimensionWhitelist, String defaultVaultName, int afkCheckTimer, String afkTimer, String playTimeSync) {
+    public ConfigGeneral(String defaultHomeName, int minHomes, int maxHomes, HashMap<String, Location> spawn, int rtpRadius, String[] rtpBiomeBlacklist, int[] rtpDimensionWhitelist, String defaultVaultName, int afkCheckTimer, String afkTimer, String playTimeSync, long statusSync) {
         this.defaultHomeName = defaultHomeName;
         this.minHomes = minHomes;
         this.maxHomes = maxHomes;
@@ -32,6 +33,7 @@ public class ConfigGeneral {
         this.afkCheckTimer = afkCheckTimer;
         this.afkTimer = afkTimer;
         this.playTimeSync = playTimeSync;
+        this.statusSync = statusSync;
     }
 
     public ConfigGeneral() {
@@ -46,5 +48,6 @@ public class ConfigGeneral {
         this.afkCheckTimer = 30;
         this.afkTimer = "5m";
         this.playTimeSync = "5m";
+        this.statusSync = 90;
     }
 }
