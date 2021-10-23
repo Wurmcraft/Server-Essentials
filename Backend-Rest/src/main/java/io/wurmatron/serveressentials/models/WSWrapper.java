@@ -21,6 +21,6 @@ public class WSWrapper {
     }
 
     public enum Type {
-        MESSAGE, REQUEST_RESPONSE, UPDATE, DELETE
+        MESSAGE, REQUEST_RESPONSE, UPDATE, DELETE, ACTION
     }
 }

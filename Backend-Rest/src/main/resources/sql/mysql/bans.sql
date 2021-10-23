@@ -10,5 +10,5 @@ CREATE TABLE `bans` (
   `ban_type` tinytext NOT NULL,
   `ban_data` tinytext NOT NULL,
   `ban_status` tinyint(1) NOT NULL DEFAULT '1',
-   PRIMARY KEY (`banID`)
+   PRIMARY KEY (`ban_id`)
 );

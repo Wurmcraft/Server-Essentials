@@ -66,7 +66,6 @@ public class ServerEssentialsRest {
                         .path("api/swagger")
                         .swagger(new SwaggerOptions("/swagger")
                                 .title("Server-Essentials Swagger")).roles(new HashSet<>(Arrays.asList(RestRoles.DEV)))));
-
                 LOG.info("Connect to swagger http://" + config.server.host + ":" + config.server.port + "/swagger");
             }
             cfg.requestLogger((ctx, ms) -> {

@@ -43,6 +43,10 @@ dependencies {
     implementation "com.discord4j:discord4j-core:${discord4j_version}"
 }
 
+shadowJar {
+    configurations = [project.configurations.compileClasspath]
+}
+
 shadowJar.archiveName = "${archivesBaseName}-${version}.jar"
 jar {
     manifest {

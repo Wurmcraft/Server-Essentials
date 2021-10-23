@@ -71,7 +71,7 @@ public class SQLCacheAccount extends SQLCache {
     }
 
     /**
-     * Updates a existing account with the provided info
+     * Updates a existin gaccount with the provided info
      *
      * @param account         account to collect the data to be updated
      * @param columnsToUpdate columns in the database to update with the provided data
@@ -96,7 +96,6 @@ public class SQLCacheAccount extends SQLCache {
         }
         return false;
     }
-
 
     /**
      * Deletes the given account from the database

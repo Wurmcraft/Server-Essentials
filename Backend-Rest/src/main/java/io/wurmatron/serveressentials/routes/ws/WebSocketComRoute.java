@@ -11,6 +11,7 @@ import io.wurmatron.serveressentials.routes.Route;
 import io.wurmatron.serveressentials.routes.informational.StatusRoutes;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
@@ -25,11 +26,20 @@ public class WebSocketComRoute {
     public static Consumer<WsHandler> ws = ws -> {
 
         ws.onConnect(ctx -> {
-            String token = ctx.cookie("authentication");
+            Map<String, String> cookies = ctx.cookieMap();
+            String token = cookies.get("authentication");
             if (!activeConnections.containsValue(token)) {
                 if (EndpointSecurity.authTokens.containsKey(token)) {
                     AuthUser serverPerms = EndpointSecurity.authTokens.get(token);
                     if (serverPerms.type.equalsIgnoreCase("SERVER")) {
+                        if (activeConnections.containsValue(serverPerms.name)) {
+                            for (WsContext wsContext : activeConnections.keySet())
+                                if (activeConnections.get(wsContext).equals(serverPerms.name)) {
+                                    wsContext.session.close();
+                                    activeConnections.remove(wsContext);
+                                    LOG.warn(serverPerms.name + " tried to login twice, closing socket for older connection");
+                                }
+                        }
                         activeConnections.put(ctx, serverPerms.name);
                         ctx.send(GSON.toJson(new WSWrapper(200, WSWrapper.Type.UPDATE, new DataWrapper(AuthUser.class.getTypeName(), GSON.toJson(serverPerms)))));
                         LOG.info(activeConnections.get(ctx) + " has connected to the Web Socket");
@@ -59,7 +69,7 @@ public class WebSocketComRoute {
         });
 
         ws.onError(ctx -> {
-            System.out.println("Error: " + ctx.error().getMessage());
+            System.out.println("Error: " + ctx.error());
         });
     };
 
@@ -86,13 +96,35 @@ public class WebSocketComRoute {
                     LOG.warn("Failed to parse message from '" + activeConnections.get(ctx) + "'");
                     e.printStackTrace();
                 }
+            } else if (dataWrapper.data.type.equalsIgnoreCase("DM")) {
+                try {
+                    DMMessage dmMSG = GSON.fromJson(dataWrapper.data.data, DMMessage.class);
+                    if(sendToOtherPlayerUUID(GSON.toJson(dmMSG), dmMSG.receiverID)) {
+//                        ctx.send() TODO Send Confirmation
+                    }
+                } catch (Exception e) {
+                    LOG.warn("Failed to parse message from '" + activeConnections.get(ctx) + "'");
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public static void sendToAllOthers(String data, WsContext ctx) {
         for (WsContext context : activeConnections.keySet())
-            if (context.equals(ctx))
+            if (!context.equals(ctx))
                 context.send(data);
+    }
+
+    public static boolean sendToOtherPlayerUUID(String data, String p) {
+        for (WsContext context : activeConnections.keySet()) {
+            ServerStatus lastStatus = StatusRoutes.lastServerStatus.get(activeConnections.get(context));
+            for (String player : lastStatus.onlinePlayers)
+                if (player.equalsIgnoreCase(p)) {
+                    context.send(data);
+                   return true;
+                }
+        }
+        return false;
     }
 }
