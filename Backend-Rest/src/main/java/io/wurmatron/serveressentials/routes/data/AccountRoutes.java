@@ -429,13 +429,13 @@ public class AccountRoutes {
         // Validate Perms
         if (account.perms != null && account.perms.length > 0)
             for (String perm : account.perms)
-                if (!perm.contains(".") && !perm.equalsIgnoreCase("*"))
+                if (!perm.isEmpty() && !perm.contains(".") && !perm.equalsIgnoreCase("*"))
                     errors.add(new MessageResponse("Bad Request", perm + " is not a perm!"));
 
         // Validate Perks
         if (account.perks != null && account.perks.length > 0)
             for (String perk : account.perks)
-                if (!perk.contains("."))
+                if (!perk.isEmpty() && !perk.contains("."))
                     errors.add(new MessageResponse("Bad Request", perk + " is not a perk!"));
 
         // Validate Language
@@ -452,10 +452,10 @@ public class AccountRoutes {
     }
 
     /**
-     *  Generates a SQL Statement for get users with filters applied
+     * Generates a SQL Statement for get users with filters applied
      *
      * @param ctx context to get the information from the user
-     * @return  sql statement for user lookup
+     * @return sql statement for user lookup
      */
     private static String createSQLForUsersWithFilters(Context ctx) {
         StringBuilder sqlBuilder = new StringBuilder();

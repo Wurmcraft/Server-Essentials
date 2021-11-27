@@ -195,7 +195,7 @@ public class ActionRoutes {
         builder.append("SELECT * FROM " + SQLActions.ACTIONS_TABLE + " WHERE ");
         String relatedID = ctx.queryParam("related-id");
         if (relatedID != null && !relatedID.trim().isEmpty())
-            builder.append("relatedID LIKE '" + relatedID + "%' AND ");
+            builder.append("related_id LIKE '" + relatedID + "%' AND ");
         String host = ctx.queryParam("host");
         if (host != null && !host.trim().isEmpty())
             builder.append("host LIKE '" + host + "%' AND ");

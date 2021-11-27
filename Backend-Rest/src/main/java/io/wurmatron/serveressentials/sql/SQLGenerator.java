@@ -5,10 +5,7 @@ import org.postgresql.util.PGobject;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,7 +151,7 @@ public class SQLGenerator {
         else if (connection.databaseType.equalsIgnoreCase("postgress"))
             sql = "INSERT INTO " + table + " (" + String.join(", ", columns) + ") VALUES (" + argumentGenerator(columns.length, 0, columns) + ")";
         PreparedStatement statement = connection.createPrepared(sql, generatedKey ? Statement.RETURN_GENERATED_KEYS : 0);
-        addArguments(statement, columns, data);
+        statement = addArguments(statement, columns, data);
         LOG.info("INSERT: " + statement);
         statement.executeUpdate();
         if (generatedKey) {
@@ -390,7 +387,10 @@ public class SQLGenerator {
             } else if (format == 1 && columns != null && columns.length > 0) {
                 StringBuilder builder = new StringBuilder();
                 for (int x = 0; x < count; x++)
-                    builder.append(columns[x]).append(" = ?, ");
+                    if (connection.databaseType.equalsIgnoreCase("mysql"))
+                        builder.append("`").append(columns[x]).append("`").append(" = ?, ");
+                    else
+                        builder.append(columns[x]).append(" = ?, ");
                 return builder.substring(0, builder.length() - 2);
             }
         return "";
@@ -410,8 +410,10 @@ public class SQLGenerator {
         for (int index = 0; index < columns.length; index++) {
             Object fieldData = data.getClass().getDeclaredField(columns[index]).get(data);
             // Ignore null entries
-            if (fieldData == null)
+            if (fieldData == null) {
+                pStatement.setNull(index + 1, Types.NULL);
                 continue;
+            }
             // Check for Special Cases
             if (fieldData instanceof String[]) {
                 pStatement.setObject(index + 1, ((String[]) fieldData).length > 0 ? Strings.join(((String[]) fieldData), ", ") : " ");

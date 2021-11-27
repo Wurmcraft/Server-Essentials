@@ -78,8 +78,8 @@ public class TestRankRoutes {
     @Test
     @Order(2)
     public void testGetPrefixPriority() throws IOException {
-        int prefixPriority = HTTPRequests.get("api/rank/" + TestRanks.TEST_RANK.name + "/prefix-priority", Rank.class).prefixPriority;
-        assertEquals(TestRanks.TEST_RANK.prefixPriority, prefixPriority, "Rank Prefix Priority  is the same");
+        int prefixPriority = HTTPRequests.get("api/rank/" + TestRanks.TEST_RANK.name + "/prefix-priority", Rank.class).prefix_priority;
+        assertEquals(TestRanks.TEST_RANK.prefix_priority, prefixPriority, "Rank Prefix Priority  is the same");
     }
 
     @Test
@@ -92,8 +92,8 @@ public class TestRankRoutes {
     @Test
     @Order(2)
     public void testGetSuffixPriority() throws IOException {
-        int suffixPriority = HTTPRequests.get("api/rank/" + TestRanks.TEST_RANK.name + "/suffix-priority", Rank.class).suffixPriority;
-        assertEquals(TestRanks.TEST_RANK.suffixPriority, suffixPriority, "Rank Suffix Priority  is the same");
+        int suffixPriority = HTTPRequests.get("api/rank/" + TestRanks.TEST_RANK.name + "/suffix-priority", Rank.class).suffix_priority;
+        assertEquals(TestRanks.TEST_RANK.suffix_priority, suffixPriority, "Rank Suffix Priority  is the same");
     }
 
     @Test
@@ -106,8 +106,8 @@ public class TestRankRoutes {
     @Test
     @Order(2)
     public void testGetColorPriority() throws IOException {
-        int colorPriority = HTTPRequests.get("api/rank/" + TestRanks.TEST_RANK.name + "/color-priority", Rank.class).colorPriority;
-        assertEquals(TestRanks.TEST_RANK.colorPriority, colorPriority, "Rank Color Priority  is the same");
+        int colorPriority = HTTPRequests.get("api/rank/" + TestRanks.TEST_RANK.name + "/color-priority", Rank.class).color_priority;
+        assertEquals(TestRanks.TEST_RANK.color_priority, colorPriority, "Rank Color Priority  is the same");
     }
 
     @Test
