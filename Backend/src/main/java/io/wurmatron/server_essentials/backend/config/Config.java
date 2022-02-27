@@ -3,9 +3,6 @@
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
-package io.wurmatron.server_essentials;
+package io.wurmatron.server_essentials.backend.config;
 
-public class ServerEssentialsBackend {
-
-  public static void main(String[] args) {}
-}
+public class Config {}

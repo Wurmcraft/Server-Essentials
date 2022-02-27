@@ -1,0 +1,30 @@
+/**
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ *
+ * <p>Copyright (c) 2022 Wurmcraft
+ */
+package io.wurmatron.server_essentials.backend.model.config;
+
+import io.wurmatron.server_essentials.backend.config.Config;
+
+public class BackendConfig extends Config {
+
+  public General General;
+
+  // Defaults
+  public BackendConfig() {
+    this.General = new General(false);
+  }
+
+  public BackendConfig(BackendConfig.General general) {
+    General = general;
+  }
+
+  public static class General {
+    public boolean debug;
+
+    public General(boolean debug) {
+      this.debug = debug;
+    }
+  }
+}
