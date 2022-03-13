@@ -5,6 +5,16 @@
  */
 package io.wurmatron.server_essentials.backend.db;
 
+import org.hibernate.SessionFactory;
+
 public class DatabaseConnector {
 
+    /**
+     * TODO Implement
+     *
+     * Get the current active session for the current selected database
+     */
+    public static SessionFactory getSession() {
+        return null;
+    }
 }
