@@ -5,26 +5,44 @@
  */
 package io.wurmatron.server_essentials.backend.model.config;
 
+import io.wurmatron.server_essentials.backend.ServerEssentialsBackend;
 import io.wurmatron.server_essentials.backend.config.Config;
 
-public class BackendConfig extends Config {
+public class BackendConfig implements Config {
 
-  public General General;
+    public General General;
 
-  // Defaults
-  public BackendConfig() {
-    this.General = new General(false);
-  }
-
-  public BackendConfig(BackendConfig.General general) {
-    General = general;
-  }
-
-  public static class General {
-    public boolean debug;
-
-    public General(boolean debug) {
-      this.debug = debug;
+    // Defaults
+    public BackendConfig() {
+        this.General = new General(false, 30);
     }
-  }
+
+    public BackendConfig(BackendConfig.General general) {
+        General = general;
+    }
+
+    public static class General {
+        public boolean debug;
+        public int fileResyncInterval;
+
+        public General(boolean debug, int fileResyncInterval) {
+            this.debug = debug;
+            this.fileResyncInterval = fileResyncInterval;
+        }
+    }
+
+    @Override
+    public String getName() {
+        return "backend";
+    }
+
+    @Override
+    public ConfigStyle getConfigStyle() {
+        return ConfigStyle.JSON;
+    }
+
+    @Override
+    public void setValues(boolean isReloaded) {
+            // TODO Implement config loading
+    }
 }
