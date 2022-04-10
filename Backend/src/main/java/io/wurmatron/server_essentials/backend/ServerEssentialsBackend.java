@@ -9,6 +9,7 @@ package io.wurmatron.server_essentials.backend;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.javalin.Javalin;
+import io.wurmatron.server_essentials.backend.config.Config;
 import io.wurmatron.server_essentials.backend.config.ConfigLoader;
 import io.wurmatron.server_essentials.backend.model.config.BackendConfig;
 import org.slf4j.Logger;
@@ -31,13 +32,9 @@ public class ServerEssentialsBackend {
   //
   public static BackendConfig backendConfiguration;
   public static Javalin javalin;
-  public static ScheduledExecutorService scheduledService;
+  public static ScheduledExecutorService scheduledService= Executors.newScheduledThreadPool(4);;
 
   public static void main(String[] args) throws IOException {
-    scheduledService = Executors.newScheduledThreadPool(4);
-    if (!new File(SAVE_DIR + File.separator + "backend.json").exists()) {
-      ConfigLoader.create(new BackendConfig(), SAVE_DIR);
-    }
-    backendConfiguration = ConfigLoader.loadBackendConfig();
+    backendConfiguration = ConfigLoader.loadOrCreateBackendConfig(SAVE_DIR);
   }
 }

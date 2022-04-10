@@ -3,7 +3,7 @@
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
-package io.wurmatron.server_essentials.backend.backend.db;
+package io.wurmatron.server_essentials.backend.db;
 
 import io.wurmatron.server_essentials.backend.db.DatabaseConfigurator;
 import org.junit.jupiter.api.*;

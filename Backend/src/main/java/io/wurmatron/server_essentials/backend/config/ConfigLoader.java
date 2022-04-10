@@ -33,9 +33,9 @@ public class ConfigLoader {
    *
    * @throws IOException backend.toml cannot be found
    */
-  public static BackendConfig loadBackendConfig() throws IOException {
+  public static BackendConfig loadBackendConfig(File saveDir) throws IOException {
     BackendConfig newInstance = new BackendConfig();
-    Config backendConfig = load(newInstance, ServerEssentialsBackend.SAVE_DIR);
+    Config backendConfig = load(newInstance, saveDir);
     if (backendConfig instanceof BackendConfig) {
       return (BackendConfig) backendConfig;
     }
@@ -44,10 +44,17 @@ public class ConfigLoader {
     return null;
   }
 
+  public static BackendConfig loadOrCreateBackendConfig(File saveDir) throws IOException {
+    if (!new File(saveDir + File.separator + "backend.json").exists()) {
+      ConfigLoader.create(new BackendConfig(), ServerEssentialsBackend.SAVE_DIR);
+    }
+    return ConfigLoader.loadBackendConfig(saveDir);
+  }
+
   /**
    * Create a new configuration, based on the provided instance
    *
-   * @param config  instance of the config to be saved
+   * @param config instance of the config to be saved
    * @param saveDir directory to save the config file in
    * @throws IOException Any write / file creation errors
    */
@@ -80,7 +87,7 @@ public class ConfigLoader {
    * Loads a config file based on its instance and save directory
    *
    * @param configInstance instance of the config to be loaded
-   * @param saveDir        directory with the saved config file
+   * @param saveDir directory with the saved config file
    * @return instance of the config loaded from the file
    * @throws IOException Unable to find / load the provided config instance
    */
@@ -99,7 +106,7 @@ public class ConfigLoader {
       // Write to cache and setup tracking
       configCache.put(configInstance.getName(), configInstance);
       Config finalConfigInstance = configInstance;
-      getWatcher(configInstance).track((kind, filename, bak) -> {
+      getWatcher(configInstance, saveDir).track((kind, filename, bak) -> {
         try {
           finalConfigInstance.setValues(
               kind.kind().equals(StandardWatchEventKinds.ENTRY_MODIFY));
@@ -127,7 +134,7 @@ public class ConfigLoader {
    * Save a config instance into a file
    *
    * @param instance Object instance to be saved.
-   * @param saveDir  directory the config will be saved within
+   * @param saveDir directory the config will be saved within
    * @return the file that the config was saved as
    * @throws IOException Unable to save / write the config file
    */
@@ -160,7 +167,7 @@ public class ConfigLoader {
    *
    * @param config instance of the config that is being tracked
    */
-  private static FileWatcher getWatcher(Config config) throws IOException {
+  private static FileWatcher getWatcher(Config config, File saveDir) throws IOException {
     if (config.getName().contains(File.separator)) {
       // Load / Track non-base directory
       String dir = config.getName()
@@ -169,12 +176,12 @@ public class ConfigLoader {
         return fileWatchers.get(dir);
       } else {
         FileWatcher watcher = new FileWatcher(FileSystems.getDefault().newWatchService(),
-            new File(ServerEssentialsBackend.SAVE_DIR + File.separator + dir));
+            new File(saveDir + File.separator + dir));
         fileWatchers.put(dir, watcher);
         ServerEssentialsBackend.LOG.debug(
-            "Creating file watcher for directory'" + ServerEssentialsBackend.SAVE_DIR
+            "Creating file watcher for directory'" + saveDir
                 + "/'");
-        return getWatcher(config);
+        return getWatcher(config, saveDir);
       }
     } else {
       // Base loader / directory
@@ -182,12 +189,12 @@ public class ConfigLoader {
         return fileWatchers.get("/");
       } else { // Create base file watcher
         FileWatcher watcher = new FileWatcher(FileSystems.getDefault().newWatchService(),
-            ServerEssentialsBackend.SAVE_DIR);
+            saveDir);
         fileWatchers.put("/", watcher);
         ServerEssentialsBackend.LOG.debug(
-            "Creating file watcher for directory'" + ServerEssentialsBackend.SAVE_DIR
+            "Creating file watcher for directory'" + saveDir
                 + "/'");
-        return getWatcher(config);
+        return getWatcher(config, saveDir);
       }
     }
   }

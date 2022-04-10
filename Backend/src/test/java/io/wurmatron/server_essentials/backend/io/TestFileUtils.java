@@ -3,6 +3,6 @@
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
-package io.wurmatron.server_essentials.backend.backend.io;
+package io.wurmatron.server_essentials.backend.io;
 
 public class TestFileUtils {}

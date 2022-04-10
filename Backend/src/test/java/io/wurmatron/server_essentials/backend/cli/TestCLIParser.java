@@ -3,6 +3,6 @@
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
-package io.wurmatron.server_essentials.backend.backend.discord;
+package io.wurmatron.server_essentials.backend.cli;
 
-public class TestDiscordBot {}
+public class TestCLIParser {}
