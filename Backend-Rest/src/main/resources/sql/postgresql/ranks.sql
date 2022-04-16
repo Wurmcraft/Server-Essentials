@@ -8,5 +8,5 @@ CREATE TABLE ranks (
   suffix_priority int NOT NULL DEFAULT '0',
   color text,
   color_priority int NOT NULL DEFAULT '0',
-  PRIMARY KEY (rankID)
+  PRIMARY KEY (name)
 );

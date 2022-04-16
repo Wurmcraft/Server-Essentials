@@ -46,7 +46,7 @@ public class DatabasePopulator {
             if (!set.next())
                 return false;
         } catch (Exception e) {
-            LOG.debug("Failed to check if table exists ' " + tableName + "' (" + e.getMessage() + ")");
+            LOG.debug("Failed to check if table exists ' " + tableName + "' (" + e.getLocalizedMessage() + ")");
         }
         return true;
     }
@@ -62,7 +62,7 @@ public class DatabasePopulator {
             c.createStatement().execute(tableSQL);
             LOG.info("Table '" + tableName + "' Created!");
         } catch (Exception e) {
-            LOG.warn("Failed to create table '" + tableName + "' (" + e.getMessage() + ")");
+            LOG.warn("Failed to create table '" + tableName + "' (" + e.getLocalizedMessage() + ")");
         }
     }
 

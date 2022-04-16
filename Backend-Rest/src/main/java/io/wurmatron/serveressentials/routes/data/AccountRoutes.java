@@ -44,6 +44,8 @@ public class AccountRoutes {
     public static Handler createAccount = ctx -> {
         try {
             Account newAccount = GSON.fromJson(ctx.body(), Account.class);
+            if (newAccount.lang == null)
+                newAccount.lang = "";
             if (isValidAccount(ctx, newAccount)) {
                 // Check for existing account
                 Account account = SQLCacheAccount.get(newAccount.uuid);
@@ -415,16 +417,16 @@ public class AccountRoutes {
             errors.add(new MessageResponse("Bad Request", "Missing Rank(s)"));
         }
         // Check for valid ranks
-        if (account.rank != null)
-            for (String rank : account.rank)
-                if (rank.trim().isEmpty()) {
-                    errors.add(new MessageResponse("Bad Request", "Empty Rank(s)"));
-                } else {
-                    Rank validRank = SQLCacheRank.get(rank);
-                    if (validRank == null) {
-                        errors.add(new MessageResponse("Bad Request", rank + " is not a valid rank!"));
-                    }
-                }
+//        if (account.rank != null)
+//            for (String rank : account.rank)
+//                if (rank.trim().isEmpty()) {
+//                    errors.add(new MessageResponse("Bad Request", "Empty Rank(s)"));
+//                } else {
+//                    Rank validRank = SQLCacheRank.get(rank);
+//                    if (validRank == null) {
+//                        errors.add(new MessageResponse("Bad Request", rank + " is not a valid rank!"));
+//                    }
+//                }
 
         // Validate Perms
         if (account.perms != null && account.perms.length > 0)
@@ -439,9 +441,9 @@ public class AccountRoutes {
                     errors.add(new MessageResponse("Bad Request", perk + " is not a perk!"));
 
         // Validate Language
-        if (account.lang == null || account.lang.trim().isEmpty()) {
-            errors.add(new MessageResponse("Bad Request", "Language must not be empty"));
-        }
+//        if (account.lang == null || account.lang.trim().isEmpty()) {
+//            errors.add(new MessageResponse("Bad Request", "Language must not be empty"));
+//        }
         // TODO Check for valid language
 
         if (errors.size() > 0) {

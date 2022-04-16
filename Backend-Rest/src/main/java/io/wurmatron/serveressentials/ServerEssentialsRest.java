@@ -43,8 +43,7 @@ public class ServerEssentialsRest {
         try {
             dbConnection = SQLGenerator.create();
         } catch (Exception e) {
-            LOG.warn("Failed to connect to SQL Server!");
-            LOG.warn(e.getMessage());
+            LOG.warn("Failed to connect to SQL Server! (" + e.getLocalizedMessage() + ")");
             LOG.info("Please check your SQL server and settings for connectivity!");
             System.exit(-2);
         }

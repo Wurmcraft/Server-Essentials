@@ -10,6 +10,9 @@ public class ServerStatus {
     public String currentState;
     public String specialData;
 
+    public ServerStatus() {
+    }
+
     public ServerStatus(String serverID, Long delayMS, Long lastUpdate, String[] onlinePlayers, String[] playerInfo, String currentState, String specialData) {
         this.serverID = serverID;
         this.delayMS = delayMS;

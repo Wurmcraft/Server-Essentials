@@ -10,5 +10,5 @@ CREATE TABLE bans (
   ban_type text NOT NULL,
   ban_data text NOT NULL,
   ban_status int NOT NULL DEFAULT '1',
-  PRIMARY KEY (banID)
+  PRIMARY KEY (ban_id)
 );

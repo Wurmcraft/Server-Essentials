@@ -54,7 +54,7 @@ public class ModuleGeneral {
             }
         } else {
             try {
-                RequestGenerator.post("api/information/status", new WSWrapper(200, WSWrapper.Type.MESSAGE, new DataWrapper("Status", GSON.toJson(generateStatus("Online")))));
+                RequestGenerator.post("api/information/status",  generateStatus(status));
             } catch (Exception e) {
                 LOG.warn("Failed to send updated status to Rest via HTTP Post");
                 e.printStackTrace();
@@ -64,7 +64,9 @@ public class ModuleGeneral {
 
     public static ServerStatus generateStatus(String status) {
         // TODO Compute Special Status, Invis, Management, Etc..
-        String[][] playersData = getPlayerInfo();
+        String[][] playersData = new String[][] {new String[] {}, new String[] {}};
+        if (status.equalsIgnoreCase("Online"))
+             playersData = getPlayerInfo();
         return new ServerStatus(ServerEssentials.config.general.serverID, computeDelay(), Instant.now().getEpochSecond(), playersData[0], playersData[1], status, "{}");
     }
 
@@ -75,10 +77,12 @@ public class ModuleGeneral {
     public static String[][] getPlayerInfo() {
         List<String> onlinePlayers = new ArrayList<>();
         List<String> playerInfo = new ArrayList<>();
-        for (EntityPlayer player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
-            onlinePlayers.add(player.getGameProfile().getId().toString());
-            Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account());
-            playerInfo.add(player.getDisplayNameString() + ";" + PlayerChatEvent.getRankValue("prefix", PlayerChatEvent.getRanks(account)) + ";");
+        if(FMLCommonHandler.instance().getMinecraftServerInstance() != null) {
+            for (EntityPlayer player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+                onlinePlayers.add(player.getGameProfile().getId().toString());
+                Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account());
+                playerInfo.add(player.getDisplayNameString() + ";" + PlayerChatEvent.getRankValue("prefix", PlayerChatEvent.getRanks(account)) + ";");
+            }
         }
         return new String[][]{onlinePlayers.toArray(new String[0]), playerInfo.toArray(new String[0])};
     }

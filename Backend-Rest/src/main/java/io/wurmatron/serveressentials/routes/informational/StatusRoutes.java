@@ -40,9 +40,12 @@ public class StatusRoutes {
     public static Handler updateStatus = ctx -> {
         try {
             ServerStatus status = GSON.fromJson(ctx.body(), ServerStatus.class);
-            lastServerStatus.put(status.serverID, status);
+            if (status != null && status.serverID != null && !status.serverID.isEmpty() && status.lastUpdate > 0 && status.currentState != null && !status.currentState.isEmpty())
+                lastServerStatus.put(status.serverID, status);
+            else
+                ctx.status(422).result(response("Invalid Json", "Invalid Json Status!"));
         } catch (JsonParseException e) {
-            ctx.status(500).result(response("Bad Json", "Unable to parse json for Update Status!"));
+            ctx.status(422).result(response("Bad Json", "Unable to parse json for Update Status!"));
         }
     };
 

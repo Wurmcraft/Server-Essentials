@@ -10,6 +10,7 @@ import java.lang.reflect.Modifier;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -77,9 +78,10 @@ public class RequestGenerator {
         http = addAuthentication(http);
         // Add / Write  body (if any)
         if (data != null) {
-            String bodyJson = ServerEssentials.GSON.toJson(data).replaceAll("\n", "");
+            String bodyJson = ServerEssentials.GSON.toJson(data);
             http.setRequestProperty("Content-Length", String.valueOf(bodyJson.length()));
-            http.getOutputStream().write(bodyJson.getBytes());
+            http.setRequestProperty("Content-Type","application/json");
+            http.getOutputStream().write(bodyJson.getBytes(StandardCharsets.UTF_8));
         }
         // Collect and return
         String httpBody = new BufferedReader(new InputStreamReader(http.getInputStream())).lines().collect(Collectors.joining("\n"));

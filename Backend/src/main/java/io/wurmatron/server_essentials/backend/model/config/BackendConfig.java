@@ -6,7 +6,9 @@
  */
 package io.wurmatron.server_essentials.backend.model.config;
 
+import io.wurmatron.server_essentials.backend.ServerEssentialsBackend;
 import io.wurmatron.server_essentials.backend.config.Config;
+import java.util.concurrent.Executors;
 
 public class BackendConfig implements Config {
 
@@ -14,7 +16,8 @@ public class BackendConfig implements Config {
 
   // Defaults
   public BackendConfig() {
-    this.General = new General(false, 30);
+    this.General = new General(false, 30,
+        Math.max((Runtime.getRuntime().availableProcessors() / 2), 1));
   }
 
   public BackendConfig(BackendConfig.General general) {
@@ -25,10 +28,12 @@ public class BackendConfig implements Config {
 
     public boolean debug;
     public int fileResyncInterval;
+    public int threadPoolSize;
 
-    public General(boolean debug, int fileResyncInterval) {
+    public General(boolean debug, int fileResyncInterval, int threadPoolSize) {
       this.debug = debug;
       this.fileResyncInterval = fileResyncInterval;
+      this.threadPoolSize = threadPoolSize;
     }
   }
 
@@ -44,6 +49,7 @@ public class BackendConfig implements Config {
 
   @Override
   public void setValues(boolean isReloaded) {
-    // TODO Implement config loading
+    ServerEssentialsBackend.scheduledService = Executors.newScheduledThreadPool(
+        General.threadPoolSize);
   }
 }
