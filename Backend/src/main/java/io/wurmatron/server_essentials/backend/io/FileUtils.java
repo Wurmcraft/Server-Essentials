@@ -25,7 +25,7 @@ public class FileUtils {
   public static String readInternalFile(String path) throws IOException {
     try {
       BufferedReader reader = new BufferedReader(new InputStreamReader(
-          Objects.requireNonNull(TableConfigurator.class.getResourceAsStream(path))));
+          Objects.requireNonNull(FileUtils.class.getClassLoader().getResourceAsStream(path))));
       return reader.lines().collect(Collectors.joining("\n"));
     } catch (Exception e) {
       throw new IOException("Failed to read internal path '" + path + "'");

@@ -21,7 +21,7 @@ public class TableConfigurator {
   public static boolean createTable(String dbType, String name) {
     try {
       String sqlTableData = FileUtils.readInternalFile(
-          "sql/" + dbType.toLowerCase() + "/" + name + ".sql");
+          "sql\\" + dbType.toLowerCase() + "\\" + name + ".sql");
       if (sqlTableData.length() > 0) {
         if (DatabaseConnector.getSession() != null && !DatabaseConnector.getSession()
             .isClosed()) {
