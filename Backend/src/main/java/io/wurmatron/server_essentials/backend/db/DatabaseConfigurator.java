@@ -8,6 +8,7 @@ package io.wurmatron.server_essentials.backend.db;
 
 import io.wurmatron.server_essentials.backend.ServerEssentialsBackend;
 import java.util.HashMap;
+import java.util.Locale;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -26,6 +27,7 @@ public class DatabaseConfigurator {
     // Driver
     driverClasses.put("mysql", "com.mysql.jdbc.Driver");
     driverClasses.put("postgresql", "org.postgresql.Driver");
+//    driverClasses.put("postgres", "org.postgresql.Driver");
     // Dialect
     dialectClasses.put("mysql", "org.hibernate.dialect.MySQL8Dialect");
     dialectClasses.put("postgresql", "org.hibernate.dialect.PostgreSQL95Dialect");
@@ -41,7 +43,9 @@ public class DatabaseConfigurator {
     Configuration config = createConfiguration(autofillValues);
     try {
       SessionFactory sessionFactory = config.buildSessionFactory();
+      DatabaseConnector.sessionFactory = sessionFactory;
       Session session = sessionFactory.openSession();
+      DatabaseConnector.databaseType = autofillValues.get("sql_name").toLowerCase();
       return session.isConnected();
     } catch (Exception e) {
       ServerEssentialsBackend.LOG.warn("Failed to connect to database.");
@@ -70,8 +74,8 @@ public class DatabaseConfigurator {
     config.setProperty("hibernate.connection.password",
         autofillValues.get("sql_password"));
     config.setProperty("hibernate.dialect",
-        driverClasses.getOrDefault(
-            autofillValues.get("sql_name").toLowerCase(), null));
+        dialectClasses.getOrDefault(autofillValues.get("sql_name").toLowerCase(), null));
+    config.setProperty("hibernate.current_session_context_class", "thread");
     // Table Models
     config.addPackage("io.wurmatron.server_essentials.backend.model.db");
     return config;

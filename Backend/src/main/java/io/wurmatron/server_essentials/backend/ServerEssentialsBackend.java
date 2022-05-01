@@ -9,8 +9,8 @@ package io.wurmatron.server_essentials.backend;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.javalin.Javalin;
-import io.wurmatron.server_essentials.backend.config.Config;
-import io.wurmatron.server_essentials.backend.config.ConfigLoader;
+import io.wurmatron.server_essentials.backend.cli.CommandRunner;
+import io.wurmatron.server_essentials.backend.config.InitialStartupConfigurator;
 import io.wurmatron.server_essentials.backend.model.config.BackendConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServerEssentialsBackend {
 
@@ -32,9 +31,13 @@ public class ServerEssentialsBackend {
   //
   public static BackendConfig backendConfiguration;
   public static Javalin javalin;
-  public static ScheduledExecutorService scheduledService= Executors.newScheduledThreadPool(4);;
+  public static ScheduledExecutorService scheduledService = Executors.newScheduledThreadPool(
+      4);
 
-  public static void main(String[] args) throws IOException {
-    backendConfiguration = ConfigLoader.loadOrCreateBackendConfig(SAVE_DIR);
+  public static void main(String[] args) {
+    if(!InitialStartupConfigurator.loadOrSetup(args)) {
+      ServerEssentialsBackend.LOG.error("Failed to initialization! Please check the logs for more details");
+    }
+    CommandRunner.handleCommands();
   }
 }

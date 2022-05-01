@@ -3,9 +3,12 @@ package io.wurmatron.server_essentials.backend.db;
 import io.wurmatron.server_essentials.backend.ServerEssentialsBackend;
 import io.wurmatron.server_essentials.backend.io.FileUtils;
 import java.io.IOException;
+import java.sql.PreparedStatement;
 import org.hibernate.Session;
 
 public class TableConfigurator {
+
+  public static final String[] TABLES = new String[]{"users"};
 
   /**
    * Creates a table based on to be configured table templates in
@@ -41,6 +44,18 @@ public class TableConfigurator {
       ServerEssentialsBackend.LOG.warn(
           "Failed to create table '" + name.toUpperCase() + "' via "
               + dbType.toUpperCase());
+    }
+    return false;
+  }
+
+  public static boolean tableExists(String name) {
+    try {
+      PreparedStatement statment = DatabaseConnector.getConnection()
+          .prepareStatement("SELECT COUNT(*) FROM " + name);
+      statment.execute();
+      return true;
+    } catch (Exception e) {
+      e.printStackTrace();
     }
     return false;
   }

@@ -7,6 +7,7 @@
 package io.wurmatron.server_essentials.backend.config;
 
 import io.wurmatron.server_essentials.backend.ServerEssentialsBackend;
+import io.wurmatron.server_essentials.backend.config.Config.ConfigStyle;
 import io.wurmatron.server_essentials.backend.io.FileWatcher;
 import io.wurmatron.server_essentials.backend.model.config.BackendConfig;
 import me.grison.jtoml.impl.Toml;
@@ -25,8 +26,8 @@ import static io.wurmatron.server_essentials.backend.ServerEssentialsBackend.GSO
 public class ConfigLoader {
 
   // Stores the loaded config's as a cache
-  private static NonBlockingHashMap<String, Config> configCache = new NonBlockingHashMap<>();
-  private static NonBlockingHashMap<String, FileWatcher> fileWatchers = new NonBlockingHashMap<>();
+  private static final NonBlockingHashMap<String, Config> configCache = new NonBlockingHashMap<>();
+  private static final NonBlockingHashMap<String, FileWatcher> fileWatchers = new NonBlockingHashMap<>();
 
   /**
    * Loads the config for the backend in TOML format from the SAVE_DIR/backend.toml
@@ -102,6 +103,8 @@ public class ConfigLoader {
             configInstance.getClass());
       } else if (configInstance.getConfigStyle().equals(Config.ConfigStyle.TOML)) {
         configInstance = (T) Toml.parse(configFile).getAs("", configInstance.getClass());
+      } else if (configInstance.getConfigStyle().equals(Config.ConfigStyle.TXT)) {
+        configInstance = TextFileConfigReaderAndLoader.load(configInstance, configFile);
       }
       // Write to cache and setup tracking
       configCache.put(configInstance.getName(), configInstance);
@@ -145,6 +148,8 @@ public class ConfigLoader {
       fileBytes = GSON.toJson(instance);
     } else if (instance.getConfigStyle().equals(Config.ConfigStyle.TOML)) {
       fileBytes = Toml.serialize(instance);
+    } else if(instance.getConfigStyle().equals(ConfigStyle.TXT)) {
+      fileBytes = TextFileConfigReaderAndLoader.convertToString(instance);
     }
     File configFile = new File(
         saveDir + File.separator + instance.getName() + "." + instance.getConfigStyle()

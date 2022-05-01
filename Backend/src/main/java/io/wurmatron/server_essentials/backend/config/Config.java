@@ -27,6 +27,6 @@ public interface Config {
     void setValues(boolean isReloaded);
 
     enum ConfigStyle {
-        JSON, TOML
+        JSON, TOML, TXT
     }
 }
