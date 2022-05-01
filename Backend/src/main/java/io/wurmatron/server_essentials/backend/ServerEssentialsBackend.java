@@ -12,6 +12,7 @@ import io.javalin.Javalin;
 import io.wurmatron.server_essentials.backend.cli.CommandRunner;
 import io.wurmatron.server_essentials.backend.config.InitialStartupConfigurator;
 import io.wurmatron.server_essentials.backend.model.config.BackendConfig;
+import io.wurmatron.server_essentials.backend.rest.JavalinConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,9 +36,21 @@ public class ServerEssentialsBackend {
       4);
 
   public static void main(String[] args) {
-    if(!InitialStartupConfigurator.loadOrSetup(args)) {
-      ServerEssentialsBackend.LOG.error("Failed to initialization! Please check the logs for more details");
+    displaySystemInfo();
+    if (!InitialStartupConfigurator.loadOrSetup(args)) {
+      ServerEssentialsBackend.LOG.error(
+          "Failed to initialization! Please check the logs for more details");
     }
+    javalin = JavalinConfigurator.setupAndConfigure(backendConfiguration, args);
     CommandRunner.handleCommands();
+  }
+
+  public static void displaySystemInfo() {
+    LOG.debug("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+    LOG.debug("OS: " + System.getProperty("os.name") + "-" + System.getProperty("os.arch"));
+    LOG.debug("CPU: " + Runtime.getRuntime().availableProcessors() + " cores");
+    LOG.debug("Java: " + System.getProperty("java.runtime.version"));
+    LOG.debug("Memory: " + (Runtime.getRuntime().totalMemory() / 1000000) + "MB | MAX: " + (Runtime.getRuntime().maxMemory() / 1000000) + "MB");
+    LOG.debug("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
   }
 }

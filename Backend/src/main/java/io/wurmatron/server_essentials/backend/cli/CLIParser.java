@@ -6,6 +6,8 @@
  */
 package io.wurmatron.server_essentials.backend.cli;
 
+import io.wurmatron.server_essentials.backend.ServerEssentialsBackend;
+import io.wurmatron.server_essentials.backend.db.DatabaseConnector;
 import java.util.Scanner;
 
 public class CLIParser {
@@ -18,9 +20,18 @@ public class CLIParser {
   }
 
   public static void handleCommand(String command) {
-    if(command.equalsIgnoreCase("help")) {
+    if (command.equalsIgnoreCase("help")) {
       System.out.println("- help <display command information / usage>");
-    } else
+      System.out.println("- stop <gracefully shutdown the application>");
+    } else if (command.equalsIgnoreCase("stop") || command.equalsIgnoreCase("quit")) {
+      ServerEssentialsBackend.LOG.warn("Shutting Down! ...");
+      DatabaseConnector.getSession().close();
+      ServerEssentialsBackend.javalin.stop();
+      ServerEssentialsBackend.scheduledService.shutdown();
+      // TODO Shutdown gracefully
+      System.exit(1);
+    } else {
       System.out.println("Unknown Command!, Try help for a list of commands");
+    }
   }
 }

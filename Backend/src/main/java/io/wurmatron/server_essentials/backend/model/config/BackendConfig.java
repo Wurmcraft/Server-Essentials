@@ -13,11 +13,13 @@ import java.util.concurrent.Executors;
 public class BackendConfig implements Config {
 
   public General General;
+  public Server Server;
 
   // Defaults
   public BackendConfig() {
     this.General = new General(false, 30,
         Math.max((Runtime.getRuntime().availableProcessors() / 2), 1));
+    this.Server = new Server("0.0.0.0", 8233, "", 10, true, false);
   }
 
   public BackendConfig(BackendConfig.General general) {
@@ -34,6 +36,26 @@ public class BackendConfig implements Config {
       this.debug = debug;
       this.fileResyncInterval = fileResyncInterval;
       this.threadPoolSize = threadPoolSize;
+    }
+  }
+
+  public static class Server {
+
+    public String host;
+    public int port;
+    public String corosOrigins;
+    public long requestTimeout;
+    public boolean forceLowercase;
+    public boolean swaggerEnabled;
+
+    public Server(String host, int port, String corosOrigins, long requestTimeout,
+        boolean forceLowercase, boolean swaggerEnabled) {
+      this.host = host;
+      this.port = port;
+      this.corosOrigins = corosOrigins;
+      this.requestTimeout = requestTimeout;
+      this.forceLowercase = forceLowercase;
+      this.swaggerEnabled = swaggerEnabled;
     }
   }
 
