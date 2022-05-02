@@ -188,4 +188,6 @@ public class UserAccount {
   public void setPurchasedPerks(String purchasedPerks) {
     this.purchasedPerks = purchasedPerks;
   }
+
+
 }
