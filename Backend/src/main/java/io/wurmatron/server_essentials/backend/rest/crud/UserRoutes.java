@@ -1,3 +1,8 @@
+/**
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ *
+ * <p>Copyright (c) 2022 Wurmcraft
+ */
 package io.wurmatron.server_essentials.backend.rest.crud;
 
 import io.javalin.core.validation.BodyValidator;
@@ -24,36 +29,65 @@ public class UserRoutes {
       deprecated = false,
       tags = {"User"},
       headers = {},
-      requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = UserAccount.class), description = "User account to be created"),
+      requestBody =
+          @OpenApiRequestBody(
+              content = @OpenApiContent(from = UserAccount.class),
+              description = "User account to be created"),
       responses = {
-          @OpenApiResponse(status = "201", content = @OpenApiContent(from = RestResponse.class), description = "User account has been created"),
-          @OpenApiResponse(status = "400", content = @OpenApiContent(from = RestResponse.class), description = "There is an error with the provided user account"),
-          @OpenApiResponse(status = "401", content = @OpenApiContent(from = RestResponse.class), description = "No credentials where provided to preform this action"),
-          @OpenApiResponse(status = "403", content = @OpenApiContent(from = RestResponse.class), description = "The provided credentials do not have permission to preform this action"),
-          @OpenApiResponse(status = "409", content = @OpenApiContent(from = RestResponse.class), description = "A user account with the provided information already exists"),
-          @OpenApiResponse(status = "429", content = @OpenApiContent(from = RestResponse.class), description = "The provided credentials have created to many user accounts within a given time frame"),
-          @OpenApiResponse(status = "500", content = @OpenApiContent(from = RestResponse.class), description = "The api had an internal server error, see the response for more information"),
-      }
-  )
+        @OpenApiResponse(
+            status = "201",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "User account has been created"),
+        @OpenApiResponse(
+            status = "400",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "There is an error with the provided user account"),
+        @OpenApiResponse(
+            status = "401",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "No credentials where provided to preform this action"),
+        @OpenApiResponse(
+            status = "403",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "The provided credentials do not have permission to preform this action"),
+        @OpenApiResponse(
+            status = "409",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "A user account with the provided information already exists"),
+        @OpenApiResponse(
+            status = "429",
+            content = @OpenApiContent(from = RestResponse.class),
+            description =
+                "The provided credentials have created to many user accounts within a given time frame"),
+        @OpenApiResponse(
+            status = "500",
+            content = @OpenApiContent(from = RestResponse.class),
+            description =
+                "The api had an internal server error, see the response for more information"),
+      })
   @Route(path = "/api/users", method = "POST")
-  public static Handler createUser = ctx -> {
-    UserAccount userAccount = validateUserAccount(ctx.bodyValidator(UserAccount.class));
-    Objects.requireNonNull(DatabaseConnector.getSession()).getCurrentSession()
-        .beginTransaction();
-    UserAccount existingAccount = DatabaseConnector.getSession().getCurrentSession()
-        .get(UserAccount.class, userAccount.getUuid());
-    DatabaseConnector.getSession().getCurrentSession().getTransaction().commit();
-    if (existingAccount != null) {
-      ctx.result(ServerEssentialsBackend.GSON.toJson(filterBasedOnPerms(existingAccount)))
-          .status(409);
-    }
-    Objects.requireNonNull(DatabaseConnector.getSession()).getCurrentSession()
-        .beginTransaction();
-    DatabaseConnector.getSession().getCurrentSession()
-        .save(userAccount);
-    DatabaseConnector.getSession().getCurrentSession().getTransaction().commit();
-    ctx.status(201);
-  };
+  public static Handler createUser =
+      ctx -> {
+        UserAccount userAccount = validateUserAccount(ctx.bodyValidator(UserAccount.class));
+        Objects.requireNonNull(DatabaseConnector.getSession())
+            .getCurrentSession()
+            .beginTransaction();
+        UserAccount existingAccount =
+            DatabaseConnector.getSession()
+                .getCurrentSession()
+                .get(UserAccount.class, userAccount.getUuid());
+        DatabaseConnector.getSession().getCurrentSession().getTransaction().commit();
+        if (existingAccount != null) {
+          ctx.result(ServerEssentialsBackend.GSON.toJson(filterBasedOnPerms(existingAccount)))
+              .status(409);
+        }
+        Objects.requireNonNull(DatabaseConnector.getSession())
+            .getCurrentSession()
+            .beginTransaction();
+        DatabaseConnector.getSession().getCurrentSession().save(userAccount);
+        DatabaseConnector.getSession().getCurrentSession().getTransaction().commit();
+        ctx.status(201);
+      };
 
   @OpenApi(
       description = "Delete a existing account",
@@ -62,40 +96,70 @@ public class UserRoutes {
       tags = {"User"},
       headers = {},
       pathParams = {
-          @OpenApiParam(name = "uuid", required = true, description = "UUID of the account to delete")},
+        @OpenApiParam(name = "uuid", required = true, description = "UUID of the account to delete")
+      },
       responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = RestResponse.class), description = "User account has been deleted"),
-          @OpenApiResponse(status = "400", content = @OpenApiContent(from = RestResponse.class), description = "An error occurred while attempting to delete the provided user account"),
-          @OpenApiResponse(status = "401", content = @OpenApiContent(from = RestResponse.class), description = "No credentials where provided to preform this action"),
-          @OpenApiResponse(status = "403", content = @OpenApiContent(from = RestResponse.class), description = "The provided credentials do not have permission to preform this action"),
-          @OpenApiResponse(status = "404", content = @OpenApiContent(from = RestResponse.class), description = "No user account exists with this uuid"),
-          @OpenApiResponse(status = "429", content = @OpenApiContent(from = RestResponse.class), description = "The provided credentials have deleted to many user accounts within a given time frame"),
-          @OpenApiResponse(status = "500", content = @OpenApiContent(from = RestResponse.class), description = "The api had an internal server error, see the response for more information"),
-      }
-  )
+        @OpenApiResponse(
+            status = "200",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "User account has been deleted"),
+        @OpenApiResponse(
+            status = "400",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "An error occurred while attempting to delete the provided user account"),
+        @OpenApiResponse(
+            status = "401",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "No credentials where provided to preform this action"),
+        @OpenApiResponse(
+            status = "403",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "The provided credentials do not have permission to preform this action"),
+        @OpenApiResponse(
+            status = "404",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "No user account exists with this uuid"),
+        @OpenApiResponse(
+            status = "429",
+            content = @OpenApiContent(from = RestResponse.class),
+            description =
+                "The provided credentials have deleted to many user accounts within a given time frame"),
+        @OpenApiResponse(
+            status = "500",
+            content = @OpenApiContent(from = RestResponse.class),
+            description =
+                "The api had an internal server error, see the response for more information"),
+      })
   @Route(path = "/api/users/{uuid}", method = "DELETE")
-  public static Handler deleteUser = ctx -> {
-    String uuid = ctx.pathParamAsClass("uuid", String.class).check(id -> {
-      try {
-        UUID.fromString(id);
-        return true;
-      } catch (Exception e) {
-        return false;
-      }
-    }, "UUID must be valid").get();
-    Objects.requireNonNull(DatabaseConnector.getSession()).getCurrentSession()
-        .beginTransaction();
-    UserAccount userAccount = DatabaseConnector.getSession().getCurrentSession()
-        .get(UserAccount.class, uuid);
-    if (userAccount != null) {
-      DatabaseConnector.getSession().getCurrentSession().delete(userAccount);
-      DatabaseConnector.getSession().getCurrentSession().getTransaction().commit();
-      ctx.result(ServerEssentialsBackend.GSON.toJson(userAccount));
-      ctx.status(200);
-    } else {
-      ctx.status(404);
-    }
-  };
+  public static Handler deleteUser =
+      ctx -> {
+        String uuid =
+            ctx.pathParamAsClass("uuid", String.class)
+                .check(
+                    id -> {
+                      try {
+                        UUID.fromString(id);
+                        return true;
+                      } catch (Exception e) {
+                        return false;
+                      }
+                    },
+                    "UUID must be valid")
+                .get();
+        Objects.requireNonNull(DatabaseConnector.getSession())
+            .getCurrentSession()
+            .beginTransaction();
+        UserAccount userAccount =
+            DatabaseConnector.getSession().getCurrentSession().get(UserAccount.class, uuid);
+        if (userAccount != null) {
+          DatabaseConnector.getSession().getCurrentSession().delete(userAccount);
+          DatabaseConnector.getSession().getCurrentSession().getTransaction().commit();
+          ctx.result(ServerEssentialsBackend.GSON.toJson(userAccount));
+          ctx.status(200);
+        } else {
+          ctx.status(404);
+        }
+      };
 
   @OpenApi(
       description = "Get an existing user account",
@@ -104,39 +168,72 @@ public class UserRoutes {
       tags = {"User"},
       headers = {},
       pathParams = {
-          @OpenApiParam(name = "uuid", required = true, description = "UUID of the account you are looking for")},
+        @OpenApiParam(
+            name = "uuid",
+            required = true,
+            description = "UUID of the account you are looking for")
+      },
       responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = UserAccount.class), description = "User account has been returned"),
-          @OpenApiResponse(status = "400", content = @OpenApiContent(from = RestResponse.class), description = "An error occurred while attempting to delete the provided user account"),
-          @OpenApiResponse(status = "401", content = @OpenApiContent(from = RestResponse.class), description = "No credentials where provided to preform this action"),
-          @OpenApiResponse(status = "403", content = @OpenApiContent(from = RestResponse.class), description = "The provided credentials do not have permission to preform this action"),
-          @OpenApiResponse(status = "404", content = @OpenApiContent(from = RestResponse.class), description = "No user account exists with this uuid"),
-          @OpenApiResponse(status = "429", content = @OpenApiContent(from = RestResponse.class), description = "The provided credentials have deleted to many user accounts within a given time frame"),
-          @OpenApiResponse(status = "500", content = @OpenApiContent(from = RestResponse.class), description = "The api had an internal server error, see the response for more information"),
-      }
-  )
+        @OpenApiResponse(
+            status = "200",
+            content = @OpenApiContent(from = UserAccount.class),
+            description = "User account has been returned"),
+        @OpenApiResponse(
+            status = "400",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "An error occurred while attempting to delete the provided user account"),
+        @OpenApiResponse(
+            status = "401",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "No credentials where provided to preform this action"),
+        @OpenApiResponse(
+            status = "403",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "The provided credentials do not have permission to preform this action"),
+        @OpenApiResponse(
+            status = "404",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "No user account exists with this uuid"),
+        @OpenApiResponse(
+            status = "429",
+            content = @OpenApiContent(from = RestResponse.class),
+            description =
+                "The provided credentials have deleted to many user accounts within a given time frame"),
+        @OpenApiResponse(
+            status = "500",
+            content = @OpenApiContent(from = RestResponse.class),
+            description =
+                "The api had an internal server error, see the response for more information"),
+      })
   @Route(path = "/api/users/{uuid}", method = "GET")
-  public static Handler getUser = ctx -> {
-    String uuid = ctx.pathParamAsClass("uuid", String.class).check(id -> {
-      try {
-        UUID.fromString(id);
-        return true;
-      } catch (Exception e) {
-        return false;
-      }
-    }, "UUID must be valid").get();
-    Objects.requireNonNull(DatabaseConnector.getSession()).getCurrentSession()
-        .beginTransaction();
-    UserAccount userAccount = DatabaseConnector.getSession().getCurrentSession()
-        .get(UserAccount.class, uuid);
-    if (userAccount != null) {
-      DatabaseConnector.getSession().getCurrentSession().getTransaction().commit();
-      ctx.result(ServerEssentialsBackend.GSON.toJson(filterBasedOnPerms(userAccount)));
-      ctx.status(200);
-    } else {
-      ctx.status(404);
-    }
-  };
+  public static Handler getUser =
+      ctx -> {
+        String uuid =
+            ctx.pathParamAsClass("uuid", String.class)
+                .check(
+                    id -> {
+                      try {
+                        UUID.fromString(id);
+                        return true;
+                      } catch (Exception e) {
+                        return false;
+                      }
+                    },
+                    "UUID must be valid")
+                .get();
+        Objects.requireNonNull(DatabaseConnector.getSession())
+            .getCurrentSession()
+            .beginTransaction();
+        UserAccount userAccount =
+            DatabaseConnector.getSession().getCurrentSession().get(UserAccount.class, uuid);
+        if (userAccount != null) {
+          DatabaseConnector.getSession().getCurrentSession().getTransaction().commit();
+          ctx.result(ServerEssentialsBackend.GSON.toJson(filterBasedOnPerms(userAccount)));
+          ctx.status(200);
+        } else {
+          ctx.status(404);
+        }
+      };
 
   @OpenApi(
       description = "Get a list of user accounts that match the provided filters",
@@ -145,34 +242,69 @@ public class UserRoutes {
       tags = {"User"},
       headers = {},
       queryParams = {
-          @OpenApiParam(name = "uuid", description = "Filter based on a partial uuid"),
-          @OpenApiParam(name = "username", description = "Filter based on the last known username"),
-          @OpenApiParam(name = "rank", description = "Filter based on the users rank"),
-          @OpenApiParam(name = "perm", description = "Filter based on the accounts perms"),
-          @OpenApiParam(name = "lang", description = "Filter based on the accounts language key"),
-          @OpenApiParam(name = "muted", description = "Filter based on the accounts mute status", type = Boolean.class),
-          @OpenApiParam(name = "nick", description = "Filter based on the accounts nickname"),
-          @OpenApiParam(name = "discord-id", description = "Filter based on the accounts discord-id"),
-          @OpenApiParam(name = "server-playtime", description = "Filter based on the accounts server playtime"),
-          @OpenApiParam(name = "total-playtime", description = "Filter based on the accounts total playtime"),
-          @OpenApiParam(name = "currency-balance", description = "Filter based on the accounts currency balance"),
-          @OpenApiParam(name = "total-balance", description = "Filter based on the accounts total balance"),
-          @OpenApiParam(name = "system-perms", description = "Filter based on the accounts system perms"),
+        @OpenApiParam(name = "uuid", description = "Filter based on a partial uuid"),
+        @OpenApiParam(name = "username", description = "Filter based on the last known username"),
+        @OpenApiParam(name = "rank", description = "Filter based on the users rank"),
+        @OpenApiParam(name = "perm", description = "Filter based on the accounts perms"),
+        @OpenApiParam(name = "lang", description = "Filter based on the accounts language key"),
+        @OpenApiParam(
+            name = "muted",
+            description = "Filter based on the accounts mute status",
+            type = Boolean.class),
+        @OpenApiParam(name = "nick", description = "Filter based on the accounts nickname"),
+        @OpenApiParam(name = "discord-id", description = "Filter based on the accounts discord-id"),
+        @OpenApiParam(
+            name = "server-playtime",
+            description = "Filter based on the accounts server playtime"),
+        @OpenApiParam(
+            name = "total-playtime",
+            description = "Filter based on the accounts total playtime"),
+        @OpenApiParam(
+            name = "currency-balance",
+            description = "Filter based on the accounts currency balance"),
+        @OpenApiParam(
+            name = "total-balance",
+            description = "Filter based on the accounts total balance"),
+        @OpenApiParam(
+            name = "system-perms",
+            description = "Filter based on the accounts system perms"),
       },
       responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = UserAccount[].class), description = "User accounts that match the provided query filters"),
-          @OpenApiResponse(status = "400", content = @OpenApiContent(from = RestResponse.class), description = "An error occurred while applying the requested filters"),
-          @OpenApiResponse(status = "401", content = @OpenApiContent(from = RestResponse.class), description = "No credentials where provided to preform this action"),
-          @OpenApiResponse(status = "403", content = @OpenApiContent(from = RestResponse.class), description = "The provided credentials do not have permission to preform this action"),
-          @OpenApiResponse(status = "409", content = @OpenApiContent(from = RestResponse.class), description = "An invalid combo of filters has been applied"),
-          @OpenApiResponse(status = "429", content = @OpenApiContent(from = RestResponse.class), description = "Too many requested filters for the provided authentication token"),
-          @OpenApiResponse(status = "500", content = @OpenApiContent(from = RestResponse.class), description = "The api had an internal server error, see the response for more information"),
-      }
-  )
+        @OpenApiResponse(
+            status = "200",
+            content = @OpenApiContent(from = UserAccount[].class),
+            description = "User accounts that match the provided query filters"),
+        @OpenApiResponse(
+            status = "400",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "An error occurred while applying the requested filters"),
+        @OpenApiResponse(
+            status = "401",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "No credentials where provided to preform this action"),
+        @OpenApiResponse(
+            status = "403",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "The provided credentials do not have permission to preform this action"),
+        @OpenApiResponse(
+            status = "409",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "An invalid combo of filters has been applied"),
+        @OpenApiResponse(
+            status = "429",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "Too many requested filters for the provided authentication token"),
+        @OpenApiResponse(
+            status = "500",
+            content = @OpenApiContent(from = RestResponse.class),
+            description =
+                "The api had an internal server error, see the response for more information"),
+      })
   @Route(path = "/api/users/", method = "GET")
-  public static Handler getUsers = ctx -> {
-    ctx.status(501); // TODO Implement
-  };
+  public static Handler getUsers =
+      ctx -> {
+        ctx.status(501); // TODO Implement
+      };
 
   @OpenApi(
       description = "Update an existing user account",
@@ -180,52 +312,93 @@ public class UserRoutes {
       deprecated = false,
       tags = {"User"},
       headers = {},
-      requestBody = @OpenApiRequestBody(content = {
-          @OpenApiContent(from = UserAccount.class)}),
+      requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = UserAccount.class)}),
       pathParams = {
-          @OpenApiParam(name = "uuid", required = true, description = "UUID of the account to update")},
+        @OpenApiParam(name = "uuid", required = true, description = "UUID of the account to update")
+      },
       responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = UserAccount.class), description = "User accounts has been updated"),
-          @OpenApiResponse(status = "400", content = @OpenApiContent(from = RestResponse.class), description = "An error occurred while applying the requested filters"),
-          @OpenApiResponse(status = "401", content = @OpenApiContent(from = RestResponse.class), description = "No credentials where provided to preform this action"),
-          @OpenApiResponse(status = "403", content = @OpenApiContent(from = RestResponse.class), description = "The provided credentials do not have permission to preform this action"),
-          @OpenApiResponse(status = "409", content = @OpenApiContent(from = RestResponse.class), description = "An invalid combo of filters has been applied"),
-          @OpenApiResponse(status = "429", content = @OpenApiContent(from = RestResponse.class), description = "Too many requested filters for the provided authentication token"),
-          @OpenApiResponse(status = "500", content = @OpenApiContent(from = RestResponse.class), description = "The api had an internal server error, see the response for more information"),
-      }
-  )
+        @OpenApiResponse(
+            status = "200",
+            content = @OpenApiContent(from = UserAccount.class),
+            description = "User accounts has been updated"),
+        @OpenApiResponse(
+            status = "400",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "An error occurred while applying the requested filters"),
+        @OpenApiResponse(
+            status = "401",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "No credentials where provided to preform this action"),
+        @OpenApiResponse(
+            status = "403",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "The provided credentials do not have permission to preform this action"),
+        @OpenApiResponse(
+            status = "409",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "An invalid combo of filters has been applied"),
+        @OpenApiResponse(
+            status = "429",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "Too many requested filters for the provided authentication token"),
+        @OpenApiResponse(
+            status = "500",
+            content = @OpenApiContent(from = RestResponse.class),
+            description =
+                "The api had an internal server error, see the response for more information"),
+      })
   @Route(path = "/api/users/{uuid}", method = "PUT")
-  public static Handler updateUser = ctx -> {
-    String uuid = ctx.pathParamAsClass("uuid", String.class).check(id -> {
-      try {
-        UUID.fromString(id);
-        return true;
-      } catch (Exception e) {
-        return false;
-      }
-    }, "UUID must be valid").get();
-    UserAccount updateAccount = validateUserAccount(ctx.bodyValidator(UserAccount.class));
-    Objects.requireNonNull(DatabaseConnector.getSession()).getCurrentSession()
-        .beginTransaction();
-    UserAccount userAccount = DatabaseConnector.getSession().getCurrentSession()
-        .get(UserAccount.class, uuid);
-    DatabaseConnector.getSession().getCurrentSession().getTransaction().commit();
-    Objects.requireNonNull(DatabaseConnector.getSession()).getCurrentSession()
-        .beginTransaction();
-    if (userAccount != null) {
-      DatabaseConnector.getSession().getCurrentSession().update(updateAccount);
-      DatabaseConnector.getSession().getCurrentSession().getTransaction().commit();
-      ctx.result(ServerEssentialsBackend.GSON.toJson(updateAccount));
-      ctx.status(200);
-    } else {
-      ctx.status(404);
-    }
-  };
+  public static Handler updateUser =
+      ctx -> {
+        String uuid =
+            ctx.pathParamAsClass("uuid", String.class)
+                .check(
+                    id -> {
+                      try {
+                        UUID.fromString(id);
+                        return true;
+                      } catch (Exception e) {
+                        return false;
+                      }
+                    },
+                    "UUID must be valid")
+                .get();
+        UserAccount updateAccount = validateUserAccount(ctx.bodyValidator(UserAccount.class));
+        Objects.requireNonNull(DatabaseConnector.getSession())
+            .getCurrentSession()
+            .beginTransaction();
+        UserAccount userAccount =
+            DatabaseConnector.getSession().getCurrentSession().get(UserAccount.class, uuid);
+        DatabaseConnector.getSession().getCurrentSession().getTransaction().commit();
+        Objects.requireNonNull(DatabaseConnector.getSession())
+            .getCurrentSession()
+            .beginTransaction();
+        if (userAccount != null) {
+          DatabaseConnector.getSession().getCurrentSession().update(updateAccount);
+          DatabaseConnector.getSession().getCurrentSession().getTransaction().commit();
+          ctx.result(ServerEssentialsBackend.GSON.toJson(updateAccount));
+          ctx.status(200);
+        } else {
+          ctx.status(404);
+        }
+      };
 
-  public static final String[] validPatches = new String[]{"username", "lang", "muted",
-      "nick",
-      "discord-id", "password-hash", "password-salt", "wallet", "playtime", "ranks",
-      "perms", "perks", "system-perms"};
+  public static final String[] validPatches =
+      new String[] {
+        "username",
+        "lang",
+        "muted",
+        "nick",
+        "discord-id",
+        "password-hash",
+        "password-salt",
+        "wallet",
+        "playtime",
+        "ranks",
+        "perms",
+        "perks",
+        "system-perms"
+      };
 
   @OpenApi(
       description = "Update an existing user account",
@@ -233,75 +406,117 @@ public class UserRoutes {
       deprecated = false,
       tags = {"User"},
       headers = {},
-      requestBody = @OpenApiRequestBody(content = {
-          @OpenApiContent(from = UserAccount.class)}),
+      requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = UserAccount.class)}),
       pathParams = {
-          @OpenApiParam(name = "uuid", required = true, description = "UUID of the account to update"),
-          @OpenApiParam(name = "patch", required = true, description = "Type of data to update, ('username', 'lang', 'muted', 'nick', 'discord-id', 'password-hash', 'password-salt', 'wallet', 'playtime', 'ranks', 'perms', 'perks', 'system-perms')")},
+        @OpenApiParam(
+            name = "uuid",
+            required = true,
+            description = "UUID of the account to update"),
+        @OpenApiParam(
+            name = "patch",
+            required = true,
+            description =
+                "Type of data to update, ('username', 'lang', 'muted', 'nick', 'discord-id', 'password-hash', 'password-salt', 'wallet', 'playtime', 'ranks', 'perms', 'perks', 'system-perms')")
+      },
       responses = {
-          @OpenApiResponse(status = "200", content = @OpenApiContent(from = UserAccount.class), description = "User accounts has been updated"),
-          @OpenApiResponse(status = "400", content = @OpenApiContent(from = RestResponse.class), description = "An error occurred while applying the requested filters"),
-          @OpenApiResponse(status = "401", content = @OpenApiContent(from = RestResponse.class), description = "No credentials where provided to preform this action"),
-          @OpenApiResponse(status = "403", content = @OpenApiContent(from = RestResponse.class), description = "The provided credentials do not have permission to preform this action"),
-          @OpenApiResponse(status = "429", content = @OpenApiContent(from = RestResponse.class), description = "Too many requested filters for the provided authentication token"),
-          @OpenApiResponse(status = "500", content = @OpenApiContent(from = RestResponse.class), description = "The api had an internal server error, see the response for more information"),
-      }
-  )
+        @OpenApiResponse(
+            status = "200",
+            content = @OpenApiContent(from = UserAccount.class),
+            description = "User accounts has been updated"),
+        @OpenApiResponse(
+            status = "400",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "An error occurred while applying the requested filters"),
+        @OpenApiResponse(
+            status = "401",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "No credentials where provided to preform this action"),
+        @OpenApiResponse(
+            status = "403",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "The provided credentials do not have permission to preform this action"),
+        @OpenApiResponse(
+            status = "429",
+            content = @OpenApiContent(from = RestResponse.class),
+            description = "Too many requested filters for the provided authentication token"),
+        @OpenApiResponse(
+            status = "500",
+            content = @OpenApiContent(from = RestResponse.class),
+            description =
+                "The api had an internal server error, see the response for more information"),
+      })
   @Route(path = "/api/users/{uuid}/{patch}", method = "PATCH")
-  public static Handler updateUserSpecific = ctx -> {
-    // Make sure uuid is valid
-    String uuid = ctx.pathParamAsClass("uuid", String.class).check(id -> {
-      try {
-        UUID.fromString(id);
-        return true;
-      } catch (Exception e) {
-        return false;
-      }
-    }, "UUID must be valid").get();
-    // Validate patch value
-    String patch = ctx.pathParam("patch");
-    if (!isValidPatch(patch)) {
-      ctx.result(ServerEssentialsBackend.GSON.toJson(
-              new RestResponse(patch + " is not a valid patch",
-                  "Patch must be valid ('", Strings.join(validPatches, "', '") + "')")))
-          .status(400);
-    }
-    // Get existing account data
-    Objects.requireNonNull(DatabaseConnector.getSession()).getCurrentSession()
-        .beginTransaction();
-    UserAccount existingAccountData = DatabaseConnector.getSession().getCurrentSession()
-        .get(UserAccount.class, uuid);
-    // Get body and verify uuid's match
-    UserAccount updateData = ctx.bodyAsClass(UserAccount.class);
-    if (!updateData.getUuid().equals(uuid)) {
-      ctx.result(ServerEssentialsBackend.GSON.toJson(new RestResponse("UUID's must match",
-          "UUID's from the path and the body must match!",
-          ServerEssentialsBackend.GSON.toJson(updateData)))).status(400);
-    }
-    // Update existing data with provided details
-    if (existingAccountData != null) {
-      UserAccount updatedAccount = patchAccountWithUpdate(existingAccountData, updateData,
-          patch);
-      DatabaseConnector.getSession().getCurrentSession().update(updatedAccount);
-      DatabaseConnector.getSession().getCurrentSession().getTransaction().commit();
-      ctx.result(ServerEssentialsBackend.GSON.toJson(updatedAccount));
-      ctx.status(200);
-    } else {
-      ctx.status(404);
-    }
-  };
+  public static Handler updateUserSpecific =
+      ctx -> {
+        // Make sure uuid is valid
+        String uuid =
+            ctx.pathParamAsClass("uuid", String.class)
+                .check(
+                    id -> {
+                      try {
+                        UUID.fromString(id);
+                        return true;
+                      } catch (Exception e) {
+                        return false;
+                      }
+                    },
+                    "UUID must be valid")
+                .get();
+        // Validate patch value
+        String patch = ctx.pathParam("patch");
+        if (!isValidPatch(patch)) {
+          ctx.result(
+                  ServerEssentialsBackend.GSON.toJson(
+                      new RestResponse(
+                          patch + " is not a valid patch",
+                          "Patch must be valid ('",
+                          Strings.join(validPatches, "', '") + "')")))
+              .status(400);
+        }
+        // Get existing account data
+        Objects.requireNonNull(DatabaseConnector.getSession())
+            .getCurrentSession()
+            .beginTransaction();
+        UserAccount existingAccountData =
+            DatabaseConnector.getSession().getCurrentSession().get(UserAccount.class, uuid);
+        // Get body and verify uuid's match
+        UserAccount updateData = ctx.bodyAsClass(UserAccount.class);
+        if (!updateData.getUuid().equals(uuid)) {
+          ctx.result(
+                  ServerEssentialsBackend.GSON.toJson(
+                      new RestResponse(
+                          "UUID's must match",
+                          "UUID's from the path and the body must match!",
+                          ServerEssentialsBackend.GSON.toJson(updateData))))
+              .status(400);
+        }
+        // Update existing data with provided details
+        if (existingAccountData != null) {
+          UserAccount updatedAccount =
+              patchAccountWithUpdate(existingAccountData, updateData, patch);
+          DatabaseConnector.getSession().getCurrentSession().update(updatedAccount);
+          DatabaseConnector.getSession().getCurrentSession().getTransaction().commit();
+          ctx.result(ServerEssentialsBackend.GSON.toJson(updatedAccount));
+          ctx.status(200);
+        } else {
+          ctx.status(404);
+        }
+      };
 
   private static UserAccount validateUserAccount(BodyValidator<UserAccount> account) {
-    return account.check(usr -> usr.getUuid() != null, "UUID must not be null")
+    return account
+        .check(usr -> usr.getUuid() != null, "UUID must not be null")
         .check(usr -> usr.getUuid().length() > 0, "UUID must not be empty")
-        .check(usr -> {
-          try {
-            UUID.fromString(usr.getUuid());
-            return true;
-          } catch (Exception e) {
-            return false;
-          }
-        }, "UUID must be valid")
+        .check(
+            usr -> {
+              try {
+                UUID.fromString(usr.getUuid());
+                return true;
+              } catch (Exception e) {
+                return false;
+              }
+            },
+            "UUID must be valid")
         .check(usr -> usr.getLastUsername().length() > 0, "Username must not be empty")
         .get();
   }
@@ -314,9 +529,8 @@ public class UserRoutes {
     return account;
   }
 
-  private static UserAccount patchAccountWithUpdate(UserAccount existingAccount,
-      UserAccount providedUpdateData,
-      String patchValue) {
+  private static UserAccount patchAccountWithUpdate(
+      UserAccount existingAccount, UserAccount providedUpdateData, String patchValue) {
     if (patchValue.equalsIgnoreCase("username")) {
       existingAccount.setLastUsername(providedUpdateData.getLastUsername());
     } else if (patchValue.equalsIgnoreCase("lang")) {

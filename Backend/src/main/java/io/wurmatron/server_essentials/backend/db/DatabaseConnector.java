@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -22,13 +21,10 @@ import org.hibernate.engine.spi.SessionFactoryImplementor;
 
 public class DatabaseConnector {
 
-
   public static String databaseType;
   static SessionFactory sessionFactory;
 
-  /**
-   * Get the current active session for the current selected database
-   */
+  /** Get the current active session for the current selected database */
   public static SessionFactory getSession() {
     if (sessionFactory != null && sessionFactory.isOpen()) {
       return sessionFactory;
@@ -41,21 +37,29 @@ public class DatabaseConnector {
 
   public static Connection getConnection() throws SQLException {
     Session session = getSession().getCurrentSession();
-    SessionFactoryImplementor sessionFactoryImplementation = (SessionFactoryImplementor) session.getSessionFactory();
-    return sessionFactoryImplementation.getJdbcServices()
-        .getBootstrapJdbcConnectionAccess().obtainConnection();
+    SessionFactoryImplementor sessionFactoryImplementation =
+        (SessionFactoryImplementor) session.getSessionFactory();
+    return sessionFactoryImplementation
+        .getJdbcServices()
+        .getBootstrapJdbcConnectionAccess()
+        .obtainConnection();
   }
 
   public static void loadDBConfig(boolean resetConfig) {
     HashMap<String, String> dbSetup = new HashMap<>();
-    File dbConfigFile = new File(
-        ServerEssentialsBackend.SAVE_DIR + File.separator + "database.txt");
+    File dbConfigFile =
+        new File(ServerEssentialsBackend.SAVE_DIR + File.separator + "database.txt");
     // Create new db config file
     if (resetConfig || !dbConfigFile.exists()) {
       dbSetup = askDBConfigValues();
-      DatabaseConfig dbConfig = new DatabaseConfig(dbSetup.get("sql_name"),
-          dbSetup.get("sql_host"), dbSetup.get("sql_port"), dbSetup.get("sql_table"),
-          dbSetup.get("sql_username"), dbSetup.get("sql_password"));
+      DatabaseConfig dbConfig =
+          new DatabaseConfig(
+              dbSetup.get("sql_name"),
+              dbSetup.get("sql_host"),
+              dbSetup.get("sql_port"),
+              dbSetup.get("sql_table"),
+              dbSetup.get("sql_username"),
+              dbSetup.get("sql_password"));
       try {
         if (dbConfigFile.exists()) {
           ConfigLoader.save(dbConfig, ServerEssentialsBackend.SAVE_DIR);
@@ -71,7 +75,8 @@ public class DatabaseConnector {
     }
     // Load db File
     try {
-      DatabaseConfig config = ConfigLoader.load(new DatabaseConfig(), ServerEssentialsBackend.SAVE_DIR);
+      DatabaseConfig config =
+          ConfigLoader.load(new DatabaseConfig(), ServerEssentialsBackend.SAVE_DIR);
       dbSetup.put("sql_name", config.type);
       dbSetup.put("sql_host", config.host);
       dbSetup.put("sql_port", config.port);
@@ -79,8 +84,7 @@ public class DatabaseConnector {
       dbSetup.put("sql_username", config.username);
       dbSetup.put("sql_password", config.password);
     } catch (IOException e) {
-      ServerEssentialsBackend.LOG.error(
-          "Failed to load '" + dbConfigFile.getAbsolutePath() + "'");
+      ServerEssentialsBackend.LOG.error("Failed to load '" + dbConfigFile.getAbsolutePath() + "'");
       ServerEssentialsBackend.LOG.error(e.getMessage());
     }
 
@@ -93,10 +97,11 @@ public class DatabaseConnector {
     while (!DatabaseConfigurator.driverClasses.containsKey(sqlName.toLowerCase())) {
       sqlName = CLIParser.getUserInput("SQL Database Type");
       if (!DatabaseConfigurator.driverClasses.containsKey(sqlName.toLowerCase())) {
-        ServerEssentialsBackend.LOG.warn(
-            "Invalid Database type (" + sqlName.toLowerCase() + ")");
-        ServerEssentialsBackend.LOG.info("Valid database types include: (" + Strings.join(
-            DatabaseConfigurator.driverClasses.keySet(), ", ") + ")");
+        ServerEssentialsBackend.LOG.warn("Invalid Database type (" + sqlName.toLowerCase() + ")");
+        ServerEssentialsBackend.LOG.info(
+            "Valid database types include: ("
+                + Strings.join(DatabaseConfigurator.driverClasses.keySet(), ", ")
+                + ")");
       }
     }
     String sqlHost = CLIParser.getUserInput("Host");

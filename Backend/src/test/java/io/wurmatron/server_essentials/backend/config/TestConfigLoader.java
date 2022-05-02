@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -51,8 +50,8 @@ public class TestConfigLoader {
   @Order(1)
   public void TestLoadBackendConfig_NonExistError() {
     try {
-      BackendConfig backendConfig = ConfigLoader.loadBackendConfig(
-          ServerEssentialsBackendTest.SAVE_DIR);
+      BackendConfig backendConfig =
+          ConfigLoader.loadBackendConfig(ServerEssentialsBackendTest.SAVE_DIR);
       fail("Loaded non-existing config file! (" + backendConfig + ")");
     } catch (IOException e) {
       assertTrue(true, ""); // Message will never be displayed
@@ -63,8 +62,8 @@ public class TestConfigLoader {
   @Order(2)
   public void TestCreateBackendConfig() {
     try {
-      Config backend = ConfigLoader.create(new BackendConfig(),
-          ServerEssentialsBackendTest.SAVE_DIR);
+      Config backend =
+          ConfigLoader.create(new BackendConfig(), ServerEssentialsBackendTest.SAVE_DIR);
       assertNotNull(backend, "Config is non-null");
     } catch (IOException e) {
       e.printStackTrace();
@@ -75,8 +74,8 @@ public class TestConfigLoader {
   @Test
   @Order(3)
   public void TestLoadBackendConfig_Load() throws IOException {
-    BackendConfig backendConfig = ConfigLoader.loadBackendConfig(
-        ServerEssentialsBackendTest.SAVE_DIR);
+    BackendConfig backendConfig =
+        ConfigLoader.loadBackendConfig(ServerEssentialsBackendTest.SAVE_DIR);
     assertNotNull(backendConfig);
   }
 
@@ -86,11 +85,10 @@ public class TestConfigLoader {
     BackendConfig newConfig = new BackendConfig();
     newConfig.General.fileResyncInterval = 900;
     ConfigLoader.save(newConfig, ServerEssentialsBackendTest.SAVE_DIR);
-    BackendConfig loadedConfig = ConfigLoader.loadBackendConfig(
-        ServerEssentialsBackendTest.SAVE_DIR);
+    BackendConfig loadedConfig =
+        ConfigLoader.loadBackendConfig(ServerEssentialsBackendTest.SAVE_DIR);
     if (loadedConfig != null) {
-      assertEquals(newConfig.General.fileResyncInterval,
-          loadedConfig.General.fileResyncInterval);
+      assertEquals(newConfig.General.fileResyncInterval, loadedConfig.General.fileResyncInterval);
     } else {
       fail("Failed to load updated config");
     }

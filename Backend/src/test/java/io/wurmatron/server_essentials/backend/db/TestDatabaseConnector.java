@@ -5,22 +5,21 @@
  */
 package io.wurmatron.server_essentials.backend.db;
 
-import io.wurmatron.server_essentials.backend.db.DatabaseConnector;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestDatabaseConnector {
 
-    @Test
-    @Order(1)
-    public void TestDatabaseConnection() {
-        SessionFactory factory = DatabaseConnector.getSession();
-        assertNotNull(factory, "DB Session is not null");
-    }
+  @Test
+  @Order(1)
+  public void TestDatabaseConnection() {
+    SessionFactory factory = DatabaseConnector.getSession();
+    assertNotNull(factory, "DB Session is not null");
+  }
 }

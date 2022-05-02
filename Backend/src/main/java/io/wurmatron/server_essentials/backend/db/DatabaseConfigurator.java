@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -17,8 +16,8 @@ import org.hibernate.cfg.Configuration;
 import org.reflections8.Reflections;
 
 /**
- * Helps with the configuration and creation of the database along with ongoing
- * maintenance such as table updates.
+ * Helps with the configuration and creation of the database along with ongoing maintenance such as
+ * table updates.
  */
 public class DatabaseConfigurator {
 
@@ -29,7 +28,7 @@ public class DatabaseConfigurator {
     // Driver
     driverClasses.put("mysql", "com.mysql.jdbc.Driver");
     driverClasses.put("postgresql", "org.postgresql.Driver");
-//    driverClasses.put("postgres", "org.postgresql.Driver");
+    //    driverClasses.put("postgres", "org.postgresql.Driver");
     // Dialect
     dialectClasses.put("mysql", "org.hibernate.dialect.MySQL8Dialect");
     dialectClasses.put("postgresql", "org.hibernate.dialect.PostgreSQL95Dialect");
@@ -38,8 +37,7 @@ public class DatabaseConfigurator {
   /**
    * Configure the initial DB connection and settings.
    *
-   * @param autofillValues values to be used by automatic setup for autofill into setup
-   * prompts
+   * @param autofillValues values to be used by automatic setup for autofill into setup prompts
    */
   public static boolean initialDBSetup(HashMap<String, String> autofillValues) {
     Configuration config = createConfiguration(autofillValues);
@@ -61,21 +59,22 @@ public class DatabaseConfigurator {
   // sql_port = sql server port
   // sql_username = sql username
   // sql_password = sql password
-  private static Configuration createConfiguration(
-      HashMap<String, String> autofillValues) {
+  private static Configuration createConfiguration(HashMap<String, String> autofillValues) {
     Configuration config = new Configuration();
-    config.setProperty("hibernate.connection.driver_class", driverClasses.getOrDefault(
-        autofillValues.get("sql_name").toLowerCase(), null));
-    config.setProperty("hibernate.connection.url",
-        createURL(autofillValues.get("sql_name"),
+    config.setProperty(
+        "hibernate.connection.driver_class",
+        driverClasses.getOrDefault(autofillValues.get("sql_name").toLowerCase(), null));
+    config.setProperty(
+        "hibernate.connection.url",
+        createURL(
+            autofillValues.get("sql_name"),
             autofillValues.get("sql_host"),
             autofillValues.get("sql_port"),
             autofillValues.get("sql_table")));
-    config.setProperty("hibernate.connection.username",
-        autofillValues.get("sql_username"));
-    config.setProperty("hibernate.connection.password",
-        autofillValues.get("sql_password"));
-    config.setProperty("hibernate.dialect",
+    config.setProperty("hibernate.connection.username", autofillValues.get("sql_username"));
+    config.setProperty("hibernate.connection.password", autofillValues.get("sql_password"));
+    config.setProperty(
+        "hibernate.dialect",
         dialectClasses.getOrDefault(autofillValues.get("sql_name").toLowerCase(), null));
     config.setProperty("hibernate.current_session_context_class", "thread");
     // Table Models
@@ -88,8 +87,7 @@ public class DatabaseConfigurator {
     return config;
   }
 
-  private static String createURL(String sqlName, String host, String port,
-      String dbName) {
+  private static String createURL(String sqlName, String host, String port, String dbName) {
     return "jdbc:" + sqlName.toLowerCase() + "://" + host + ":" + port + "/" + dbName;
   }
 }

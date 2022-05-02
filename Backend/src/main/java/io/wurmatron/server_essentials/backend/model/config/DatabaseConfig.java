@@ -1,3 +1,8 @@
+/**
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ *
+ * <p>Copyright (c) 2022 Wurmcraft
+ */
 package io.wurmatron.server_essentials.backend.model.config;
 
 import io.wurmatron.server_essentials.backend.config.Config;
@@ -11,8 +16,8 @@ public class DatabaseConfig implements Config {
   public String username;
   public String password;
 
-  public DatabaseConfig(String type, String host, String port,
-      String database, String username, String password) {
+  public DatabaseConfig(
+      String type, String host, String port, String database, String username, String password) {
     this.type = type;
     this.host = host;
     this.port = port;

@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -23,12 +22,14 @@ public class FileUtils {
    */
   public static String readInternalFile(String path) throws IOException {
     try {
-      BufferedReader reader = new BufferedReader(new InputStreamReader(
-          Objects.requireNonNull(FileUtils.class.getClassLoader().getResourceAsStream(path))));
+      BufferedReader reader =
+          new BufferedReader(
+              new InputStreamReader(
+                  Objects.requireNonNull(
+                      FileUtils.class.getClassLoader().getResourceAsStream(path))));
       return reader.lines().collect(Collectors.joining("\n"));
     } catch (Exception e) {
       throw new IOException("Failed to read internal path '" + path + "'");
     }
   }
-
 }

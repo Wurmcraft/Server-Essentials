@@ -1,5 +1,9 @@
+/**
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ *
+ * <p>Copyright (c) 2022 Wurmcraft
+ */
 package io.wurmatron.server_essentials.backend.model.db;
-
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,13 +58,23 @@ public class UserAccount {
   @Column(name = "system_perms")
   private String systemPermissions;
 
-  public UserAccount() {
-  }
+  public UserAccount() {}
 
-  public UserAccount(String uuid, String lastUsername, String ranks, String perms,
-      String purchasedPerks, String language, boolean muted, String nickname,
-      String discordID, String playTime, String bankAccounts, String passwordHash,
-      String passwordSalt, String systemPermissions) {
+  public UserAccount(
+      String uuid,
+      String lastUsername,
+      String ranks,
+      String perms,
+      String purchasedPerks,
+      String language,
+      boolean muted,
+      String nickname,
+      String discordID,
+      String playTime,
+      String bankAccounts,
+      String passwordHash,
+      String passwordSalt,
+      String systemPermissions) {
     this.uuid = uuid;
     this.lastUsername = lastUsername;
     this.ranks = ranks;
@@ -188,6 +202,4 @@ public class UserAccount {
   public void setPurchasedPerks(String purchasedPerks) {
     this.purchasedPerks = purchasedPerks;
   }
-
-
 }

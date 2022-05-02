@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -17,8 +16,8 @@ public class BackendConfig implements Config {
 
   // Defaults
   public BackendConfig() {
-    this.General = new General(false, 30,
-        Math.max((Runtime.getRuntime().availableProcessors() / 2), 1));
+    this.General =
+        new General(false, 30, Math.max((Runtime.getRuntime().availableProcessors() / 2), 1));
     this.Server = new Server("0.0.0.0", 8233, "", 10, true, false);
   }
 
@@ -48,8 +47,13 @@ public class BackendConfig implements Config {
     public boolean forceLowercase;
     public boolean swaggerEnabled;
 
-    public Server(String host, int port, String corosOrigins, long requestTimeout,
-        boolean forceLowercase, boolean swaggerEnabled) {
+    public Server(
+        String host,
+        int port,
+        String corosOrigins,
+        long requestTimeout,
+        boolean forceLowercase,
+        boolean swaggerEnabled) {
       this.host = host;
       this.port = port;
       this.corosOrigins = corosOrigins;
@@ -71,7 +75,7 @@ public class BackendConfig implements Config {
 
   @Override
   public void setValues(boolean isReloaded) {
-    ServerEssentialsBackend.scheduledService = Executors.newScheduledThreadPool(
-        General.threadPoolSize);
+    ServerEssentialsBackend.scheduledService =
+        Executors.newScheduledThreadPool(General.threadPoolSize);
   }
 }

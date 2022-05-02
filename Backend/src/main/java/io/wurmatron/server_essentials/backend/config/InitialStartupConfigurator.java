@@ -1,3 +1,8 @@
+/**
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ *
+ * <p>Copyright (c) 2022 Wurmcraft
+ */
 package io.wurmatron.server_essentials.backend.config;
 
 import io.wurmatron.server_essentials.backend.ServerEssentialsBackend;
@@ -27,8 +32,8 @@ public class InitialStartupConfigurator {
 
   public static boolean loadOrSetup(String[] args) {
     try {
-      ServerEssentialsBackend.backendConfiguration = ConfigLoader.loadOrCreateBackendConfig(
-          ServerEssentialsBackend.SAVE_DIR);
+      ServerEssentialsBackend.backendConfiguration =
+          ConfigLoader.loadOrCreateBackendConfig(ServerEssentialsBackend.SAVE_DIR);
     } catch (IOException e) {
       ServerEssentialsBackend.LOG.warn(e.getMessage());
       ServerEssentialsBackend.LOG.info("Failed to load configuration file");
@@ -43,5 +48,4 @@ public class InitialStartupConfigurator {
     }
     return true;
   }
-
 }

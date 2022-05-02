@@ -1,3 +1,8 @@
+/**
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ *
+ * <p>Copyright (c) 2022 Wurmcraft
+ */
 package io.wurmatron.server_essentials.backend.config;
 
 import io.wurmatron.server_essentials.backend.ServerEssentialsBackend;
@@ -22,7 +27,9 @@ public class TextFileConfigReaderAndLoader {
       return mapToFields(configInstance, mappedData);
     } catch (IOException e) {
       ServerEssentialsBackend.LOG.warn(
-          "Failed to read config file '" + configInstance.getName() + "."
+          "Failed to read config file '"
+              + configInstance.getName()
+              + "."
               + configInstance.getConfigStyle().toString().toLowerCase());
       ServerEssentialsBackend.LOG.warn(e.getMessage());
     }
@@ -45,28 +52,28 @@ public class TextFileConfigReaderAndLoader {
         // TODO Based on type not just via .toString()
         classMap.put(field.getName(), field.get(configInstance).toString());
       } catch (Exception e) {
-        ServerEssentialsBackend.LOG.debug("Failed to convert field '" + field.getName()
-            + "' to string for config (txt) conversion");
+        ServerEssentialsBackend.LOG.debug(
+            "Failed to convert field '"
+                + field.getName()
+                + "' to string for config (txt) conversion");
         ServerEssentialsBackend.LOG.debug(e.getMessage());
       }
     }
     return classMap;
   }
 
-  private static <T extends Config> T mapToFields(T configInstance,
-      HashMap<String, String> mappedValues) {
+  private static <T extends Config> T mapToFields(
+      T configInstance, HashMap<String, String> mappedValues) {
     for (String field : mappedValues.keySet()) {
       try {
         Field f = configInstance.getClass().getDeclaredField(field);
         f.set(configInstance, mappedValues.get(field));
       } catch (Exception e) {
         ServerEssentialsBackend.LOG.debug(
-            "Unable to find field '" + field + "' within '" + configInstance.getName()
-                + "'");
+            "Unable to find field '" + field + "' within '" + configInstance.getName() + "'");
         ServerEssentialsBackend.LOG.debug(e.getMessage());
       }
     }
     return configInstance;
   }
-
 }

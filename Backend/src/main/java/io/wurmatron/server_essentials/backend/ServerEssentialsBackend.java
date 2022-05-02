@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -30,8 +29,7 @@ public class ServerEssentialsBackend {
   //
   public static BackendConfig backendConfiguration;
   public static Javalin javalin;
-  public static ScheduledExecutorService scheduledService = Executors.newScheduledThreadPool(
-      4);
+  public static ScheduledExecutorService scheduledService = Executors.newScheduledThreadPool(4);
 
   public static void main(String[] args) {
     displaySystemInfo();
@@ -48,7 +46,12 @@ public class ServerEssentialsBackend {
     LOG.debug("OS: " + System.getProperty("os.name") + "-" + System.getProperty("os.arch"));
     LOG.debug("CPU: " + Runtime.getRuntime().availableProcessors() + " cores");
     LOG.debug("Java: " + System.getProperty("java.runtime.version"));
-    LOG.debug("Memory: " + (Runtime.getRuntime().totalMemory() / 1000000) + "MB | MAX: " + (Runtime.getRuntime().maxMemory() / 1000000) + "MB");
+    LOG.debug(
+        "Memory: "
+            + (Runtime.getRuntime().totalMemory() / 1000000)
+            + "MB | MAX: "
+            + (Runtime.getRuntime().maxMemory() / 1000000)
+            + "MB");
     LOG.debug("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
   }
 }

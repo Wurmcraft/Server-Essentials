@@ -1,3 +1,8 @@
+/**
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ *
+ * <p>Copyright (c) 2022 Wurmcraft
+ */
 package io.wurmatron.server_essentials.backend.rest;
 
 import static io.wurmatron.server_essentials.backend.ServerEssentialsBackend.LOG;
@@ -16,15 +21,18 @@ import org.reflections8.scanners.SubTypesScanner;
 
 public class RouteLoader {
 
-  public static final String[] SUPPORTED_ROUTE_METHODS = {"GET", "POST", "PUT", "DELETE",
-      "PATCH", "BEFORE", "WS", "WS/BEFORE"};
-  public static final Reflections REFLECTIONS = new Reflections(
-      RouteLoader.class.getPackage().getName(), new MethodAnnotationsScanner(),
-      new SubTypesScanner(), new FieldAnnotationsScanner());
+  public static final String[] SUPPORTED_ROUTE_METHODS = {
+    "GET", "POST", "PUT", "DELETE", "PATCH", "BEFORE", "WS", "WS/BEFORE"
+  };
+  public static final Reflections REFLECTIONS =
+      new Reflections(
+          RouteLoader.class.getPackage().getName(),
+          new MethodAnnotationsScanner(),
+          new SubTypesScanner(),
+          new FieldAnnotationsScanner());
 
   /**
-   * Classpath lookup to find all the fields annotated with @Route and validate, if so add
-   * the route
+   * Classpath lookup to find all the fields annotated with @Route and validate, if so add the route
    *
    * @return list of all the found valid routes
    */
@@ -35,12 +43,20 @@ public class RouteLoader {
       if (isValidRoute(field)) {
         Route route = field.getDeclaredAnnotation(Route.class);
         LOG.debug(
-            "Route '" + field.getName() + "' " + route.method() + " (" + route.path()
+            "Route '"
+                + field.getName()
+                + "' "
+                + route.method()
+                + " ("
+                + route.path()
                 + ") has been created!");
         validRoutes.add(field);
       } else {
         LOG.debug(
-            "Route '" + field.getName() + " " + field.getClass().toGenericString()
+            "Route '"
+                + field.getName()
+                + " "
+                + field.getClass().toGenericString()
                 + "' is invalid, it will not be registered!");
       }
     }
@@ -63,10 +79,8 @@ public class RouteLoader {
     return false;
   }
 
-
   /**
-   * Checks if a route is valid 1. Route has a supported method type 2. Route has a at
-   * least 1 role
+   * Checks if a route is valid 1. Route has a supported method type 2. Route has a at least 1 role
    *
    * @param field route field to validate
    * @return if the route is a valid route or not
@@ -79,8 +93,8 @@ public class RouteLoader {
     if (!isValidMethod(routeAnnotation.method())) {
       return false;
     }
-    return routeAnnotation.roles().length > 0 || routeAnnotation.method()
-        .equalsIgnoreCase("BEFORE");
+    return routeAnnotation.roles().length > 0
+        || routeAnnotation.method().equalsIgnoreCase("BEFORE");
   }
 
   /**
@@ -90,24 +104,29 @@ public class RouteLoader {
    */
   public static void registerRoutes(Javalin javalin) {
     List<Field> routes = findRoutes();
-    routes.forEach(field -> {
-      try {
-        register(javalin, field);
-      } catch (InstantiationException | IllegalAccessException e) {
-        LOG.error("Failed to register '" + field.getName() + "' (" + field.getAnnotation(
-            Route.class).path() + ")");
-        LOG.debug(e.getMessage());
-      }
-    });
+    routes.forEach(
+        field -> {
+          try {
+            register(javalin, field);
+          } catch (InstantiationException | IllegalAccessException e) {
+            LOG.error(
+                "Failed to register '"
+                    + field.getName()
+                    + "' ("
+                    + field.getAnnotation(Route.class).path()
+                    + ")");
+            LOG.debug(e.getMessage());
+          }
+        });
     LOG.info(routes.size() + " routes have been created!");
-//        RouteUtils.setupExceptions(javalin);
+    //        RouteUtils.setupExceptions(javalin);
     LOG.info("Default Exception Handlers have been registered!");
     // Patch JDK Bug
-//        HttpUtils.allowMethods("PATCH");
+    //        HttpUtils.allowMethods("PATCH");
   }
 
   public static final Handler userPermCheck = null;
-//    public static final Handler userPermCheck = EndpointSecurity::checkForPerms;
+  //    public static final Handler userPermCheck = EndpointSecurity::checkForPerms;
 
   /**
    * Registers the route with javalin, based on the @Route configuration
@@ -125,43 +144,49 @@ public class RouteLoader {
     if (!route.method().equalsIgnoreCase("WS")) {
       handler = (Handler) field.get(field.getClass());
     }
-//    for (RouteRole role : roles) {
-//      if (role.equals(Route.RestRoles.USER)) {
-//        javalin.before(route.path(), userPermCheck);
-//      }
-//    }
+    //    for (RouteRole role : roles) {
+    //      if (role.equals(Route.RestRoles.USER)) {
+    //        javalin.before(route.path(), userPermCheck);
+    //      }
+    //    }
     switch (route.method().toUpperCase()) {
-      case "GET": {
-        javalin.get(route.path(), handler, roles);
-        break;
-      }
-      case "POST": {
-        javalin.post(route.path(), handler, roles);
-        break;
-      }
-      case "PUT": {
-        javalin.put(route.path(), handler, roles);
-        break;
-      }
-      case "DELETE": {
-        javalin.delete(route.path(), handler, roles);
-        break;
-      }
-      case "PATCH": {
-        javalin.patch(route.path(), handler, roles);
-        break;
-      }
-      case "BEFORE": {
-        javalin.before(route.path(), handler);
-        break;
-      }
-//      case "WS": {
-//        javalin.ws(route.path(), (Consumer<WsHaWndler>) field.get(field.getClass()),
-//            roles);
-//      }
-//      case "WS/BEFORE": {
-//        javalin.wsBefore(route.path(), (Consumer<WsHandler>) field.get(field.getClass()));
-//      }
+      case "GET":
+        {
+          javalin.get(route.path(), handler, roles);
+          break;
+        }
+      case "POST":
+        {
+          javalin.post(route.path(), handler, roles);
+          break;
+        }
+      case "PUT":
+        {
+          javalin.put(route.path(), handler, roles);
+          break;
+        }
+      case "DELETE":
+        {
+          javalin.delete(route.path(), handler, roles);
+          break;
+        }
+      case "PATCH":
+        {
+          javalin.patch(route.path(), handler, roles);
+          break;
+        }
+      case "BEFORE":
+        {
+          javalin.before(route.path(), handler);
+          break;
+        }
+        //      case "WS": {
+        //        javalin.ws(route.path(), (Consumer<WsHaWndler>) field.get(field.getClass()),
+        //            roles);
+        //      }
+        //      case "WS/BEFORE": {
+        //        javalin.wsBefore(route.path(), (Consumer<WsHandler>) field.get(field.getClass()));
+        //      }
     }
   }
 }

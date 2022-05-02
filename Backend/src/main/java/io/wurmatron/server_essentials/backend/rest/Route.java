@@ -1,3 +1,8 @@
+/**
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ *
+ * <p>Copyright (c) 2022 Wurmcraft
+ */
 package io.wurmatron.server_essentials.backend.rest;
 
 import io.javalin.core.security.RouteRole;
@@ -11,30 +16,29 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Route {
 
-    /**
-     * Path used by javalin for the creation of a route
-     * /account/:id
-     * /account
-     *
-     * @see io.javalin.Javalin#get(String, Handler)
-     */
-    String path();
+  /**
+   * Path used by javalin for the creation of a route /account/:id /account
+   *
+   * @see io.javalin.Javalin#get(String, Handler)
+   */
+  String path();
 
-    /**
-     * HTTP method to be used for this route
-     */
-    String method();
+  /** HTTP method to be used for this route */
+  String method();
 
-    /**
-     * Minimum Role required to access any part of this resource
-     */
-    RestRoles[] roles() default {RestRoles.ANONYMOUS, RestRoles.USER, RestRoles.SERVER, RestRoles.DEV};
+  /** Minimum Role required to access any part of this resource */
+  RestRoles[] roles() default {
+    RestRoles.ANONYMOUS, RestRoles.USER, RestRoles.SERVER, RestRoles.DEV
+  };
 
-    /**
-     * Used for each route to determine if the requested data is accessible to the given user, or some needs to be removed / blanked out
-     */
-    public enum RestRoles implements RouteRole {
-        ANONYMOUS, USER, SERVER, DEV
-    }
-
+  /**
+   * Used for each route to determine if the requested data is accessible to the given user, or some
+   * needs to be removed / blanked out
+   */
+  public enum RestRoles implements RouteRole {
+    ANONYMOUS,
+    USER,
+    SERVER,
+    DEV
+  }
 }
