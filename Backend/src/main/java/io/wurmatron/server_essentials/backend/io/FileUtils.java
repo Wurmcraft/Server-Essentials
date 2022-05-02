@@ -6,7 +6,6 @@
  */
 package io.wurmatron.server_essentials.backend.io;
 
-import io.wurmatron.server_essentials.backend.db.TableConfigurator;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

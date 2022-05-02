@@ -13,13 +13,11 @@ import io.wurmatron.server_essentials.backend.cli.CommandRunner;
 import io.wurmatron.server_essentials.backend.config.InitialStartupConfigurator;
 import io.wurmatron.server_essentials.backend.model.config.BackendConfig;
 import io.wurmatron.server_essentials.backend.rest.JavalinConfigurator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ServerEssentialsBackend {
 

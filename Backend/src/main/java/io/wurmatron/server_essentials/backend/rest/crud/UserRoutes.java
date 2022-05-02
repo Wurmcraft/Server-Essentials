@@ -1,13 +1,17 @@
 package io.wurmatron.server_essentials.backend.rest.crud;
 
+import io.javalin.core.validation.BodyValidator;
 import io.javalin.http.Handler;
 import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
 import io.javalin.plugin.openapi.annotations.OpenApiRequestBody;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
+import io.wurmatron.server_essentials.backend.db.DatabaseConnector;
 import io.wurmatron.server_essentials.backend.model.db.UserAccount;
 import io.wurmatron.server_essentials.backend.model.rest.RestResponse;
 import io.wurmatron.server_essentials.backend.rest.Route;
+import java.util.Objects;
+import java.util.UUID;
 
 public class UserRoutes {
 
@@ -30,6 +34,27 @@ public class UserRoutes {
   )
   @Route(path = "/api/users", method = "POST")
   public static Handler createUser = ctx -> {
-    ctx.status(501);
+    UserAccount userAccount = validateUserAccount(ctx.bodyValidator(UserAccount.class));
+    Objects.requireNonNull(DatabaseConnector.getSession()).getCurrentSession()
+        .beginTransaction();
+    DatabaseConnector.getSession().getCurrentSession()
+        .save(userAccount);
+    DatabaseConnector.getSession().getCurrentSession().getTransaction().commit();
+    ctx.status(201);
   };
+
+  private static UserAccount validateUserAccount(BodyValidator<UserAccount> account) {
+    return account.check(usr -> usr.getUuid() != null, "UUID must not be null")
+        .check(usr -> usr.getUuid().length() > 0, "UUID must not be empty")
+        .check(usr -> {
+          try {
+            UUID.fromString(usr.getUuid());
+            return true;
+          } catch (Exception e) {
+            return false;
+          }
+        }, "UUID must be valid")
+        .check(usr -> usr.getLastUsername().length() > 0, "Username must not be empty")
+        .get();
+  }
 }

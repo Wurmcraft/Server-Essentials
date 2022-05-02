@@ -1,12 +1,16 @@
 package io.wurmatron.server_essentials.backend.io;
 
 import io.wurmatron.server_essentials.backend.ServerEssentialsBackend;
-import org.cliffc.high_scale_lib.NonBlockingHashMap;
-
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.util.concurrent.TimeUnit;
+import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 public class FileWatcher {
 

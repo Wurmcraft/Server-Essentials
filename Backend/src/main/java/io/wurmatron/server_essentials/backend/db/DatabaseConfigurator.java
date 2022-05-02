@@ -8,11 +8,13 @@ package io.wurmatron.server_essentials.backend.db;
 
 import io.wurmatron.server_essentials.backend.ServerEssentialsBackend;
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.Set;
+import javax.persistence.Entity;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.reflections8.Reflections;
 
 /**
  * Helps with the configuration and creation of the database along with ongoing
@@ -77,6 +79,11 @@ public class DatabaseConfigurator {
         dialectClasses.getOrDefault(autofillValues.get("sql_name").toLowerCase(), null));
     config.setProperty("hibernate.current_session_context_class", "thread");
     // Table Models
+    Reflections reflections = new Reflections("io.wurmatron.server_essentials.backend.model.db");
+    Set<Class<?>> importantClasses = reflections.getTypesAnnotatedWith(Entity.class);
+    for (Class<?> clazz : importantClasses) {
+      config.addAnnotatedClass(clazz);
+    }
     config.addPackage("io.wurmatron.server_essentials.backend.model.db");
     return config;
   }

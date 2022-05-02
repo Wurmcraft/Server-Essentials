@@ -6,19 +6,21 @@
  */
 package io.wurmatron.server_essentials.backend.config;
 
+import static io.wurmatron.server_essentials.backend.ServerEssentialsBackend.GSON;
+
 import io.wurmatron.server_essentials.backend.ServerEssentialsBackend;
 import io.wurmatron.server_essentials.backend.config.Config.ConfigStyle;
 import io.wurmatron.server_essentials.backend.io.FileWatcher;
 import io.wurmatron.server_essentials.backend.model.config.BackendConfig;
-import me.grison.jtoml.impl.Toml;
-import org.cliffc.high_scale_lib.NonBlockingHashMap;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.*;
-
-import static io.wurmatron.server_essentials.backend.ServerEssentialsBackend.GSON;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.StandardWatchEventKinds;
+import me.grison.jtoml.impl.Toml;
+import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 /**
  * Helps with the loading of configurations from multiple formats and locations
