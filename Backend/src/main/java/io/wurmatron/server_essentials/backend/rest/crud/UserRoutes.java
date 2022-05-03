@@ -6,6 +6,7 @@
 package io.wurmatron.server_essentials.backend.rest.crud;
 
 import io.javalin.core.validation.BodyValidator;
+import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
@@ -17,9 +18,17 @@ import io.wurmatron.server_essentials.backend.db.DatabaseConnector;
 import io.wurmatron.server_essentials.backend.model.db.UserAccount;
 import io.wurmatron.server_essentials.backend.model.rest.RestResponse;
 import io.wurmatron.server_essentials.backend.rest.Route;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import joptsimple.internal.Strings;
+import kotlin.collections.ArrayDeque;
+import org.jetbrains.annotations.NotNull;
 
 public class UserRoutes {
 
@@ -303,8 +312,80 @@ public class UserRoutes {
   @Route(path = "/api/users/", method = "GET")
   public static Handler getUsers =
       ctx -> {
-        ctx.status(501); // TODO Implement
+        CriteriaBuilder cb = DatabaseConnector.getSession().getCriteriaBuilder();
+        CriteriaQuery<UserAccount> cr = cb.createQuery(UserAccount.class);
+        Root<UserAccount> root = cr.from(UserAccount.class);
+        cr = cr.select(root);
+        List<Predicate> filters = createFilters(ctx, cb, root);
+        // Process query
+        cr = cr.where(filters.toArray(new Predicate[] {}));
+        List<UserAccount> filteredAccounts =
+            DatabaseConnector.getSession().createEntityManager().createQuery(cr).getResultList();
+        List<UserAccount> protectedAccounts = new ArrayDeque<>();
+        for (UserAccount account : filteredAccounts) {
+          protectedAccounts.add(filterBasedOnPerms(account));
+        }
+        ctx.result(
+                ServerEssentialsBackend.GSON.toJson(protectedAccounts.toArray(new UserAccount[0])))
+            .status(200);
       };
+
+  @NotNull
+  private static List<Predicate> createFilters(
+      Context ctx, CriteriaBuilder cb, Root<UserAccount> root) {
+    List<Predicate> filters = new ArrayList<>();
+
+    filters.add(createFilter(ctx, "uuid", cb, root, "uuid"));
+    filters.add(createFilter(ctx, "username", cb, root, "lastUsername"));
+    filters.add(createFilter(ctx, "rank", cb, root, "ranks"));
+    filters.add(createFilter(ctx, "perm", cb, root, "perms"));
+    filters.add(createFilter(ctx, "perk", cb, root, "perks"));
+    filters.add(createFilter(ctx, "lang", cb, root, "language"));
+    filters.add(createFilter(ctx, "nick", cb, root, "nickname"));
+    filters.add(createFilter(ctx, "discord-id", cb, root, "discord_id"));
+    filters.add(createFilter(ctx, "system-perms", cb, root, "system_perms"));
+
+    // Filter muted
+    String muted = ctx.queryParam("muted");
+    if (muted != null && muted.length() > 0) {
+      filters.add(cb.equal(root.get("muted"), Boolean.getBoolean(muted)));
+    }
+
+    // Filter server playtime // TODO Implement
+    String serverPlaytime = ctx.queryParam("server-playtime");
+    if (serverPlaytime != null && serverPlaytime.length() > 0) {
+      ctx.status(502);
+    }
+
+    // Filter total playtime // TODO Implement
+    String totalPlaytime = ctx.queryParam("total-playtime");
+    if (totalPlaytime != null && totalPlaytime.length() > 0) {
+      ctx.status(502);
+    }
+
+    // Filter server balance // TODO Implement
+    String serverBalance = ctx.queryParam("server-balance");
+    if (serverBalance != null && serverBalance.length() > 0) {
+      ctx.status(502);
+    }
+
+    // Filter total balance // TODO Implement
+    String totalBalance = ctx.queryParam("totalBalance");
+    if (totalBalance != null && totalBalance.length() > 0) {
+      ctx.status(502);
+    }
+
+    return filters;
+  }
+
+  private static Predicate createFilter(
+      Context ctx, String key, CriteriaBuilder cb, Root<UserAccount> root, String system_perms) {
+    String filterQuery = ctx.queryParam(key);
+    if (filterQuery != null && filterQuery.length() > 0) {
+      return cb.like(root.get(system_perms), "%" + filterQuery + "%");
+    }
+    return null;
+  }
 
   @OpenApi(
       description = "Update an existing user account",
