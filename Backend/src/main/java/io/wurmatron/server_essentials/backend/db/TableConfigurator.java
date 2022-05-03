@@ -13,7 +13,7 @@ import org.hibernate.Session;
 
 public class TableConfigurator {
 
-  public static final String[] TABLES = new String[] {"users"};
+  public static final String[] TABLES = new String[] {"users", "ranks"};
 
   /**
    * Creates a table based on to be configured table templates in sql/{jdbc}/{table_name}.sql

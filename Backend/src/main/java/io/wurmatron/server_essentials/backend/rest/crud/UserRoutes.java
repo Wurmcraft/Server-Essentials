@@ -110,7 +110,7 @@ public class UserRoutes {
       responses = {
         @OpenApiResponse(
             status = "200",
-            content = @OpenApiContent(from = RestResponse.class),
+            content = @OpenApiContent(from = UserAccount.class),
             description = "User account has been deleted"),
         @OpenApiResponse(
             status = "400",
@@ -190,7 +190,7 @@ public class UserRoutes {
         @OpenApiResponse(
             status = "400",
             content = @OpenApiContent(from = RestResponse.class),
-            description = "An error occurred while attempting to delete the provided user account"),
+            description = "An error occurred while attempting to get the provided user account"),
         @OpenApiResponse(
             status = "401",
             content = @OpenApiContent(from = RestResponse.class),
@@ -379,10 +379,10 @@ public class UserRoutes {
   }
 
   private static Predicate createFilter(
-      Context ctx, String key, CriteriaBuilder cb, Root<UserAccount> root, String system_perms) {
+      Context ctx, String key, CriteriaBuilder cb, Root<UserAccount> root, String value) {
     String filterQuery = ctx.queryParam(key);
     if (filterQuery != null && filterQuery.length() > 0) {
-      return cb.like(root.get(system_perms), "%" + filterQuery + "%");
+      return cb.like(root.get(value), "%" + filterQuery + "%");
     }
     return null;
   }
