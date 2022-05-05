@@ -45,7 +45,7 @@ public class TestAutoRankRoutes {
     @Test
     @Order(2)
     public void testUpdateAutoRank() throws IOException {
-        TestAutoRanks.TEST_AUTORANK.playTime = 4000L;
+        TestAutoRanks.TEST_AUTORANK.playtime = 4000L;
         HTTPRequests.put("api/autorank/" + TestAutoRanks.TEST_AUTORANK.rank, TestAutoRanks.TEST_AUTORANK);
         // Check if the auto-rank has ranked up
         AutoRank[] autoranks = HTTPRequests.get("api/autorank", AutoRank[].class);
@@ -68,29 +68,29 @@ public class TestAutoRankRoutes {
     @Test
     @Order(2)
     public void testGetSpecificNextAutoRank() throws IOException {
-        String nextRank = HTTPRequests.get("api/autorank/" + TestAutoRanks.TEST_AUTORANK.rank + "/next-rank", AutoRank.class).nextRank;
-        assertEquals(TestAutoRanks.TEST_AUTORANK.nextRank, nextRank, "Next-Rank is the same");
+        String nextRank = HTTPRequests.get("api/autorank/" + TestAutoRanks.TEST_AUTORANK.rank + "/next-rank", AutoRank.class).next_rank;
+        assertEquals(TestAutoRanks.TEST_AUTORANK.next_rank, nextRank, "Next-Rank is the same");
     }
 
     @Test
     @Order(2)
     public void testGetSpecificPlaytimeAutoRank() throws IOException {
-        long playtime = HTTPRequests.get("api/autorank/" + TestAutoRanks.TEST_AUTORANK.rank + "/playtime", AutoRank.class).playTime;
-        assertEquals(TestAutoRanks.TEST_AUTORANK.playTime, playtime, "Playtime is the same");
+        long playtime = HTTPRequests.get("api/autorank/" + TestAutoRanks.TEST_AUTORANK.rank + "/playtime", AutoRank.class).playtime;
+        assertEquals(TestAutoRanks.TEST_AUTORANK.playtime, playtime, "Playtime is the same");
     }
 
     @Test
     @Order(2)
     public void testGetSpecificCurrencyAutoRank() throws IOException {
-        String currencyName = HTTPRequests.get("api/autorank/" + TestAutoRanks.TEST_AUTORANK.rank + "/currency", AutoRank.class).currencyName;
-        assertEquals(TestAutoRanks.TEST_AUTORANK.currencyName, currencyName, "Currency-Name is the same");
+        String currencyName = HTTPRequests.get("api/autorank/" + TestAutoRanks.TEST_AUTORANK.rank + "/currency", AutoRank.class).currency_name;
+        assertEquals(TestAutoRanks.TEST_AUTORANK.currency_name, currencyName, "Currency-Name is the same");
     }
 
     @Test
     @Order(2)
     public void testGetSpecificCurrencyAmountAutoRank() throws IOException {
-        double amount = HTTPRequests.get("api/autorank/" + TestAutoRanks.TEST_AUTORANK.rank + "/currency-amount", AutoRank.class).currencyAmount;
-        assertEquals(TestAutoRanks.TEST_AUTORANK.currencyAmount, amount, "Currency Amount is the same");
+        double amount = HTTPRequests.get("api/autorank/" + TestAutoRanks.TEST_AUTORANK.rank + "/currency-amount", AutoRank.class).currency_amount;
+        assertEquals(TestAutoRanks.TEST_AUTORANK.currency_amount, amount, "Currency Amount is the same");
     }
 
     @Test

@@ -13,7 +13,7 @@ public class Ban {
     public String banned_by;
     public String banned_by_type;
     public String ban_reason;
-    public long timestamp;
+    public String timestamp;
     public String ban_type;
     public String ban_data;
     public boolean ban_status;
@@ -31,12 +31,12 @@ public class Ban {
      * @param banData      extra data related to the ban
      * @param banStatus    is this ban still active
      */
-    public Ban(long banID, String uuid, String ip, String discordID, String bannedBy, String bannedByType, String banReason, long timestamp, String banType, String banData, boolean banStatus) {
+    public Ban(long banID, String uuid, String ip, String discordID, String banned_by, String bannedByType, String banReason, String timestamp, String banType, String banData, boolean banStatus) {
         this.ban_id = banID;
         this.uuid = uuid;
         this.ip = ip;
         this.discord_id = discordID;
-        this.banned_by = bannedBy;
+        this.banned_by = banned_by;
         this.banned_by_type = bannedByType;
         this.ban_reason = banReason;
         this.timestamp = timestamp;
@@ -44,7 +44,6 @@ public class Ban {
         this.ban_data = banData;
         this.ban_status = banStatus;
     }
-
 
     public Ban() {
     }

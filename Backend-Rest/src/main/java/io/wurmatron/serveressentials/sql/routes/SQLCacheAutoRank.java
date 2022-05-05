@@ -58,7 +58,7 @@ public class SQLCacheAutoRank extends SQLCache {
     @Nullable
     public static AutoRank create(AutoRank autoRank) {
         try {
-            insert(AUTORANK_TABLE, Arrays.copyOfRange(AUTORANKS_COLUMNS, 1, AUTORANKS_COLUMNS.length), autoRank, false);
+            insert(AUTORANK_TABLE, AUTORANKS_COLUMNS, autoRank, false);
             autoRankCache.put(autoRank.rank.toUpperCase(), new CacheAutoRank(autoRank));
             return autoRank;
         } catch (Exception e) {
@@ -81,10 +81,12 @@ public class SQLCacheAutoRank extends SQLCache {
             update(AUTORANK_TABLE, columnsToUpdate, "rank", "" + autoRank.rank, autoRank);
             if (autoRankCache.containsKey(autoRank.rank.toUpperCase())) {
                 try {
-                    autoRankCache.get(autoRank.rank).autoRank = updateInfoLocal(columnsToUpdate, autoRank, autoRankCache.get(autoRank.rank.toUpperCase()).autoRank);
-                    autoRankCache.get(autoRank.rank).lastSync = System.currentTimeMillis();
+                    autoRankCache.get(autoRank.rank.toUpperCase()).autoRank = updateInfoLocal(columnsToUpdate, autoRank, autoRankCache.get(autoRank.rank.toUpperCase()).autoRank);
+                    autoRankCache.get(autoRank.rank.toUpperCase()).lastSync = System.currentTimeMillis();
                     return true;
                 } catch (Exception e) {
+                    LOG.debug("Failed to update autorank with name '" + autoRank.rank + "' (" + e.getMessage() + ")");
+                    LOG.debug("AutoRank: " + GSON.toJson(autoRank));
                 }
             } else {
                 autoRankCache.put(autoRank.rank.toUpperCase(), new CacheAutoRank(autoRank));

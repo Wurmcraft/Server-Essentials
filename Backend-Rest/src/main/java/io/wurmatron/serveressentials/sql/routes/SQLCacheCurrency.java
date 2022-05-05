@@ -35,7 +35,7 @@ public class SQLCacheCurrency extends SQLCache {
         try {
             Currency currency = get("*", CURRENCY_TABLE, "displayName", name, new Currency());
             if (currency != null) {
-                currencyCache.put(currency.displayName.toUpperCase(), new CacheCurrency(currency));
+                currencyCache.put(currency.display_name.toUpperCase(), new CacheCurrency(currency));
                 return currency.clone();
             }
         } catch (Exception e) {
@@ -70,10 +70,10 @@ public class SQLCacheCurrency extends SQLCache {
     public static Currency create(Currency currency) {
         try {
             insert(CURRENCY_TABLE, Arrays.copyOfRange(CURRENCYS_COLUMNS, 1, CURRENCYS_COLUMNS.length), currency, false);
-            currencyCache.put(currency.displayName.toUpperCase(), new CacheCurrency(currency.clone()));
+            currencyCache.put(currency.display_name.toUpperCase(), new CacheCurrency(currency.clone()));
             return currency;
         } catch (Exception e) {
-            LOG.debug("Failed to create currency '" + currency.displayName + "' (" + e.getMessage() + ")");
+            LOG.debug("Failed to create currency '" + currency.display_name + "' (" + e.getMessage() + ")");
             LOG.debug("Currency: " + GSON.toJson(currency));
         }
         return null;
@@ -89,15 +89,15 @@ public class SQLCacheCurrency extends SQLCache {
      */
     public static boolean update(Currency currency, String[] columnsToUpdate) {
         try {
-            update(CURRENCY_TABLE, columnsToUpdate, "displayName", "" + currency.displayName, currency);
-            if (currencyCache.containsKey(currency.displayName.toUpperCase())) {
-                currencyCache.get(currency.displayName).currency = updateInfoLocal(columnsToUpdate, currency, currencyCache.get(currency.displayName).currency);
-                currencyCache.get(currency.displayName).lastSync = System.currentTimeMillis();
+            update(CURRENCY_TABLE, columnsToUpdate, "displayName", "" + currency.display_name, currency);
+            if (currencyCache.containsKey(currency.display_name.toUpperCase())) {
+                currencyCache.get(currency.display_name).currency = updateInfoLocal(columnsToUpdate, currency, currencyCache.get(currency.display_name).currency);
+                currencyCache.get(currency.display_name).lastSync = System.currentTimeMillis();
             } else
-                currencyCache.put(currency.displayName.toUpperCase(), new CacheCurrency(currency));
+                currencyCache.put(currency.display_name.toUpperCase(), new CacheCurrency(currency));
             return true;
         } catch (Exception e) {
-            LOG.debug("Failed to Update currency with name '" + currency.displayName + "' (" + e.getMessage() + ")");
+            LOG.debug("Failed to Update currency with name '" + currency.display_name + "' (" + e.getMessage() + ")");
             LOG.debug("Currency: " + GSON.toJson(currency));
         }
         return false;

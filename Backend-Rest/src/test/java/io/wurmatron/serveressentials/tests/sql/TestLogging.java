@@ -56,7 +56,7 @@ public class TestLogging {
     @Order(2)
     public void testUpdateEntry() {
         TEST_ENTRY.action_data = "{\"fire\": true}";
-        boolean updated = SQLLogging.update(TEST_ENTRY, new String[]{"actionData"});
+        boolean updated = SQLLogging.update(TEST_ENTRY, new String[]{"action_data"});
         assertTrue(updated, "Log Entry was updated successfully without errors");
         // Check if the entry was updated
         List<LogEntry> logEntries = SQLLogging.get(TEST_ENTRY.server_id, TEST_ENTRY.x, TEST_ENTRY.y, TEST_ENTRY.z, TEST_ENTRY.dim);

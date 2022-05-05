@@ -19,6 +19,7 @@ import java.util.List;
 import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
 import static io.wurmatron.serveressentials.routes.RouteUtils.response;
 
+// TODO FIX
 public class AutoRankRoutes {
 
     @OpenApi(
@@ -250,12 +251,13 @@ public class AutoRankRoutes {
         if (autoRank.rank == null || autoRank.rank.trim().isEmpty())
             errors.add(new MessageResponse("Bad Request", "Invalid / Empty Rank"));
         // Check Next Rank
-        if (autoRank.nextRank == null || autoRank.nextRank.trim().isEmpty())
+        if (autoRank.next_rank == null || autoRank.next_rank.trim().isEmpty())
             errors.add(new MessageResponse("Bad Request", "Invalid / Empty Next-Rank"));
         // Check playtime
-        if (autoRank.playTime != null && autoRank.playTime < 0)
+        if (autoRank.playtime != null && autoRank.playtime < 0)
             errors.add(new MessageResponse("Bad Request", "Invalid Playtime, Must be equal or greater than 0"));
-        if (autoRank.currencyName != null && !autoRank.currencyName.trim().isEmpty() && autoRank.currencyAmount != null && autoRank.currencyAmount < 0)
+        if (autoRank.currency_name != null && !autoRank.currency_name.trim().isEmpty() && autoRank.currency_amount
+            != null && autoRank.currency_amount < 0)
             errors.add(new MessageResponse("Bad Request", "Invalid Currency Amount, Must be equal or greater than 0"));
         if (errors.size() == 0) {
             return true;
@@ -280,7 +282,7 @@ public class AutoRankRoutes {
         if (role.equals(Route.RestRoles.USER)) {
             // TODO Based on SystemPerms
         }
-        clone.specialEvents = null;
+        clone.special_events = null;
         return clone;
     }
 
@@ -290,19 +292,17 @@ public class AutoRankRoutes {
      * @param data PathParam provided by the user via the endpoint
      */
     public static String convertPathToField(String data) {
-        if (data.equalsIgnoreCase("autorank-id"))
-            return "autoRankID";
         if (data.equalsIgnoreCase("rank") || data.equals("name"))
             return "rank";
-        if (data.equalsIgnoreCase("next-rank"))
+        else if (data.equalsIgnoreCase("next-rank"))
             return "nextRank";
-        if (data.equalsIgnoreCase("playtime"))
+        else if (data.equalsIgnoreCase("playtime"))
             return "playTime";
-        if (data.equalsIgnoreCase("currency"))
+        else if (data.equalsIgnoreCase("currency"))
             return "currencyName";
-        if (data.equalsIgnoreCase("currency-amount"))
+        else if (data.equalsIgnoreCase("currency-amount"))
             return "currencyAmount";
-        if (data.equalsIgnoreCase("special-event") || data.equalsIgnoreCase("special-events") || data.equalsIgnoreCase("event"))
+       else if (data.equalsIgnoreCase("special-event") || data.equalsIgnoreCase("special-events") || data.equalsIgnoreCase("event"))
             return "specialEvents";
         return null;
     }
@@ -323,19 +323,19 @@ public class AutoRankRoutes {
         // Verify, Check and Apply Next-Rank Filter
         String nextRank = ctx.queryParam("next");
         if (nextRank != null && !nextRank.trim().isEmpty())
-            sqlBuilder.append("nextRank LIKE '").append(nextRank).append("%' AND ");
+            sqlBuilder.append("next_rank LIKE '").append(nextRank).append("%' AND ");
         // Verify, Check and Apply playtimeFilter
         String playtime = ctx.queryParam("playtime");
         if (playtime != null && !playtime.trim().isEmpty())
-            sqlBuilder.append("playTime='").append(playtime).append("' AND ");
+            sqlBuilder.append("play_time='").append(playtime).append("' AND ");
         // Verify, Check and Apply Currency Filter
         String currency = ctx.queryParam("currency");
         if (currency != null && !currency.trim().isEmpty())
-            sqlBuilder.append("currencyName LIKE '").append(currency).append("%' AND ");
+            sqlBuilder.append("currency_name LIKE '").append(currency).append("%' AND ");
         // Verify, Check and Apply currency amount Filter
         String amount = ctx.queryParam("currency-amount");
         if (amount != null && !amount.trim().isEmpty())
-            sqlBuilder.append("currencyAmount='").append(amount).append("' AND ");
+            sqlBuilder.append("currency_amount='").append(amount).append("' AND ");
         // Finalize SQL
         sqlBuilder.append(";");
         String sql = sqlBuilder.toString();

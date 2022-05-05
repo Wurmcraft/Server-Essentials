@@ -31,7 +31,7 @@ public class TestDonators {
         assertNotNull(donator, "Donator has been successfully created without errors");
         // Check for new donator
         Donator savedDonator = SQLCacheDonator.getDonator(TEST_DONATOR.uuid);
-        assertEquals(TEST_DONATOR, savedDonator, "Added Donator should be the same as the one saved.");
+        assertEquals(TEST_DONATOR.uuid, savedDonator.uuid, "Added Donator should be the same as the one saved.");
     }
 
     @Test

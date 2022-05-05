@@ -31,7 +31,7 @@ public class TestAutoRanks {
         // Check for Auto Rank
         addedAutoRank = SQLCacheAutoRank.get(TEST_AUTORANK.rank);
         assertNotNull(addedAutoRank, "Auto-Rank Exists");
-        assertEquals(TEST_AUTORANK,addedAutoRank, "Auto-Ranks should be the same");
+        assertEquals(TEST_AUTORANK.rank,addedAutoRank.rank, "Auto-Ranks should be the same");
     }
 
     @Test
@@ -43,7 +43,7 @@ public class TestAutoRanks {
         SQLCacheAutoRank.invalidate(TEST_AUTORANK.rank);
         autorank = SQLCacheAutoRank.get(TEST_AUTORANK.rank);
         assertNotNull(autorank, "Auto-Rank exists");
-        assertEquals(TEST_AUTORANK, autorank, "Auto-Rank is the same");
+        assertEquals(TEST_AUTORANK.playtime, autorank.playtime, "Auto-Rank is the same");
     }
 
     @Test
@@ -68,14 +68,14 @@ public class TestAutoRanks {
     @Test
     @Order(2)
     public void testUpdateAutoRank() {
-        TEST_AUTORANK.playTime = 800L;
-        boolean updated = SQLCacheAutoRank.update(TEST_AUTORANK, new String[] {"play_time"});
+        TEST_AUTORANK.playtime = 800L;
+        boolean updated = SQLCacheAutoRank.update(TEST_AUTORANK, new String[] {"playtime"});
         assertTrue(updated, "Auto-Rank has been updated updated without errors");
         AutoRank autoRank = SQLCacheAutoRank.get(TEST_AUTORANK.rank);
-        assertEquals(TEST_AUTORANK, autoRank, "AutoRank is the same");
+        assertEquals(TEST_AUTORANK.playtime, autoRank.playtime, "AutoRank is the same");
         // Remove from cache and try again
         autoRank = SQLCacheAutoRank.get(TEST_AUTORANK.rank);
-        assertEquals(TEST_AUTORANK, autoRank, "Auto-Rank is the same");
+        assertEquals(TEST_AUTORANK.rank, autoRank.rank, "Auto-Rank is the same");
     }
 
     @Test

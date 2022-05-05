@@ -122,13 +122,13 @@ public class CurrencyRoutes {
         Currency currencyUpdate = GSON.fromJson(ctx.body(), Currency.class);
         String name = ctx.pathParam("name");
         Currency currency = SQLCacheCurrency.get(name);
-        if (!name.equals(currencyUpdate.displayName)) {
+        if (!name.equals(currencyUpdate.display_name)) {
             ctx.status(400).result(response("Name Mismatch", "Path and Body Name's dont match!"));
             return;
         }
         if (currency != null) {
             SQLCacheCurrency.update(currencyUpdate, SQLCacheCurrency.getColumns());
-            ctx.status(200).result(GSON.toJson(SQLCacheCurrency.get(currencyUpdate.displayName)));
+            ctx.status(200).result(GSON.toJson(SQLCacheCurrency.get(currencyUpdate.display_name)));
         } else
             ctx.status(404).result(response("Not Found", "Currency with the provided Name does not exist"));
     };
@@ -170,11 +170,11 @@ public class CurrencyRoutes {
     public static boolean isValidCurrency(Context ctx, Currency currency) {
         List<MessageResponse> errors = new ArrayList<>();
         // Check DisplayName
-        if (currency.displayName == null || currency.displayName.trim().isEmpty())
+        if (currency.display_name == null || currency.display_name.trim().isEmpty())
             errors.add(new MessageResponse("Bad Name", "Display Name must not be empty / null"));
-        if (currency.globalWorth <= 0)
+        if (currency.global_worth <= 0)
             errors.add(new MessageResponse("Invalid Worth", "Global Worth must be greater than 0.00"));
-        if (currency.sellWorth <= 0)
+        if (currency.sell_worth <= 0)
             errors.add(new MessageResponse("Invalid Sell", "Global Sell must be greater than 0.00"));
         if (currency.tax < 0)
             errors.add(new MessageResponse("Invalid Tax", "Tax must not be negative"));
@@ -199,8 +199,8 @@ public class CurrencyRoutes {
         if (role.equals(Route.RestRoles.USER)) {
             // TODO Based on SystemPerms
         }
-        currency.globalWorth = null;
-        currency.sellWorth = null;
+        currency.global_worth = null;
+        currency.sell_worth = null;
         currency.tax = null;
         return clone;
     }

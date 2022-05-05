@@ -38,7 +38,7 @@ public class SQLCacheBan extends SQLCache {
                 invalidate(banID);
         // Not in cache / invalid
         try {
-            Ban ban = get("*", BAN_TABLE, "ban_id", "" + banID, new Ban());
+            Ban ban = get("*", BAN_TABLE, "ban_id", ""+ banID, new Ban());
             if (ban != null) {
                 bansCache.put(banID, new CacheBan(ban));
                 return ban.clone();
@@ -159,7 +159,7 @@ public class SQLCacheBan extends SQLCache {
      */
     public static boolean update(Ban ban, String[] columnsToUpdate) {
         try {
-            update(BAN_TABLE, columnsToUpdate, "banID", "" + ban.ban_id, ban);
+            update(BAN_TABLE, columnsToUpdate, "ban_id", "" + ban.ban_id, ban);
             invalidate(ban.ban_id);
             return true;
         } catch (Exception e) {
@@ -177,7 +177,7 @@ public class SQLCacheBan extends SQLCache {
      */
     public static boolean delete(long banID) {
         try {
-            delete(BAN_TABLE, "banID", "" + banID);
+            delete(BAN_TABLE, "ban_id", "" + banID);
             invalidate(banID);
             return true;
         } catch (Exception e) {

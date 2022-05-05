@@ -7,11 +7,11 @@ import java.util.Objects;
 public class AutoRank {
 
     public String rank;
-    public String nextRank;
-    public Long playTime;
-    public String currencyName;
-    public Double currencyAmount;
-    public String specialEvents;
+    public String next_rank;
+    public Long playtime;
+    public String currency_name;
+    public Double currency_amount;
+    public String special_events;
 
     /**
      * @param rank           current rank of the user
@@ -23,11 +23,11 @@ public class AutoRank {
      */
     public AutoRank(String rank, String nextRank, long playtime, String currencyName, double currencyAmount, String specialEvents) {
         this.rank = rank;
-        this.nextRank = nextRank;
-        this.playTime = playtime;
-        this.currencyName = currencyName;
-        this.currencyAmount = currencyAmount;
-        this.specialEvents = specialEvents;
+        this.next_rank = nextRank;
+        this.playtime = playtime;
+        this.currency_name = currencyName;
+        this.currency_amount = currencyAmount;
+        this.special_events = specialEvents;
     }
 
     public AutoRank() {
@@ -43,7 +43,10 @@ public class AutoRank {
         if (this == o) return true;
         if (!(o instanceof AutoRank)) return false;
         AutoRank autoRank = (AutoRank) o;
-        return playTime.equals(autoRank.playTime) && Double.compare(autoRank.currencyAmount, currencyAmount) == 0 && Objects.equals(rank, autoRank.rank) && Objects.equals(nextRank, autoRank.nextRank) && Objects.equals(currencyName, autoRank.currencyName) && Objects.equals(specialEvents, autoRank.specialEvents);
+        return playtime.equals(autoRank.playtime) && Double.compare(autoRank.currency_amount,
+            currency_amount) == 0 && Objects.equals(rank, autoRank.rank) && Objects.equals(
+            next_rank, autoRank.next_rank) && Objects.equals(
+            currency_name, autoRank.currency_name) && Objects.equals(special_events, autoRank.special_events);
     }
 
     @Override

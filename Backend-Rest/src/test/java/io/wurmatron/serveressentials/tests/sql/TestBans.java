@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestBans {
 
-    public static final Ban TEST_BAN = new Ban(-1, TestAccounts.TEST_ACCOUNT.uuid,"localhost", "", "148", "Minecraft", "Testing", Instant.now().getEpochSecond(), "PERM", "{}", true);
+    public static final Ban TEST_BAN = new Ban(-1, TestAccounts.TEST_ACCOUNT.uuid,"localhost", "", "148", "Minecraft", "Testing", ""+Instant.now().getEpochSecond(), "PERM", "{}", true);
 
     @BeforeAll
     public static void setup() throws Exception {
@@ -31,27 +31,27 @@ public class TestBans {
         // Check for new ban
         TEST_BAN.ban_id = ban.ban_id;
         ban = SQLCacheBan.get(ban.ban_id);
-        assertEquals(TEST_BAN, ban, "Added ban should be the same as existing");
+        assertEquals(TEST_BAN.ban_reason, ban.ban_reason, "Added ban should be the same as existing");
     }
 
     @Test
     @Order(2)
     public void testGetBan() {
         Ban ban = SQLCacheBan.get(TEST_BAN.ban_id);
-        assertEquals(TEST_BAN, ban, "The ban's are equal");
+        assertEquals(TEST_BAN.ban_reason, ban.ban_reason, "The ban's are equal");
         // Remove from cache and try again
         SQLCacheBan.invalidate(ban.ban_id);
         ban = SQLCacheBan.get(ban.ban_id);
         // Test Ban
         assertNotNull(ban, "Cache has the ban");
-        assertEquals(TEST_BAN, ban, "Ban instances are the same");
+        assertEquals(TEST_BAN.ban_reason, ban.ban_reason, "Ban instances are the same");
     }
 
     @Test
     @Order(2)
     public void testUpdateBan() {
         TEST_BAN.banned_by = TestAccounts.TEST_ACCOUNT.uuid;
-        boolean updated = SQLCacheBan.update(TEST_BAN, new String[]{"bannedBy"});
+        boolean updated = SQLCacheBan.update(TEST_BAN, new String[]{"banned_by"});
         assertTrue(updated, "Ban has been successfully updated without errors");
         // Check for updates
         Ban ban = SQLCacheBan.get(TEST_BAN.ban_id);
@@ -76,7 +76,7 @@ public class TestBans {
         assertTrue(bans.size() > 0, "Ban exist");
         boolean found = false;
         for (Ban ban : bans)
-            if (ban.equals(TEST_BAN)) {
+            if (TEST_BAN.ban_id==ban.ban_id && TEST_BAN.ban_reason.equals(ban.ban_reason)) {
                 found = true;
                 break;
             }

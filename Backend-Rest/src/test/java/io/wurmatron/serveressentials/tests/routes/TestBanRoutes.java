@@ -61,7 +61,7 @@ public class TestBanRoutes {
         HTTPRequests.put("api/ban/" + TestBans.TEST_BAN.ban_id, TestBans.TEST_BAN);
         // Make sure it was updated
         Ban entry = HTTPRequests.get("api/ban/" + TestBans.TEST_BAN.ban_id, Ban.class);
-        assertEquals(TestBans.TEST_BAN, entry, "Entry was updated");
+        assertEquals(TestBans.TEST_BAN.ban_reason, entry.ban_reason, "Entry was updated");
     }
 
     @Test
