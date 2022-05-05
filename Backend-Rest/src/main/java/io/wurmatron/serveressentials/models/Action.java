@@ -8,7 +8,7 @@ public class Action {
     public String host;
     public String action;
     public String action_data;
-    public Long timestamp;
+    public String timestamp;
 
     /**
      * @param relatedID  serverID/discord Channel ID
@@ -17,7 +17,7 @@ public class Action {
      * @param actionData Json data related to the given action
      * @param timestamp  Unix Timestamp for when the action occurred
      */
-    public Action(String relatedID, String host, String action, String actionData, long timestamp) {
+    public Action(String relatedID, String host, String action, String actionData, String timestamp) {
         this.related_id = relatedID;
         this.host = host;
         this.action = action;

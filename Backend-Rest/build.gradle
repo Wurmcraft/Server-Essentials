@@ -1,22 +1,22 @@
+import com.github.spotbugs.snom.SpotBugsReport
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "4.0.4"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.diffplug.spotless" version "6.3.0"
+    id "java"
+    id "com.github.spotbugs" version "5.0.6"
+    id 'idea'
+    id 'eclipse'
 }
-apply plugin: 'java'
-apply plugin: 'idea'
 
 repositories {
-    jcenter()
     mavenCentral()
-     maven { url "https://raw.github.com/agrison/jtoml/mvn-repo/" }
+    maven { url "https://raw.github.com/agrison/jtoml/mvn-repo/" }
 }
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
-archivesBaseName = 'SE-Rest'
-
 dependencies {
-    // File's
+    // File
     implementation "com.google.code.gson:gson:${gson_version}"              // https://github.com/google/gson
     implementation "me.grison:jtoml:${jtoml_version}"                       // https://github.com/agrison/jtoml
     // Logging
@@ -27,36 +27,37 @@ dependencies {
     // Utils
     implementation "com.boundary:high-scale-lib:${highscalelib_version}" // https://github.com/boundary/high-scale-lib
     implementation "commons-io:commons-io:${apache_io_version}" // https://commons.apache.org/proper/commons-io/
-    implementation "mysql:mysql-connector-java:${mysql_connector_version}" // https://www.mysql.com/products/connector/
-    implementation "org.postgresql:postgresql:${postgres_version}"
     // HTTP / Rest / WSS
     implementation "io.javalin:javalin:${javalin_version}" // https://javalin.io/
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}" // https://github.com/jetbrains/kotlin
     implementation "io.javalin:javalin-openapi:${javalin_openapi_version}"  // https://javalin.io/plugins/openapi
     // Classpath search
     implementation "net.oneandone.reflections8:reflections8:${reflections_version}" // https://github.com/aschoerk/reflections8
-    implementation "org.javassist:javassist:${javassist_version}" // https://www.javassist.org/}
+    implementation "org.javassist:javassist:${javassist_version}" // https://www.javassist.org/
     // Unit Testing
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${junit_version}"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junit_version}"
+    testImplementation platform("org.junit:junit-bom:${junit_version}")
+    testImplementation "org.junit.jupiter:junit-jupiter"
     // Discord
-    implementation "com.discord4j:discord4j-core:${discord4j_version}"
+    implementation "com.discord4j:discord4j-core:${discord4j_version}" // https://discord4j.com/
+    // Database
+    implementation "org.hibernate:hibernate-core:${hibernate_version}"  // https://hibernate.org/
+    implementation "mysql:mysql-connector-java:${mysql_connector_version}" // https://www.mysql.com/products/connector/
+    implementation "org.postgresql:postgresql:${postgres_version}"  // https://jdbc.postgresql.org/
 }
 
-shadowJar {
-    configurations = [project.configurations.compileClasspath]
-}
+// Add build requirements
+jar.finalizedBy('shadowJar')
+jar.finalizedBy('spotlessApply')
+jar.finalizedBy('spotbugsMain')
 
-shadowJar.archiveName = "${archivesBaseName}-${version}.jar"
+
 jar {
     manifest {
         attributes(
-                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-                'Main-Class': 'io.wurmatron.serveressentials.ServerEssentialsRest'
+                'Main-Class': 'io.wurmatron.server_essentials.ServerEssentialsBackend'
         )
     }
 }
-jar.finalizedBy('shadowJar')
 
 task processSource(type: Sync) {
     from sourceSets.main.java
@@ -65,13 +66,42 @@ task processSource(type: Sync) {
     into "$buildDir/src"
 }
 
-compileJava {
-    source = processSource.outputs
+// Configure Plugins
+shadowJar.archiveName = "${archivesBaseName}-${version}.jar"
+shadowJar {
+    minimize {
+        exclude(dependency('mysql:.*:.*'))
+        exclude(dependency('org.postgresql:.*:.*'))
+        exclude(dependency('org.postgresql:.*:.*'))
+    }
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+spotless {
+    java {
+        licenseHeaderFile 'HEADER.txt'
+        importOrder()
+        removeUnusedImports()
+        indentWithTabs()
+        trimTrailingWhitespace()
+        googleJavaFormat()
+    }
+}
+
+// Tests
+spotbugsMain {
+    reports(({
+        html {
+            required = true
+            outputLocation = file("$buildDir/reports/spotbugs/main/spotbugs.html")
+            stylesheet = 'fancy-hist.xsl'
+        }
+    } as Closure<NamedDomainObjectContainer<? extends SpotBugsReport>>))
 }
 
 test {
     useJUnitPlatform()
-    dependsOn 'cleanTest'
     testLogging {
         events "passed", "skipped", "failed"
     }

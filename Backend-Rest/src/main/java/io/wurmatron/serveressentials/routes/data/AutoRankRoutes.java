@@ -75,7 +75,7 @@ public class AutoRankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/autorank/:rank", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/autorank/{rank}", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler override = ctx -> {
         try {
             AutoRank autoRank = GSON.fromJson(ctx.body(), AutoRank.class);
@@ -113,7 +113,7 @@ public class AutoRankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/autorank/:name/:data", method = "GET")
+    @Route(path = "api/autorank/{name}/{data}", method = "GET")
     public static Handler getData = ctx -> {
             String name = ctx.pathParam("name");
             if (!name.isEmpty()) {
@@ -178,7 +178,7 @@ public class AutoRankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/autorank/:name/:data", method = "PATCH", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/autorank/{name}/{data}", method = "PATCH", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler patch = ctx -> {
         try {
             AutoRank autorank = GSON.fromJson(ctx.body(), AutoRank.class);
@@ -221,7 +221,7 @@ public class AutoRankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/autorank/:name", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/autorank/{name}", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler delete = ctx -> {
             String name = ctx.pathParam("name");
             if (!name.isEmpty()) {

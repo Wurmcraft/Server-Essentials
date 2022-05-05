@@ -78,9 +78,9 @@ public class RankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/rank/:name", method = "PUT", roles = {Route.RestRoles.DEV})
+    @Route(path = "api/rank/{name}", method = "PUT", roles = {Route.RestRoles.DEV})
     public static Handler overrideRank = ctx -> {
-        String name = ctx.pathParam("name", String.class).get();
+        String name = ctx.pathParam("name");
         if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
             try {
                 // Check for valid json
@@ -122,7 +122,7 @@ public class RankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/rank/:name/:data", method = "PATCH", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/rank/{name}/{data}", method = "PATCH", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler patchRank = ctx -> {
         String name = ctx.pathParam("name");
         if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
@@ -164,9 +164,9 @@ public class RankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/rank/:name", method = "GET")
+    @Route(path = "api/rank/{name}", method = "GET")
     public static Handler getRank = ctx -> {
-        String name = ctx.pathParam("name", String.class).get();
+        String name = ctx.pathParam("name");
         if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
             Rank rank = SQLCacheRank.get(name);
             if (rank != null)
@@ -196,11 +196,11 @@ public class RankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/rank/:name/:data", method = "GET")
+    @Route(path = "api/rank/{name}/{data}", method = "GET")
     public static Handler getRankInfo = ctx -> {
-        String name = ctx.pathParam("name", String.class).get();
+        String name = ctx.pathParam("name");
         if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
-            String pathParam = ctx.pathParam("data", String.class).get();
+            String pathParam = ctx.pathParam("data");
             String field = convertPathToField(pathParam);
             if (field != null) {
                 Rank rank = SQLCacheRank.get(name);
@@ -266,9 +266,9 @@ public class RankRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/rank/:name", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/rank/{name}", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler deleteRank = ctx -> {
-        String name = ctx.pathParam("name", String.class).get();
+        String name = ctx.pathParam("name");
         if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
             Rank rank = SQLCacheRank.get(name);
             if (rank != null) {
@@ -398,20 +398,20 @@ public class RankRoutes {
         String prefix = ctx.queryParam("prefix");
         if (prefix != null && !prefix.trim().isEmpty())
             whereBuilder.append("prefix LIKE '%").append(prefix).append("%' AND");
-        Validator<Integer> prefixPriority = ctx.queryParam("prefixPriority", Integer.class);
-        if (ctx.queryParam("prefixPriority") != null && !ctx.queryParam("prefixPriority").trim().isEmpty() && prefixPriority.isValid())
+        Validator<Integer> prefixPriority = ctx.queryParamAsClass("prefixPriority", Integer.class);
+        if (ctx.queryParam("prefixPriority") != null && !ctx.queryParam("prefixPriority").trim().isEmpty() && prefixPriority.errors().isEmpty())
             whereBuilder.append("prefixPriority='").append(prefixPriority.get()).append("' AND");
         String suffix = ctx.queryParam("suffix");
         if (suffix != null && !suffix.trim().isEmpty())
             whereBuilder.append("suffix LIKE '%").append(suffix).append("%' AND");
-        Validator<Integer> suffixPriority = ctx.queryParam("suffixPriority", Integer.class);
-        if (ctx.queryParam("suffixPriority") != null && !ctx.queryParam("suffixPriority").trim().isEmpty() && suffixPriority.isValid())
+        Validator<Integer> suffixPriority = ctx.queryParamAsClass("suffixPriority", Integer.class);
+        if (ctx.queryParam("suffixPriority") != null && !ctx.queryParam("suffixPriority").trim().isEmpty() && suffixPriority.errors().isEmpty())
             whereBuilder.append("suffixPriority='").append(suffixPriority.get()).append("' AND");
         String color = ctx.queryParam("color");
         if (color != null && !color.trim().isEmpty())
             whereBuilder.append("color LIKE '%").append(color).append("%' AND");
-        Validator<Integer> colorPriority = ctx.queryParam("colorPriority", Integer.class);
-        if (ctx.queryParam("colorPriority") != null && !ctx.queryParam("colorPriority").trim().isEmpty() && colorPriority.isValid())
+        Validator<Integer> colorPriority = ctx.queryParamAsClass("colorPriority", Integer.class);
+        if (ctx.queryParam("colorPriority") != null && !ctx.queryParam("colorPriority").trim().isEmpty() && colorPriority.errors().isEmpty())
             whereBuilder.append("colorPriority='").append(colorPriority.get()).append("' AND");
         String sql = sqlBuilder.toString();
         String whereSQL = whereBuilder.toString();

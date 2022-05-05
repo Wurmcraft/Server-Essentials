@@ -31,7 +31,7 @@ public class UsernameRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/lookup/username/:uuid", method = "GET", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/lookup/username/{uuid}", method = "GET", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler getUsername = ctx -> {
         try {
             UUID uuid = UUID.fromString(ctx.pathParam("uuid"));
@@ -60,7 +60,7 @@ public class UsernameRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/lookup/uuid/:username", method = "GET", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/lookup/uuid/{username}", method = "GET", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler getUUID = ctx -> {
         try {
             String uuid = SQLCacheUsername.getUUID(ctx.pathParam("username"));

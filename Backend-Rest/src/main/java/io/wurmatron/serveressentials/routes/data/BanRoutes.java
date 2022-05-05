@@ -124,7 +124,7 @@ public class BanRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/ban/:id", method = "GET")
+    @Route(path = "api/ban/{id}", method = "GET")
     public static Handler getID = ctx -> {
         try {
             long id = Long.parseLong(ctx.pathParam("id"));
@@ -153,7 +153,7 @@ public class BanRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/ban/:id", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/ban/{id}", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler override = ctx -> {
         try {
             Ban banUpdate = GSON.fromJson(ctx.body(), Ban.class);
@@ -189,7 +189,7 @@ public class BanRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/ban/:id", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/ban/{id}", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler delete = ctx -> {
         try {
             long id = Long.parseLong(ctx.pathParam("id"));

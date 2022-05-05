@@ -214,7 +214,7 @@ public class SQLGenerator {
         StringBuilder sqlBuilder = new StringBuilder(sql);
         for (int x = 0; x < key.length; x++)
             sqlBuilder.append(key[x]).append("=? ").append("AND ");
-        String slq = sqlBuilder.substring(0, sqlBuilder.length() - 4).toString();
+        String slq = sqlBuilder.substring(0, sqlBuilder.length() - 4);
         PreparedStatement statement = connection.createPrepared(slq + ";");
         addArguments(statement, columnsToUpdate, data);
         for (int x = 1; x < key.length + 1; x++)
@@ -223,6 +223,8 @@ public class SQLGenerator {
         statement.execute();
         return true;
     }
+
+//    UPDATE actions SET action_data = '{data}' WHERE related_id='string' AND host='string' AND action='string' AND timestamp='1651713900'
 
     /**
      * Delete the given account from the database
@@ -277,7 +279,8 @@ public class SQLGenerator {
         if (!next || result.next()) {
             for (Field field : dataType.getClass().getDeclaredFields()) {
                 try {
-                    Object obj = result.getObject(field.getName());
+                    String test = result.getString(field.getName());
+                    Object obj = result.getObject(field.getName()); // null? how!?!?
                     Class<?> fieldType = field.getType();
                     boolean isArray = fieldType.isArray();
                     boolean str = obj instanceof String;

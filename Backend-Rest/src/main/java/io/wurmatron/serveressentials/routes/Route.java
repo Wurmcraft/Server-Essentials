@@ -1,13 +1,13 @@
 package io.wurmatron.serveressentials.routes;
 
 
-import io.javalin.core.security.Role;
 import io.javalin.http.Handler;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import javax.management.relation.Role;
 
 /**
  * Used by routes to automatically register the given route with the provided parameters
@@ -39,7 +39,7 @@ public @interface Route {
     /**
      * Used for each route to determine if the requested data is accessible to the given user, or some needs to be removed / blanked out
      */
-    public enum RestRoles implements Role {
+    public enum RestRoles {
         ANONYMOUS, USER, SERVER, DEV
     }
 

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestActions {
 
-    public static final Action TEST_ACTION = new Action(TestAccounts.TEST_ACCOUNT.uuid, "Test", "Create", "{}", Instant.now().getEpochSecond());
+    public static final Action TEST_ACTION = new Action(TestAccounts.TEST_ACCOUNT.uuid, "Test", "Create", "{}", ""+Instant.now().getEpochSecond());
 
     @BeforeAll
     public static void setup() throws Exception {

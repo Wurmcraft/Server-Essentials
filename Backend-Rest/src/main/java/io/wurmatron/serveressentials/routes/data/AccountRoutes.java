@@ -83,10 +83,10 @@ public class AccountRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/user/:uuid", method = "PUT", roles = {RestRoles.DEV})
+    @Route(path = "api/user/{uuid}", method = "PUT", roles = {RestRoles.DEV})
     public static Handler overrideAccount = ctx -> {
         if (validateUUID(ctx, true)) {
-            String uuid = ctx.pathParam("uuid", String.class).get();
+            String uuid = ctx.pathParam("uuid");
             try {
                 Account account = GSON.fromJson(ctx.body(), Account.class);
                 // Make sure account uuid and path uuid are the same
@@ -126,11 +126,11 @@ public class AccountRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/user/:uuid/:data", method = "PATCH", roles = {RestRoles.USER, RestRoles.SERVER, RestRoles.DEV})
+    @Route(path = "api/user/{uuid}/{data}", method = "PATCH", roles = {RestRoles.USER, RestRoles.SERVER, RestRoles.DEV})
     public static Handler patchAccount = ctx -> {
         if (validateUUID(ctx, true)) {
-            String uuid = ctx.pathParam("uuid", String.class).get();
-            String data = ctx.pathParam("data", String.class).get();
+            String uuid = ctx.pathParam("uuid");
+            String data = ctx.pathParam("data");
             String fieldName = convertPathToField(data);
             if (fieldName == null) {
                 ctx.status(400).result(response("Bad Request", data + " is not valid entry for the requested Account"));
@@ -172,10 +172,10 @@ public class AccountRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/user/:uuid", method = "GET")
+    @Route(path = "api/user/{uuid}", method = "GET")
     public static Handler getAccount = ctx -> {
         if (validateUUID(ctx, true)) {
-            String uuid = ctx.pathParam("uuid", String.class).get();
+            String uuid = ctx.pathParam("uuid");
             Account account = SQLCacheAccount.get(uuid);
             if (account != null)
                 ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, account)));
@@ -236,12 +236,12 @@ public class AccountRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/user/:uuid/:data", method = "GET")
+    @Route(path = "api/user/{uuid}/{data}", method = "GET")
     public static Handler getAccountInformation = ctx -> {
         if (validateUUID(ctx, true)) {
-            String uuid = ctx.pathParam("uuid", String.class).get();
+            String uuid = ctx.pathParam("uuid");
             // Validate Data
-            String data = ctx.pathParam("data", String.class).get();
+            String data = ctx.pathParam("data");
             String field = convertPathToField(data);
             if (field == null) {
                 ctx.status(400).result(response("Bad Request", data + " is not valid entry for the requested Account"));
@@ -310,10 +310,10 @@ public class AccountRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/user/:uuid", method = "DELETE", roles = {RestRoles.SERVER, RestRoles.DEV})
+    @Route(path = "api/user/{uuid}/", method = "DELETE", roles = {RestRoles.SERVER, RestRoles.DEV})
     public static Handler deleteAccount = ctx -> {
         if (validateUUID(ctx, true)) {
-            String uuid = ctx.pathParam("uuid", String.class).get();
+            String uuid = ctx.pathParam("uuid");
             // Check if account exists
             Account existingAccount = SQLCacheAccount.get(uuid);
             if (existingAccount != null) {
@@ -333,7 +333,7 @@ public class AccountRoutes {
     private static boolean validateUUID(Context ctx, boolean path) {
         String uuid;
         if (path)
-            uuid = ctx.pathParam("uuid", String.class).get();
+            uuid = ctx.pathParam("uuid");
         else {
             uuid = ctx.queryParam("uuid");
             if (uuid == null)
@@ -347,7 +347,6 @@ public class AccountRoutes {
         }
         return false;
     }
-
 
     /**
      * Converts the endpoint PathParm into he internal data name, used for reflection

@@ -94,7 +94,7 @@ public class TransferRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/transfer/:id", method = "GET", roles = {Route.RestRoles.ANONYMOUS, Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/transfer/{id}", method = "GET", roles = {Route.RestRoles.ANONYMOUS, Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler getID = ctx -> {
         try {
             long id = Long.parseLong(ctx.pathParam("id"));
@@ -125,7 +125,7 @@ public class TransferRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/transfer/:id/:data", method = "GET", roles = {Route.RestRoles.ANONYMOUS, Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/transfer/{id}/{data}", method = "GET", roles = {Route.RestRoles.ANONYMOUS, Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler getData = ctx -> {
         try {
             long id = Long.parseLong(ctx.pathParam("id"));
@@ -163,7 +163,7 @@ public class TransferRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/transfer/:id", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/transfer/{id}", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler update = ctx -> {
         try {
             TransferEntry updateEntry = GSON.fromJson(ctx.body(), TransferEntry.class);
@@ -198,7 +198,7 @@ public class TransferRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/transfer/:id/:data", method = "PATCH", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/transfer/{id}/{data}", method = "PATCH", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler patch = ctx -> {
         try {
             long id = Long.parseLong(ctx.pathParam("id"));
@@ -235,7 +235,7 @@ public class TransferRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/transfer/:id", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/transfer/{id}", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler delete = ctx -> {
         try {
             long id = Long.parseLong(ctx.pathParam("id"));

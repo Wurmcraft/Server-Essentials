@@ -87,7 +87,7 @@ public class CurrencyRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/currency/:name", method = "GET")
+    @Route(path = "api/currency/{name}", method = "GET")
     public static Handler getName = ctx -> {
         try {
             String name = ctx.pathParam("name");
@@ -117,7 +117,7 @@ public class CurrencyRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/currency/:name", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/currency/{name}", method = "PUT", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler override = ctx -> {
         Currency currencyUpdate = GSON.fromJson(ctx.body(), Currency.class);
         String name = ctx.pathParam("name");
@@ -149,7 +149,7 @@ public class CurrencyRoutes {
                     @OpenApiResponse(status = "500", content = {@OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
             }
     )
-    @Route(path = "api/currency/:name", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+    @Route(path = "api/currency/{name}", method = "DELETE", roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
     public static Handler delete = ctx -> {
             String name = ctx.pathParam("name");
             Currency currency = SQLCacheCurrency.get(name);

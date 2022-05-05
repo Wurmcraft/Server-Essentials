@@ -22,6 +22,7 @@ public class SQLActions extends SQLDirect {
      */
     @Nullable
     public static Action create(Action action) {
+        // TODO Test for valid action?!?
         try {
             insert(ACTIONS_TABLE, ACTIONS_COLUMNS, action, false);
             return action;
@@ -42,7 +43,7 @@ public class SQLActions extends SQLDirect {
     public static Action update(Action action, String[] columnsToUpdate) {
         try {
             update(ACTIONS_TABLE, columnsToUpdate, new String[]{"related_id", "host", "action", "timestamp"}, new String[]{action.related_id, action.host, action.action, action.timestamp + ""}, action);
-            List<Action> actions = get(action.related_id, action.action, action.related_id);
+            List<Action> actions = get(action.host, action.action, action.related_id);
             for (Action a : actions)
                 if (a.timestamp.equals(action.timestamp))
                     return a;
@@ -110,13 +111,13 @@ public class SQLActions extends SQLDirect {
      * @param timestamp unix timestamp of when the action was created / happened
      * @return instance of the deleted action
      */
-    public static Action delete(String host, String action, String relatedID, long timestamp) {
+    public static Action delete(String host, String action, String relatedID, String timestamp) {
         try {
             List<Action> actions = queryArray("SELECT * from " + ACTIONS_TABLE + " WHERE host='" + host + "' AND action='" + action + "' AND related_id='" + relatedID + "'", new Action());
-            PreparedStatement statement = connection.createPrepared("DELETE FROM " + ACTIONS_TABLE + " WHERE host='" + host + "' AND action='" + action + "' AND relatedID='" + relatedID + "'");
+            PreparedStatement statement = connection.createPrepared("DELETE FROM " + ACTIONS_TABLE + " WHERE host='" + host + "' AND action='" + action + "' AND related_id='" + relatedID + "'");
             statement.execute();
             for (Action a : actions)
-                if (a.timestamp == timestamp)
+                if (a.timestamp.equals(timestamp))
                     return a;
         } catch (Exception e) {
             LOG.debug("Failed to delete action for '" + host + "' (" + e.getMessage() + ")");
