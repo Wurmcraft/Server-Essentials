@@ -5,5 +5,5 @@ CREATE TABLE donator (
   uuid text NOT NULL,
   timestamp text NOT NULL,
   type text NOT NULL,
-  type_data json NOT NULL
+  type_data text NOT NULL
 );

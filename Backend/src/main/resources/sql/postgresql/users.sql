@@ -9,7 +9,7 @@ CREATE TABLE users (
   mute_time text NOT NULL,
   display_name text NOT NULL,
   discord_id text NOT NULL,
-  tracked_time json NOT NULL,
+  tracked_time text NOT NULL,
   wallet json NOT NULL,
   reward_points int NOT NULL,
   password_hash text NOT NULL,

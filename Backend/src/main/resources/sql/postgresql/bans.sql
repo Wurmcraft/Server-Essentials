@@ -9,6 +9,6 @@ CREATE TABLE bans (
   timestamp text NOT NULL,
   ban_type text NOT NULL,
   ban_data text NOT NULL,
-  ban_status int NOT NULL DEFAULT '1',
+  ban_status boolean NOT NULL,
   PRIMARY KEY (ban_id)
 );

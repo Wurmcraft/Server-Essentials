@@ -1,4 +1,12 @@
+/**
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ *
+ * <p>Copyright (c) 2022 Wurmcraft
+ */
 package io.wurmatron.serveressentials.routes.data;
+
+import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
+import static io.wurmatron.serveressentials.routes.RouteUtils.response;
 
 import com.google.gson.JsonParseException;
 import io.javalin.http.Context;
@@ -11,13 +19,9 @@ import io.wurmatron.serveressentials.routes.Route;
 import io.wurmatron.serveressentials.routes.RouteUtils;
 import io.wurmatron.serveressentials.sql.routes.SQLCacheAutoRank;
 import io.wurmatron.serveressentials.sql.routes.SQLDirect;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-
-import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
-import static io.wurmatron.serveressentials.routes.RouteUtils.response;
 
 public class AutoRankRoutes {
 
@@ -26,334 +30,498 @@ public class AutoRankRoutes {
       description = "Create a new auto-rank",
       tags = {"Auto-Rank"},
       headers = {
-          @OpenApiParam(name = "Authorization", description = "Authorization Token to used for authentication within the rest API", required = true)},
-      requestBody = @OpenApiRequestBody(content = {
-          @OpenApiContent(from = AutoRank.class)}, required = true, description = "Auto-Rank Information used to create the new entry"),
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
+      },
+      requestBody =
+          @OpenApiRequestBody(
+              content = {@OpenApiContent(from = AutoRank.class)},
+              required = true,
+              description = "Auto-Rank Information used to create the new entry"),
       responses = {
-          @OpenApiResponse(status = "201", content = {
-              @OpenApiContent(from = AutoRank.class)}, description = "Auto-Rank has been created successfully, autoRankID is also returned"),
-          @OpenApiResponse(status = "400", content = {
-              @OpenApiContent(from = MessageResponse[].class)}, description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(status = "401", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "You are missing an authorization token"),
-          @OpenApiResponse(status = "403", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(status = "409", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Auto-Rank already exists"),
-          @OpenApiResponse(status = "422", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(status = "500", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
-      }
-  )
-  @Route(path = "api/autorank", method = "POST", roles = {Route.RestRoles.USER,
-      Route.RestRoles.SERVER, Route.RestRoles.DEV})
-  public static Handler create = ctx -> {
-    try {
-      AutoRank autoRank = GSON.fromJson(ctx.body(), AutoRank.class);
-      if (isValidAutoRank(ctx, autoRank)) {
-        // Check for existing
-        AutoRank existing = SQLCacheAutoRank.get(autoRank.rank);
-        if (existing == null) {
-          // Create new AutoRank
-          autoRank = SQLCacheAutoRank.create(autoRank);
-          if (autoRank == null) {
-            ctx.status(500).result(response("AutoRank Failed to create",
-                "Autorank has failed to be created"));
+        @OpenApiResponse(
+            status = "201",
+            content = {@OpenApiContent(from = AutoRank.class)},
+            description = "Auto-Rank has been created successfully, autoRankID is also returned"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "409",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Auto-Rank already exists"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
+      })
+  @Route(
+      path = "api/autorank",
+      method = "POST",
+      roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+  public static Handler create =
+      ctx -> {
+        try {
+          AutoRank autoRank = GSON.fromJson(ctx.body(), AutoRank.class);
+          if (isValidAutoRank(ctx, autoRank)) {
+            // Check for existing
+            AutoRank existing = SQLCacheAutoRank.get(autoRank.rank);
+            if (existing == null) {
+              // Create new AutoRank
+              autoRank = SQLCacheAutoRank.create(autoRank);
+              if (autoRank == null) {
+                ctx.status(500)
+                    .result(
+                        response("AutoRank Failed to create", "Autorank has failed to be created"));
+              }
+              ctx.status(201).result(GSON.toJson(autoRank));
+            } else {
+              ctx.status(409)
+                  .result(response("AutoRank Exists", "AutoRank with the same rank exists!"));
+            }
           }
-          ctx.status(201).result(GSON.toJson(autoRank));
-        } else {
-          ctx.status(409)
-              .result(response("AutoRank Exists", "AutoRank with the same rank exists!"));
+        } catch (JsonParseException e) {
+          ctx.status(422)
+              .result(response("Invalid JSON", "Failed to parse the body into an AutoRank"));
         }
-      }
-    } catch (JsonParseException e) {
-      ctx.status(422)
-          .result(response("Invalid JSON", "Failed to parse the body into an AutoRank"));
-    }
-  };
+      };
 
   @OpenApi(
       summary = "Override an existing auto-rank",
       description = "Override an existing auto-rank",
       tags = {"Auto-Rank"},
       headers = {
-          @OpenApiParam(name = "Authorization", description = "Authorization Token to used for authentication within the rest API", required = true)},
-      requestBody = @OpenApiRequestBody(content = {
-          @OpenApiContent(from = AutoRank.class)}, required = true, description = "Auto-Rank Information used to update the existing entry"),
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
+      },
+      requestBody =
+          @OpenApiRequestBody(
+              content = {@OpenApiContent(from = AutoRank.class)},
+              required = true,
+              description = "Auto-Rank Information used to update the existing entry"),
       responses = {
-          @OpenApiResponse(status = "200", content = {
-              @OpenApiContent(from = AutoRank.class)}, description = "Auto-Rank has been updated successfully"),
-          @OpenApiResponse(status = "400", content = {
-              @OpenApiContent(from = MessageResponse[].class)}, description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(status = "401", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "You are missing an authorization token"),
-          @OpenApiResponse(status = "403", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(status = "404", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Auto-Rank does not exist"),
-          @OpenApiResponse(status = "422", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(status = "500", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
-      }
-  )
-  @Route(path = "api/autorank/{rank}", method = "PUT", roles = {Route.RestRoles.USER,
-      Route.RestRoles.SERVER, Route.RestRoles.DEV})
-  public static Handler override = ctx -> {
-    try {
-      AutoRank autoRank = GSON.fromJson(ctx.body(), AutoRank.class);
-      String rank = ctx.pathParam("rank");
-      if (!rank.equals(autoRank.rank)) {
-        ctx.status(400)
-            .result(response("Bad Request", "Path ID and Body ID don't match"));
-        return;
-      }
-      if (isValidAutoRank(ctx, autoRank)) {
-        // Check for existing
-        AutoRank existing = SQLCacheAutoRank.get(autoRank.rank);
-        if (existing != null) {
-          // Update Existing Autorank
-          SQLCacheAutoRank.update(autoRank,
-              new String[]{"play_time", "next_rank", "currency_name", "currency_amount",
-                  "special_events"});
-          ctx.status(200).result(GSON.toJson(autoRank));
-        } else {
-          ctx.status(404).result(response("AutoRank does not exists",
-              "AutoRank with the rank does not exist!"));
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = AutoRank.class)},
+            description = "Auto-Rank has been updated successfully"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Auto-Rank does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
+      })
+  @Route(
+      path = "api/autorank/{rank}",
+      method = "PUT",
+      roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+  public static Handler override =
+      ctx -> {
+        try {
+          AutoRank autoRank = GSON.fromJson(ctx.body(), AutoRank.class);
+          String rank = ctx.pathParam("rank");
+          if (!rank.equals(autoRank.rank)) {
+            ctx.status(400).result(response("Bad Request", "Path ID and Body ID don't match"));
+            return;
+          }
+          if (isValidAutoRank(ctx, autoRank)) {
+            // Check for existing
+            AutoRank existing = SQLCacheAutoRank.get(autoRank.rank);
+            if (existing != null) {
+              // Update Existing Autorank
+              SQLCacheAutoRank.update(
+                  autoRank,
+                  new String[] {
+                    "play_time", "next_rank", "currency_name", "currency_amount", "special_events"
+                  });
+              ctx.status(200).result(GSON.toJson(autoRank));
+            } else {
+              ctx.status(404)
+                  .result(
+                      response(
+                          "AutoRank does not exists", "AutoRank with the rank does not exist!"));
+            }
+          }
+        } catch (JsonParseException e) {
+          ctx.status(422)
+              .result(response("Invalid JSON", "Failed to parse the body into an AutoRank"));
         }
-      }
-    } catch (JsonParseException e) {
-      ctx.status(422)
-          .result(response("Invalid JSON", "Failed to parse the body into an AutoRank"));
-    }
-  };
+      };
 
   @OpenApi(
       summary = "Get an existing auto-ranks specific data based on its ID",
       description = "Get an existing auto-ranks specific data based on its ID",
       tags = {"Auto-Rank"},
       responses = {
-          @OpenApiResponse(status = "200", content = {
-              @OpenApiContent(from = AutoRank.class)}, description = "Requested AutoRank is returned"),
-          @OpenApiResponse(status = "400", content = {
-              @OpenApiContent(from = MessageResponse[].class)}, description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(status = "401", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "You are missing an authorization token"),
-          @OpenApiResponse(status = "403", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(status = "404", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Auto-Rank with the provided ID does not exist"),
-          @OpenApiResponse(status = "422", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(status = "500", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
-      }
-  )
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = AutoRank.class)},
+            description = "Requested AutoRank is returned"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Auto-Rank with the provided ID does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
+      })
   @Route(path = "api/autorank/{name}/{data}", method = "GET")
-  public static Handler getDataSpecific = ctx -> {
-    String name = ctx.pathParam("name");
-    if (!name.isEmpty()) {
-      AutoRank autoRank = SQLCacheAutoRank.get(name);
-      if (autoRank != null) {
-        String field = convertPathToField(ctx.pathParam("data"));
-        if (field != null) {
-          Field autoRankField = autoRank.getClass().getField(field);
-          autoRank = RouteUtils.wipeAllExceptField(autoRank.clone(), autoRankField);
-          ctx.status(200).result(GSON.toJson(autoRank));
+  public static Handler getDataSpecific =
+      ctx -> {
+        String name = ctx.pathParam("name");
+        if (!name.isEmpty()) {
+          AutoRank autoRank = SQLCacheAutoRank.get(name);
+          if (autoRank != null) {
+            String field = convertPathToField(ctx.pathParam("data"));
+            if (field != null) {
+              Field autoRankField = autoRank.getClass().getField(field);
+              autoRank = RouteUtils.wipeAllExceptField(autoRank.clone(), autoRankField);
+              ctx.status(200).result(GSON.toJson(autoRank));
+            } else {
+              ctx.status(400)
+                  .result(
+                      response(
+                          "Bad Request", ctx.pathParam("data") + " is not a valid path param"));
+            }
+          } else {
+            ctx.status(404)
+                .result(response("Invalid ID", "No AutoRank Exists with the provided ID"));
+          }
         } else {
-          ctx.status(400).result(response("Bad Request",
-              ctx.pathParam("data") + " is not a valid path param"));
+          ctx.status(400).result(response("Bad Request", "ID must be 0 or greater"));
         }
-      } else {
-        ctx.status(404)
-            .result(response("Invalid ID", "No AutoRank Exists with the provided ID"));
-      }
-    } else {
-      ctx.status(400).result(response("Bad Request", "ID must be 0 or greater"));
-    }
-  };
+      };
 
   @OpenApi(
       summary = "Get an existing auto-ranks",
       description = "Get an existing auto-ranks ",
       tags = {"Auto-Rank"},
       responses = {
-          @OpenApiResponse(status = "200", content = {
-              @OpenApiContent(from = AutoRank.class)}, description = "Requested AutoRank is returned"),
-          @OpenApiResponse(status = "400", content = {
-              @OpenApiContent(from = MessageResponse[].class)}, description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(status = "401", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "You are missing an authorization token"),
-          @OpenApiResponse(status = "403", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(status = "404", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Auto-Rank with the provided ID does not exist"),
-          @OpenApiResponse(status = "422", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(status = "500", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
-      }
-  )
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = AutoRank.class)},
+            description = "Requested AutoRank is returned"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Auto-Rank with the provided ID does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
+      })
   @Route(path = "api/autorank/{name}", method = "GET")
-  public static Handler getData = ctx -> {
-    String name = ctx.pathParam("name");
-    if (!name.isEmpty()) {
-      AutoRank autoRank = SQLCacheAutoRank.get(name);
-      if (autoRank != null) {
-        ctx.status(200).result(GSON.toJson(autoRank));
-      } else {
-        ctx.status(404)
-            .result(response("Invalid ID", "No AutoRank Exists with the provided ID"));
-      }
-    } else {
-      ctx.status(400).result(response("Bad Request", "ID must be 0 or greater"));
-    }
-  };
+  public static Handler getData =
+      ctx -> {
+        String name = ctx.pathParam("name");
+        if (!name.isEmpty()) {
+          AutoRank autoRank = SQLCacheAutoRank.get(name);
+          if (autoRank != null) {
+            ctx.status(200).result(GSON.toJson(autoRank));
+          } else {
+            ctx.status(404)
+                .result(response("Invalid ID", "No AutoRank Exists with the provided ID"));
+          }
+        } else {
+          ctx.status(400).result(response("Bad Request", "ID must be 0 or greater"));
+        }
+      };
 
   @OpenApi(
       summary = "Get existing auto-ranks with query filters",
       description = "Get existing auto-ranks with query filters",
       tags = {"Auto-Rank"},
       queryParams = {
-          @OpenApiParam(name = "rank", description = "Rank the user currently has"),
-          @OpenApiParam(name = "next", description = "The rank the user will rank-up into"),
-          @OpenApiParam(name = "playtime", description = "Total Playtime until rank-up"),
-          @OpenApiParam(name = "playtime", description = "Total Playtime until rank-up", type = Long.class),
-          @OpenApiParam(name = "currency", description = "Name of the currency used to rank-up"),
-          @OpenApiParam(name = "currency-amount", description = "Amount of the currency required to rank-up", type = Double.class),
+        @OpenApiParam(name = "rank", description = "Rank the user currently has"),
+        @OpenApiParam(name = "next", description = "The rank the user will rank-up into"),
+        @OpenApiParam(name = "playtime", description = "Total Playtime until rank-up"),
+        @OpenApiParam(
+            name = "playtime",
+            description = "Total Playtime until rank-up",
+            type = Long.class),
+        @OpenApiParam(name = "currency", description = "Name of the currency used to rank-up"),
+        @OpenApiParam(
+            name = "currency-amount",
+            description = "Amount of the currency required to rank-up",
+            type = Double.class),
       },
       responses = {
-          @OpenApiResponse(status = "200", content = {
-              @OpenApiContent(from = AutoRank[].class)}, description = "Auto-Ranks matching the filter are returned"),
-          @OpenApiResponse(status = "400", content = {
-              @OpenApiContent(from = MessageResponse[].class)}, description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(status = "401", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "You are missing an authorization token"),
-          @OpenApiResponse(status = "403", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(status = "404", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Auto-Rank with the provided ID does not exist"),
-          @OpenApiResponse(status = "422", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(status = "500", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
-      }
-  )
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = AutoRank[].class)},
+            description = "Auto-Ranks matching the filter are returned"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Auto-Rank with the provided ID does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
+      })
   @Route(path = "api/autorank", method = "GET")
-  public static Handler get = ctx -> {
-    String sql = createSQLForUsersWithFilters(ctx);
-    // Send Request and Process
-    List<AutoRank> accounts = SQLDirect.queryArray(sql, new AutoRank());
-    ctx.status(200).result(GSON.toJson(accounts.toArray(new AutoRank[0])));
-  };
+  public static Handler get =
+      ctx -> {
+        String sql = createSQLForUsersWithFilters(ctx);
+        // Send Request and Process
+        List<AutoRank> accounts = SQLDirect.queryArray(sql, new AutoRank());
+        ctx.status(200).result(GSON.toJson(accounts.toArray(new AutoRank[0])));
+      };
 
   @OpenApi(
       summary = "Update an existing auto-rank",
       description = "Update an existing auto-rank",
       tags = {"Auto-Rank"},
       headers = {
-          @OpenApiParam(name = "Authorization", description = "Authorization Token to used for authentication within the rest API", required = true)},
-      requestBody = @OpenApiRequestBody(content = {
-          @OpenApiContent(from = AutoRank.class)}, required = true, description = "Auto-Rank Information used to update the existing entry"),
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
+      },
+      requestBody =
+          @OpenApiRequestBody(
+              content = {@OpenApiContent(from = AutoRank.class)},
+              required = true,
+              description = "Auto-Rank Information used to update the existing entry"),
       responses = {
-          @OpenApiResponse(status = "200", content = {
-              @OpenApiContent(from = AutoRank.class)}, description = "Auto-Rank has been updated successfully"),
-          @OpenApiResponse(status = "400", content = {
-              @OpenApiContent(from = MessageResponse[].class)}, description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(status = "401", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "You are missing an authorization token"),
-          @OpenApiResponse(status = "403", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(status = "404", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Auto-Rank does not exist"),
-          @OpenApiResponse(status = "422", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(status = "500", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
-      }
-  )
-  @Route(path = "api/autorank/{name}/{data}", method = "PATCH", roles = {
-      Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
-  public static Handler patch = ctx -> {
-    try {
-      AutoRank autorank = GSON.fromJson(ctx.body(), AutoRank.class);
-      String name = ctx.pathParam("name");
-      if (!name.isEmpty()) {
-        AutoRank cacheAutoRank = SQLCacheAutoRank.get(name);
-        if (cacheAutoRank != null) {
-          String field = convertPathToField(ctx.pathParam("data"));
-          if (field != null) {
-            Field arField = cacheAutoRank.getClass().getDeclaredField(field);
-            arField.set(cacheAutoRank, arField.get(autorank));
-            if (isValidAutoRank(ctx, cacheAutoRank)) {
-              ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, cacheAutoRank)));
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = AutoRank.class)},
+            description = "Auto-Rank has been updated successfully"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Auto-Rank does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
+      })
+  @Route(
+      path = "api/autorank/{name}/{data}",
+      method = "PATCH",
+      roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+  public static Handler patch =
+      ctx -> {
+        try {
+          AutoRank autorank = GSON.fromJson(ctx.body(), AutoRank.class);
+          String name = ctx.pathParam("name");
+          if (!name.isEmpty()) {
+            AutoRank cacheAutoRank = SQLCacheAutoRank.get(name);
+            if (cacheAutoRank != null) {
+              String field = convertPathToField(ctx.pathParam("data"));
+              if (field != null) {
+                Field arField = cacheAutoRank.getClass().getDeclaredField(field);
+                arField.set(cacheAutoRank, arField.get(autorank));
+                if (isValidAutoRank(ctx, cacheAutoRank)) {
+                  ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, cacheAutoRank)));
+                } else {
+                  ctx.status(500)
+                      .result(
+                          response(
+                              "AutoRank Error",
+                              "AutoRank has failed to be validated!, Full Update / Put is required"));
+                }
+              } else {
+                ctx.status(400)
+                    .result(
+                        response(
+                            "Bad Request", ctx.pathParam("data") + " is not a valid path param"));
+              }
             } else {
-              ctx.status(500).result(response("AutoRank Error",
-                  "AutoRank has failed to be validated!, Full Update / Put is required"));
+              ctx.status(404)
+                  .result(response("Invalid ID", "No AutoRank Exists with the provided ID"));
             }
           } else {
-            ctx.status(400).result(response("Bad Request",
-                ctx.pathParam("data") + " is not a valid path param"));
+            ctx.status(400).result(response("Bad Request", "Name must not be empty"));
           }
-        } else {
-          ctx.status(404)
-              .result(response("Invalid ID", "No AutoRank Exists with the provided ID"));
+        } catch (JsonParseException e) {
+          ctx.status(422)
+              .result(response("Invalid JSON", "Failed to parse the body into an AutoRank"));
         }
-      } else {
-        ctx.status(400).result(response("Bad Request", "Name must not be empty"));
-      }
-    } catch (JsonParseException e) {
-      ctx.status(422)
-          .result(response("Invalid JSON", "Failed to parse the body into an AutoRank"));
-    }
-  };
+      };
 
   @OpenApi(
       summary = "Delete an existing auto-rank",
       description = "Delete an existing auto-rank",
       tags = {"Auto-Rank"},
       headers = {
-          @OpenApiParam(name = "Authorization", description = "Authorization Token to used for authentication within the rest API", required = true)},
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
+      },
       responses = {
-          @OpenApiResponse(status = "200", content = {
-              @OpenApiContent(from = AutoRank.class)}, description = "Auto-Rank has been updated deleted"),
-          @OpenApiResponse(status = "400", content = {
-              @OpenApiContent(from = MessageResponse[].class)}, description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(status = "401", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "You are missing an authorization token"),
-          @OpenApiResponse(status = "403", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(status = "409", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Rank already exists"),
-          @OpenApiResponse(status = "422", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(status = "500", content = {
-              @OpenApiContent(from = MessageResponse.class)}, description = "The server has encountered an error, please contact the server's admin to check the logs")
-      }
-  )
-  @Route(path = "api/autorank/{name}", method = "DELETE", roles = {Route.RestRoles.USER,
-      Route.RestRoles.SERVER, Route.RestRoles.DEV})
-  public static Handler delete = ctx -> {
-    String name = ctx.pathParam("name");
-    if (!name.isEmpty()) {
-      AutoRank autoRank = SQLCacheAutoRank.get(name);
-      if (autoRank != null) {
-        boolean deleted = SQLCacheAutoRank.delete(autoRank.rank);
-        if (deleted) {
-          ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, autoRank)));
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = AutoRank.class)},
+            description = "Auto-Rank has been updated deleted"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "409",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Rank already exists"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
+      })
+  @Route(
+      path = "api/autorank/{name}",
+      method = "DELETE",
+      roles = {Route.RestRoles.USER, Route.RestRoles.SERVER, Route.RestRoles.DEV})
+  public static Handler delete =
+      ctx -> {
+        String name = ctx.pathParam("name");
+        if (!name.isEmpty()) {
+          AutoRank autoRank = SQLCacheAutoRank.get(name);
+          if (autoRank != null) {
+            boolean deleted = SQLCacheAutoRank.delete(autoRank.rank);
+            if (deleted) {
+              ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, autoRank)));
+            } else {
+              ctx.status(500)
+                  .result(
+                      response(
+                          "Delete Failed", "Failed to delete autorank '" + autoRank.rank + "'"));
+            }
+          } else {
+            ctx.status(404)
+                .result(response("Invalid ID", "No AutoRank Exists with the provided ID"));
+          }
         } else {
-          ctx.status(500).result(response("Delete Failed",
-              "Failed to delete autorank '" + autoRank.rank + "'"));
+          ctx.status(400).result(response("Bad Request", "Name must not be empty"));
         }
-      } else {
-        ctx.status(404)
-            .result(response("Invalid ID", "No AutoRank Exists with the provided ID"));
-      }
-    } else {
-      ctx.status(400).result(response("Bad Request", "Name must not be empty"));
-    }
-  };
+      };
 
   /**
    * Checks if the provided autorank is valid, if not respond with the error
@@ -373,14 +541,16 @@ public class AutoRankRoutes {
     }
     // Check playtime
     if (autoRank.playtime != null && autoRank.playtime < 0) {
-      errors.add(new MessageResponse("Bad Request",
-          "Invalid Playtime, Must be equal or greater than 0"));
+      errors.add(
+          new MessageResponse("Bad Request", "Invalid Playtime, Must be equal or greater than 0"));
     }
-    if (autoRank.currency_name != null && !autoRank.currency_name.trim().isEmpty()
-        && autoRank.currency_amount
-        != null && autoRank.currency_amount < 0) {
-      errors.add(new MessageResponse("Bad Request",
-          "Invalid Currency Amount, Must be equal or greater than 0"));
+    if (autoRank.currency_name != null
+        && !autoRank.currency_name.trim().isEmpty()
+        && autoRank.currency_amount != null
+        && autoRank.currency_amount < 0) {
+      errors.add(
+          new MessageResponse(
+              "Bad Request", "Invalid Currency Amount, Must be equal or greater than 0"));
     }
     if (errors.size() == 0) {
       return true;
@@ -426,8 +596,9 @@ public class AutoRankRoutes {
       return "currency_name";
     } else if (data.equalsIgnoreCase("currency-amount")) {
       return "currency_amount";
-    } else if (data.equalsIgnoreCase("special-event") || data.equalsIgnoreCase(
-        "special-events") || data.equalsIgnoreCase("event")) {
+    } else if (data.equalsIgnoreCase("special-event")
+        || data.equalsIgnoreCase("special-events")
+        || data.equalsIgnoreCase("event")) {
       return "special_events";
     }
     return null;

@@ -4,5 +4,5 @@ CREATE TABLE autoranks (
   play_time int NOT NULL,
   currency_name text NOT NULL,
   currency_amount int NOT NULL,
-  special_events json NOT NULL
+  special_events text NOT NULL
 );
