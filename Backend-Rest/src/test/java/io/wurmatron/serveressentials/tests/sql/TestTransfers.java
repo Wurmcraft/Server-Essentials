@@ -36,7 +36,7 @@ public class TestTransfers {
         // Find transferID
         SQLCacheTransfers.invalidate(entry.transfer_id);
         entry = SQLCacheTransfers.getID(TEST_ENTRY.transfer_id);
-        assertEquals(TEST_ENTRY, entry, "Entry should be the same as the one saved.");
+        assertEquals(TEST_ENTRY.uuid, entry.uuid, "Entry should be the same as the one saved.");
     }
 
     @Test

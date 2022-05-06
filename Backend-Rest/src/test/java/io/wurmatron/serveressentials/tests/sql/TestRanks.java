@@ -26,10 +26,10 @@ public class TestRanks {
     @Order(1)
     public void testAddRank() {
         Rank addedRank = SQLCacheRank.create(TEST_RANK);
-        assertNotNull(addedRank, "Rank has been successfully updated without errors");
+        assertNotNull(addedRank, "Rank has been successfully created without errors");
         addedRank = SQLCacheRank.get(TEST_RANK.name);
         assertNotNull(addedRank, "Rank exists");
-        assertEquals(TEST_RANK, addedRank, "Rank should be the same");
+        assertEquals(TEST_RANK.name, addedRank.name, "Rank should be the same");
     }
 
     @Test
@@ -41,7 +41,7 @@ public class TestRanks {
         SQLCacheRank.invalidate(TEST_RANK.name);
         rank = SQLCacheRank.get(TEST_RANK.name);
         assertNotNull(rank, "Rank exists");
-        assertEquals(TEST_RANK, rank, "Rank is the same");
+        assertEquals(TEST_RANK.prefix, rank.prefix, "Rank is the same");
     }
 
     @Test
@@ -56,7 +56,7 @@ public class TestRanks {
         assertTrue(ranks.size() > 0, "Ranks exist");
         boolean found = false;
         for (Rank rank : ranks)
-            if (rank.equals(TEST_RANK)) {
+            if (rank.name.equals(TEST_RANK.name)) {
                 found = true;
                 break;
             }
@@ -66,14 +66,14 @@ public class TestRanks {
     @Test
     @Order(2)
     public void testUpdateRank() {
-        TEST_RANK.name = "Test2";
-        boolean updated = SQLCacheRank.update(TEST_RANK, new String[] {"name"});
+        TEST_RANK.color = "Red";
+        boolean updated = SQLCacheRank.update(TEST_RANK, new String[] {"color"});
         assertTrue(updated, "Rank has been updated updated without errors");
         Rank rank = SQLCacheRank.get(TEST_RANK.name);
-        assertEquals(TEST_RANK, rank, "Rank is the same");
+        assertEquals(TEST_RANK.color, rank.color, "Rank is the same");
         // Remove from cache and try again
         rank = SQLCacheRank.get(TEST_RANK.name);
-        assertEquals(TEST_RANK, rank, "Rank is the same");
+        assertEquals(TEST_RANK.color, rank.color, "Rank is the same");
     }
 
     @Test

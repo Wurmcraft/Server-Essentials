@@ -67,7 +67,7 @@ public class TestMarkets {
     @Order(2)
     public void testUpdateMarketEntry() {
         TEST_MARKET.transfer_id = "Test";
-        boolean updated = SQLCacheMarket.update(TEST_MARKET, new String[]{"transferID"});
+        boolean updated = SQLCacheMarket.update(TEST_MARKET, new String[]{"transfer_id"});
         assertTrue(updated, "Market Entry has been successfully updated without errors");
         // Check for updates
         List<MarketEntry> entries = SQLCacheMarket.get(TEST_MARKET.server_id, TEST_MARKET.seller_uuid);

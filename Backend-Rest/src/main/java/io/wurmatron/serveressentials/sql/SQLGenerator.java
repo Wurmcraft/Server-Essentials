@@ -77,7 +77,7 @@ public class SQLGenerator {
       sql = "SELECT " + columns + " FROM " + table + " WHERE " + key + "=?;";
     }
     PreparedStatement statement = connection.createPrepared(sql);
-    if (table.equalsIgnoreCase("bans")) {
+    if (table.equalsIgnoreCase("bans") || table.equalsIgnoreCase("transfers")) {
       statement.setInt(1, Integer.parseInt(data));
     } else {
       statement.setString(1, data);
@@ -106,7 +106,12 @@ public class SQLGenerator {
   protected static <T> List<T> getArray(String columns, String table, String key,
       String data, T dataType)
       throws SQLException, IllegalAccessException, InstantiationException {
-    String sql = "SELECT " + columns + " FROM '" + table + "'";
+    String sql = "";
+    if (connection.databaseType.equalsIgnoreCase("mysql")) {
+      sql =  "SELECT " + columns + " FROM '" + table + "'";
+    } else if (connection.databaseType.equalsIgnoreCase("postgress")) {
+      sql =  "SELECT " + columns + " FROM " + table + "";
+    }
     if (!key.isEmpty() && !data.isEmpty()) {
       sql = sql + " WHERE " + key + "=?;";
     }
@@ -269,7 +274,7 @@ public class SQLGenerator {
     }
     PreparedStatement statement = connection.createPrepared(sql);
     addArguments(statement, columnsToUpdate, data);
-    if (table.equalsIgnoreCase("bans")) {
+    if (table.equalsIgnoreCase("bans") || table.equalsIgnoreCase("transfers")) {
       statement.setInt(columnsToUpdate.length + 1, Integer.parseInt(value));
     } else {
       statement.setString(columnsToUpdate.length + 1, value);
@@ -369,7 +374,7 @@ public class SQLGenerator {
       throws SQLException {
     PreparedStatement statement = connection.createPrepared(
         "DELETE FROM " + table + " WHERE " + key + "=?;");
-    if (table.equals("bans")) {
+    if (table.equals("bans") || table.equalsIgnoreCase("transfers")) {
       statement.setInt(1, Integer.parseInt(value));
     } else {
       statement.setString(1, value);

@@ -41,7 +41,7 @@ public class TestStatistics {
     @Order(2)
     public void testUpdateStat() {
         TEST_STAT.event_data = "{\"x\": 5}";
-        boolean updated = SQLStatistics.update(TEST_STAT, new String[]{"eventData"});
+        boolean updated = SQLStatistics.update(TEST_STAT, new String[]{"event_data"});
         assertTrue(updated, "Stat has been successfully updated without issues");
         // Check if it was updated
         List<TrackedStat> userStats = SQLStatistics.get(TEST_STAT.uuid);
