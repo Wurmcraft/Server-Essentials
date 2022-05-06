@@ -71,15 +71,19 @@ public class PlaytimeTrackerEvents {
     }
 
     public Account addTime(Account account, long time) {
-        for (int index = 0; index < account.trackedTime.length; index++)
-            if (account.trackedTime[index].serverID.equalsIgnoreCase(ServerEssentials.config.general.serverID)) {
-                account.trackedTime[index].totalTime = account.trackedTime[index].totalTime + time;
-                account.trackedTime[index].lastSeen = Instant.now().getEpochSecond();
-                return account;
-            }
+        if (account.tracked_time != null) {
+            for (int index = 0; index < account.tracked_time.length; index++)
+                if (account.tracked_time[index].serverID.equalsIgnoreCase(ServerEssentials.config.general.serverID)) {
+                    account.tracked_time[index].totalTime = account.tracked_time[index].totalTime + time;
+                    account.tracked_time[index].lastSeen = Instant.now().getEpochSecond();
+                    return account;
+                }
+        }
         ServerTime stat = new ServerTime(ServerEssentials.config.general.serverID, time, Instant.now().getEpochSecond());
-        account.trackedTime = Arrays.copyOf(account.trackedTime, account.trackedTime.length + 1);
-        account.trackedTime[account.trackedTime.length - 1] = stat;
+        if(account.tracked_time == null)
+            account.tracked_time = new ServerTime[0];
+        account.tracked_time = Arrays.copyOf(account.tracked_time, account.tracked_time.length + 1);
+        account.tracked_time[account.tracked_time.length - 1] = stat;
         return account;
     }
 
@@ -142,7 +146,7 @@ public class PlaytimeTrackerEvents {
                 afkPlayers.add(player);
                 ServerEssentials.LOG.info(commandLang.ANNOUNCEMENT_AFK_ENABLED.replaceAll("\\{@NAME@}", player.getDisplayNameString()));
                 for (EntityPlayer randPlayer : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
-                    Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account()).language, new Language());
+                    Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account()).lang, new Language());
                     ChatHelper.send(randPlayer, lang.ANNOUNCEMENT_AFK_ENABLED.replaceAll("\\{@NAME@}", player.getDisplayNameString()));
                 }
             }
@@ -150,7 +154,7 @@ public class PlaytimeTrackerEvents {
             afkPlayers.remove(player);
             ServerEssentials.LOG.info(commandLang.ANNOUNCEMENT_AFK_DISABLED.replaceAll("\\{@NAME@}", player.getDisplayNameString()));
             for (EntityPlayer randPlayer : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
-                Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account()).language, new Language());
+                Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account()).lang, new Language());
                 ChatHelper.send(randPlayer, lang.ANNOUNCEMENT_AFK_DISABLED.replaceAll("\\{@NAME@}", player.getDisplayNameString()));
             }
         }

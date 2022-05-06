@@ -87,7 +87,7 @@ public class ChatHelper {
             for (EntityPlayer spy : ChatHelper.socialSpy) {
                 if (spy.getGameProfile().getId().toString().equals(sender.getGameProfile().getId().toString()) || spy.getGameProfile().getId().toString().equals(receiver.getGameProfile().getId().toString()))
                     continue;
-                Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, spy.getGameProfile().getId().toString(), new Account()).language, new Language());
+                Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, spy.getGameProfile().getId().toString(), new Account()).lang, new Language());
                 send(spy, lang.SOCIAL_SPY_TAG + " " + msgColor + sender.getDisplayNameString() + " " + sentMessage);
             }
         }
@@ -114,14 +114,14 @@ public class ChatHelper {
     }
 
     public static String getName(EntityPlayer player, Account account) {
-        if (account.displayName == null || account.displayName.isEmpty())
+        if (account.display_name == null || account.display_name.isEmpty())
             return player.getDisplayNameString();
         else
-            return ((ConfigChat) SECore.moduleConfigs.get("CHAT")).nickFormat.replaceAll("%NICK%", account.displayName).replaceAll("%USERNAME%", player.getDisplayNameString());
+            return ((ConfigChat) SECore.moduleConfigs.get("CHAT")).nickFormat.replaceAll("%NICK%", account.display_name).replaceAll("%USERNAME%", player.getDisplayNameString());
     }
 
     public static void send(EntityPlayer player, Bulletin bulletin) {
-        Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account()).language, new Language());
+        Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account()).lang, new Language());
         send(player, lang.SPACER);
         send(player, bulletin.title);         // TODO Center Title
         send(player, bulletin.message);

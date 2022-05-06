@@ -24,7 +24,7 @@ public class TPACommand {
         ChatHelper.send(player.player, player.lang.COMMAND_TPA.replaceAll("\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
         if (!ChatHelper.isIgnored(SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new LocalAccount()), player.player.getGameProfile().getId().toString())) {
             activeRequests.put(otherPlayer, player.player);
-            Language otherLang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, ((Account) SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString())).language, new Language());
+            Language otherLang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, ((Account) SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString())).lang, new Language());
             ChatHelper.send(otherPlayer, otherLang.COMMAND_TPA_OTHER.replaceAll("\\{@PLAYER@}", player.player.getDisplayNameString()));
         }
     }

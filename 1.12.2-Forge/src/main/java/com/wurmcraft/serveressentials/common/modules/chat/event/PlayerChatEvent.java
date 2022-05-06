@@ -62,14 +62,14 @@ public class PlayerChatEvent {
         LocalAccount local = SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, e.getPlayer().getGameProfile().getId().toString(), new LocalAccount());
         Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, e.getPlayer().getGameProfile().getId().toString(), new Account());
         if (isMuted(account)) {
-            Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.language, new Language());
+            Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.lang, new Language());
             ChatHelper.send(e.getPlayer(), lang.MUTED);
             e.setCanceled(true);
             return;
         }
         Channel ch = SECore.dataLoader.get(DataLoader.DataType.CHANNEL, local.channel, new Channel());
         if (!ch.enabled && !RankUtils.hasPermission(account, "chat.pause.bypass")) {
-            Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.language, new Language());
+            Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.lang, new Language());
             ChatHelper.send(e.getPlayer(), lang.CHANNEL_DISABLED);
             e.setCanceled(true);
             return;
@@ -129,10 +129,10 @@ public class PlayerChatEvent {
                     player.experienceLevel + "",
                     "0d",       // TODO Get Total Playtime
                     "0d",       // TODO Get Total Playtime
-                    account.rewardPoints + "",
-                    account.rewardPoints + "",
-                    account.language.toUpperCase(),
-                    account.language.toUpperCase()
+                    account.reward_points + "",
+                    account.reward_points + "",
+                    account.lang.toUpperCase(),
+                    account.lang.toUpperCase()
             });
         }
         // Replace Message placeholder

@@ -36,7 +36,7 @@ public class PauseChatCommand {
         // Update all current users about channel status
         for (EntityPlayer serverPlayer : ChatHelper.getInChannel(ch).keySet()) {
             Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, serverPlayer.getGameProfile().getId().toString(), new Account());
-            Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.language, new Language());
+            Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.lang, new Language());
             if (ch.enabled)
                 ChatHelper.send(serverPlayer, lang.COMMAND_PAUSECHAT_ANNOUCMENT_ENABLED.replaceAll("\\{@CHANNEL@}", ch.name));
             else

@@ -22,14 +22,14 @@ public class TPAAcceptCommand {
         if (TPACommand.activeRequests.containsKey(player.player)) {
             EntityPlayer otherPlayer = TPACommand.activeRequests.get(player.player);
             ChatHelper.send(player.player, player.lang.COMMAND_TPACCEPT.replaceAll("\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
-            Language otherLang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account()).language, new Language());
+            Language otherLang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account()).lang, new Language());
             ChatHelper.send(otherPlayer, otherLang.COMMAND_TPACCEPT_OTHER.replaceAll("\\{@PLAYER@}", player.player.getDisplayNameString()));
             if (TeleportUtils.teleportTo((EntityPlayerMP) otherPlayer, SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new LocalAccount()), new Location(player.player.posX, player.player.posY, player.player.posZ, player.player.dimension, otherPlayer.rotationPitch, otherPlayer.rotationYaw)))
                 TPACommand.activeRequests.remove(player.player);
         } else if (TPAHereCommand.activeRequests.containsKey(player.player)) {
             EntityPlayer otherPlayer = TPAHereCommand.activeRequests.get(player.player);
             ChatHelper.send(player.player, player.lang.COMMAND_TPACCEPT_HERE.replaceAll("\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
-            Language otherLang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account()).language, new Language());
+            Language otherLang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account()).lang, new Language());
             ChatHelper.send(player.player, otherLang.COMMAND_TPACCEPT_HERE_OTHER.replaceAll("\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
             if (TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, new Location(otherPlayer.posX, otherPlayer.posY, otherPlayer.posZ, otherPlayer.dimension, player.player.rotationYaw, player.player.rotationPitch)))
                 TPAHereCommand.activeRequests.remove(player.player);

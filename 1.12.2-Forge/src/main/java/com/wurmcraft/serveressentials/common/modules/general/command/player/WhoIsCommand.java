@@ -18,6 +18,6 @@ public class WhoIsCommand {
         Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account());
         ChatHelper.send(player.sender, player.lang.COMMAND_WHOIS_UUID.replaceAll("\\{@UUID}", otherPlayer.getGameProfile().getId().toString()));
         ChatHelper.send(player.sender, player.lang.COMMAND_WHOIS_NAME.replaceAll("\\{@NAME@}", otherPlayer.getDisplayNameString()));
-        ChatHelper.send(player.sender, player.lang.COMMAND_WHOIS_DISPLAYNAME.replaceAll("\\{@NICK@}", account.displayName));
+        ChatHelper.send(player.sender, player.lang.COMMAND_WHOIS_DISPLAYNAME.replaceAll("\\{@NICK@}", account.display_name));
     }
 }

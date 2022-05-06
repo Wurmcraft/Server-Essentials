@@ -47,7 +47,7 @@ public class ServerEssentials {
     public static final String VERSION = "@VERSION@";
 
     public static final Logger LOG = LogManager.getLogger(NAME);
-    public static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
+    public static final Gson GSON = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
     public static ConfigGlobal config;
     public static ScheduledExecutorService scheduledService;

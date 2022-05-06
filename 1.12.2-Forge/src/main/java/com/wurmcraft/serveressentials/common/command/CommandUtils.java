@@ -244,7 +244,7 @@ public class CommandUtils {
     }
 
     public static Language getPlayerLang(EntityPlayer otherPlayer) {
-        return SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account()).language, new Language());
+        return SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account()).lang, new Language());
     }
 
     public static Boolean convertBoolean(String value) {

@@ -24,48 +24,47 @@ public class RestDataLoader extends FileDataLoader {
 
     static {
         // Action
-        fieldToQuery.put("relatedID", "related-id");
-        fieldToQuery.put("actionData", "action-data");
+        fieldToQuery.put("related_id", "related-id");
+        fieldToQuery.put("action_data", "action-data");
         // Account
-        fieldToQuery.put("muteTime", "mute-time");
-        fieldToQuery.put("displayName", "display-name");
-        fieldToQuery.put("discordID", "discord-id");
-        fieldToQuery.put("trackedTime", "tracked-time");
-        fieldToQuery.put("rewardPoints", "reward-points");
-        fieldToQuery.put("passwordHash", "password-hash");
-        fieldToQuery.put("passwordSalt", "password-salt");
-        fieldToQuery.put("systemPerms", "system-perms");
+        fieldToQuery.put("mute_time", "mute-time");
+        fieldToQuery.put("display_name", "display-name");
+        fieldToQuery.put("discord_id", "discord-id");
+        fieldToQuery.put("tracked_time", "tracked-time");
+        fieldToQuery.put("reward_points", "reward-points");
+        fieldToQuery.put("password_hash", "password-hash");
+        fieldToQuery.put("password_salt", "password-salt");
+        fieldToQuery.put("system_perms", "system-perms");
         // Ban
-        fieldToQuery.put("bannedBy", "banned-by");
-        fieldToQuery.put("bannedByType", "banned-by-type");
-        fieldToQuery.put("banReason", "ban-reason");
-        fieldToQuery.put("banType", "ban-type");
-        fieldToQuery.put("banData", "ban-data");
-        fieldToQuery.put("banStatus", "ban-status");
+        fieldToQuery.put("banned_by", "banned-by");
+        fieldToQuery.put("banned_by_type", "banned-by-type");
+        fieldToQuery.put("ban_reason", "ban-reason");
+        fieldToQuery.put("ban_type", "ban-type");
+        fieldToQuery.put("ban_data", "ban-data");
+        fieldToQuery.put("ban_status", "ban-status");
         // Currency
-        fieldToQuery.put("currencyID", "currency-id");
-        fieldToQuery.put("globalWorth", "global-worth");
-        fieldToQuery.put("sellWorth", "sell-worth");
+        fieldToQuery.put("global_worth", "global-worth");
+        fieldToQuery.put("sell_worth", "sell-worth");
         // Donator
-        fieldToQuery.put("transactionID", "transaction-id");
-        fieldToQuery.put("typeData", "type-data");
+        fieldToQuery.put("transaction_id", "transaction-id");
+        fieldToQuery.put("type_data", "type-data");
         // Log Entry
-        fieldToQuery.put("serverID", "server-id");
-        fieldToQuery.put("actionType", "action-type");
+        fieldToQuery.put("server_id", "server-id");
+        fieldToQuery.put("action_type", "action-type");
         // Market Entry
-        fieldToQuery.put("sellerUUID", "seller-uuid");
-        fieldToQuery.put("currencyName", "currency-name");
-        fieldToQuery.put("currencyAmount", "currency-amount");
-        fieldToQuery.put("marketType", "market-type");
-        fieldToQuery.put("marketData", "market-data");
-        fieldToQuery.put("transferID", "transfer-id");
+        fieldToQuery.put("seller_uuid", "seller-uuid");
+        fieldToQuery.put("currency_name", "currency-name");
+        fieldToQuery.put("currency_amount", "currency-amount");
+        fieldToQuery.put("market_type", "market-type");
+        fieldToQuery.put("market_data", "market-data");
+        fieldToQuery.put("transfer_id", "transfer-id");
         // Rank
-        fieldToQuery.put("rankID", "rank-id");
-        fieldToQuery.put("prefixPriority", "prefix-priority");
-        fieldToQuery.put("suffixPriority", "suffix-priority");
-        fieldToQuery.put("colorPriority", "color-priority");
+        fieldToQuery.put("rank_id", "rank-id");
+        fieldToQuery.put("prefix_priority", "prefix-priority");
+        fieldToQuery.put("suffix_priority", "suffix-priority");
+        fieldToQuery.put("color_priority", "color-priority");
         // Transfer Entry
-        fieldToQuery.put("startTime", "start-time");
+        fieldToQuery.put("start_time", "start-time");
         SAVE_FOLDER = "Cache";
     }
 

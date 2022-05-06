@@ -23,7 +23,7 @@ public class TPAHereCommand {
         LocalAccount localOther = SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new LocalAccount());
         if (!ChatHelper.isIgnored(localOther, player.player.getGameProfile().getId().toString())) {
             activeRequests.put(otherPlayer, player.player);
-            Language otherLang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account()).language, new Language());
+            Language otherLang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account()).lang, new Language());
             ChatHelper.send(otherPlayer, otherLang.COMMAND_TPAHERE_OTHER.replaceAll("\\{@PLAYER@}", player.player.getDisplayNameString()));
         }
         ChatHelper.send(player.player, player.lang.COMMAND_TPAHERE.replaceAll("\\{@PLAYER}", otherPlayer.getDisplayNameString()));

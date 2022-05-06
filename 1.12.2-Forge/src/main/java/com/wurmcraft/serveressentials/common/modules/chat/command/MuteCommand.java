@@ -32,7 +32,7 @@ public class MuteCommand {
             Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, muted.getGameProfile().getId().toString(), new Account());
             account.muted = !account.muted;
             if (account.muted) {
-                account.muteTime = Instant.now().getEpochSecond() + muteTime;
+                account.mute_time = Instant.now().getEpochSecond() + muteTime;
                 boolean updated = SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, muted.getGameProfile().getId().toString(), account);
                 if (updated) {
                     ChatHelper.send(player.sender, player.lang.COMMAND_MUTE.replaceAll("\\{@TIME@}", CommandUtils.displayTime(muteTime)).replaceAll("\\{@PLAYER@}", muted.getDisplayNameString()));
@@ -41,7 +41,7 @@ public class MuteCommand {
                     LOG.warn("Failed to update user's mute (" + player.player.getDisplayNameString() + ") '" + muted.getGameProfile().getId().toString() + "'");
                 }
             } else {
-                account.muteTime = 0L;
+                account.mute_time = 0L;
                 boolean updated = SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, muted.getGameProfile().getId().toString(), account);
                 if (updated) {
                     ChatHelper.send(player.sender, player.lang.COMMAND_MUTE_UNDO.replaceAll("\\{@TIME@}", CommandUtils.displayTime(muteTime)).replaceAll("\\{@PLAYER@}", muted.getDisplayNameString()));
@@ -84,7 +84,7 @@ public class MuteCommand {
         Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid, new Account());
         account.muted = !account.muted;
         long muteTime = convertToTime(inputs);
-        account.muteTime = Instant.now().getEpochSecond() + muteTime;
+        account.mute_time = Instant.now().getEpochSecond() + muteTime;
         boolean updated = SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, uuid, account);
         if (account.muted) {
             if (updated) {

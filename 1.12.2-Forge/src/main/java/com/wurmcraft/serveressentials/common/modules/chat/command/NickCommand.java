@@ -24,9 +24,9 @@ public class NickCommand {
     public void nickSelf(ServerPlayer player, String nickname) {
         if (RankUtils.hasPermission(player.global, "command.nick.self")) {
             Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, player.local.uuid, new Account());
-            account.displayName = nickname;
+            account.display_name = nickname;
             SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, account.uuid, account);
-            ChatHelper.send(player.sender, player.lang.COMMAND_NICK.replaceAll("\\{@NICK@}", account.displayName));
+            ChatHelper.send(player.sender, player.lang.COMMAND_NICK.replaceAll("\\{@NICK@}", account.display_name));
         } else {
             // TODO No Perms
         }
@@ -36,7 +36,7 @@ public class NickCommand {
     public void nickSelfReset(ServerPlayer player) {
         if (RankUtils.hasPermission(player.global, "command.nick.self")) {
             Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, player.local.uuid, new Account());
-            account.displayName = "";
+            account.display_name = "";
             SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, account.uuid, account);
             ChatHelper.send(player.sender, player.lang.COMMAND_NICK_RESET);
         } else {
@@ -48,9 +48,9 @@ public class NickCommand {
     public void nickOther(ServerPlayer player, EntityPlayer otherPlayer, String nick) {
         if (RankUtils.hasPermission(player.global, "command.nick.other")) {
             Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account());
-            account.displayName = nick;
+            account.display_name = nick;
             SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, account.uuid, account);
-            ChatHelper.send(player.sender, player.lang.COMMAND_NICK_OTHER.replaceAll("\\{@NICK@}", account.displayName).replaceAll("\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
+            ChatHelper.send(player.sender, player.lang.COMMAND_NICK_OTHER.replaceAll("\\{@NICK@}", account.display_name).replaceAll("\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
         } else {
             // TODO No Perms
         }
@@ -60,7 +60,7 @@ public class NickCommand {
     public void nickOtherReset(ServerPlayer player, EntityPlayer otherPlayer) {
         if (RankUtils.hasPermission(player.global, "command.nick.other")) {
             Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account());
-            account.displayName = "";
+            account.display_name = "";
             SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, account.uuid, account);
             ChatHelper.send(player.sender, player.lang.COMMAND_NICK_OTHER_RESET.replaceAll("\\{@PLAYER@}}", otherPlayer.getDisplayNameString()));
         } else {

@@ -28,6 +28,6 @@ public class ServerPlayer {
         this.sender = player;
         this.local = local;
         this.global = global;
-        this.lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, global.language, new Language());
+        this.lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, global.lang, new Language());
     }
 }
