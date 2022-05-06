@@ -308,15 +308,15 @@ public class TransferRoutes {
      */
     public static String convertPathToField(String data) {
         if (data.equalsIgnoreCase("transfer-id") || data.equalsIgnoreCase("id"))
-            return "transferID";
+            return "transfer_id";
         if (data.equalsIgnoreCase("uuid"))
             return "uuid";
         if (data.equalsIgnoreCase("start-time"))
-            return "startTime";
+            return "start_time";
         if (data.equalsIgnoreCase("items"))
             return "items";
         if (data.equalsIgnoreCase("server-id"))
-            return "serverID";
+            return "server_id";
         return null;
     }
 

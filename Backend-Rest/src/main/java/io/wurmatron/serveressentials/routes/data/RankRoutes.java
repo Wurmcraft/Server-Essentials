@@ -334,9 +334,7 @@ public class RankRoutes {
      * @see Rank
      */
     public static String convertPathToField(String data) {
-        if (data.equalsIgnoreCase("rank-id") || data.equalsIgnoreCase("id"))
-            return "rankID";
-        else if (data.equalsIgnoreCase("name"))
+         if (data.equalsIgnoreCase("name"))
             return "name";
         else if (data.equalsIgnoreCase("permissions") || data.equalsIgnoreCase("perms") || data.equalsIgnoreCase("permission"))
             return "permissions";
@@ -345,15 +343,15 @@ public class RankRoutes {
         else if (data.equalsIgnoreCase("prefix"))
             return "prefix";
         else if (data.equalsIgnoreCase("prefix-priority") || data.equalsIgnoreCase("prefixPriority"))
-            return "prefixPriority";
+            return "prefix_priority";
         else if (data.equalsIgnoreCase("suffix"))
             return "suffix";
         else if (data.equalsIgnoreCase("suffix-priority") || data.equalsIgnoreCase("suffixPriority"))
-            return "suffixPriority";
+            return "suffix_priority";
         else if (data.equalsIgnoreCase("color"))
             return "color";
         else if (data.equalsIgnoreCase("color-priority") || data.equalsIgnoreCase("colorPriority"))
-            return "colorPriority";
+            return "color_priority";
         return null;
     }
 
@@ -398,21 +396,21 @@ public class RankRoutes {
         String prefix = ctx.queryParam("prefix");
         if (prefix != null && !prefix.trim().isEmpty())
             whereBuilder.append("prefix LIKE '%").append(prefix).append("%' AND");
-        Validator<Integer> prefixPriority = ctx.queryParamAsClass("prefixPriority", Integer.class);
-        if (ctx.queryParam("prefixPriority") != null && !ctx.queryParam("prefixPriority").trim().isEmpty() && prefixPriority.errors().isEmpty())
-            whereBuilder.append("prefixPriority='").append(prefixPriority.get()).append("' AND");
+        Validator<Integer> prefixPriority = ctx.queryParamAsClass("prefix-priority", Integer.class);
+        if (ctx.queryParam("prefix-priority") != null && !ctx.queryParam("prefix-priority").trim().isEmpty() && prefixPriority.errors().isEmpty())
+            whereBuilder.append("prefix_priority='").append(prefixPriority.get()).append("' AND");
         String suffix = ctx.queryParam("suffix");
         if (suffix != null && !suffix.trim().isEmpty())
             whereBuilder.append("suffix LIKE '%").append(suffix).append("%' AND");
-        Validator<Integer> suffixPriority = ctx.queryParamAsClass("suffixPriority", Integer.class);
-        if (ctx.queryParam("suffixPriority") != null && !ctx.queryParam("suffixPriority").trim().isEmpty() && suffixPriority.errors().isEmpty())
-            whereBuilder.append("suffixPriority='").append(suffixPriority.get()).append("' AND");
+        Validator<Integer> suffixPriority = ctx.queryParamAsClass("suffix-priority", Integer.class);
+        if (ctx.queryParam("suffix-priority") != null && !ctx.queryParam("suffix-priority").trim().isEmpty() && suffixPriority.errors().isEmpty())
+            whereBuilder.append("suffix_priority='").append(suffixPriority.get()).append("' AND");
         String color = ctx.queryParam("color");
         if (color != null && !color.trim().isEmpty())
             whereBuilder.append("color LIKE '%").append(color).append("%' AND");
-        Validator<Integer> colorPriority = ctx.queryParamAsClass("colorPriority", Integer.class);
-        if (ctx.queryParam("colorPriority") != null && !ctx.queryParam("colorPriority").trim().isEmpty() && colorPriority.errors().isEmpty())
-            whereBuilder.append("colorPriority='").append(colorPriority.get()).append("' AND");
+        Validator<Integer> colorPriority = ctx.queryParamAsClass("color-priority", Integer.class);
+        if (ctx.queryParam("color-priority") != null && !ctx.queryParam("color-priority").trim().isEmpty() && colorPriority.errors().isEmpty())
+            whereBuilder.append("color_priority='").append(colorPriority.get()).append("' AND");
         String sql = sqlBuilder.toString();
         String whereSQL = whereBuilder.toString();
         if (whereSQL.endsWith("AND")) {

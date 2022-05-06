@@ -192,7 +192,7 @@ public class DonatorRoutes {
         // Verify, Check and Apply TransactionID Filter
         String transactionID = ctx.queryParam("transaction");
         if (transactionID != null && !transactionID.trim().isEmpty())
-            sqlBuilder.append("transactionID LIKE '").append(transactionID).append("%' AND ");
+            sqlBuilder.append("transaction_id LIKE '").append(transactionID).append("%' AND ");
         // Verify, Check and Apply Amount Filter
         String amount = ctx.queryParam("amount");
         if (amount != null && !amount.trim().isEmpty())

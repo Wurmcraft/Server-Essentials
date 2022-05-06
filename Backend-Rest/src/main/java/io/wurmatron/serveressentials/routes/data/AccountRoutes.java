@@ -145,6 +145,7 @@ public class AccountRoutes {
                     Field field = account.getClass().getDeclaredField(fieldName);
                     field.set(account, field.get(patchInfo));
                     if (isValidAccount(ctx, account)) {
+                        SQLCacheAccount.update(account, new String[] {fieldName});
                         ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, account)));
                     } else {
                         ctx.status(500).result(response("Account Error", "User Account has failed to be validated!, Full Update / Put is required"));
@@ -365,27 +366,27 @@ public class AccountRoutes {
         else if (data.equalsIgnoreCase("perk") || data.equalsIgnoreCase("perks"))
             return "perks";
         else if (data.equalsIgnoreCase("lang") || data.equalsIgnoreCase("language"))
-            return "language";
+            return "lang";
         else if (data.equalsIgnoreCase("mute") || data.equalsIgnoreCase("muted"))
             return "muted";
         else if (data.equalsIgnoreCase("mute-time") || data.equalsIgnoreCase("mutetime"))
-            return "muteTime";
+            return "mute_time";
         else if (data.equalsIgnoreCase("display-name") || data.equalsIgnoreCase("displayname"))
-            return "displayName";
+            return "display_name";
         else if (data.equalsIgnoreCase("discord-id") || data.equalsIgnoreCase("discordid") || data.equalsIgnoreCase("discord"))
-            return "discordID";
+            return "discord_id";
         else if (data.equalsIgnoreCase("play-time") || data.equalsIgnoreCase("playtime") || data.equalsIgnoreCase("time"))
-            return "trackedTime";
+            return "tracked_time";
         else if (data.equalsIgnoreCase("currency") || data.equalsIgnoreCase("wallet"))
             return "wallet";
         else if (data.equalsIgnoreCase("reward-points") || data.equalsIgnoreCase("rewardpoints"))
-            return "rewardPoints";
+            return "reward_points";
         else if (data.equalsIgnoreCase("password-hash") || data.equalsIgnoreCase("passwordhash"))
-            return "passwordHash";
+            return "password_hash";
         else if (data.equalsIgnoreCase("password-salt") || data.equalsIgnoreCase("passwordsalt"))
-            return "passwordSalt";
+            return "password_salt";
         else if (data.equalsIgnoreCase("system-perms") || data.equalsIgnoreCase("systemperms"))
-            return "systemPerms";
+            return "system_perms";
         return null;
     }
 
@@ -482,17 +483,17 @@ public class AccountRoutes {
         if (language != null && !language.trim().isEmpty())
             sqlBuilder.append("muted LIKE '").append(muted).append("' AND ");
         // Verify, Check and Apply DiscordID Filter
-        String discordID = ctx.queryParam("discordID");
+        String discordID = ctx.queryParam("discord-id");
         if (discordID != null && !discordID.trim().isEmpty())
-            sqlBuilder.append("discordID LIKE '").append(discordID).append("%' AND ");
+            sqlBuilder.append("discord_id LIKE '").append(discordID).append("%' AND ");
         // TODO Playtime
         // TODO Currency
-        String rewardPointsMin = ctx.queryParam("rewardPointsMin");
+        String rewardPointsMin = ctx.queryParam("reward-points-min");
         if (rewardPointsMin != null && !rewardPointsMin.trim().isEmpty())
-            sqlBuilder.append("rewardPoints >= '").append(rewardPointsMin).append("' AND ");
-        String rewardPointsMax = ctx.queryParam("rewardPointsMax");
+            sqlBuilder.append("reward_points >= '").append(rewardPointsMin).append("' AND ");
+        String rewardPointsMax = ctx.queryParam("reward-points-max");
         if (rewardPointsMax != null && !rewardPointsMax.trim().isEmpty())
-            sqlBuilder.append("rewardPoints <= '").append(rewardPointsMax).append("' AND ");
+            sqlBuilder.append("reward_points <= '").append(rewardPointsMax).append("' AND ");
         // Finalize SQL
         sqlBuilder.append(";");
         String sql = sqlBuilder.toString();

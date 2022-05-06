@@ -186,19 +186,19 @@ public class MarketRoutes {
         // Verify, Check and Apply ServerID Filter
         String serverID = ctx.queryParam("server-id");
         if (serverID != null && !serverID.trim().isEmpty())
-            sqlBuilder.append("serverID LIKE '").append(serverID).append("%' AND ");
+            sqlBuilder.append("server_id LIKE '").append(serverID).append("%' AND ");
         // Verify, Check and Apply UUID Filter
         String uuid = ctx.queryParam("uuid");
         if (uuid != null && !uuid.trim().isEmpty())
-            sqlBuilder.append("sellerUUID LIKE '").append(uuid).append("%' AND ");
+            sqlBuilder.append("seller_uuid LIKE '").append(uuid).append("%' AND ");
         // Verify, Check and Apply MarketType Filter
         String marketType = ctx.queryParam("market-type");
         if (marketType != null && !marketType.trim().isEmpty())
-            sqlBuilder.append("marketType LIKE '").append(marketType).append("%' AND ");
+            sqlBuilder.append("market_type LIKE '").append(marketType).append("%' AND ");
         // Verify, Check and Apply TransferID Filter
         String transferID = ctx.queryParam("transfer-id");
         if (transferID != null && !transferID.trim().isEmpty())
-            sqlBuilder.append("transferID LIKE '").append(transferID).append("%' AND ");
+            sqlBuilder.append("transfer_id LIKE '").append(transferID).append("%' AND ");
         // Verify, Check and Apply Item Filter
         String item = ctx.queryParam("item");
         if (item != null && !item.trim().isEmpty())

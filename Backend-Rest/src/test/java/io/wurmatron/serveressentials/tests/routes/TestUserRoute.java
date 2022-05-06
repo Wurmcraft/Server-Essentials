@@ -51,29 +51,29 @@ public class TestUserRoute {
     @Test
     @Order(2)
     public void testGetUsername() throws IOException {
-        String username = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.username + "/username", Account.class).username;
+        String username = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/username", Account.class).username;
         assertEquals(TestAccounts.TEST_ACCOUNT.username, username, "Username is the same");
     }
 
     @Test
     @Order(2)
     public void testGetRanks() throws IOException {
-        String[] ranks = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/rank", Account.class).perks;
-        assertEquals(TestAccounts.TEST_ACCOUNT.rank, ranks, "Ranks are the same");
+        String[] ranks = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/rank", Account.class).rank;
+        assertArrayEquals(TestAccounts.TEST_ACCOUNT.rank, ranks, "Ranks are the same");
     }
 
     @Test
     @Order(2)
     public void testGetPerms() throws IOException {
         String[] perms = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/perms", Account.class).perms;
-        assertEquals(TestAccounts.TEST_ACCOUNT.perms, perms, "Perms are the same");
+        assertArrayEquals(TestAccounts.TEST_ACCOUNT.perms, perms, "Perms are the same");
     }
 
     @Test
     @Order(2)
     public void testGetPerks() throws IOException {
         String[] perks = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/perks", Account.class).perks;
-        assertEquals(TestAccounts.TEST_ACCOUNT.perks, perks, "Perks are the same");
+        assertArrayEquals(TestAccounts.TEST_ACCOUNT.perks, perks, "Perks are the same");
     }
 
     @Test
@@ -115,14 +115,14 @@ public class TestUserRoute {
     @Order(2)
     public void testGetTrackedTime() throws IOException {
         ServerTime[] playTime = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/playtime", Account.class).tracked_time;
-        assertEquals(TestAccounts.TEST_ACCOUNT.tracked_time, playTime, "Tracked-Time is the same");
+        assertArrayEquals(TestAccounts.TEST_ACCOUNT.tracked_time, playTime, "Tracked-Time is the same");
     }
 
     @Test
     @Order(2)
     public void testGetWallet() throws IOException {
         BankAccount[] banks = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/wallet", Account.class).wallet;
-        assertEquals(TestAccounts.TEST_ACCOUNT.wallet, banks, "Wallet is the same");
+        assertArrayEquals(TestAccounts.TEST_ACCOUNT.wallet, banks, "Wallet is the same");
     }
 
     @Test
@@ -136,7 +136,7 @@ public class TestUserRoute {
     @Order(2)
     public void testSystemPerms() throws IOException {
         String[] systemPerms = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/system-perms", Account.class).system_perms;
-        assertEquals(TestAccounts.TEST_ACCOUNT.system_perms, systemPerms, "System Perms are the same");
+        assertArrayEquals(TestAccounts.TEST_ACCOUNT.system_perms, systemPerms, "System Perms are the same");
     }
 
     @Test
@@ -146,7 +146,7 @@ public class TestUserRoute {
         int status = HTTPRequests.put("api/user/" + TestAccounts.TEST_ACCOUNT.uuid, TestAccounts.TEST_ACCOUNT);
         assertEquals(HttpURLConnection.HTTP_OK, status, "Account has been updated");
         // Make sure its updated
-        Account updatedAccount = HTTPRequests.get("api/user", Account.class);
+        Account updatedAccount = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid, Account.class);
         assertEquals(TestAccounts.TEST_ACCOUNT, updatedAccount, "Updated account are equal");
     }
 
@@ -157,7 +157,7 @@ public class TestUserRoute {
         int status = HTTPRequests.patch("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/language", TestAccounts.TEST_ACCOUNT);
         assertEquals(HttpURLConnection.HTTP_OK, status, "Account has been updated");
         // Make sure its updated
-        String updatedLang = HTTPRequests.get("api/user", Account.class).lang;
+        String updatedLang = HTTPRequests.get("api/user/" + TestAccounts.TEST_ACCOUNT.uuid + "/language", Account.class).lang;
         assertEquals(TestAccounts.TEST_ACCOUNT.lang, updatedLang, "Language has been updated / changed");
     }
 

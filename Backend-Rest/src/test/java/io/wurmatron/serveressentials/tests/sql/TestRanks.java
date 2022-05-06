@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestRanks {
 
-    public static final Rank TEST_RANK = new Rank("Test", new String[]{"general.*", "language.*"}, new String[]{"Test"}, "[Test]", 0, "&c", 0, "", 0);
+    public static final Rank TEST_RANK = new Rank("test", new String[]{"general.*", "language.*"}, new String[]{"Test"}, "[Test]", 0, "&c", 0, "", 0);
 
     @BeforeAll
     public static void setup() throws Exception {

@@ -31,11 +31,11 @@ public class TestRankRoutes {
     public void testAddRank() throws IOException {
         Rank createdRank = HTTPRequests.postWithReturn("api/rank", TestRanks.TEST_RANK, Rank.class);
         assertNotNull(createdRank, "Rank is not null");
-        assertEquals(TestRanks.TEST_RANK, createdRank, "Ranks are the same");
+        assertEquals(TestRanks.TEST_RANK.prefix, createdRank.prefix, "Ranks are the same");
         // Check if rank was added
         createdRank = HTTPRequests.get("api/rank/" + createdRank.name, Rank.class);
         assertNotNull(createdRank, "Rank is not null");
-        assertEquals(TestRanks.TEST_RANK, createdRank);
+        assertEquals(TestRanks.TEST_RANK.prefix, createdRank.prefix);
     }
 
     @Test
@@ -43,8 +43,8 @@ public class TestRankRoutes {
     public void testGetRank() throws IOException {
         Rank rank = HTTPRequests.get("api/rank/" + TestRanks.TEST_RANK.name, Rank.class);
         assertNotNull(rank, "Rank is not null");
-        assertEquals(TestRanks.TEST_RANK, rank);
-        assertEquals(TestRanks.TEST_RANK, rank, "Ranks are the same");
+        assertEquals(TestRanks.TEST_RANK.color, rank.color);
+        assertEquals(TestRanks.TEST_RANK.color, rank.color, "Ranks are the same");
     }
 
     @Test

@@ -38,7 +38,7 @@ public class TestBanRoutes {
     @Order(2)
     public void testGetBanEntry() throws IOException {
         Ban entry = HTTPRequests.get("api/ban/" + TestBans.TEST_BAN.ban_id, Ban.class);
-        assertEquals(TestBans.TEST_BAN, entry, "Entry exists");
+        assertEquals(TestBans.TEST_BAN.ban_reason, entry.ban_reason, "Entry exists");
     }
 
     @Test
@@ -47,7 +47,7 @@ public class TestBanRoutes {
         Ban[] bans = HTTPRequests.get("api/ban", Ban[].class);
         boolean exists = false;
         for(Ban ban : bans)
-            if(TestBans.TEST_BAN.equals(ban)) {
+            if(TestBans.TEST_BAN.ban_type.equals(ban.ban_type)) {
                  exists = true;
                  break;
             }

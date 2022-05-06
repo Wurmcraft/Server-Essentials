@@ -61,7 +61,7 @@ public class TestStatisticRoutes {
         TrackedStat[] stats = HTTPRequests.get("api/statistics?uuid=" + TestStatistics.TEST_STAT.uuid, TrackedStat[].class);
         boolean exists = false;
         for (TrackedStat s : stats)
-            if (s.equals(TestStatistics.TEST_STAT))
+            if (s.event_type.equals(TestStatistics.TEST_STAT.event_type))
                 exists = true;
         assertTrue(exists, "Entry was Updated");
     }

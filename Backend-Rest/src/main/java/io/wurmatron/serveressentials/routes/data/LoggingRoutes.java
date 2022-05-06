@@ -134,7 +134,7 @@ public class LoggingRoutes {
             if (isValidLogEntry(ctx, logEntryToDelete)) {
                 List<LogEntry> entrys = SQLLogging.get(logEntryToDelete.server_id, logEntryToDelete.action_type, logEntryToDelete.uuid);
                 for (LogEntry e : entrys)
-                    if (e.equals(logEntryToDelete)) {
+                    if (e.timestamp.equals(logEntryToDelete.timestamp) && e.action_type.equals(logEntryToDelete.action_type) && e.server_id.equals(logEntryToDelete.server_id)) {
                         SQLLogging.delete(logEntryToDelete.server_id, logEntryToDelete.action_type, logEntryToDelete.uuid, logEntryToDelete.timestamp);
                         ctx.status(200).result(GSON.toJson(e));
                         return;
@@ -188,11 +188,11 @@ public class LoggingRoutes {
         // Verify, Check and Apply ServerID Filter
         String serverID = ctx.queryParam("server-id");
         if (serverID != null && !serverID.trim().isEmpty())
-            sqlBuilder.append("serverID LIKE '").append(serverID).append("%' AND ");
+            sqlBuilder.append("server_id LIKE '").append(serverID).append("%' AND ");
         // Verify, Check and Apply action Filter
         String action = ctx.queryParam("action");
         if (action != null && !action.trim().isEmpty())
-            sqlBuilder.append("actionType LIKE '").append(action).append("%' AND ");
+            sqlBuilder.append("action_type LIKE '").append(action).append("%' AND ");
         // Verify, Check and Apply UUID Filter
         String uuid = ctx.queryParam("uuid");
         if (uuid != null && !uuid.trim().isEmpty())

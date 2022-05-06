@@ -64,7 +64,7 @@ public class TestLoggingRoutes {
         LogEntry[] entries = HTTPRequests.get("api/logging?action=" + TestLogging.TEST_ENTRY.action_type, LogEntry[].class);
         boolean exists = false;
         for (LogEntry entry : entries)
-            if (TestLogging.TEST_ENTRY.equals(entry)) {
+            if (TestLogging.TEST_ENTRY.action_type.equals(entry.action_type)) {
                 exists = true;
                 break;
             }
@@ -80,7 +80,7 @@ public class TestLoggingRoutes {
         LogEntry[] entries = HTTPRequests.get("api/logging?action=" + TestLogging.TEST_ENTRY.action_type, LogEntry[].class);
         boolean exists = false;
         for (LogEntry entry : entries)
-            if (TestLogging.TEST_ENTRY.equals(entry)) {
+            if (TestLogging.TEST_ENTRY.dim.equals(entry.dim)) {
                 exists = true;
                 break;
             }
