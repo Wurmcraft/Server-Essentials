@@ -30,7 +30,7 @@ public class TestCurrencys {
         assertNotNull(currency, "Currency has been successfully created without errors");
         // Check for new currency
         currency = SQLCacheCurrency.get(currency.display_name);
-        assertEquals(TEST_CURRENCY, currency, "Added currency should be the same as the one added");
+        assertEquals(TEST_CURRENCY.global_worth, currency.global_worth, "Added currency should be the same as the one added");
     }
 
     @Test
@@ -43,14 +43,14 @@ public class TestCurrencys {
         currency = SQLCacheCurrency.get(TEST_CURRENCY.display_name);
         // Test Currency
         assertNotNull(currency, "Cache has the currency");
-        assertEquals(TEST_CURRENCY, currency, "Currency's are the same");
+        assertEquals(TEST_CURRENCY.sell_worth, currency.sell_worth, "Currency's are the same");
     }
 
     @Test
     @Order(2)
     public void testUpdateCurrency() {
-        TEST_CURRENCY.display_name = "Test Updated";
-        boolean updated = SQLCacheCurrency.update(TEST_CURRENCY,new String[] {"displayName"});
+        TEST_CURRENCY.global_worth = 9001.0;
+        boolean updated = SQLCacheCurrency.update(TEST_CURRENCY,new String[] {"global_worth"});
         assertTrue(updated, "Currency has been successfully updated without errors");
         // Check for updates
         Currency currency = SQLCacheCurrency.get(TEST_CURRENCY.display_name);

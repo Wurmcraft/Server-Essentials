@@ -33,7 +33,7 @@ public class SQLCacheCurrency extends SQLCache {
                 invalidate(name.toUpperCase());
         // Invalid / missing
         try {
-            Currency currency = get("*", CURRENCY_TABLE, "displayName", name, new Currency());
+            Currency currency = get("*", CURRENCY_TABLE, "display_name", name, new Currency());
             if (currency != null) {
                 currencyCache.put(currency.display_name.toUpperCase(), new CacheCurrency(currency));
                 return currency.clone();
@@ -89,10 +89,10 @@ public class SQLCacheCurrency extends SQLCache {
      */
     public static boolean update(Currency currency, String[] columnsToUpdate) {
         try {
-            update(CURRENCY_TABLE, columnsToUpdate, "displayName", "" + currency.display_name, currency);
+            update(CURRENCY_TABLE, columnsToUpdate, "display_name", "" + currency.display_name, currency);
             if (currencyCache.containsKey(currency.display_name.toUpperCase())) {
-                currencyCache.get(currency.display_name).currency = updateInfoLocal(columnsToUpdate, currency, currencyCache.get(currency.display_name).currency);
-                currencyCache.get(currency.display_name).lastSync = System.currentTimeMillis();
+                currencyCache.get(currency.display_name.toUpperCase()).currency = updateInfoLocal(columnsToUpdate, currency, currencyCache.get(currency.display_name.toUpperCase()).currency);
+                currencyCache.get(currency.display_name.toUpperCase()).lastSync = System.currentTimeMillis();
             } else
                 currencyCache.put(currency.display_name.toUpperCase(), new CacheCurrency(currency));
             return true;

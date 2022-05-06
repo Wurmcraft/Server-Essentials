@@ -43,7 +43,7 @@ public class TestTransfers {
     @Order(2)
     public void testUpdateTransfer() {
         TEST_ENTRY.server_id = "Test2";
-        boolean updated = SQLCacheTransfers.update(TEST_ENTRY, new String[]{"serverID"});
+        boolean updated = SQLCacheTransfers.update(TEST_ENTRY, new String[]{"server_id"});
         assertTrue(updated, " has been successfully created without errors");
         // Invalidate Cache and try again
         SQLCacheTransfers.invalidate(TEST_ENTRY.transfer_id);
