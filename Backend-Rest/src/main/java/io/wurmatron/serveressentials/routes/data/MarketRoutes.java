@@ -96,7 +96,7 @@ public class MarketRoutes {
         try {
             MarketEntry updateEntry = GSON.fromJson(ctx.body(), MarketEntry.class);
             if (isValidMarketEntry(ctx, updateEntry)) {
-                SQLCacheMarket.update(updateEntry, new String[]{"item", "currencyName", "currencyAmount", "marketData", "transferID"});
+                SQLCacheMarket.update(updateEntry, new String[]{"item", "currency_name", "currency_amount", "market_data", "transfer_id"});
                 List<MarketEntry> entries = SQLCacheMarket.get(updateEntry.server_id, updateEntry.seller_uuid);
                 for (MarketEntry entry : entries)
                     if (entry.timestamp.equals(updateEntry.timestamp)) {

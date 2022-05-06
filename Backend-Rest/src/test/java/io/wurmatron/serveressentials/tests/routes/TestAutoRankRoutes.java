@@ -4,6 +4,7 @@ import io.wurmatron.serveressentials.ServerEssentialsRest;
 import io.wurmatron.serveressentials.models.AutoRank;
 import io.wurmatron.serveressentials.tests.sql.TestAutoRanks;
 import io.wurmatron.serveressentials.tests.utils.HTTPRequests;
+import java.util.Objects;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class TestAutoRankRoutes {
         assertNotNull(addedRank, "Auto-Rank was added successfully");
         // Make sure the auto-rank was added
         AutoRank autorank = HTTPRequests.get("api/autorank/" + addedRank.rank, AutoRank.class);
-        assertEquals(TestAutoRanks.TEST_AUTORANK, autorank, "Auto-Ranks are the same");
+        assertEquals(TestAutoRanks.TEST_AUTORANK.playtime, autorank.playtime, "Auto-Ranks are the same");
     }
 
     @Test
@@ -51,7 +52,8 @@ public class TestAutoRankRoutes {
         AutoRank[] autoranks = HTTPRequests.get("api/autorank", AutoRank[].class);
         boolean exists = false;
         for (AutoRank ar : autoranks)
-            if (TestAutoRanks.TEST_AUTORANK.equals(ar)) {
+            if (Objects.equals(TestAutoRanks.TEST_AUTORANK.currency_amount,
+                ar.currency_amount)) {
                 exists = true;
                 break;
             }
