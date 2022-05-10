@@ -26,7 +26,6 @@ public class SQLActions extends SQLDirect {
    */
   @Nullable
   public static Action create(Action action) {
-    // TODO Test for valid action?!?
     try {
       insert(ACTIONS_TABLE, ACTIONS_COLUMNS, action, false);
       return action;
