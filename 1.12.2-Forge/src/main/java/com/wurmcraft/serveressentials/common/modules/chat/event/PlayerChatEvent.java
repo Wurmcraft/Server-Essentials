@@ -9,6 +9,7 @@ import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.command.EcoUtils;
 import com.wurmcraft.serveressentials.common.command.RankUtils;
+import com.wurmcraft.serveressentials.common.data.ConfigLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.modules.chat.ConfigChat;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
@@ -60,6 +61,11 @@ public class PlayerChatEvent {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatEvent(ServerChatEvent e) {
         LocalAccount local = SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, e.getPlayer().getGameProfile().getId().toString(), new LocalAccount());
+        if (local.channel == null) {
+            LOG.debug("Adding missing default channel to '" + local.uuid + "'");
+            local.channel = ((ConfigChat) SECore.moduleConfigs.get("CHAT")).defaultChannel;
+            SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, local.uuid, local);
+        }
         Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, e.getPlayer().getGameProfile().getId().toString(), new Account());
         if (isMuted(account)) {
             Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.lang, new Language());
@@ -151,18 +157,18 @@ public class PlayerChatEvent {
         String val = null;
         for (Rank rank : ranks)
             if (type.equalsIgnoreCase("suffix")) {
-                if (rank.suffixPriority > highestPriority) {
-                    highestPriority = rank.suffixPriority;
+                if (rank.suffix_priority > highestPriority) {
+                    highestPriority = rank.suffix_priority;
                     val = rank.suffix;
                 }
             } else if (type.equalsIgnoreCase("prefix")) {
-                if (rank.prefixPriority > highestPriority) {
-                    highestPriority = rank.prefixPriority;
+                if (rank.prefix_priority > highestPriority) {
+                    highestPriority = rank.prefix_priority;
                     val = rank.prefix;
                 }
             } else if (type.equalsIgnoreCase("color"))
-                if (rank.colorPriority > highestPriority) {
-                    highestPriority = rank.colorPriority;
+                if (rank.color_priority > highestPriority) {
+                    highestPriority = rank.color_priority;
                     val = rank.color;
                 }
         return val;

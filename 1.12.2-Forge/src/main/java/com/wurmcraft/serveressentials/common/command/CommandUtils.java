@@ -134,7 +134,7 @@ public class CommandUtils {
             autofill.addAll(SECore.modules.keySet());
         else if (arg == CommandArgument.CURRENCY)
             for (Currency currency : SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency()).values())
-                autofill.add(currency.displayName);
+                autofill.add(currency.display_name);
         else if (arg == CommandArgument.WARP) {
             // TODO Autofill warps (user access only)
         } else if (arg == CommandArgument.DATA_TYPE) {

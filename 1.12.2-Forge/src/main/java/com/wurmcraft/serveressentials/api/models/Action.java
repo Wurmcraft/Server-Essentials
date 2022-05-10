@@ -1,42 +1,57 @@
+/**
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ *
+ * <p>Copyright (c) 2022 Wurmcraft
+ */
 package com.wurmcraft.serveressentials.api.models;
 
-import java.util.Objects;
+
+import com.wurmcraft.serveressentials.ServerEssentials;
 
 public class Action {
 
-    public String relatedID;
-    public String host;
-    public String action;
-    public String actionData;
-    public Long timestamp;
+  public String related_id;
+  public String host;
+  public String action;
+  public String action_data;
+  public String timestamp;
 
-    /**
-     * @param relatedID  serverID/discord Channel ID
-     * @param host       "Minecraft", "Discord"
-     * @param action     Name of the given action, that has happened
-     * @param actionData Json data related to the given action
-     * @param timestamp  Unix Timestamp for when the action occurred
-     */
-    public Action(String relatedID, String host, String action, String actionData, long timestamp) {
-        this.relatedID = relatedID;
-        this.host = host;
-        this.action = action;
-        this.actionData = actionData;
-        this.timestamp = timestamp;
-    }
+  /**
+   * @param relatedID serverID/discord Channel ID
+   * @param host "Minecraft", "Discord"
+   * @param action Name of the given action, that has happened
+   * @param actionData Json data related to the given action
+   * @param timestamp Unix Timestamp for when the action occurred
+   */
+  public Action(String relatedID, String host, String action, String actionData, String timestamp) {
+    this.related_id = relatedID;
+    this.host = host;
+    this.action = action;
+    this.action_data = actionData;
+    this.timestamp = timestamp;
+  }
 
-    public Action() {
-    }
+  public Action() {}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Action)) return false;
-        Action action1 = (Action) o;
-        return Objects.equals(relatedID, action1.relatedID)
-                && Objects.equals(host, action1.host)
-                && Objects.equals(action, action1.action)
-                && Objects.equals(actionData, action1.actionData)
-                && Objects.equals(timestamp, action1.timestamp);
-    }
+  @Override
+  public String toString() {
+    return ServerEssentials.GSON.toJson(this);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Action)) return false;
+    Action other = (Action) o;
+    return related_id.equals(other.related_id)
+        && host.equals(other.host)
+        && action.equals(other.action)
+        && timestamp.equals(other.timestamp);
+  }
+
+  @Override
+  public Action clone() {
+    String json = ServerEssentials.GSON.toJson(this);
+    return ServerEssentials.GSON.fromJson(json, Action.class);
+  }
 }

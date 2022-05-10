@@ -1,57 +1,69 @@
+/**
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ *
+ * <p>Copyright (c) 2022 Wurmcraft
+ */
 package com.wurmcraft.serveressentials.api.models;
+
+import com.wurmcraft.serveressentials.ServerEssentials;
 
 import java.util.Objects;
 
 public class AutoRank {
 
-    public Integer autoRankID;
-    public String rank;
-    public String nextRank;
-    public Long playTime;
-    public String currencyName;
-    public Double currencyAmount;
-    public String specialEvents;
+  public String rank;
+  public String next_rank;
+  public Long playtime;
+  public String currency_name;
+  public Double currency_amount;
+  public String special_events;
 
-    /**
-     * @param autoRankID     id of the given rank (Don't change as this is used internally to track)
-     * @param rank           current rank of the user
-     * @param nextRank       rank the user will gain after the requirements
-     * @param playtime       amount of time (in minutes)
-     * @param currencyName   name of the currency
-     * @param currencyAmount amount of the given currency
-     * @param specialEvents  special events required to rankup, (Used to extend functionality))
-     */
-    public AutoRank(
-            Integer autoRankID,
-            String rank,
-            String nextRank,
-            long playtime,
-            String currencyName,
-            double currencyAmount,
-            String specialEvents) {
-        this.autoRankID = autoRankID;
-        this.rank = rank;
-        this.nextRank = nextRank;
-        this.playTime = playtime;
-        this.currencyName = currencyName;
-        this.currencyAmount = currencyAmount;
-        this.specialEvents = specialEvents;
-    }
+  /**
+   * @param rank current rank of the user
+   * @param nextRank rank the user will gain after the requirements
+   * @param playtime amount of time (in minutes)
+   * @param currencyName name of the currency
+   * @param currencyAmount amount of the given currency
+   * @param specialEvents special events required to rankup, (Used to extend functionality))
+   */
+  public AutoRank(
+      String rank,
+      String nextRank,
+      long playtime,
+      String currencyName,
+      double currencyAmount,
+      String specialEvents) {
+    this.rank = rank;
+    this.next_rank = nextRank;
+    this.playtime = playtime;
+    this.currency_name = currencyName;
+    this.currency_amount = currencyAmount;
+    this.special_events = specialEvents;
+  }
 
-    public AutoRank() {
-    }
+  public AutoRank() {}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AutoRank)) return false;
-        AutoRank autoRank = (AutoRank) o;
-        return autoRankID.equals(autoRank.autoRankID)
-                && playTime.equals(autoRank.playTime)
-                && Double.compare(autoRank.currencyAmount, currencyAmount) == 0
-                && Objects.equals(rank, autoRank.rank)
-                && Objects.equals(nextRank, autoRank.nextRank)
-                && Objects.equals(currencyName, autoRank.currencyName)
-                && Objects.equals(specialEvents, autoRank.specialEvents);
-    }
+  @Override
+  public String toString() {
+    return ServerEssentials.GSON.toJson(this);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof AutoRank)) return false;
+    AutoRank autoRank = (AutoRank) o;
+    return playtime.equals(autoRank.playtime)
+        && Double.compare(autoRank.currency_amount, currency_amount) == 0
+        && Objects.equals(rank, autoRank.rank)
+        && Objects.equals(next_rank, autoRank.next_rank)
+        && Objects.equals(currency_name, autoRank.currency_name)
+        && Objects.equals(special_events, autoRank.special_events);
+  }
+
+  @Override
+  public AutoRank clone() {
+    String json = ServerEssentials.GSON.toJson(this);
+    return ServerEssentials.GSON.fromJson(json, AutoRank.class);
+  }
 }
