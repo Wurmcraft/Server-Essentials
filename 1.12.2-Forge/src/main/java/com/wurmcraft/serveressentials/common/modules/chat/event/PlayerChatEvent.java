@@ -184,6 +184,12 @@ public class PlayerChatEvent {
                 // TODO Correct Invalid Rank
             }
         }
+        // Add errored rank is none are found
+        if(ranks.size() == 0) {
+            Rank erroredRank = new Rank("Error",new String[] {}, new String[] {}, "[Error]", 0,"",0,"",0);
+            ranks.add(erroredRank);
+        }
+
         return ranks;
     }
 }
