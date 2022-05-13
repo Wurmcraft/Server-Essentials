@@ -10,20 +10,30 @@ import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.GameType;
 
-@ModuleCommand(module = "General", name = "Survival", defaultAliases = {"GmS"})
+@ModuleCommand(
+    module = "General",
+    name = "Survival",
+    defaultAliases = {"GmS"})
 public class SurvivalCommand {
 
-    @Command(args = {}, usage = {})
-    public void spectator(ServerPlayer player) {
-        player.player.setGameType(GameType.SURVIVAL);
-        ChatHelper.send(player.sender, player.lang.COMMAND_SURVIVAL);
-    }
+  @Command(
+      args = {},
+      usage = {})
+  public void spectator(ServerPlayer player) {
+    player.player.setGameType(GameType.SURVIVAL);
+    ChatHelper.send(player.sender, player.lang.COMMAND_SURVIVAL);
+  }
 
-    @Command(args = {CommandArgument.PLAYER}, usage = {"player"})
-    public void spectatorOther(ServerPlayer player, EntityPlayer otherPlayer) {
-        otherPlayer.setGameType(GameType.SPECTATOR);
-        Language otherLang = CommandUtils.getPlayerLang(otherPlayer);
-        ChatHelper.send(otherPlayer, otherLang.COMMAND_SPECTATOR);
-        ChatHelper.send(player.sender, player.lang.COMMAND_SURVIVAL_OTHER.replaceAll("\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
-    }
+  @Command(
+      args = {CommandArgument.PLAYER},
+      usage = {"player"})
+  public void spectatorOther(ServerPlayer player, EntityPlayer otherPlayer) {
+    otherPlayer.setGameType(GameType.SPECTATOR);
+    Language otherLang = CommandUtils.getPlayerLang(otherPlayer);
+    ChatHelper.send(otherPlayer, otherLang.COMMAND_SPECTATOR);
+    ChatHelper.send(
+        player.sender,
+        player.lang.COMMAND_SURVIVAL_OTHER.replaceAll(
+            "\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
+  }
 }

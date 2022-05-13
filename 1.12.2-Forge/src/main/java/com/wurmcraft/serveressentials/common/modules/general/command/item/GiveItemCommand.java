@@ -8,16 +8,26 @@ import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.ItemStackConverter;
 import net.minecraft.item.ItemStack;
 
-@ModuleCommand(module = "General", name = "GiveItem", defaultAliases = {"Item"})
+@ModuleCommand(
+    module = "General",
+    name = "GiveItem",
+    defaultAliases = {"Item"})
 public class GiveItemCommand {
 
-    @Command(args = {CommandArgument.STRING}, usage = {"item"})
-    public void getItem(ServerPlayer player, String item) {
-        ItemStack stack = ItemStackConverter.getData(item);
-        if (stack != null) {
-            ChatHelper.send(player.sender, player.lang.COMMAND_GIVEITEM.replaceAll("\\{@COUNT@}", stack.getCount() + "").replaceAll("\\{@NAME@}", stack.getDisplayName()));
-            player.player.inventory.addItemStackToInventory(stack);
-        } else
-            ChatHelper.send(player.sender, player.lang.COMMAND_GIVEITEM_NONE);
-    }
+  @Command(
+      args = {CommandArgument.STRING},
+      usage = {"item"})
+  public void getItem(ServerPlayer player, String item) {
+    ItemStack stack = ItemStackConverter.getData(item);
+    if (stack != null) {
+      ChatHelper.send(
+          player.sender,
+          player
+              .lang
+              .COMMAND_GIVEITEM
+              .replaceAll("\\{@COUNT@}", stack.getCount() + "")
+              .replaceAll("\\{@NAME@}", stack.getDisplayName()));
+      player.player.inventory.addItemStackToInventory(stack);
+    } else ChatHelper.send(player.sender, player.lang.COMMAND_GIVEITEM_NONE);
+  }
 }

@@ -5,11 +5,7 @@ import com.wurmcraft.serveressentials.api.loading.Module;
 @Module(name = "Autorank")
 public class ModuleAutorank {
 
-    public void setup() {
+  public void setup() {}
 
-    }
-
-    public void reload() {
-
-    }
+  public void reload() {}
 }

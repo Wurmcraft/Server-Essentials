@@ -7,15 +7,16 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class PlayerLoadEvent extends Event {
 
-    public EntityPlayer player;
-    public Account account;
-    public LocalAccount local;
-    public boolean newAccount;
+  public EntityPlayer player;
+  public Account account;
+  public LocalAccount local;
+  public boolean newAccount;
 
-    public PlayerLoadEvent(EntityPlayer player, Account account, LocalAccount local, boolean newAccount) {
-        this.player = player;
-        this.account = account;
-        this.local = local;
-        this.newAccount = newAccount;
-    }
+  public PlayerLoadEvent(
+      EntityPlayer player, Account account, LocalAccount local, boolean newAccount) {
+    this.player = player;
+    this.account = account;
+    this.local = local;
+    this.newAccount = newAccount;
+  }
 }

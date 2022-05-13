@@ -14,32 +14,36 @@ import net.minecraft.util.text.TextComponentTranslation;
 @ModuleCommand(module = "General", name = "God", defaultAliases = "Invincible")
 public class GodCommand {
 
-    @Command(args = {}, usage = {})
-    public void selfGod(ServerPlayer player) {
-        if (player.player.capabilities.disableDamage) {
-            player.player.capabilities.disableDamage = false;
-            ChatHelper.send(player.sender, player.lang.COMMAND_GOD_OFF);
-        } else {
-            player.player.capabilities.disableDamage = true;
-            ChatHelper.send(player.sender, player.lang.COMMAND_GOD_ON);
-        }
+  @Command(
+      args = {},
+      usage = {})
+  public void selfGod(ServerPlayer player) {
+    if (player.player.capabilities.disableDamage) {
+      player.player.capabilities.disableDamage = false;
+      ChatHelper.send(player.sender, player.lang.COMMAND_GOD_OFF);
+    } else {
+      player.player.capabilities.disableDamage = true;
+      ChatHelper.send(player.sender, player.lang.COMMAND_GOD_ON);
     }
+  }
 
-    @Command(args = {CommandArgument.PLAYER}, usage = {"player"})
-    public void godOther(ServerPlayer player, EntityPlayer otherPlayer) {
-        if (RankUtils.hasPermission(player.global, "command.god.other")) {
-            if (otherPlayer.capabilities.disableDamage) {
-                otherPlayer.capabilities.disableDamage = false;
-                Language otherLang = CommandUtils.getPlayerLang(otherPlayer);
-                ChatHelper.send(otherPlayer, otherLang.COMMAND_GOD_ON);
-                ChatHelper.send(player.sender, player.lang.COMMAND_GOD_OFF_OTHER);
-            } else {
-                otherPlayer.capabilities.disableDamage = true;
-                Language otherLang = CommandUtils.getPlayerLang(otherPlayer);
-                ChatHelper.send(otherPlayer, otherLang.COMMAND_GOD_ON);
-                ChatHelper.send(player.sender, player.lang.COMMAND_GOD_ON_OTHER);
-            }
-        } else
-            ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
-    }
+  @Command(
+      args = {CommandArgument.PLAYER},
+      usage = {"player"})
+  public void godOther(ServerPlayer player, EntityPlayer otherPlayer) {
+    if (RankUtils.hasPermission(player.global, "command.god.other")) {
+      if (otherPlayer.capabilities.disableDamage) {
+        otherPlayer.capabilities.disableDamage = false;
+        Language otherLang = CommandUtils.getPlayerLang(otherPlayer);
+        ChatHelper.send(otherPlayer, otherLang.COMMAND_GOD_ON);
+        ChatHelper.send(player.sender, player.lang.COMMAND_GOD_OFF_OTHER);
+      } else {
+        otherPlayer.capabilities.disableDamage = true;
+        Language otherLang = CommandUtils.getPlayerLang(otherPlayer);
+        ChatHelper.send(otherPlayer, otherLang.COMMAND_GOD_ON);
+        ChatHelper.send(player.sender, player.lang.COMMAND_GOD_ON_OTHER);
+      }
+    } else
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
+  }
 }

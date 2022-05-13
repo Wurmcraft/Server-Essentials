@@ -7,7 +7,7 @@ package com.wurmcraft.serveressentials.api.models.account;
 
 import java.util.Objects;
 
-public class BankAccount  {
+public class BankAccount {
 
   public String currencyName;
   public double amount;

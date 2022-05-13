@@ -5,7 +5,7 @@
  */
 package com.wurmcraft.serveressentials.api.models.account;
 
-public class ServerTime  {
+public class ServerTime {
   public String serverID;
   public long totalTime;
   public long lastSeen;

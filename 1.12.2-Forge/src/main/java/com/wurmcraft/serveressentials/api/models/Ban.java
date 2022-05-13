@@ -6,7 +6,6 @@
 package com.wurmcraft.serveressentials.api.models;
 
 import com.wurmcraft.serveressentials.ServerEssentials;
-
 import java.util.Objects;
 
 public class Ban {

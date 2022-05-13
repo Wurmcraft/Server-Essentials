@@ -9,25 +9,29 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class ServerPlayer {
 
-    public ICommandSender sender;
-    public EntityPlayer player;
-    public LocalAccount local;
-    public Account global;
-    public Language lang;
+  public ICommandSender sender;
+  public EntityPlayer player;
+  public LocalAccount local;
+  public Account global;
+  public Language lang;
 
-    public ServerPlayer(ICommandSender sender) {
-        this.sender = sender;
-        this.player = null;
-        this.local = null;
-        this.global = null;
-        this.lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, ((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang, new Language());
-    }
+  public ServerPlayer(ICommandSender sender) {
+    this.sender = sender;
+    this.player = null;
+    this.local = null;
+    this.global = null;
+    this.lang =
+        SECore.dataLoader.get(
+            DataLoader.DataType.LANGUAGE,
+            ((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang,
+            new Language());
+  }
 
-    public ServerPlayer(EntityPlayer player, LocalAccount local, Account global) {
-        this.player = player;
-        this.sender = player;
-        this.local = local;
-        this.global = global;
-        this.lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, global.lang, new Language());
-    }
+  public ServerPlayer(EntityPlayer player, LocalAccount local, Account global) {
+    this.player = player;
+    this.sender = player;
+    this.local = local;
+    this.global = global;
+    this.lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, global.lang, new Language());
+  }
 }

@@ -6,11 +6,11 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class PlayerUnloadEvent extends Event {
 
-    public Account account;
-    public LocalAccount local;
+  public Account account;
+  public LocalAccount local;
 
-    public PlayerUnloadEvent(Account account, LocalAccount local) {
-        this.account = account;
-        this.local = local;
-    }
+  public PlayerUnloadEvent(Account account, LocalAccount local) {
+    this.account = account;
+    this.local = local;
+  }
 }

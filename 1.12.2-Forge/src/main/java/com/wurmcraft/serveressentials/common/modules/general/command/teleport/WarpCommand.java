@@ -16,33 +16,64 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 @ModuleCommand(module = "General", name = "Warp")
 public class WarpCommand {
 
-    @Command(args = {CommandArgument.WARP}, usage = {"name"})
-    public void warp(ServerPlayer player, Warp warp) {
-        if (TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, warp) && RankUtils.hasPermission(player.global, "command.warp." + warp.name))
-            ChatHelper.send(player.sender, player.lang.COMMAND_WARP.replaceAll("\\{@NAME@}", warp.name));
-    }
+  @Command(
+      args = {CommandArgument.WARP},
+      usage = {"name"})
+  public void warp(ServerPlayer player, Warp warp) {
+    if (TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, warp)
+        && RankUtils.hasPermission(player.global, "command.warp." + warp.name))
+      ChatHelper.send(player.sender, player.lang.COMMAND_WARP.replaceAll("\\{@NAME@}", warp.name));
+  }
 
-    @Command(args = {}, usage = {}, isSubCommand = true, subCommandAliases = {"l"}, canConsoleUse = true)
-    public void list(ServerPlayer player) {
-        try {
-            Warp[] warps = SECore.dataLoader.getFromKey(DataLoader.DataType.WARP, new Warp[0]).values().toArray(new Warp[0]);
-            StringBuilder builder = new StringBuilder();
-            for (Warp warp : warps)
-                if (RankUtils.hasPermission(player.global, "command.warp." + warp.name))
-                    builder.append(warp.name).append(", ");
-            ChatHelper.send(player.sender, player.lang.COMMAND_WARP_LIST.replaceAll("\\{@LIST@}", builder.substring(0, builder.length() - 2)));
-        } catch (Exception e) {
-            ChatHelper.send(player.sender, player.lang.COMMAND_WARP_LIST.replaceAll("\\{@LIST@}", "[]"));
-        }
+  @Command(
+      args = {},
+      usage = {},
+      isSubCommand = true,
+      subCommandAliases = {"l"},
+      canConsoleUse = true)
+  public void list(ServerPlayer player) {
+    try {
+      Warp[] warps =
+          SECore.dataLoader
+              .getFromKey(DataLoader.DataType.WARP, new Warp[0])
+              .values()
+              .toArray(new Warp[0]);
+      StringBuilder builder = new StringBuilder();
+      for (Warp warp : warps)
+        if (RankUtils.hasPermission(player.global, "command.warp." + warp.name))
+          builder.append(warp.name).append(", ");
+      ChatHelper.send(
+          player.sender,
+          player.lang.COMMAND_WARP_LIST.replaceAll(
+              "\\{@LIST@}", builder.substring(0, builder.length() - 2)));
+    } catch (Exception e) {
+      ChatHelper.send(player.sender, player.lang.COMMAND_WARP_LIST.replaceAll("\\{@LIST@}", "[]"));
     }
+  }
 
-    @Command(args = {CommandArgument.STRING}, usage = {"name"}, isSubCommand = true, canConsoleUse = true, subCommandAliases = {"c"})
-    public void create(ServerPlayer player, String name) {
-        FMLCommonHandler.instance().getMinecraftServerInstance().commandManager.executeCommand(player.sender, "/setwarp " + name);
-    }
+  @Command(
+      args = {CommandArgument.STRING},
+      usage = {"name"},
+      isSubCommand = true,
+      canConsoleUse = true,
+      subCommandAliases = {"c"})
+  public void create(ServerPlayer player, String name) {
+    FMLCommonHandler.instance()
+        .getMinecraftServerInstance()
+        .commandManager
+        .executeCommand(player.sender, "/setwarp " + name);
+  }
 
-    @Command(args = {CommandArgument.STRING}, usage = {"name"}, isSubCommand = true, canConsoleUse = true, subCommandAliases = {"del", "d", "remove", "rem", "r"})
-    public void delete(ServerPlayer player, String name) {
-        FMLCommonHandler.instance().getMinecraftServerInstance().commandManager.executeCommand(player.sender, "/deleteWarp " + name);
-    }
+  @Command(
+      args = {CommandArgument.STRING},
+      usage = {"name"},
+      isSubCommand = true,
+      canConsoleUse = true,
+      subCommandAliases = {"del", "d", "remove", "rem", "r"})
+  public void delete(ServerPlayer player, String name) {
+    FMLCommonHandler.instance()
+        .getMinecraftServerInstance()
+        .commandManager
+        .executeCommand(player.sender, "/deleteWarp " + name);
+  }
 }

@@ -7,10 +7,10 @@ import net.minecraft.inventory.InventoryBasic;
 
 public class TrashInventory extends InventoryBasic {
 
-    public EntityPlayer player;
+  public EntityPlayer player;
 
-    public TrashInventory(EntityPlayer player, Language lang) {
-        super(ChatHelper.replaceColor(lang.DISPLAY_TRASHCAN), true, 54);
-        this.player = player;
-    }
+  public TrashInventory(EntityPlayer player, Language lang) {
+    super(ChatHelper.replaceColor(lang.DISPLAY_TRASHCAN), true, 54);
+    this.player = player;
+  }
 }

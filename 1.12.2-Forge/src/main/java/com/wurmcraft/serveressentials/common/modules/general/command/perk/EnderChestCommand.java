@@ -11,19 +11,28 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentTranslation;
 
-@ModuleCommand(module = "General", name = "EnderChest", defaultAliases = {"EChest"})
+@ModuleCommand(
+    module = "General",
+    name = "EnderChest",
+    defaultAliases = {"EChest"})
 public class EnderChestCommand {
 
-    @Command(args = {}, usage = {})
-    public void echest(ServerPlayer player) {
-        player.player.displayGUIChest(new PlayerInventory((EntityPlayerMP) player.player, (EntityPlayerMP) player.player, true));
-    }
+  @Command(
+      args = {},
+      usage = {})
+  public void echest(ServerPlayer player) {
+    player.player.displayGUIChest(
+        new PlayerInventory((EntityPlayerMP) player.player, (EntityPlayerMP) player.player, true));
+  }
 
-    @Command(args = {CommandArgument.PLAYER}, usage = {"player"})
-    public void echest(ServerPlayer player, EntityPlayer otherPlayer) {
-        if (RankUtils.hasPermission(player.global, "command.echest.other")) {
-            player.player.displayGUIChest(new PlayerInventory((EntityPlayerMP) otherPlayer, (EntityPlayerMP) player.player, true));
-        } else
-            ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
-    }
+  @Command(
+      args = {CommandArgument.PLAYER},
+      usage = {"player"})
+  public void echest(ServerPlayer player, EntityPlayer otherPlayer) {
+    if (RankUtils.hasPermission(player.global, "command.echest.other")) {
+      player.player.displayGUIChest(
+          new PlayerInventory((EntityPlayerMP) otherPlayer, (EntityPlayerMP) player.player, true));
+    } else
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
+  }
 }

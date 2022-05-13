@@ -5,7 +5,6 @@
  */
 package com.wurmcraft.serveressentials.api.models;
 
-
 import com.wurmcraft.serveressentials.ServerEssentials;
 
 public class Action {

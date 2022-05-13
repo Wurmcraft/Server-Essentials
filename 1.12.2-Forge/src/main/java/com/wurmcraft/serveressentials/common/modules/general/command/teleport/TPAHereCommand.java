@@ -16,16 +16,36 @@ import org.cliffc.high_scale_lib.NonBlockingHashMap;
 @ModuleCommand(module = "General", name = "TpaHere")
 public class TPAHereCommand {
 
-    public static NonBlockingHashMap<EntityPlayer, EntityPlayer> activeRequests = new NonBlockingHashMap<>();
+  public static NonBlockingHashMap<EntityPlayer, EntityPlayer> activeRequests =
+      new NonBlockingHashMap<>();
 
-    @Command(args = {CommandArgument.PLAYER}, usage = "player")
-    public void tpaHere(ServerPlayer player, EntityPlayer otherPlayer) {
-        LocalAccount localOther = SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new LocalAccount());
-        if (!ChatHelper.isIgnored(localOther, player.player.getGameProfile().getId().toString())) {
-            activeRequests.put(otherPlayer, player.player);
-            Language otherLang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, otherPlayer.getGameProfile().getId().toString(), new Account()).lang, new Language());
-            ChatHelper.send(otherPlayer, otherLang.COMMAND_TPAHERE_OTHER.replaceAll("\\{@PLAYER@}", player.player.getDisplayNameString()));
-        }
-        ChatHelper.send(player.player, player.lang.COMMAND_TPAHERE.replaceAll("\\{@PLAYER}", otherPlayer.getDisplayNameString()));
+  @Command(
+      args = {CommandArgument.PLAYER},
+      usage = "player")
+  public void tpaHere(ServerPlayer player, EntityPlayer otherPlayer) {
+    LocalAccount localOther =
+        SECore.dataLoader.get(
+            DataLoader.DataType.LOCAL_ACCOUNT,
+            otherPlayer.getGameProfile().getId().toString(),
+            new LocalAccount());
+    if (!ChatHelper.isIgnored(localOther, player.player.getGameProfile().getId().toString())) {
+      activeRequests.put(otherPlayer, player.player);
+      Language otherLang =
+          SECore.dataLoader.get(
+              DataLoader.DataType.LANGUAGE,
+              SECore.dataLoader.get(
+                      DataLoader.DataType.ACCOUNT,
+                      otherPlayer.getGameProfile().getId().toString(),
+                      new Account())
+                  .lang,
+              new Language());
+      ChatHelper.send(
+          otherPlayer,
+          otherLang.COMMAND_TPAHERE_OTHER.replaceAll(
+              "\\{@PLAYER@}", player.player.getDisplayNameString()));
     }
+    ChatHelper.send(
+        player.player,
+        player.lang.COMMAND_TPAHERE.replaceAll("\\{@PLAYER}", otherPlayer.getDisplayNameString()));
+  }
 }

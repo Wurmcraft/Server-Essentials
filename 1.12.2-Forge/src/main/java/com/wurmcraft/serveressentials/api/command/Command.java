@@ -9,16 +9,14 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Command {
 
-    /**
-     * Arguments required for the requested command
-     */
-    CommandArgument[] args();
+  /** Arguments required for the requested command */
+  CommandArgument[] args();
 
-    String[] usage();
+  String[] usage();
 
-    boolean isSubCommand() default false;
+  boolean isSubCommand() default false;
 
-    String[] subCommandAliases() default "";
+  String[] subCommandAliases() default "";
 
-    boolean canConsoleUse() default false;
+  boolean canConsoleUse() default false;
 }

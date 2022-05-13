@@ -5,10 +5,8 @@
  */
 package com.wurmcraft.serveressentials.api.models;
 
-
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.models.transfer.ItemWrapper;
-
 import java.util.Objects;
 
 public class MarketEntry {

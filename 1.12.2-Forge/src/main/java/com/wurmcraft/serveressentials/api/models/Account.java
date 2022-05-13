@@ -8,7 +8,6 @@ package com.wurmcraft.serveressentials.api.models;
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.models.account.BankAccount;
 import com.wurmcraft.serveressentials.api.models.account.ServerTime;
-
 import java.util.Arrays;
 import java.util.Objects;
 

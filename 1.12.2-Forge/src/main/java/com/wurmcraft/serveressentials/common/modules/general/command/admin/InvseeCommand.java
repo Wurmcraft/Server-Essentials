@@ -11,19 +11,28 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentTranslation;
 
-@ModuleCommand(module = "General", name = "Invsee", defaultAliases = {"isee"})
+@ModuleCommand(
+    module = "General",
+    name = "Invsee",
+    defaultAliases = {"isee"})
 public class InvseeCommand {
 
-    @Command(args = {}, usage = {})
-    public void invsee(ServerPlayer player) {
-        player.player.displayGUIChest(new PlayerInventory((EntityPlayerMP) player.player, (EntityPlayerMP) player.player, false));
-    }
+  @Command(
+      args = {},
+      usage = {})
+  public void invsee(ServerPlayer player) {
+    player.player.displayGUIChest(
+        new PlayerInventory((EntityPlayerMP) player.player, (EntityPlayerMP) player.player, false));
+  }
 
-    @Command(args = {CommandArgument.PLAYER}, usage = {"player"})
-    public void invsee(ServerPlayer player, EntityPlayer otherPlayer) {
-        if (RankUtils.hasPermission(player.global, "command.invsee.other")) {
-            player.player.displayGUIChest(new PlayerInventory((EntityPlayerMP) otherPlayer, (EntityPlayerMP) player.player, false));
-        } else
-            ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
-    }
+  @Command(
+      args = {CommandArgument.PLAYER},
+      usage = {"player"})
+  public void invsee(ServerPlayer player, EntityPlayer otherPlayer) {
+    if (RankUtils.hasPermission(player.global, "command.invsee.other")) {
+      player.player.displayGUIChest(
+          new PlayerInventory((EntityPlayerMP) otherPlayer, (EntityPlayerMP) player.player, false));
+    } else
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
+  }
 }

@@ -5,12 +5,10 @@
  */
 package com.wurmcraft.serveressentials.api.models.transfer;
 
-
 import com.wurmcraft.serveressentials.ServerEssentials;
-
 import java.util.Objects;
 
-public class ItemWrapper  {
+public class ItemWrapper {
 
   public int count;
   public String item;

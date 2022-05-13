@@ -5,11 +5,7 @@ import com.wurmcraft.serveressentials.api.loading.Module;
 @Module(name = "Statistics", dependencies = "Core")
 public class ModuleStatistics {
 
-    public void setup() {
+  public void setup() {}
 
-    }
-
-    public void reload() {
-
-    }
+  public void reload() {}
 }

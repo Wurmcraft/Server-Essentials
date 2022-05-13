@@ -9,11 +9,13 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 @ModuleCommand(module = "General", name = "Dusk")
 public class DustCommand {
 
-    public static final int time = 12000;
+  public static final int time = 12000;
 
-    @Command(args = {}, usage = {})
-    public void setDay(ServerPlayer player) {
-        FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld().setWorldTime(time);
-        ChatHelper.send(player.sender, player.lang.COMMAND_TIME.replaceAll("\\{@TIME@}", "' + time"));
-    }
+  @Command(
+      args = {},
+      usage = {})
+  public void setDay(ServerPlayer player) {
+    FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld().setWorldTime(time);
+    ChatHelper.send(player.sender, player.lang.COMMAND_TIME.replaceAll("\\{@TIME@}", "' + time"));
+  }
 }
