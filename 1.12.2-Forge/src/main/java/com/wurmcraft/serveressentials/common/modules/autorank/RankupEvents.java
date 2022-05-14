@@ -4,15 +4,19 @@ import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.AutoRank;
+import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.common.command.EcoUtils;
+import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
+import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,19 +33,23 @@ public class RankupEvents {
             >= lastCheck.get(e.player.getGameProfile().getId().toString())) {
           Account account =
               SECore.dataLoader.get(
-                  DataType.ACCOUNT, e.player.getGameProfile().getId().toString(), new Account());
+                  DataType.ACCOUNT, e.player.getGameProfile().getId().toString(),
+                  new Account());
           checkAndHandleUpdate(e.player, account);
           lastCheck.put(account.uuid, System.currentTimeMillis() + 5000);
         }
       } else {
-        lastCheck.put(e.player.getGameProfile().getId().toString(), System.currentTimeMillis());
+        lastCheck.put(e.player.getGameProfile().getId().toString(),
+            System.currentTimeMillis());
       }
     }
   }
 
   public static void checkAndHandleUpdate(EntityPlayer player, Account account) {
-    for (String ar : SECore.dataLoader.getFromKey(DataType.AUTORANK, new AutoRank()).keySet()) {
-      AutoRank autoRank = SECore.dataLoader.getFromKey(DataType.AUTORANK, new AutoRank()).get(ar);
+    for (String ar : SECore.dataLoader.getFromKey(DataType.AUTORANK, new AutoRank())
+        .keySet()) {
+      AutoRank autoRank = SECore.dataLoader.getFromKey(DataType.AUTORANK, new AutoRank())
+          .get(ar);
       List<Rank> userRanks = PlayerUtils.getUserRanks(account);
       for (Rank rank : userRanks) {
         if (canRankup(account, rank, autoRank)) {
@@ -71,7 +79,8 @@ public class RankupEvents {
   }
 
   public static void rankup(EntityPlayer player, AutoRank autoRank) {
-    Account account = PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString());
+    Account account = PlayerUtils.getLatestAccount(
+        player.getGameProfile().getId().toString());
     if (account != null) {
       List<String> userRanks = new ArrayList<>();
       Collections.addAll(userRanks, account.rank);
@@ -80,14 +89,35 @@ public class RankupEvents {
       account.rank = userRanks.toArray(new String[0]);
       SECore.dataLoader.update(
           DataType.ACCOUNT, player.getGameProfile().getId().toString(), account);
-      // TODO Rankup notification to player
-      // TODO Rankup notification to players on server (depending on configuration)
-      // TODO Rankup notification on bridge (depending on configuration)
+      notifyRankup(player, autoRank);
     } else {
       ServerEssentials.LOG.warn(
           "Failed to rankup user '"
               + player.getGameProfile().getId().toString()
               + "' Unable to pull updated data from api");
     }
+  }
+
+  private static void notifyRankup(EntityPlayer player, AutoRank autoRank) {
+    Account account = SECore.dataLoader.get(DataType.ACCOUNT,
+        player.getGameProfile().getId().toString(), new Account());
+    Language userLang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.lang,
+        new Language());
+    ChatHelper.send(player, userLang.ANNOUNCEMENT_RANKUP_PERSONAL.replaceAll("\\{@RANK@}",
+        autoRank.next_rank));
+    if (((ConfigAutorank) SECore.moduleConfigs.get("AUTORANK")).announceRackup) {
+      for (EntityPlayer otherPlayer : FMLCommonHandler.instance()
+          .getMinecraftServerInstance().getPlayerList()
+          .getPlayers()) {
+        Language lang = SECore.dataLoader.get(DataLoader.DataType.LANGUAGE,
+            SECore.dataLoader.get(DataLoader.DataType.ACCOUNT,
+                player.getGameProfile().getId().toString(), new Account()).lang,
+            new Language());
+        ChatHelper.send(otherPlayer,
+            lang.ANNOUNCEMENT_RANKUP_SERVER.replaceAll("\\{@RANK@}", autoRank.next_rank)
+                .replaceAll("\\{@NAME@}", ChatHelper.getName(player, account)));
+      }
+    }
+    // TODO Rankup notification on bridge (depending on configuration)
   }
 }

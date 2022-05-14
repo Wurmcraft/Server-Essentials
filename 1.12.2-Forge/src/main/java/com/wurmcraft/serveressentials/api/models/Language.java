@@ -27,6 +27,8 @@ public class Language {
   // Announcement
   public String ANNOUNCEMENT_AFK_ENABLED;
   public String ANNOUNCEMENT_AFK_DISABLED;
+  public String ANNOUNCEMENT_RANKUP_PERSONAL;
+  public String ANNOUNCEMENT_RANKUP_SERVER;
 
   // Item GUI
   public String ITEM_PREV;

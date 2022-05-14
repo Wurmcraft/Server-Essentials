@@ -19,6 +19,8 @@
   "ITEM_OPTIONS": "&6Options",
   "ITEM_INFO": "&6Information",
   "ITEM_UPGRADE": "&bUpgrade / Purchase",
+  "ANNOUNCEMENT_RANKUP_PERSONAL": "&bYou have ranked up to {@RANK@}",
+  "ANNOUNCEMENT_RANKUP_SERVER": "&b{@NAME@} has ranked up to {@RANK@}",
   "ANNOUNCEMENT_AFK_ENABLED": "&b{@NAME@} is now AFK!",
   "ANNOUNCEMENT_AFK_DISABLED": "&b{@NAME@} is no longer AFK!",
   "COMMAND_BASE_VERSION": "&bServer Essentials Version: &c{@VERSION@}",
