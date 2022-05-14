@@ -6,11 +6,13 @@ import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Rank;
+import com.wurmcraft.serveressentials.api.models.account.ServerTime;
 import com.wurmcraft.serveressentials.api.models.local.Home;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.api.models.local.Location;
 import com.wurmcraft.serveressentials.common.command.RankUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
+import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import com.wurmcraft.serveressentials.common.modules.general.ConfigGeneral;
 import java.util.ArrayList;
@@ -26,8 +28,11 @@ public class PlayerUtils {
 
   public static boolean isUserOnline(String uuid) {
     for (EntityPlayerMP player :
-        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers())
-      if (player.getGameProfile().getId().toString().equals(uuid)) return true;
+        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+      if (player.getGameProfile().getId().toString().equals(uuid)) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -36,13 +41,19 @@ public class PlayerUtils {
     try {
       UUID uuid = UUID.fromString(input);
       String username = UsernameCache.getLastKnownUsername(uuid);
-      if (username != null) return uuid.toString();
+      if (username != null) {
+        return uuid.toString();
+      }
     } catch (Exception e) {
     }
     // Username Check
-    if (UsernameCache.getMap().containsValue(input))
-      for (UUID uuid : UsernameCache.getMap().keySet())
-        if (UsernameCache.getMap().get(uuid).equals(input)) return uuid.toString();
+    if (UsernameCache.getMap().containsValue(input)) {
+      for (UUID uuid : UsernameCache.getMap().keySet()) {
+        if (UsernameCache.getMap().get(uuid).equals(input)) {
+          return uuid.toString();
+        }
+      }
+    }
     return null;
   }
 
@@ -54,7 +65,9 @@ public class PlayerUtils {
       if (response.status == 200) {
         Account account = GSON.fromJson(response.response, Account.class);
         String username = account.username;
-        if (username != null) return uuid.toString();
+        if (username != null) {
+          return uuid.toString();
+        }
       }
     } catch (Exception e) {
     }
@@ -64,7 +77,9 @@ public class PlayerUtils {
       if (response.status == 200) {
         Account account = GSON.fromJson(response.response, Account.class);
         String uuid = account.uuid;
-        if (uuid != null) return uuid;
+        if (uuid != null) {
+          return uuid;
+        }
       }
     } catch (Exception e) {
     }
@@ -73,8 +88,9 @@ public class PlayerUtils {
 
   public static String getUUIDForInput(String input) {
     String localUUID = validateUUID(input);
-    if (localUUID == null && SECore.dataLoader.getClass().equals(RestDataLoader.class))
+    if (localUUID == null && SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
       return validateUUIDRemote(input);
+    }
     return localUUID;
   }
 
@@ -103,15 +119,18 @@ public class PlayerUtils {
     try {
       UUID uuid = UUID.fromString(input);
       String username = validateUsername(uuid.toString());
-      if (username == null && SECore.dataLoader.getClass().equals(RestDataLoader.class))
+      if (username == null && SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
         return validateUsernameRemote(uuid.toString());
+      }
     } catch (Exception e) {
     }
     // Validate Username
     String username = validateUsername(input);
-    if (username != null) return username;
-    else if (SECore.dataLoader.getClass().equals(RestDataLoader.class))
+    if (username != null) {
+      return username;
+    } else if (SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
       return validateUsernameRemote(validateUUIDRemote(input));
+    }
     return null;
   }
 
@@ -128,8 +147,13 @@ public class PlayerUtils {
   }
 
   public static Home getHome(LocalAccount local, String name) {
-    if (local.homes != null)
-      for (Home home : local.homes) if (name.equalsIgnoreCase(home.name)) return home;
+    if (local.homes != null) {
+      for (Home home : local.homes) {
+        if (name.equalsIgnoreCase(home.name)) {
+          return home;
+        }
+      }
+    }
     return null;
   }
 
@@ -142,20 +166,29 @@ public class PlayerUtils {
     HashMap<String, Location> spawnPos =
         ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).spawn;
     // Simple Match (if possible)
-    if (ranks.length == 1) return spawnPos.getOrDefault(ranks[0], null);
+    if (ranks.length == 1) {
+      return spawnPos.getOrDefault(ranks[0], null);
+    }
     // Highest Rank
     List<Rank> userRanks = new ArrayList<>();
     for (String name : ranks) {
       Rank rank = SECore.dataLoader.get(DataLoader.DataType.RANK, name, new Rank());
-      if (rank != null && spawnPos.containsKey(rank.name)) userRanks.add(rank);
+      if (rank != null && spawnPos.containsKey(rank.name)) {
+        userRanks.add(rank);
+      }
     }
     if (userRanks.size() > 0) {
       Rank highestRank = userRanks.get(0);
-      for (Rank rank : userRanks)
-        if (RankUtils.isGreaterThan(rank, highestRank)) highestRank = rank;
+      for (Rank rank : userRanks) {
+        if (RankUtils.isGreaterThan(rank, highestRank)) {
+          highestRank = rank;
+        }
+      }
       return spawnPos.get(highestRank.name);
     }
-    if (spawnPos.containsKey("*")) return spawnPos.get("*");
+    if (spawnPos.containsKey("*")) {
+      return spawnPos.get("*");
+    }
     return null;
   }
 
@@ -170,6 +203,27 @@ public class PlayerUtils {
         e.printStackTrace();
         return null;
       }
-    } else return SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid, new Account());
+    } else {
+      return SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid, new Account());
+    }
+  }
+
+  public static List<Rank> getUserRanks(Account account) {
+    List<Rank> ranks = new ArrayList<>();
+    for (String rank : account.rank) {
+      ranks.add(SECore.dataLoader.get(DataType.RANK, rank, new Rank()));
+    }
+    ranks.remove(null);
+    return ranks;
+  }
+
+  public static long getTotalPlaytime(Account account) {
+    long playtime = 0;
+    if (account != null && account.tracked_time != null && account.tracked_time.length > 0) {
+      for (ServerTime time : account.tracked_time) {
+        playtime += time.totalTime;
+      }
+    }
+    return playtime;
   }
 }

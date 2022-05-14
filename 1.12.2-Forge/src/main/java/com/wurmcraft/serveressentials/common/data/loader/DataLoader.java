@@ -13,9 +13,9 @@ public class DataLoader implements IDataLoader {
   public enum DataType {
     ACTION(
         "api/action", "relatedID;host;action;timestamp", null, Action.class, Action[].class, false),
-    AUTORANK("api/autorank", "CRUD/PATCH", "autoRankID", AutoRank.class, AutoRank[].class, true),
+    AUTORANK("api/autorank", "CRUD/PATCH", "rank", AutoRank.class, AutoRank[].class, true),
     BAN("api/ban", "CRUD", "banID", Ban.class, Ban[].class, true),
-    CURRENCY("api/currency", "CRUD", "currencyID", Currency.class, Currency[].class, true),
+    CURRENCY("api/currency", "CRUD", "display_name", Currency.class, Currency[].class, true),
     DONATOR("api/donator", "CRUD", "uuid", Donator.class, Donator[].class, true),
     LOG_ENTRY(
         "api/logging", "serverID;action;x;y;z;dim", null, LogEntry.class, LogEntry[].class, false),
@@ -24,7 +24,7 @@ public class DataLoader implements IDataLoader {
     TRANSFER(
         "api/transfer",
         "CRUD/PATCH",
-        "transferID",
+        "transfer_id",
         TransferEntry.class,
         TransferEntry[].class,
         false),
