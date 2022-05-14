@@ -179,4 +179,7 @@ public class Language {
   public String COMMAND_SPEED_WALK_OTHER;
   public String COMMAND_SPEED_FLY_OTHER;
   public String COMMAND_SEEN;
+  public String COMMAND_AR_TIME;
+  public String COMMAND_AR_CURRENCY;
+  public String COMMAND_AR_MAX;
 }

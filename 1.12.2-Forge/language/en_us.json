@@ -159,5 +159,8 @@
   "COMMAND_SPEED_FLY": "&bYour flying speed has been changed to {@SPEED@}",
   "COMMAND_SPEED_WALK_OTHER": "&b{@NAME@}'s walking speed has been set tp {@SPEED@}",
   "COMMAND_SPEED_FLY_OTHER": "&b{@NAME@}'s flying speed has been set tp {@SPEED@}",
-  "COMMAND_SEEN": "&B{@PLAYER@} was last seen {@TIME@} ago"
+  "COMMAND_SEEN": "&b{@PLAYER@} was last seen {@TIME@} ago",
+  "COMMAND_AR_TIME": "&bTime required to rankup {@CURRENT_TIME@} / {@TIME@}",
+  "COMMAND_AR_CURRENCY": "&bCurrency require to rankup {@CURRENT_AMOUNT} / {AMOUNT}",
+  "COMMAND_AR_MAX": "&bYou are max rank"
 }
