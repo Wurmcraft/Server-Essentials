@@ -5,6 +5,7 @@ import com.wurmcraft.serveressentials.api.loading.Module;
 import com.wurmcraft.serveressentials.api.models.AutoRank;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
+import com.wurmcraft.serveressentials.common.modules.autorank.event.RankupEvents;
 import net.minecraftforge.common.MinecraftForge;
 
 @Module(name = "Autorank", dependencies = "Rank")

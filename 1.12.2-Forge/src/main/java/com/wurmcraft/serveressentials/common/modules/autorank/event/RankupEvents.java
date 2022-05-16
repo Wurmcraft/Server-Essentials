@@ -1,4 +1,4 @@
-package com.wurmcraft.serveressentials.common.modules.autorank;
+package com.wurmcraft.serveressentials.common.modules.autorank.event;
 
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
@@ -9,6 +9,7 @@ import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.common.command.EcoUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
+import com.wurmcraft.serveressentials.common.modules.autorank.ConfigAutorank;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.util.ArrayList;

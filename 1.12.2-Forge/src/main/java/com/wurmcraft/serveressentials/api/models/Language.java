@@ -20,6 +20,9 @@ public class Language {
   public String SOCIAL_SPY_TAG;
   public String HOME_OVER;
 
+  // Ban
+  public String BANNED;
+
   // Display
   public String DISPLAY_VAULT;
   public String DISPLAY_TRASHCAN;
@@ -182,4 +185,9 @@ public class Language {
   public String COMMAND_AR_TIME;
   public String COMMAND_AR_CURRENCY;
   public String COMMAND_AR_MAX;
+  public String COMMAND_BAN_CREATE;
+  public String COMMAND_BAN_DELETE;
+  public String COMMAND_BAN_LOOKUP_ID;
+  public String COMMAND_BAN_LOOKUP_REASON;
+  public String COMMAND_BAN_LOOKUP_TIME;
 }

@@ -1,4 +1,4 @@
-package com.wurmcraft.serveressentials.common.modules.autorank;
+package com.wurmcraft.serveressentials.common.modules.autorank.command;
 
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.command.Command;

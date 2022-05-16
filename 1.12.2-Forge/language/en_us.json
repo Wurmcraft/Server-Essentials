@@ -23,6 +23,7 @@
   "ANNOUNCEMENT_RANKUP_SERVER": "&b{@NAME@} has ranked up to {@RANK@}",
   "ANNOUNCEMENT_AFK_ENABLED": "&b{@NAME@} is now AFK!",
   "ANNOUNCEMENT_AFK_DISABLED": "&b{@NAME@} is no longer AFK!",
+  "BANNED": "&cYou are banned, for {@REASON@} until {@TIME@}",
   "COMMAND_BASE_VERSION": "&bServer Essentials Version: &c{@VERSION@}",
   "COMMAND_BASE_MODULES": "&bModules: &c{@MODULES@}",
   "COMMAND_BASE_STORAGE": "&bStorage: &c{@STORAGE@}",
@@ -162,5 +163,10 @@
   "COMMAND_SEEN": "&b{@PLAYER@} was last seen {@TIME@} ago",
   "COMMAND_AR_TIME": "&bTime required to rankup {@CURRENT_TIME@} / {@TIME@}",
   "COMMAND_AR_CURRENCY": "&bCurrency require to rankup {@CURRENT_AMOUNT} / {AMOUNT}",
-  "COMMAND_AR_MAX": "&bYou are max rank"
+  "COMMAND_AR_MAX": "&bYou are max rank",
+  "COMMAND_BAN_CREATE": "&bUser {@USER@} has been banned for {@TIME@}",
+  "COMMAND_BAN_DELETE": "&bBans for user {@USER@} have been removed!",
+  "COMMAND_BAN_LOOKUP_ID": "&bBan ID: {@ID@}",
+  "COMMAND_BAN_LOOKUP_REASON": "&bReason: {@REASON@}",
+  "COMMAND_BAN_LOOKUP_TIME": "&bTime: {@TIME@}"
 }
