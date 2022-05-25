@@ -4,10 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.command.CommandConfig;
+import com.wurmcraft.serveressentials.api.command.CustomCommandJson;
 import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.loading.Module;
 import com.wurmcraft.serveressentials.api.models.config.ConfigGlobal;
 import com.wurmcraft.serveressentials.common.command.CommandUtils;
+import com.wurmcraft.serveressentials.common.command.CustomCommand;
 import com.wurmcraft.serveressentials.common.command.SECommand;
 import com.wurmcraft.serveressentials.common.data.AnnotationLoader;
 import com.wurmcraft.serveressentials.common.data.ConfigLoader;
@@ -62,8 +64,9 @@ public class ServerEssentials {
     SECore.moduleConfigs = ConfigLoader.loadModuleConfigs();
     scheduledService = Executors.newScheduledThreadPool(config.performance.maxThreads);
     if (SECore.moduleConfigs.get("GENERAL") != null
-        && SECore.dataLoader.getClass().equals(RestDataLoader.class))
+        && SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
       ModuleGeneral.sendStatusUpdate(true, "Pre-Initialization");
+    }
   }
 
   @Mod.EventHandler
@@ -71,11 +74,14 @@ public class ServerEssentials {
     LOG.info("Starting Initialization");
     setupModules();
     if (SECore.moduleConfigs.get("GENERAL") != null
-        && SECore.dataLoader.getClass().equals(RestDataLoader.class))
+        && SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
       ModuleGeneral.sendStatusUpdate(true, "Initialization");
+    }
   }
 
-  /** Using reflection to call the setup method on each module's instance */
+  /**
+   * Using reflection to call the setup method on each module's instance
+   */
   private void setupModules() {
     for (String module : SECore.modules.keySet()) {
       Object instance = SECore.modules.get(module);
@@ -98,8 +104,9 @@ public class ServerEssentials {
     LOG.info("Starting Post-Initialization");
     commandClasses = loadCommands();
     if (SECore.moduleConfigs.get("GENERAL") != null
-        && SECore.dataLoader.getClass().equals(RestDataLoader.class))
+        && SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
       ModuleGeneral.sendStatusUpdate(true, "Post-Initialization");
+    }
   }
 
   private HashMap<Class<?>, CommandConfig> loadCommands() {
@@ -108,8 +115,11 @@ public class ServerEssentials {
     for (Class<?> command : commands) {
       ModuleCommand instance = command.getDeclaredAnnotation(ModuleCommand.class);
       CommandConfig config = CommandUtils.loadConfig(instance);
-      if (config != null) commandClasses.put(command, config);
-      else LOG.warn("Failed to load config for command '" + instance.name() + "'");
+      if (config != null) {
+        commandClasses.put(command, config);
+      } else {
+        LOG.warn("Failed to load config for command '" + instance.name() + "'");
+      }
     }
     return commandClasses;
   }
@@ -117,7 +127,7 @@ public class ServerEssentials {
   @Mod.EventHandler
   public void onServerStart(FMLServerStartingEvent e) {
     LOG.info("Server Starting has begun");
-    for (Class<?> command : commandClasses.keySet())
+    for (Class<?> command : commandClasses.keySet()) {
       try {
         e.registerServerCommand(new SECommand(commandClasses.get(command), command));
       } catch (Exception f) {
@@ -127,6 +137,12 @@ public class ServerEssentials {
                 + command.getDeclaredAnnotation(ModuleCommand.class).name()
                 + "'");
       }
+    }
+    // Load Custom Command
+    List<CustomCommandJson> customCommands = CustomCommand.loadCustomCommands();
+    for (CustomCommandJson json : customCommands) {
+      e.registerServerCommand(new CustomCommand(json));
+    }
     //         Startup WSS if Rest is enabled
     if (SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
       try {
@@ -135,16 +151,18 @@ public class ServerEssentials {
         f.printStackTrace();
         LOG.warn("Failed to start web-socket for data connection!");
       }
-      if (SECore.moduleConfigs.get("GENERAL") != null)
+      if (SECore.moduleConfigs.get("GENERAL") != null) {
         ModuleGeneral.sendStatusUpdate(true, "Starting");
+      }
     }
   }
 
   @Mod.EventHandler
   public void serverStarted(FMLServerStartingEvent e) {
     if (SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
-      if (SECore.moduleConfigs.get("GENERAL") != null)
+      if (SECore.moduleConfigs.get("GENERAL") != null) {
         ModuleGeneral.sendStatusUpdate(true, "Online");
+      }
     }
   }
 
@@ -163,16 +181,22 @@ public class ServerEssentials {
       builder.append(m.name()).append(",");
     }
     String moduleNames = builder.toString();
-    if (!moduleNames.isEmpty())
-      moduleNames = moduleNames.substring(0, moduleNames.length() - 1); // Remove trailing ,
+    if (!moduleNames.isEmpty()) {
+      moduleNames = moduleNames.substring(0,
+          moduleNames.length() - 1); // Remove trailing ,
+    }
     LOG.info("Modules: [" + moduleNames + "]");
     return loadedModules;
   }
 
   public static IDataLoader getDataLoader() {
     LOG.info("Storage Type: '" + config.storage.storageType + "'");
-    if (config.storage.storageType.equalsIgnoreCase("File")) return new FileDataLoader();
-    if (config.storage.storageType.equalsIgnoreCase("Rest")) return new RestDataLoader();
+    if (config.storage.storageType.equalsIgnoreCase("File")) {
+      return new FileDataLoader();
+    }
+    if (config.storage.storageType.equalsIgnoreCase("Rest")) {
+      return new RestDataLoader();
+    }
     LOG.warn("Failed to load requested storage type, using default 'Cache-Only'");
     return new DataLoader();
   }
