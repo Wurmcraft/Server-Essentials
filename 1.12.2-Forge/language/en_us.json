@@ -19,6 +19,7 @@
   "ITEM_OPTIONS": "&6Options",
   "ITEM_INFO": "&6Information",
   "ITEM_UPGRADE": "&bUpgrade / Purchase",
+  "NO_MONEY": "&cYou cannot afford to do this!",
   "ANNOUNCEMENT_RANKUP_PERSONAL": "&bYou have ranked up to {@RANK@}",
   "ANNOUNCEMENT_RANKUP_SERVER": "&b{@NAME@} has ranked up to {@RANK@}",
   "ANNOUNCEMENT_AFK_ENABLED": "&b{@NAME@} is now AFK!",
@@ -168,5 +169,7 @@
   "COMMAND_BAN_DELETE": "&bBans for user {@USER@} have been removed!",
   "COMMAND_BAN_LOOKUP_ID": "&bBan ID: {@ID@}",
   "COMMAND_BAN_LOOKUP_REASON": "&bReason: {@REASON@}",
-  "COMMAND_BAN_LOOKUP_TIME": "&bTime: {@TIME@}"
+  "COMMAND_BAN_LOOKUP_TIME": "&bTime: {@TIME@}",
+  "COMMAND_BALANCE_BANK_INFO": "&b{@TYPE@} | {@NAME@} {@AMOUNT@}",
+  "COMMAND_PAY": "&bYou have sent {@AMOUNT@} to {@PLAYER@}"
 }
