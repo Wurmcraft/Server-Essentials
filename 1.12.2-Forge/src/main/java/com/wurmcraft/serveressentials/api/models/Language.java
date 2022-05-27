@@ -12,6 +12,7 @@ public class Language {
   public String PLAYER_ONLY;
   public String INVALID_DIMENSION;
   public String NO_MONEY;
+  public String NUMBER_REQUIRED;
 
   // Chat
   public String SPACER;
@@ -194,4 +195,29 @@ public class Language {
   public String COMMAND_BALANCE_BANK_INFO;
   public String COMMAND_PAY;
   public String COMMAND_PAY_OTHER;
+  public String COMMAND_TAXES_PAY;
+  public String COMMAND_TAXES_BANK;
+  public String COMMAND_TAXES_COMMAND;
+  public String COMMAND_TAXES_INCOME;
+  public String COMMAND_TAXES_SALES;
+  public String COMMAND_RANK_EXISTS;
+  public String COMMAND_RANK_CREATED;
+  public String COMMAND_RANK_DELETED;
+  public String COMMAND_RANK_INFO_NAME;
+  public String COMMAND_RANK_INFO_PERMISSIONS;
+  public String COMMAND_RANK_INFO_INHERITANCE;
+  public String COMMAND_RANK_INFO_PREFIX;
+  public String COMMAND_RANK_INFO_SUFFIX;
+  public String COMMAND_RANK_INFO_PREFIX_PRIORITY;
+  public String COMMAND_RANK_INFO_SUFFIX_PRIORITY;
+  public String COMMAND_RANK_INFO_COLOR;
+  public String COMMAND_RANK_INFO_COLOR_PRIORITY;
+  public String COMMAND_RANK_ADD_PERMS;
+  public String COMMAND_RANK_ADD_INHERITANCE;
+  public String COMMAND_RANK_ADD_PREFIX;
+  public String COMMAND_RANK_ADD_SUFFIX;
+  public String COMMAND_RANK_ADD_PREFIX_PRIORITY;
+  public String COMMAND_RANK_ADD_SUFFIX_PRIORITY;
+  public String COMMAND_RANK_ADD_COLOR_PRIORITY;
+  public String COMMAND_RANK_ADD_COLOR;
 }

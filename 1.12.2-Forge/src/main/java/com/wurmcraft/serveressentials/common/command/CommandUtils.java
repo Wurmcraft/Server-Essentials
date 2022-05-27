@@ -31,12 +31,14 @@ public class CommandUtils {
 
   public static CommandConfig loadConfig(ModuleCommand moduleCommand) {
     String name = moduleCommand.name().toLowerCase();
-    File command = new File(COMMAND_SAVE_DIR + File.separator + name.toLowerCase() + ".json");
-    if (!COMMAND_SAVE_DIR.exists())
+    File command = new File(
+        COMMAND_SAVE_DIR + File.separator + name.toLowerCase() + ".json");
+    if (!COMMAND_SAVE_DIR.exists()) {
       if (!COMMAND_SAVE_DIR.mkdirs()) {
         LOG.warn("Failed to create directory for command configs");
         return null;
       }
+    }
     // Check for existing
     if (command.exists()) {
       try {
@@ -45,7 +47,8 @@ public class CommandUtils {
       } catch (IOException e) {
         e.printStackTrace();
         LOG.warn(
-            "Failed to load command config for '" + name + "' (" + command.getAbsolutePath() + ")");
+            "Failed to load command config for '" + name + "' ("
+                + command.getAbsolutePath() + ")");
       }
     } else {
       // Compute Cooldown Defaults
@@ -55,11 +58,12 @@ public class CommandUtils {
           String[] split = def.split(";");
           if (split.length == 2) {
             cooldown.put(split[0], Long.parseLong(split[1]));
-          } else
+          } else {
             LOG.warn(
                 "Invalid Cooldown Format for command '"
                     + moduleCommand.name()
                     + "' Must be in the following format: <rank>;<time>");
+          }
         } catch (Exception e) {
           e.printStackTrace();
           LOG.warn("Failed to read cooldown for command '" + moduleCommand.name() + "'");
@@ -72,11 +76,12 @@ public class CommandUtils {
           String[] split = def.split(";");
           if (split.length == 2) {
             delay.put(split[0], Long.parseLong(split[1]));
-          } else
+          } else {
             LOG.warn(
                 "Invalid Delay Format for command '"
                     + moduleCommand.name()
                     + "' Must be in the following format: <rank>;<time>");
+          }
         } catch (Exception e) {
           e.printStackTrace();
           LOG.warn("Failed to read delay for command '" + moduleCommand.name() + "'");
@@ -89,11 +94,12 @@ public class CommandUtils {
           String[] split = def.split(";");
           if (split.length == 2) {
             cost.put(split[0], Double.parseDouble(split[1]));
-          } else
+          } else {
             LOG.warn(
                 "Invalid Cost Format for command '"
                     + moduleCommand.name()
                     + "' Must be in the following format: <currency>;<cost>");
+          }
         } catch (Exception e) {
           e.printStackTrace();
           LOG.warn("Failed to read cost for command '" + moduleCommand.name() + "'");
@@ -116,15 +122,17 @@ public class CommandUtils {
       } catch (IOException e) {
         e.printStackTrace();
         LOG.warn(
-            "Failed to save command config for '" + name + "' (" + command.getAbsolutePath() + ")");
+            "Failed to save command config for '" + name + "' ("
+                + command.getAbsolutePath() + ")");
       }
     }
     return null;
   }
 
   public static List<String> predict(String current, List<String> possible) {
-    if (current.isEmpty()) return possible;
-    else {
+    if (current.isEmpty()) {
+      return possible;
+    } else {
       possible.removeIf(p -> !current.toLowerCase().startsWith(current.toLowerCase()));
       return possible;
     }
@@ -133,67 +141,115 @@ public class CommandUtils {
   public static List<String> generatePossibleAutoFill(
       ICommandSender sender, CommandArgument arg, String usage) {
     List<String> autofill = new ArrayList<>();
-    if (arg == CommandArgument.STRING || arg == CommandArgument.STRING_ARR)
-      if (usage.contains(",")) for (String split : usage.split(",")) autofill.add(split.trim());
-      else autofill.add(usage);
-    if (arg == CommandArgument.DOUBLE) autofill.add(0.0 + "");
-    else if (arg == CommandArgument.INTEGER) autofill.add(0.0 + "");
-    else if (arg == CommandArgument.PLAYER)
+    if (arg == CommandArgument.STRING || arg == CommandArgument.STRING_ARR) {
+      if (usage.contains(",")) {
+        for (String split : usage.split(",")) {
+          autofill.add(split.trim());
+        }
+      } else {
+        autofill.add(usage);
+      }
+    }
+    if (arg == CommandArgument.DOUBLE) {
+      autofill.add(0.0 + "");
+    } else if (arg == CommandArgument.INTEGER) {
+      autofill.add(0.0 + "");
+    } else if (arg == CommandArgument.PLAYER) {
       for (EntityPlayer player :
-          FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers())
+          FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
+              .getPlayers()) {
         autofill.add(
             player
                 .getDisplayNameString()); // TODO Replace Username with "Name" / nick when possible
-    else if (arg == CommandArgument.RANK)
-      for (Rank rank : SECore.dataLoader.getFromKey(DataLoader.DataType.RANK, new Rank()).values())
+      }
+    } else if (arg == CommandArgument.RANK) {
+      for (Rank rank : SECore.dataLoader.getFromKey(DataLoader.DataType.RANK, new Rank())
+          .values()) {
         autofill.add(rank.name);
-    else if (arg == CommandArgument.HOME) {
+      }
+    } else if (arg == CommandArgument.HOME) {
       // TODO Autofill with user homes
-    } else if (arg == CommandArgument.MODULE) autofill.addAll(SECore.modules.keySet());
-    else if (arg == CommandArgument.CURRENCY)
+    } else if (arg == CommandArgument.MODULE) {
+      autofill.addAll(SECore.modules.keySet());
+    } else if (arg == CommandArgument.CURRENCY) {
       for (Currency currency :
-          SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency()).values())
+          SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency())
+              .values()) {
         autofill.add(currency.display_name);
-    else if (arg == CommandArgument.WARP) {
+      }
+    } else if (arg == CommandArgument.WARP) {
       // TODO Autofill warps (user access only)
     } else if (arg == CommandArgument.DATA_TYPE) {
-      for (DataLoader.DataType type : DataLoader.DataType.values())
+      for (DataLoader.DataType type : DataLoader.DataType.values()) {
         autofill.add(type.name().toLowerCase());
+      }
     } else if (arg == CommandArgument.CHANNEL) {
       for (Channel ch :
-          SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel()).values())
+          SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel())
+              .values()) {
         autofill.add(ch.name);
+      }
     } else if (arg == CommandArgument.KIT) {
-      for (Kit kit : SECore.dataLoader.getFromKey(DataLoader.DataType.KIT, new Kit()).values())
+      for (Kit kit : SECore.dataLoader.getFromKey(DataLoader.DataType.KIT, new Kit())
+          .values()) {
         autofill.add(kit.name);
+      }
     }
     return autofill;
   }
 
   public static long convertToTime(String[] times) throws NumberFormatException {
     long calculatedTime = 0L;
-    for (String time : times) calculatedTime += convertToTime(time);
+    for (String time : times) {
+      calculatedTime += convertToTime(time);
+    }
     return calculatedTime;
   }
 
   public static long convertToTime(String time) throws NumberFormatException {
     time = time.trim().toLowerCase();
     // Days
-    if (time.endsWith("d")) return Long.parseLong(time.substring(0, time.length() - 1)) * 86400;
-    if (time.endsWith("day")) return Long.parseLong(time.substring(0, time.length() - 4)) * 86400;
-    if (time.endsWith("days")) return Long.parseLong(time.substring(0, time.length() - 5)) * 86400;
+    if (time.endsWith("d")) {
+      return Long.parseLong(time.substring(0, time.length() - 1)) * 86400;
+    }
+    if (time.endsWith("day")) {
+      return Long.parseLong(time.substring(0, time.length() - 4)) * 86400;
+    }
+    if (time.endsWith("days")) {
+      return Long.parseLong(time.substring(0, time.length() - 5)) * 86400;
+    }
     // Hours
-    if (time.endsWith("h")) return Long.parseLong(time.substring(0, time.length() - 1)) * 3600;
-    if (time.endsWith("hour")) return Long.parseLong(time.substring(0, time.length() - 5)) * 3600;
-    if (time.endsWith("hours")) return Long.parseLong(time.substring(0, time.length() - 6)) * 3600;
+    if (time.endsWith("h")) {
+      return Long.parseLong(time.substring(0, time.length() - 1)) * 3600;
+    }
+    if (time.endsWith("hour")) {
+      return Long.parseLong(time.substring(0, time.length() - 5)) * 3600;
+    }
+    if (time.endsWith("hours")) {
+      return Long.parseLong(time.substring(0, time.length() - 6)) * 3600;
+    }
     // Minutes
-    if (time.endsWith("m")) return Long.parseLong(time.substring(0, time.length() - 1)) * 60;
-    if (time.endsWith("min")) return Long.parseLong(time.substring(0, time.length() - 4)) * 60;
-    if (time.endsWith("minute")) return Long.parseLong(time.substring(0, time.length() - 7)) * 60;
-    if (time.endsWith("mins")) return Long.parseLong(time.substring(0, time.length() - 5)) * 60;
-    if (time.endsWith("minutes")) return Long.parseLong(time.substring(0, time.length() - 8));
-    if (time.endsWith("s")) return Long.parseLong(time.substring(0, time.length() - 1));
-    if (time.endsWith("sec")) return Long.parseLong(time.substring(0, time.length() - 4));
+    if (time.endsWith("m")) {
+      return Long.parseLong(time.substring(0, time.length() - 1)) * 60;
+    }
+    if (time.endsWith("min")) {
+      return Long.parseLong(time.substring(0, time.length() - 4)) * 60;
+    }
+    if (time.endsWith("minute")) {
+      return Long.parseLong(time.substring(0, time.length() - 7)) * 60;
+    }
+    if (time.endsWith("mins")) {
+      return Long.parseLong(time.substring(0, time.length() - 5)) * 60;
+    }
+    if (time.endsWith("minutes")) {
+      return Long.parseLong(time.substring(0, time.length() - 8));
+    }
+    if (time.endsWith("s")) {
+      return Long.parseLong(time.substring(0, time.length() - 1));
+    }
+    if (time.endsWith("sec")) {
+      return Long.parseLong(time.substring(0, time.length() - 4));
+    }
     return 0L;
   }
 
@@ -226,11 +282,21 @@ public class CommandUtils {
       }
     }
     StringBuilder builder = new StringBuilder();
-    if (year > 0) builder.append(year).append("Y ");
-    if (month > 0) builder.append(month).append("M ");
-    if (day > 0) builder.append(day).append("D ");
-    if (hour > 0) builder.append(hour).append("h ");
-    if (min > 0) builder.append(min).append("m ");
+    if (year > 0) {
+      builder.append(year).append("Y ");
+    }
+    if (month > 0) {
+      builder.append(month).append("M ");
+    }
+    if (day > 0) {
+      builder.append(day).append("D ");
+    }
+    if (hour > 0) {
+      builder.append(hour).append("h ");
+    }
+    if (min > 0) {
+      builder.append(min).append("m ");
+    }
     builder.append(sec).append("s ");
     return builder.toString();
   }
@@ -248,9 +314,9 @@ public class CommandUtils {
     return SECore.dataLoader.get(
         DataLoader.DataType.LANGUAGE,
         SECore.dataLoader.get(
-                DataLoader.DataType.ACCOUNT,
-                otherPlayer.getGameProfile().getId().toString(),
-                new Account())
+            DataLoader.DataType.ACCOUNT,
+            otherPlayer.getGameProfile().getId().toString(),
+            new Account())
             .lang,
         new Language());
   }
@@ -260,12 +326,15 @@ public class CommandUtils {
         || value.equalsIgnoreCase("T")
         || value.equalsIgnoreCase("Yes")
         || value.equalsIgnoreCase("Y")
-        || value.equalsIgnoreCase("1")) return true;
-    else if (value.equalsIgnoreCase("False")
+        || value.equalsIgnoreCase("1")) {
+      return true;
+    } else if (value.equalsIgnoreCase("False")
         || value.equalsIgnoreCase("F")
         || value.equalsIgnoreCase("No")
         || value.equalsIgnoreCase("N")
-        || value.equalsIgnoreCase("0")) return false;
+        || value.equalsIgnoreCase("0")) {
+      return false;
+    }
     return null;
   }
 
@@ -279,7 +348,9 @@ public class CommandUtils {
     Vec3d a = pos.addVector(0, player.getEyeHeight(), 0);
     Vec3d b = a.addVector(lookAt.x * distance, lookAt.y * distance, lookAt.z * distance);
     RayTraceResult result = player.world.rayTraceBlocks(a, b);
-    if (result != null && result.typeOfHit != RayTraceResult.Type.MISS) return result.getBlockPos();
+    if (result != null && result.typeOfHit != RayTraceResult.Type.MISS) {
+      return result.getBlockPos();
+    }
     return null;
   }
 
@@ -298,9 +369,30 @@ public class CommandUtils {
       }
     }
     long lowest = Long.MAX_VALUE;
-    for (String rank : ranks)
-      if (timings.containsKey(rank.toLowerCase()) && timings.get(rank.toLowerCase()) < lowest)
+    for (String rank : ranks) {
+      if (timings.containsKey(rank.toLowerCase())
+          && timings.get(rank.toLowerCase()) < lowest) {
         lowest = timings.get(rank.toLowerCase());
+      }
+    }
     return lowest * 1000;
+  }
+
+  public static boolean isNumber(String num) {
+    try {
+      Double.parseDouble(num);
+      return true;
+    } catch (NumberFormatException e) {
+    }
+    return false;
+  }
+
+  public static double number(String num) {
+    try {
+      return Double.parseDouble(num);
+    } catch (NumberFormatException e) {
+
+    }
+    return -1.0;
   }
 }
