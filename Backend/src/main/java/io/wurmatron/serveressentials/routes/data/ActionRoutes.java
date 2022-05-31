@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -34,41 +33,41 @@ public class ActionRoutes {
       description = "Create / log a new action",
       tags = {"Action"},
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = Action.class)},
-          required = true,
-          description = "Information about the action"),
-      responses = {
-          @OpenApiResponse(
-              status = "201",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = Action.class)},
-              description = "Action instance of to created / logged"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "409",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Action already exists"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Information about the action"),
+      responses = {
+        @OpenApiResponse(
+            status = "201",
+            content = {@OpenApiContent(from = Action.class)},
+            description = "Action instance of to created / logged"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "409",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Action already exists"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/action",
@@ -79,13 +78,15 @@ public class ActionRoutes {
         try {
           Action newAction = GSON.fromJson(ctx.body(), Action.class);
           if (isValidAction(ctx, newAction)) {
-            List<Action> existingActions = SQLActions.get(newAction.host,
-                newAction.action, newAction.related_id);
+            List<Action> existingActions =
+                SQLActions.get(newAction.host, newAction.action, newAction.related_id);
             for (Action actions : existingActions) {
               if (Objects.equals(actions.timestamp, newAction.timestamp)) {
-                ctx.status(409).result(response("Action Exists!",
-                    "Action with timestamp '" + newAction.timestamp
-                        + "' already exists"));
+                ctx.status(409)
+                    .result(
+                        response(
+                            "Action Exists!",
+                            "Action with timestamp '" + newAction.timestamp + "' already exists"));
               }
             }
             ctx.status(201).result(GSON.toJson(SQLActions.create(newAction)));
@@ -94,8 +95,7 @@ public class ActionRoutes {
           }
         } catch (JsonParseException e) {
           ctx.status(422)
-              .result(response("Invalid JSON",
-                  "Failed to parse the body into an Action Entry"));
+              .result(response("Invalid JSON", "Failed to parse the body into an Action Entry"));
         }
       };
 
@@ -104,51 +104,51 @@ public class ActionRoutes {
       description = "Get a list / array of action's matching the requested criteria, (query)",
       tags = {"Action"},
       queryParams = {
-          @OpenApiParam(
-              name = "related-id",
-              description = "Server ID or discord ID related to the provided action"),
-          @OpenApiParam(
-              name = "host",
-              description = "Type that the related-id is related to, 'Minecraft', 'Discord'"),
-          @OpenApiParam(name = "action", description = "Type of action that occurred"),
-          @OpenApiParam(
-              name = "min-timestamp",
-              description = "Starting Time / Earliest time this action can have occurred"),
-          @OpenApiParam(
-              name = "max-timestamp",
-              description = "Last time this action can has occurred"),
+        @OpenApiParam(
+            name = "related-id",
+            description = "Server ID or discord ID related to the provided action"),
+        @OpenApiParam(
+            name = "host",
+            description = "Type that the related-id is related to, 'Minecraft', 'Discord'"),
+        @OpenApiParam(name = "action", description = "Type of action that occurred"),
+        @OpenApiParam(
+            name = "min-timestamp",
+            description = "Starting Time / Earliest time this action can have occurred"),
+        @OpenApiParam(
+            name = "max-timestamp",
+            description = "Last time this action can has occurred"),
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = Action[].class)},
-              description = "List of actions based on your requested filters (query)"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Action does not exist"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Action[].class)},
+            description = "List of actions based on your requested filters (query)"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Action does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/action", method = "GET")
   public static Handler get =
@@ -175,41 +175,41 @@ public class ActionRoutes {
       description = "Update an existing action",
       tags = {"Action"},
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = Action.class)},
-          required = true,
-          description = "Information about the action"),
-      responses = {
-          @OpenApiResponse(
-              status = "200",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = Action.class)},
-              description = "Updated action instance is returned"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Action does not exist"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Information about the action"),
+      responses = {
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Action.class)},
+            description = "Updated action instance is returned"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Action does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/action", method = "PUT")
   public static Handler update =
@@ -219,8 +219,7 @@ public class ActionRoutes {
           // Check for Action to update
           Action sqlAction = null;
           List<Action> sqlActions =
-              SQLActions.get(updatedAction.host, updatedAction.action,
-                  updatedAction.related_id);
+              SQLActions.get(updatedAction.host, updatedAction.action, updatedAction.related_id);
           for (Action action : sqlActions) {
             if (action.timestamp.equals(updatedAction.timestamp)) {
               sqlAction = action;
@@ -228,16 +227,14 @@ public class ActionRoutes {
             }
           }
           if (sqlAction != null) {
-            Action action = SQLActions.update(updatedAction, new String[]{ACTION_DATA});
+            Action action = SQLActions.update(updatedAction, new String[] {ACTION_DATA});
             ctx.status(200).result(GSON.toJson(action));
           } else {
-            ctx.status(404)
-                .result(response("Invalid Action", "Requested Action does not exist"));
+            ctx.status(404).result(response("Invalid Action", "Requested Action does not exist"));
           }
         } catch (JsonParseException e) {
           ctx.status(422)
-              .result(response("Invalid JSON",
-                  "Failed to parse the body into an Action Entry"));
+              .result(response("Invalid JSON", "Failed to parse the body into an Action Entry"));
         }
       };
 
@@ -246,41 +243,41 @@ public class ActionRoutes {
       description = "Delete an existing action",
       tags = {"Action"},
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = Action.class)},
-          required = true,
-          description = "Information about the action"),
-      responses = {
-          @OpenApiResponse(
-              status = "200",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = Action.class)},
-              description = "Deleted action is returned"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Action does not exist"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Information about the action"),
+      responses = {
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Action.class)},
+            description = "Deleted action is returned"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Action does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/action", method = "DELETE")
   public static Handler delete =
@@ -290,8 +287,7 @@ public class ActionRoutes {
           // Check for Action to delete
           Action sqlAction = null;
           List<Action> sqlActions =
-              SQLActions.get(updatedAction.host, updatedAction.action,
-                  updatedAction.related_id);
+              SQLActions.get(updatedAction.host, updatedAction.action, updatedAction.related_id);
           for (Action action : sqlActions) {
             if (action.timestamp.equals(updatedAction.timestamp)) {
               sqlAction = action;
@@ -307,13 +303,11 @@ public class ActionRoutes {
                     sqlAction.timestamp);
             ctx.status(200).result(GSON.toJson(action));
           } else {
-            ctx.status(404)
-                .result(response("Invalid Action", "Requested Action does not exist"));
+            ctx.status(404).result(response("Invalid Action", "Requested Action does not exist"));
           }
         } catch (JsonParseException e) {
           ctx.status(422)
-              .result(response("Invalid JSON",
-                  "Failed to parse the body into an Action Entry"));
+              .result(response("Invalid JSON", "Failed to parse the body into an Action Entry"));
         }
       };
 
@@ -338,8 +332,7 @@ public class ActionRoutes {
       errors.add(new MessageResponse("Invalid Entry", "Invalid / Empty Action"));
     }
     if (action.timestamp.length() <= 0) {
-      errors.add(
-          new MessageResponse("Invalid Entry", "Timestamp must be greater than 0"));
+      errors.add(new MessageResponse("Invalid Entry", "Timestamp must be greater than 0"));
     }
     if (errors.size() > 0) {
       context.status(400).result(GSON.toJson(errors));
