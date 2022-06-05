@@ -1,0 +1,95 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.diffplug.spotless" version "6.3.0"
+    id "java"
+    id "com.github.spotbugs" version "5.0.6"
+    id 'idea'
+    id 'eclipse'
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://raw.github.com/agrison/jtoml/mvn-repo/" }
+}
+
+dependencies {
+    // File
+    implementation "com.google.code.gson:gson:${gson_version}"              // https://github.com/google/gson
+    implementation "me.grison:jtoml:${jtoml_version}"                       // https://github.com/agrison/jtoml
+    // Logging
+    implementation "org.apache.logging.log4j:log4j-api:${log4j_version}"  // https://logging.apache.org/log4j/2.x/
+    implementation "org.apache.logging.log4j:log4j-core:${log4j_version}" // https://logging.apache.org/log4j/2.x/
+    implementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version}" // https://logging.apache.org/log4j/2.x/
+    implementation "org.slf4j:log4j-over-slf4j:${slf4j_version}" // http://www.slf4j.org/
+    // Utils
+    implementation "com.boundary:high-scale-lib:${highscalelib_version}" // https://github.com/boundary/high-scale-lib
+    implementation "commons-io:commons-io:${apache_io_version}" // https://commons.apache.org/proper/commons-io/
+    // HTTP / Rest / WSS
+    implementation "io.javalin:javalin:${javalin_version}" // https://javalin.io/
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}" // https://github.com/jetbrains/kotlin
+    implementation "io.javalin:javalin-openapi:${javalin_openapi_version}"  // https://javalin.io/plugins/openapi
+    // Classpath search
+    implementation "net.oneandone.reflections8:reflections8:${reflections_version}" // https://github.com/aschoerk/reflections8
+    implementation "org.javassist:javassist:${javassist_version}" // https://www.javassist.org/
+    // Unit Testing
+    testImplementation platform("org.junit:junit-bom:${junit_version}")
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    // Discord
+    implementation "com.discord4j:discord4j-core:${discord4j_version}" // https://discord4j.com/
+    // Database
+    implementation "org.hibernate:hibernate-core:${hibernate_version}"  // https://hibernate.org/
+    implementation "mysql:mysql-connector-java:${mysql_connector_version}" // https://www.mysql.com/products/connector/
+    implementation "org.postgresql:postgresql:${postgres_version}"  // https://jdbc.postgresql.org/
+}
+
+// Add build requirements
+jar.finalizedBy('shadowJar')
+jar.finalizedBy('spotlessApply')
+
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'io.wurmatron.server_essentials.ServerEssentialsBackend'
+        )
+    }
+}
+
+task processSource(type: Sync) {
+    from sourceSets.main.java
+    inputs.property 'version', version
+    filter(ReplaceTokens, tokens: [VERSION: version])
+    into "$buildDir/src"
+}
+
+// Configure Plugins
+shadowJar.archiveName = "${archivesBaseName}-${version}.jar"
+shadowJar {
+    minimize {
+        exclude(dependency('mysql:.*:.*'))
+        exclude(dependency('org.postgresql:.*:.*'))
+        exclude(dependency('org.postgresql:.*:.*'))
+    }
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+spotless {
+    java {
+        licenseHeaderFile 'HEADER.txt'
+        importOrder()
+        removeUnusedImports()
+        indentWithTabs()
+        trimTrailingWhitespace()
+        googleJavaFormat()
+    }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
