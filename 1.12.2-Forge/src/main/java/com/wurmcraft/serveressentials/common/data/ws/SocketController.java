@@ -32,10 +32,18 @@ public class SocketController {
                 e.printStackTrace();
               }
             }
+
+            @Override
+            public void onConnectError(WebSocket websocket, WebSocketException exception)
+                throws Exception {
+              exception.printStackTrace();
+            }
           });
       ws.connect();
       ws.setPingInterval(60 * 1000); // TODO Replace with Status update
-    } else ws.recreate().connect();
+    } else {
+      ws.recreate().connect();
+    }
   }
 
   private static String createURL() {
@@ -45,10 +53,14 @@ public class SocketController {
         + "api/live";
   }
 
-  public static synchronized void send(WSWrapper wrapper) throws IOException, WebSocketException {
-    if (ws == null || !ws.isOpen()) connect();
+  public static synchronized void send(WSWrapper wrapper)
+      throws IOException, WebSocketException {
+    if (ws == null || !ws.isOpen()) {
+      connect();
+    }
     ws.sendText(GSON.toJson(wrapper));
   }
 
-  public static void handle(WSWrapper wrapper) {}
+  public static void handle(WSWrapper wrapper) {
+  }
 }

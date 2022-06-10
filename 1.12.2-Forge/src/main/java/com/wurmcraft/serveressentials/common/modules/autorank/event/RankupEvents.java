@@ -10,6 +10,7 @@ import com.wurmcraft.serveressentials.common.command.EcoUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.autorank.ConfigAutorank;
+import com.wurmcraft.serveressentials.common.modules.autorank.ModuleAutorank;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.util.ArrayList;
@@ -47,14 +48,17 @@ public class RankupEvents {
   }
 
   public static void checkAndHandleUpdate(EntityPlayer player, Account account) {
-    for (String ar : SECore.dataLoader.getFromKey(DataType.AUTORANK, new AutoRank())
-        .keySet()) {
-      AutoRank autoRank = SECore.dataLoader.getFromKey(DataType.AUTORANK, new AutoRank())
-          .get(ar);
-      List<Rank> userRanks = PlayerUtils.getUserRanks(account);
-      for (Rank rank : userRanks) {
-        if (canRankup(account, rank, autoRank)) {
-          rankup(player, autoRank);
+    if (SECore.dataLoader.getFromKey(DataType.AUTORANK, new AutoRank()) != null) {
+      for (String ar : SECore.dataLoader.getFromKey(DataType.AUTORANK, new AutoRank())
+          .keySet()) {
+        AutoRank autoRank = SECore.dataLoader.getFromKey(DataType.AUTORANK,
+                new AutoRank())
+            .get(ar);
+        List<Rank> userRanks = PlayerUtils.getUserRanks(account);
+        for (Rank rank : userRanks) {
+          if (canRankup(account, rank, autoRank)) {
+            rankup(player, autoRank);
+          }
         }
       }
     }

@@ -9,11 +9,13 @@ import static io.wurmatron.serveressentials.ServerEssentialsRest.LOG;
 
 import io.javalin.Javalin;
 import io.javalin.http.Handler;
+import io.javalin.websocket.WsConfig;
 import io.wurmatron.serveressentials.utils.HttpUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import org.reflections8.Reflections;
 import org.reflections8.scanners.FieldAnnotationsScanner;
 import org.reflections8.scanners.MethodAnnotationsScanner;
@@ -179,13 +181,13 @@ public class RouteLoader {
           javalin.before(route.path(), handler);
           break;
         }
-        //      case "WS": {
-        //        javalin.ws(route.path(), (Consumer<WsHandler>) field.get(field.getClass()),
-        //            roles);
-        //      }
-        //      case "WS/BEFORE": {
-        //        javalin.wsBefore(route.path(), (Consumer<WsHandler>) field.get(field.getClass()));
-        //      }
+              case "WS": {
+                javalin.ws(route.path(), (Consumer<WsConfig>) field.get(field.getClass()));
+//                    roles);
+              }
+              case "WS/BEFORE": {
+                javalin.wsBefore(route.path(), (Consumer<WsConfig>) field.get(field.getClass()));
+              }
     }
   }
 }

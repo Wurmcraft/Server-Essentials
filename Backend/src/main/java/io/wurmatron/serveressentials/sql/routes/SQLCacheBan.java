@@ -249,6 +249,7 @@ public class SQLCacheBan extends SQLCache {
    */
   // TODO Implement
   private static boolean handleBanUpdateCheck(Ban ban) {
+
     return false;
   }
 

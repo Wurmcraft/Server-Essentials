@@ -31,7 +31,7 @@ public class ModuleAutorank {
     }
   }
 
-  private static void setupDefaultRankups() {
+  public static void setupDefaultRankups() {
     AutoRank defaultToMember = new AutoRank("default", "member", 300, "", 0, "{}");
     if (SECore.dataLoader.get(DataType.AUTORANK, defaultToMember.rank) == null) {
       SECore.dataLoader.register(

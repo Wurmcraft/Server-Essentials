@@ -27,7 +27,7 @@ public class Ban {
    * @param uuid uuid of the given user
    * @param ip IP address of the user when banned
    * @param discordID discord ID of the given user
-   * @param bannedBy uuid or discordID of the person that banned the specified user
+   * @param banned_by uuid or discordID of the person that banned the specified user
    * @param bannedByType "discord" or "minecraft"
    * @param banReason reason the person was banned
    * @param timestamp Unix Timestamp for when the action occurred

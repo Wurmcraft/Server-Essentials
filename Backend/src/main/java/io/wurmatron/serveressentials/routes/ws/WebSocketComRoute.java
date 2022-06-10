@@ -87,7 +87,8 @@ public class WebSocketComRoute {
       });
 
       ws.onError(ctx -> {
-        System.out.println("Error: " + ctx.error());
+        if(ctx.error() != null)
+        LOG.error(ctx.error().getLocalizedMessage());
       });
     };
 
@@ -101,6 +102,7 @@ public class WebSocketComRoute {
           if (!ServerEssentialsRest.config.discord.token.isEmpty()) {
             DiscordBot.sendMessage(message);
           }
+          LOG.info("[Chat]: " + message.serverID + ":"  + message.channel +  message.senderName + " > " + message.message);
         } catch (Exception e) {
           LOG.warn("Failed to parse message from '" + activeConnections.get(ctx) + "'");
           e.printStackTrace();
