@@ -145,12 +145,6 @@ public class ServerEssentials {
     }
     //         Startup WSS if Rest is enabled
     if (SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
-      try {
-        SocketController.connect();
-      } catch (Exception f) {
-        f.printStackTrace();
-        LOG.warn("Failed to start web-socket for data connection!");
-      }
       if (SECore.moduleConfigs.get("GENERAL") != null) {
         ModuleGeneral.sendStatusUpdate(true, "Starting");
       }

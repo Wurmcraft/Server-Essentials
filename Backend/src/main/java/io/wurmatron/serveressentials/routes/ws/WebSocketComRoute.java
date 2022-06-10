@@ -41,16 +41,16 @@ public class WebSocketComRoute {
           if (EndpointSecurity.authTokens.containsKey(token)) {
             AuthUser serverPerms = EndpointSecurity.authTokens.get(token);
             if (serverPerms.type.equalsIgnoreCase("SERVER")) {
-              if (activeConnections.containsValue(serverPerms.name)) {
-                  for (WsContext wsContext : activeConnections.keySet()) {
-                      if (activeConnections.get(wsContext).equals(serverPerms.name)) {
-                          wsContext.session.close();
-                          activeConnections.remove(wsContext);
-                          LOG.warn(serverPerms.name
-                              + " tried to login twice, closing socket for older connection");
-                      }
-                  }
-              }
+//              if (activeConnections.containsValue(serverPerms.name)) {
+//                  for (WsContext wsContext : activeConnections.keySet()) {
+//                      if (activeConnections.get(wsContext).equals(serverPerms.name)) {
+//                          wsContext.session.close();
+//                          activeConnections.remove(wsContext);
+//                          LOG.warn(serverPerms.name
+//                              + " tried to login twice, closing socket for older connection");
+//                      }
+//                  }
+//              }
               activeConnections.put(ctx, serverPerms.name);
               ctx.send(GSON.toJson(new WSWrapper(200, WSWrapper.Type.UPDATE,
                   new DataWrapper(AuthUser.class.getTypeName(),
@@ -102,7 +102,7 @@ public class WebSocketComRoute {
           if (!ServerEssentialsRest.config.discord.token.isEmpty()) {
             DiscordBot.sendMessage(message);
           }
-          LOG.info("[Chat]: " + message.serverID + ":"  + message.channel +  message.senderName + " > " + message.message);
+          LOG.info("[Chat]: (" + message.serverID + ":"  + message.channel + ") " +  message.senderName + " > " + message.message);
         } catch (Exception e) {
           LOG.warn("Failed to parse message from '" + activeConnections.get(ctx) + "'");
           e.printStackTrace();
