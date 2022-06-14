@@ -66,7 +66,7 @@ public class EndpointSecurity {
 
   /** Loads the server tokens, or create the empty file if it does not exist */
   private static void loadServerTokens() {
-    File serverTokens = new File(INTERNAL_DIR + File.separator + "servers.json");
+    File serverTokens = new File(INTERNAL_DIR + File.separator + "servers.txt");
     if (serverTokens.exists()) {
       try {
         List<String> lines = Files.readLines(serverTokens, Charset.defaultCharset());
