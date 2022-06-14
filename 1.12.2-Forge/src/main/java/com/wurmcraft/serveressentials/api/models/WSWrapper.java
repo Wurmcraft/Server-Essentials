@@ -5,6 +5,8 @@
  */
 package com.wurmcraft.serveressentials.api.models;
 
+import java.util.Objects;
+
 public class WSWrapper {
 
   public int status;
@@ -31,5 +33,23 @@ public class WSWrapper {
     UPDATE,
     DELETE,
     ACTION
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    WSWrapper wsWrapper = (WSWrapper) o;
+    return status == wsWrapper.status && type == wsWrapper.type && Objects.equals(
+        data, wsWrapper.data);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(status, type, data);
   }
 }

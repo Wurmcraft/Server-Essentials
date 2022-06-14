@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -32,77 +33,84 @@ public class WebSocketComRoute {
   public static NonBlockingHashMap<WsContext, String> activeConnections =
       new NonBlockingHashMap<>();
 
-    @Route(path = "api/live", method = "WS")
-    public static Consumer<WsConfig> ws = ws -> {
-      ws.onConnect(ctx -> {
-        Map<String, String> cookies = ctx.cookieMap();
-        String token = cookies.get("authentication");
-        if (!activeConnections.containsValue(token)) {
-          if (EndpointSecurity.authTokens.containsKey(token)) {
-            AuthUser serverPerms = EndpointSecurity.authTokens.get(token);
-            if (serverPerms.type.equalsIgnoreCase("SERVER")) {
+  @Route(path = "api/live", method = "WS")
+  public static Consumer<WsConfig> ws = ws -> {
+    ws.onConnect(ctx -> {
+      Map<String, String> cookies = ctx.cookieMap();
+      String token = cookies.get("authentication");
+      if (!activeConnections.containsValue(token)) {
+        if (EndpointSecurity.authTokens.containsKey(token)) {
+          AuthUser serverPerms = EndpointSecurity.authTokens.get(token);
+          if (serverPerms.type.equalsIgnoreCase("SERVER")) {
 //              if (activeConnections.containsValue(serverPerms.name)) {
-//                  for (WsContext wsContext : activeConnections.keySet()) {
-//                      if (activeConnections.get(wsContext).equals(serverPerms.name)) {
-//                          wsContext.session.close();
-//                          activeConnections.remove(wsContext);
-//                          LOG.warn(serverPerms.name
-//                              + " tried to login twice, closing socket for older connection");
-//                      }
-//                  }
-//              }
-              activeConnections.put(ctx, serverPerms.name);
-              ctx.send(GSON.toJson(new WSWrapper(200, WSWrapper.Type.UPDATE,
-                  new DataWrapper(AuthUser.class.getTypeName(),
-                      GSON.toJson(serverPerms)))));
-              LOG.info(activeConnections.get(ctx) + " has connected to the Web Socket");
-            } else {
-              ctx.send(GSON.toJson(new WSWrapper(409, WSWrapper.Type.MESSAGE,
-                  new DataWrapper(MessageResponse.class.getTypeName(),
-                      response("Invalid Type",
-                          "Only servers can access the live data stream")))));
-              ctx.session.close();
-            }
+////                  for (WsContext wsContext : activeConnections.keySet()) {
+////                      if (activeConnections.get(wsContext).equals(serverPerms.name)) {
+////                          wsContext.session.close();
+////                          activeConnections.remove(wsContext);
+////                          LOG.warn(serverPerms.name
+////                              + " tried to login twice, closing socket for older connection");
+////                      }
+////                  }
+////              }
+            activeConnections.put(ctx, serverPerms.name);
+            ctx.send(GSON.toJson(new WSWrapper(200, WSWrapper.Type.UPDATE,
+                new DataWrapper(AuthUser.class.getTypeName(),
+                    GSON.toJson(serverPerms)))));
+            LOG.info(activeConnections.get(ctx) + " has connected to the Web Socket");
+          } else {
+            ctx.send(GSON.toJson(new WSWrapper(409, WSWrapper.Type.MESSAGE,
+                new DataWrapper(MessageResponse.class.getTypeName(),
+                    response("Invalid Type",
+                        "Only servers can access the live data stream")))));
+            ctx.session.close();
           }
         }
-      });
+      }
+    });
 
-      ws.onMessage(ctx -> {
-        if (activeConnections.containsKey(ctx)) {
-          WSWrapper message = GSON.fromJson(ctx.message(), WSWrapper.class);
-          handle(message, ctx);
-        } else {
-          ctx.send(GSON.toJson(new WSWrapper(400, WSWrapper.Type.MESSAGE,
-              new DataWrapper(MessageResponse.class.getTypeName(),
-                  response("No Auth", "Failed to authenticate")))));
-          ctx.session.close();
-        }
-      });
+    ws.onMessage(ctx -> {
+      if (activeConnections.containsKey(ctx)) {
+        WSWrapper message = GSON.fromJson(ctx.message(), WSWrapper.class);
+        handle(message, ctx);
+      } else {
+        ctx.send(GSON.toJson(new WSWrapper(400, WSWrapper.Type.MESSAGE,
+            new DataWrapper(MessageResponse.class.getTypeName(),
+                response("No Auth", "Failed to authenticate")))));
+        ctx.session.close();
+      }
+    });
 
-      ws.onClose(ctx -> {
-        if (activeConnections.containsKey(ctx)) {
-          LOG.info(activeConnections.get(ctx) + " has disconnected from the Web Socket");
-          activeConnections.remove(ctx);
-        }
-      });
+    ws.onClose(ctx -> {
+      if (activeConnections.containsKey(ctx)) {
+        LOG.info(activeConnections.get(ctx) + " has disconnected from the Web Socket");
+        activeConnections.remove(ctx);
+      }
+    });
 
-      ws.onError(ctx -> {
-        if(ctx.error() != null)
-        LOG.error(ctx.error().getLocalizedMessage());
-      });
-    };
+    ws.onError(ctx -> {
+      if (ctx.error() != null) {
+        LOG.error(ctx.error().toString());
+      }
+    });
+  };
+
+  private static ChatMessage lastMessage = null;
 
   public static void handle(WSWrapper dataWrapper, WsContext ctx) {
     if (dataWrapper.type == WSWrapper.Type.MESSAGE) {
       if (dataWrapper.data.type.equalsIgnoreCase("CHAT")) {
         try {
           ChatMessage message = GSON.fromJson(dataWrapper.data.data, ChatMessage.class);
+          if(lastMessage != null && message.message.equals(lastMessage.message))
+            return;
+          lastMessage = message;
+          LOG.info(("[Chat]: (" + message.serverID + ":" + message.channel + ") "
+              + message.senderName + " > " + message.message).replaceAll("\u00A7", "&"));
           sendToAllOthers(GSON.toJson(dataWrapper), ctx);
           // Send on discord bridge
           if (!ServerEssentialsRest.config.discord.token.isEmpty()) {
             DiscordBot.sendMessage(message);
           }
-          LOG.info("[Chat]: (" + message.serverID + ":"  + message.channel + ") " +  message.senderName + " > " + message.message);
         } catch (Exception e) {
           LOG.warn("Failed to parse message from '" + activeConnections.get(ctx) + "'");
           e.printStackTrace();
@@ -140,7 +148,8 @@ public class WebSocketComRoute {
 
   public static boolean sendToOtherPlayerUUID(String data, String p) {
     for (WsContext context : activeConnections.keySet()) {
-      ServerStatus lastStatus = StatusRoutes.lastServerStatus.get(activeConnections.get(context));
+      ServerStatus lastStatus = StatusRoutes.lastServerStatus.get(
+          activeConnections.get(context));
       for (String player : lastStatus.onlinePlayers) {
         if (player.equalsIgnoreCase(p)) {
           context.send(data);

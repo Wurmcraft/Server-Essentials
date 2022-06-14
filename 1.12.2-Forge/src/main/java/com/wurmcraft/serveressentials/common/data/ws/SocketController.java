@@ -54,7 +54,7 @@ public class SocketController {
       ws.connectAsynchronously();
       ws.setPingInterval(60 * 1000); // TODO Replace with Status update
     } else {
-      ws.recreate().connectAsynchronously();
+      ws.connectAsynchronously();
     }
   }
 
@@ -65,7 +65,7 @@ public class SocketController {
         + "api/live";
   }
 
-  public static synchronized void send(WSWrapper wrapper)
+  public static void send(WSWrapper wrapper)
       throws IOException, WebSocketException {
     if (ws == null) {
       connect();

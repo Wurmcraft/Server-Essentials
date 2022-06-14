@@ -5,6 +5,8 @@
  */
 package com.wurmcraft.serveressentials.api.models;
 
+import java.util.Objects;
+
 public class DataWrapper {
 
   public String type;
@@ -20,5 +22,21 @@ public class DataWrapper {
   public DataWrapper(String type, String data) {
     this.type = type;
     this.data = data;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    return type.equalsIgnoreCase(((DataWrapper) o).type) && data.equals(((DataWrapper) o).data);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type, data);
   }
 }
