@@ -7,6 +7,7 @@ package io.wurmatron.serveressentials.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
 public class EncryptionUtils {
 
@@ -44,5 +45,18 @@ public class EncryptionUtils {
   public static boolean isSame(String hash, String salt, String text) {
     String hashedInput = hash(salt, text);
     return hash.equals(hashedInput);
+  }
+
+  public static final String[] CHARS = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+      "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "2", "3", "4", "5", "6", "7", "8", "9"};
+
+  private static Random RAND = new Random();
+
+  public static String generateRandomString(int length) {
+    StringBuilder builder = new StringBuilder();
+    for (int x = 0; x < length; x++) {
+      builder.append(CHARS[RAND.nextInt(CHARS.length)]);
+    }
+    return builder.toString();
   }
 }
