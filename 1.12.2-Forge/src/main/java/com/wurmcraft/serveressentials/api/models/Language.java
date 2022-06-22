@@ -220,4 +220,6 @@ public class Language {
   public String COMMAND_RANK_ADD_SUFFIX_PRIORITY;
   public String COMMAND_RANK_ADD_COLOR_PRIORITY;
   public String COMMAND_RANK_ADD_COLOR;
+  public String COMMAND_VERIFY;
+  public String COMMAND_VERIFY_FAILED;
 }
