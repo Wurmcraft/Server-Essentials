@@ -17,6 +17,7 @@ import io.wurmatron.serveressentials.discord.DiscordBot;
 import io.wurmatron.serveressentials.models.AuthUser;
 import io.wurmatron.serveressentials.models.DMMessage;
 import io.wurmatron.serveressentials.models.DataWrapper;
+import io.wurmatron.serveressentials.models.DiscordVerify;
 import io.wurmatron.serveressentials.models.MessageResponse;
 import io.wurmatron.serveressentials.models.ServerStatus;
 import io.wurmatron.serveressentials.models.WSWrapper;
@@ -101,8 +102,9 @@ public class WebSocketComRoute {
       if (dataWrapper.data.type.equalsIgnoreCase("CHAT")) {
         try {
           ChatMessage message = GSON.fromJson(dataWrapper.data.data, ChatMessage.class);
-          if(lastMessage != null && message.message.equals(lastMessage.message))
+          if (lastMessage != null && message.message.equals(lastMessage.message)) {
             return;
+          }
           lastMessage = message;
           LOG.info(("[Chat]: (" + message.serverID + ":" + message.channel + ") "
               + message.senderName + " > " + message.message).replaceAll("\u00A7", "&"));
@@ -130,6 +132,17 @@ public class WebSocketComRoute {
           if (sendToOtherPlayerUUID(GSON.toJson(dmMSG), dmMSG.receiverID)) {
             //                        ctx.send() TODO Send Confirmation
           }
+        } catch (Exception e) {
+          LOG.warn("Failed to parse message from '" + activeConnections.get(ctx) + "'");
+          e.printStackTrace();
+        }
+      } else if (dataWrapper.data.type.equalsIgnoreCase("DiscordVerify")) {
+        try {
+          DiscordVerify verify = GSON.fromJson(dataWrapper.data.data,
+              DiscordVerify.class);
+          DiscordBot.verifyUser(verify);
+          LOG.info("User '" + verify.username + "'  (" + verify.uuid + ") ("
+              + verify.discordUsername + ") has been verified!");
         } catch (Exception e) {
           LOG.warn("Failed to parse message from '" + activeConnections.get(ctx) + "'");
           e.printStackTrace();

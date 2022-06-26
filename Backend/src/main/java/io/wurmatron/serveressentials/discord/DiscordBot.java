@@ -13,22 +13,27 @@ import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.event.domain.lifecycle.ReadyEvent;
-import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.command.ApplicationCommandOption;
-import discord4j.core.object.entity.Message;
+import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.User;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
 import discord4j.discordjson.json.ApplicationCommandRequest;
+import discord4j.discordjson.json.UserGuildData;
+import discord4j.rest.entity.RestRole;
 import io.wurmatron.serveressentials.ServerEssentialsRest;
+import io.wurmatron.serveressentials.cli.CommandParser;
+import io.wurmatron.serveressentials.models.DiscordVerify;
 import io.wurmatron.serveressentials.models.data_wrapper.ChatMessage;
-import io.wurmatron.serveressentials.utils.EncryptionUtils;
 import java.util.Map;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
+import reactor.core.publisher.Flux;
 
 public class DiscordBot {
 
   public static GatewayDiscordClient client;
   public static NonBlockingHashMap<String, Map<String, String>> channelMap;
+  public static Snowflake guildID;
+  public static Snowflake verifiedRank;
 
   public static void start() {
     LOG.info("Discord Bot is starting");
@@ -38,6 +43,7 @@ public class DiscordBot {
             .login()
             .block();
     addEvents();
+    setupVariables();
     createChannelMap();
     ApplicationCommandRequest verifyCommand = ApplicationCommandRequest.builder()
         .name("verify")
@@ -55,6 +61,25 @@ public class DiscordBot {
     client.onDisconnect().block();
   }
 
+  private static void setupVariables() {
+    try {
+      Flux<UserGuildData> guilds = client.getRestClient().getGuilds();
+      guildID = Snowflake.of(guilds.blockFirst().id());
+      try {
+        RestRole role = client.getRestClient().getRoleById(guildID,
+            Snowflake.of(ServerEssentialsRest.config.discord.verifiedRankID));
+        verifiedRank = role.getId();
+      } catch (Exception e) {
+        LOG.warn(
+            "Unable to find role '" + ServerEssentialsRest.config.discord.verifiedRankID
+                + "'");
+      }
+    } catch (Exception e) {
+      LOG.warn("Bot is not connected to any servers!, Shutting Down.");
+      CommandParser.handle("stop");
+    }
+  }
+
   private static void addEvents() {
     // Confirm Login Event
     client
@@ -70,7 +95,7 @@ public class DiscordBot {
             });
     client.getEventDispatcher().on(ChatInputInteractionEvent.class, event -> {
       if (event.getCommandName().equals("verify")) {
-       return BotCommands.verify(event);
+        return BotCommands.verify(event);
       }
       return null;
     }).subscribe();
@@ -110,6 +135,16 @@ public class DiscordBot {
       String channelID = channelMap.get(message.serverID).get(message.channel);
       client.rest().getChannelById(Snowflake.of(channelID)).createMessage(message.message)
           .block();
+    }
+  }
+
+  public static void verifyUser(DiscordVerify verify) {
+    if (verifiedRank != null) {
+      Member member = client.getMemberById(guildID, Snowflake.of(verify.discordID))
+          .block();
+      member.addRole(verifiedRank).block();
+      member.getPrivateChannel().block().createMessage("You have been verified!")
+          .block(); // TODO Lang support
     }
   }
 }

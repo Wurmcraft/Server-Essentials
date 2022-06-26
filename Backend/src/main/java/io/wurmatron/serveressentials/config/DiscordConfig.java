@@ -12,16 +12,19 @@ public class DiscordConfig {
 
   public String token;
   public Map<String, String> channelMap;
+  public String verifiedRankID;
 
-  public DiscordConfig(String token, Map<String, Object> map) {
+  public DiscordConfig(String token, Map<String, Object> map, String verifiedRankID) {
     this.token = token;
     this.channelMap = new HashMap<>();
     for (String m : map.keySet()) channelMap.put(m, (String) map.get(m));
+    this.verifiedRankID = verifiedRankID;
   }
 
   public DiscordConfig() {
     this.token = "";
     this.channelMap = new HashMap<>();
     channelMap.put("test", "local:759122277525749770");
+    this.verifiedRankID = "";
   }
 }

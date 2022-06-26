@@ -94,7 +94,7 @@ public class ConfigLoader {
               Math.toIntExact(toml.getLong("config.server.cacheTime")));
       DiscordConfig discordConfig =
           new DiscordConfig(
-              toml.getString("config.discord.token"), toml.getMap("config.discord.channelMap"));
+              toml.getString("config.discord.token"), toml.getMap("config.discord.channelMap"), toml.getString("config.discord.verifiedRankID"));
       return new Config(generalConfig, dbConfig, sererConfig, discordConfig);
     } catch (Exception e) {
       e.printStackTrace();
