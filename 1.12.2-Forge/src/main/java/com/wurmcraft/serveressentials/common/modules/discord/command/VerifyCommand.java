@@ -5,12 +5,18 @@ import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.command.Command;
 import com.wurmcraft.serveressentials.api.command.CommandArgument;
 import com.wurmcraft.serveressentials.api.command.ModuleCommand;
+import com.wurmcraft.serveressentials.api.models.DataWrapper;
 import com.wurmcraft.serveressentials.api.models.DiscordVerify;
 import com.wurmcraft.serveressentials.api.models.ServerPlayer;
+import com.wurmcraft.serveressentials.api.models.WSWrapper;
+import com.wurmcraft.serveressentials.api.models.WSWrapper.Type;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
+import com.wurmcraft.serveressentials.common.data.ws.SocketController;
+import com.wurmcraft.serveressentials.common.modules.discord.ConfigDiscord;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.RequestGenerator;
 import com.wurmcraft.serveressentials.common.utils.RequestGenerator.HttpResponse;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 @ModuleCommand(module = "Discord", name = "Verify")
 public class VerifyCommand {
@@ -26,11 +32,20 @@ public class VerifyCommand {
         DiscordVerify verifyedData = ServerEssentials.GSON.fromJson(response.response,
             DiscordVerify.class);
         if (!verifyedData.discordID.isEmpty()) {
-          // TODO Handle Discord Verified commands
-          // TODO Send verified to api
           player.global.discord_id = verifyedData.discordID;
           SECore.dataLoader.update(DataType.ACCOUNT,
               player.player.getGameProfile().getId().toString(), player.global);
+          SocketController.send(new WSWrapper(200, Type.MESSAGE,
+              new DataWrapper("DiscordVerify",
+                  ServerEssentials.GSON.toJson(verifyedData))));
+          // Run Config Commands
+          for (String command : ((ConfigDiscord) SECore.moduleConfigs.get(
+              "DISCORD")).verifyCommands) {
+            FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager()
+                .executeCommand(FMLCommonHandler.instance().getMinecraftServerInstance(),
+                    command.replaceAll("\\{USERNAME}",
+                        player.player.getGameProfile().getName()));
+          }
           ChatHelper.send(player.player, player.lang.COMMAND_VERIFY);
           return;
         }

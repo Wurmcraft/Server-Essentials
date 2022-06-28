@@ -130,7 +130,7 @@ public class WebSocketComRoute {
         try {
           DMMessage dmMSG = GSON.fromJson(dataWrapper.data.data, DMMessage.class);
           if (sendToOtherPlayerUUID(GSON.toJson(dmMSG), dmMSG.receiverID)) {
-            //                        ctx.send() TODO Send Confirmation
+            // ctx.send() TODO Send Confirmation
           }
         } catch (Exception e) {
           LOG.warn("Failed to parse message from '" + activeConnections.get(ctx) + "'");
