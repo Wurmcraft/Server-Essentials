@@ -134,7 +134,7 @@ public class RequestGenerator {
   }
 
   /**
-   * Send a HTTP PUT request to the requested url with the provided information
+   * Send an HTTP PUT request to the requested url with the provided information
    *
    * @param path URL path without the base
    * @param data instance of data to be send in the body (as json)

@@ -51,6 +51,7 @@ public class VerifyCommand {
         }
       }
     } catch (Exception e) {
+      ServerEssentials.LOG.warn("Failed to send post request to API (" + e.getMessage() + ")");
     }
     ChatHelper.send(player.player, player.lang.COMMAND_VERIFY_FAILED);
   }

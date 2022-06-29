@@ -76,18 +76,25 @@ public class DiscordRoutes {
         try {
           DiscordVerify verify = GSON.fromJson(ctx.body(), DiscordVerify.class);
           if (verify.uuid != null && verify.username != null && verify.token != null) {
-            if (BotCommands.verifyCodes.contains(verify.username.toUpperCase())
-                && BotCommands.verifyCodes.get(
-                verify.username.toUpperCase())[2].equalsIgnoreCase(verify.token)) {
-              ctx.status(200).result(GSON.toJson(
-                  new DiscordVerify(verify.token, verify.uuid, verify.username,
-                      BotCommands.verifyCodes.get(verify.username.toUpperCase())[0],
-                      BotCommands.verifyCodes.get(verify.username.toUpperCase())[1])));
-              BotCommands.verifyCodes.remove(verify.username.toUpperCase());
-            } else {
-              ctx.status(404);
+            for (String username : BotCommands.verifyCodes.keySet()) {
+              if (username.equalsIgnoreCase(verify.username)) { // TODO timeout
+                boolean isValidCode = BotCommands.verifyCodes.get(
+                    verify.username.toUpperCase())[2].equalsIgnoreCase(verify.token);
+                if (isValidCode) {
+                  ctx.status(200).result(GSON.toJson(
+                      new DiscordVerify(verify.token, verify.uuid, verify.username,
+                          BotCommands.verifyCodes.get(verify.username.toUpperCase())[0],
+                          BotCommands.verifyCodes.get(
+                              verify.username.toUpperCase())[1])));
+                  BotCommands.verifyCodes.remove(verify.username.toUpperCase());
+                  return;
+                } else {
+                  ctx.status(202);
+                  return;
+                }
+              }
             }
-
+            ctx.status(404);
           } else {
             ctx.status(400).result(
                 response("Missing Data", "uuid, username and token are required"));
