@@ -48,7 +48,6 @@ dependencies {
 jar.finalizedBy('shadowJar')
 jar.finalizedBy('spotlessApply')
 
-
 jar {
     manifest {
         attributes(

@@ -567,7 +567,7 @@ public class RankRoutes {
     if (role.equals(Route.RestRoles.USER)) {
       // TODO Based on SystemPerms
     }
-    clone.name = null;
+//    clone.name = null;
     return clone;
   }
 
@@ -579,7 +579,8 @@ public class RankRoutes {
    * @see Rank
    */
   public static String convertPathToField(String data) {
-    if (data.equalsIgnoreCase("name")) return "name";
+    if (data.equalsIgnoreCase("name"))
+      return "name";
     else if (data.equalsIgnoreCase("permissions")
         || data.equalsIgnoreCase("perms")
         || data.equalsIgnoreCase("permission")) return "permissions";
