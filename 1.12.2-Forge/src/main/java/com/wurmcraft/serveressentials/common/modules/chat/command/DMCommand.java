@@ -43,7 +43,7 @@ public class DMCommand {
       } else if (SECore.dataLoader.getClass().equals(RestDataLoader.class)) { // Remote Message
         try {
           ChatHelper.lastMessageCache.put(uuid, player.player.getGameProfile().getId().toString());
-          SocketController.send(
+          ServerEssentials.socketController.send(
               new WSWrapper(
                   201,
                   WSWrapper.Type.MESSAGE,

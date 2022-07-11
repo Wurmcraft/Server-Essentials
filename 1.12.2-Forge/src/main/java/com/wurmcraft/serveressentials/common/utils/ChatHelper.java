@@ -66,7 +66,7 @@ public class ChatHelper {
     LOG.info("[Chat]: " + message.getFormattedText());
     // TODO Config / non-web socket support? possibly via matterbridge?
     try {
-      SocketController.send(
+      ServerEssentials.socketController.send(
           new WSWrapper(
               200,
               WSWrapper.Type.MESSAGE,

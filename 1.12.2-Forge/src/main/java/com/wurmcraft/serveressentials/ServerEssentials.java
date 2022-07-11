@@ -54,6 +54,7 @@ public class ServerEssentials {
   public static ConfigGlobal config;
   public static ScheduledExecutorService scheduledService;
   public static HashMap<Class<?>, CommandConfig> commandClasses;
+  public static SocketController socketController;
 
   @Mod.EventHandler
   public void onPreInit(FMLPreInitializationEvent e) {
@@ -63,6 +64,7 @@ public class ServerEssentials {
     SECore.dataLoader = getDataLoader();
     SECore.moduleConfigs = ConfigLoader.loadModuleConfigs();
     scheduledService = Executors.newScheduledThreadPool(config.performance.maxThreads);
+    socketController = new SocketController();
     if (SECore.moduleConfigs.get("GENERAL") != null
         && SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
       ModuleGeneral.sendStatusUpdate(true, "Pre-Initialization");

@@ -1,7 +1,5 @@
 package com.wurmcraft.serveressentials.common.data.ws;
 
-import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
-
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
@@ -15,46 +13,42 @@ import java.io.IOException;
 
 public class SocketController {
 
-  private static WebSocket ws;
+  public static boolean connected = false;
 
-  public static synchronized void connect() throws IOException, WebSocketException {
-    if (ws == null) {
-      String connectionURL = createURL();
-      if (RequestGenerator.token == null || RequestGenerator.token.isEmpty()) {
-        if (((RestDataLoader) SECore.dataLoader).login()) {
-          ServerEssentials.LOG.info(
-              "Logged into Rest API as '" + ServerEssentials.config.general.serverID
-                  + "'");
-        } else {
-          ServerEssentials.LOG.fatal("Failed to login to Rest API");
+  private WebSocket ws;
+
+  public SocketController() {
+    if (!connected) {
+      connected = true;
+      WebSocketFactory factory = new WebSocketFactory();
+      try {
+        // Get Auth token
+        if (RequestGenerator.token == null || RequestGenerator.token.isEmpty()) {
+          if (((RestDataLoader) SECore.dataLoader).login()) {
+            ServerEssentials.LOG.info(
+                "Logged into Rest API as '" + ServerEssentials.config.general.serverID
+                    + "'");
+          } else {
+            ServerEssentials.LOG.fatal("Failed to login to Rest API");
+          }
         }
+        // Setup Web socket
+        ws = factory.createSocket(createURL())
+            .addHeader("cookie", "authentication=" + RequestGenerator.token);
+        ws.addListener(new WebSocketAdapter() {
+          @Override
+          public void onTextMessage(WebSocket websocket, String text) throws Exception {
+            handleTextMessage(ServerEssentials.GSON.fromJson(text, WSWrapper.class));
+          }
+        });
+        ws.connect();
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      } catch (WebSocketException e) {
+        ServerEssentials.LOG.error(
+            "Failed to connect to rest api (" + e.getMessage() + ")");
+        throw new RuntimeException(e);
       }
-      ws =
-          new WebSocketFactory()
-              .createSocket(connectionURL)
-              .addHeader("cookie", "authentication=" + RequestGenerator.token);
-      ws.addListener(
-          new WebSocketAdapter() {
-            @Override
-            public void onTextMessage(WebSocket websocket, String text) throws Exception {
-              try {
-                WSWrapper wrapper = GSON.fromJson(text, WSWrapper.class);
-                handle(wrapper);
-              } catch (Exception e) {
-                e.printStackTrace();
-              }
-            }
-
-            @Override
-            public void onConnectError(WebSocket websocket, WebSocketException exception)
-                throws Exception {
-              exception.printStackTrace();
-            }
-          });
-      ws.connectAsynchronously();
-      ws.setPingInterval(60 * 1000); // TODO Replace with Status update
-    } else {
-      ws.connectAsynchronously();
     }
   }
 
@@ -65,14 +59,11 @@ public class SocketController {
         + "api/live";
   }
 
-  public static void send(WSWrapper wrapper)
-      throws IOException, WebSocketException {
-    if (ws == null) {
-      connect();
-    }
-    ws.sendText(GSON.toJson(wrapper));
+  public void handleTextMessage(WSWrapper wrapper) {
+    ServerEssentials.LOG.info("WS Message: " + wrapper.type + " " + wrapper.data);
   }
 
-  public static void handle(WSWrapper wrapper) {
+  public void send(WSWrapper wrapper) throws IOException, WebSocketException {
+    ws.sendText(ServerEssentials.GSON.toJson(wrapper));
   }
 }

@@ -28,7 +28,7 @@ public class ModuleRank {
   public void setupDefaultRanks() {
     Rank defaultRank =
         new Rank(
-            ((ConfigRank) SECore.moduleConfigs.get("RANK")).defaultRank,
+            ((ConfigRank) SECore.moduleConfigs.get("RANK")).defaultRank.toLowerCase(),
             new String[] {
               "command.help",
               "command.home",
@@ -47,7 +47,7 @@ public class ModuleRank {
             0);
     Rank member =
         new Rank(
-            "Member",
+            "member",
             new String[] {"command.warp", "command.enderchest"},
             new String[] {((ConfigRank) SECore.moduleConfigs.get("RANK")).defaultRank},
             "&8[&eMember&8]",
@@ -58,7 +58,7 @@ public class ModuleRank {
             1);
     Rank admin =
         new Rank(
-            "Admin",
+            "admin",
             new String[] {"*"},
             new String[] {"Member"},
             "&c[&4Admin&c]",

@@ -49,7 +49,7 @@ public class ModuleGeneral {
     boolean socket = ServerEssentials.config.performance.useWebsocket;
     if (socket && useWebSocket) {
       try {
-        SocketController.send(
+        ServerEssentials.socketController.send(
             new WSWrapper(
                 200,
                 WSWrapper.Type.MESSAGE,

@@ -35,7 +35,7 @@ public class VerifyCommand {
           player.global.discord_id = verifyedData.discordID;
           SECore.dataLoader.update(DataType.ACCOUNT,
               player.player.getGameProfile().getId().toString(), player.global);
-          SocketController.send(new WSWrapper(200, Type.MESSAGE,
+          ServerEssentials.socketController.send(new WSWrapper(200, Type.MESSAGE,
               new DataWrapper("DiscordVerify",
                   ServerEssentials.GSON.toJson(verifyedData))));
           // Run Config Commands

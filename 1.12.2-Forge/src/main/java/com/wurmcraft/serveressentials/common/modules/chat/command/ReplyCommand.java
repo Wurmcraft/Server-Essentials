@@ -33,7 +33,7 @@ public class ReplyCommand {
       if (otherPlayer != null) ChatHelper.send(player.player, otherPlayer, msg);
       else if (SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
         try {
-          SocketController.send(
+          ServerEssentials.socketController.send(
               new WSWrapper(
                   201,
                   WSWrapper.Type.MESSAGE,
