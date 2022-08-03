@@ -65,7 +65,7 @@ public class CustomCommand extends CommandBase {
       Account account = SECore.dataLoader.get(DataType.ACCOUNT,
           ((EntityPlayer) sender).getGameProfile().getId().toString(), new Account());
       // Min Rank Check
-      if (RankUtils.isGreaterThan(command.minRank, account.rank)) {
+      if (command.minRank != null &&  !command.minRank.isEmpty() && RankUtils.isGreaterThan(command.minRank, account.rank)) {
         return false;
       }
       return RankUtils.hasPermission(account, command.permissionNode);
