@@ -44,7 +44,7 @@ public class TestAutoRankRoutes {
     // Make sure the auto-rank was added
     AutoRank autorank = HTTPRequests.get("api/autorank/" + addedRank.rank, AutoRank.class);
     assertEquals(
-        TestAutoRanks.TEST_AUTORANK.playtime, autorank.playtime, "Auto-Ranks are the same");
+        TestAutoRanks.TEST_AUTORANK.play_time, autorank.play_time, "Auto-Ranks are the same");
   }
 
   @Test
@@ -58,7 +58,7 @@ public class TestAutoRankRoutes {
   @Test
   @Order(2)
   public void testUpdateAutoRank() throws IOException {
-    TestAutoRanks.TEST_AUTORANK.playtime = 4000L;
+    TestAutoRanks.TEST_AUTORANK.play_time = 4000L;
     HTTPRequests.put(
         "api/autorank/" + TestAutoRanks.TEST_AUTORANK.rank, TestAutoRanks.TEST_AUTORANK);
     // Check if the auto-rank has ranked up
@@ -98,8 +98,8 @@ public class TestAutoRankRoutes {
     long playtime =
         HTTPRequests.get(
                 "api/autorank/" + TestAutoRanks.TEST_AUTORANK.rank + "/playtime", AutoRank.class)
-            .playtime;
-    assertEquals(TestAutoRanks.TEST_AUTORANK.playtime, playtime, "Playtime is the same");
+            .play_time;
+    assertEquals(TestAutoRanks.TEST_AUTORANK.play_time, playtime, "Playtime is the same");
   }
 
   @Test

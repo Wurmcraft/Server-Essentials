@@ -188,8 +188,8 @@ public class AutoRankRoutes {
       };
 
   @OpenApi(
-      summary = "Get an existing auto-ranks specific data based on its ID",
-      description = "Get an existing auto-ranks specific data based on its ID",
+      summary = "Get an existing auto-ranks specific data based on its Name",
+      description = "Get an existing auto-ranks specific data based on its Name",
       tags = {"Auto-Rank"},
       responses = {
         @OpenApiResponse(
@@ -296,10 +296,10 @@ public class AutoRankRoutes {
             ctx.status(200).result(GSON.toJson(autoRank));
           } else {
             ctx.status(404)
-                .result(response("Invalid ID", "No AutoRank Exists with the provided ID"));
+                .result(response("Invalid Name", "No AutoRank exists with the provided Name"));
           }
         } else {
-          ctx.status(400).result(response("Bad Request", "ID must be 0 or greater"));
+          ctx.status(400).result(response("Bad Request", "Name must not be empty"));
         }
       };
 
@@ -540,7 +540,7 @@ public class AutoRankRoutes {
       errors.add(new MessageResponse("Bad Request", "Invalid / Empty Next-Rank"));
     }
     // Check playtime
-    if (autoRank.playtime != null && autoRank.playtime < 0) {
+    if (autoRank.play_time != null && autoRank.play_time < 0) {
       errors.add(
           new MessageResponse("Bad Request", "Invalid Playtime, Must be equal or greater than 0"));
     }

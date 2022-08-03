@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -34,9 +35,13 @@ public class SQLCacheAccount extends SQLCache {
   @Nullable
   public static Account get(String uuid) {
     // Attempt to get from cache
-    if (accountCache.containsKey(uuid))
-      if (!needsUpdate(accountCache.get(uuid))) return accountCache.get(uuid).account.clone();
-      else accountCache.remove(uuid);
+    if (accountCache.containsKey(uuid)) {
+      if (!needsUpdate(accountCache.get(uuid))) {
+        return accountCache.get(uuid).account.clone();
+      } else {
+        accountCache.remove(uuid);
+      }
+    }
     // Not in cache / invalid
     try {
       Account account = get("*", USERS_TABLE, "uuid", uuid, new Account());
@@ -45,7 +50,8 @@ public class SQLCacheAccount extends SQLCache {
         return account.clone();
       }
     } catch (Exception e) {
-      LOG.debug("Failed to find account with uuid '" + uuid + "' (" + e.getMessage() + ")");
+      LOG.debug(
+          "Failed to find account with uuid '" + uuid + "' (" + e.getMessage() + ")");
     }
     // User does not exist
     return null;
@@ -64,7 +70,9 @@ public class SQLCacheAccount extends SQLCache {
       accountCache.put(account.uuid, new CacheAccount(account));
       return account;
     } catch (Exception e) {
-      LOG.debug("Failed to add account with uuid '" + account.uuid + "' (" + e.getMessage() + ")");
+      LOG.debug(
+          "Failed to add account with uuid '" + account.uuid + "' (" + e.getMessage()
+              + ")");
       LOG.debug("Account: " + GSON.toJson(account));
     }
     return null;
@@ -82,9 +90,11 @@ public class SQLCacheAccount extends SQLCache {
       update(USERS_TABLE, columnsToUpdate, "uuid", account.uuid, account);
       if (accountCache.containsKey(account.uuid)) { // Exists in cache, updating
         try {
-          accountCache.get(account.uuid).account =
-              updateInfoLocal(columnsToUpdate, account, accountCache.get(account.uuid).account);
-          accountCache.get(account.uuid).lastSync = System.currentTimeMillis();
+          CacheAccount cache = accountCache.get(account.uuid);
+          cache.account = updateInfoLocal(columnsToUpdate, account,
+              accountCache.get(account.uuid).account);
+          cache.lastSync = System.currentTimeMillis();
+          accountCache.put(account.uuid, cache);
         } catch (Exception e) {
         }
       } else { // Missing from cache
@@ -93,7 +103,8 @@ public class SQLCacheAccount extends SQLCache {
       return true;
     } catch (Exception e) {
       LOG.debug(
-          "Failed to update account with uuid '" + account.uuid + "' (" + e.getMessage() + ")");
+          "Failed to update account with uuid '" + account.uuid + "' (" + e.getMessage()
+              + ")");
       LOG.debug("Account: " + GSON.toJson(account));
     }
     return false;
@@ -112,7 +123,8 @@ public class SQLCacheAccount extends SQLCache {
       invalidate(uuid);
       return true;
     } catch (Exception e) {
-      LOG.debug("Failed to delete account with uuid '" + uuid + "' (" + e.getMessage() + ")");
+      LOG.debug(
+          "Failed to delete account with uuid '" + uuid + "' (" + e.getMessage() + ")");
     }
     return false;
   }
@@ -133,8 +145,11 @@ public class SQLCacheAccount extends SQLCache {
     LOG.info("Account Cache cleanup has begun!");
     // ID Cache
     List<String> toBeRemoved = new ArrayList<>();
-    for (CacheAccount entry : accountCache.values())
-      if (needsUpdate(entry)) toBeRemoved.add(entry.account.uuid + "");
+    for (CacheAccount entry : accountCache.values()) {
+      if (needsUpdate(entry)) {
+        toBeRemoved.add(entry.account.uuid + "");
+      }
+    }
     // Remove from cache
     int count = 0;
     for (String accountEntry : toBeRemoved) {
@@ -145,7 +160,8 @@ public class SQLCacheAccount extends SQLCache {
   }
 
   /** This should do nothing, its here to prevent an possible reflection issue */
-  public static void cleanupDB() {}
+  public static void cleanupDB() {
+  }
 
   /**
    * List all the table columns besides the key, in this case 'uuid'

@@ -87,16 +87,16 @@ public class ARCommand {
     for (AutoRank ar : nextRanks) {
       ChatHelper.send(sender, lang.SPACER);
       // Display Playtime
-      if (ar.playtime > 0) {
+      if (ar.play_time > 0) {
         ChatHelper.send(sender, lang.COMMAND_AR_TIME.replaceAll("\\{@CURRENT_TIME@}",
                 "" + PlayerUtils.getTotalPlaytime(account))
-            .replaceAll("\\{@TIME@}", "" + ar.playtime));
+            .replaceAll("\\{@TIME@}", "" + ar.play_time));
       }
       // Display Required Currency
       if(ar.currency_amount > 0) {
         ChatHelper.send(sender, lang.COMMAND_AR_CURRENCY.replaceAll("\\{@CURRENT_AMOUNT@}",
                 "" + PlayerUtils.getTotalPlaytime(account))
-            .replaceAll("\\{@AMOUNT@}", "" + ar.playtime));
+            .replaceAll("\\{@AMOUNT@}", "" + ar.play_time));
       }
     }
     if(nextRanks.size() == 0) {

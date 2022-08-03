@@ -12,7 +12,7 @@ public class AutoRank {
 
   public String rank;
   public String next_rank;
-  public Long playtime;
+  public Long play_time;
   public String currency_name;
   public Double currency_amount;
   public String special_events;
@@ -34,7 +34,7 @@ public class AutoRank {
       String specialEvents) {
     this.rank = rank;
     this.next_rank = nextRank;
-    this.playtime = playtime;
+    this.play_time = playtime;
     this.currency_name = currencyName;
     this.currency_amount = currencyAmount;
     this.special_events = specialEvents;
@@ -52,7 +52,7 @@ public class AutoRank {
     if (this == o) return true;
     if (!(o instanceof AutoRank)) return false;
     AutoRank autoRank = (AutoRank) o;
-    return playtime.equals(autoRank.playtime)
+    return play_time.equals(autoRank.play_time)
         && Double.compare(autoRank.currency_amount, currency_amount) == 0
         && Objects.equals(rank, autoRank.rank)
         && Objects.equals(next_rank, autoRank.next_rank)

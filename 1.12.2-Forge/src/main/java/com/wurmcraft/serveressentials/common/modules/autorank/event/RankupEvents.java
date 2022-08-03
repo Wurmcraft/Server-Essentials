@@ -10,7 +10,6 @@ import com.wurmcraft.serveressentials.common.command.EcoUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.autorank.ConfigAutorank;
-import com.wurmcraft.serveressentials.common.modules.autorank.ModuleAutorank;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.util.ArrayList;
@@ -70,7 +69,7 @@ public class RankupEvents {
     }
     // Playtime check
     long totalPlaytime = PlayerUtils.getTotalPlaytime(account);
-    if (totalPlaytime < rank.playtime) {
+    if (totalPlaytime < rank.play_time) {
       return false;
     }
     // Currency Check
