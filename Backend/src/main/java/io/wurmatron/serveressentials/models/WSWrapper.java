@@ -32,4 +32,13 @@ public class WSWrapper {
     DELETE,
     ACTION
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if(obj instanceof WSWrapper) {
+      WSWrapper other = (WSWrapper) obj;
+      return status == other.status && type.equals(other.type) && data.equals(other.data);
+    }
+    return false;
+  }
 }

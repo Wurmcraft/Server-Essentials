@@ -34,6 +34,8 @@ public class WebSocketComRoute {
   public static NonBlockingHashMap<WsContext, String> activeConnections =
       new NonBlockingHashMap<>();
 
+  private static WSWrapper lastCom;
+
   @Route(path = "api/live", method = "WS")
   public static Consumer<WsConfig> ws = ws -> {
     ws.onConnect(ctx -> {
@@ -72,7 +74,10 @@ public class WebSocketComRoute {
     ws.onMessage(ctx -> {
       if (activeConnections.containsKey(ctx)) {
         WSWrapper message = GSON.fromJson(ctx.message(), WSWrapper.class);
-        handle(message, ctx);
+        if (!message.equals(lastCom)) {
+          handle(message, ctx);
+          lastCom = message;
+        }
       } else {
         ctx.send(GSON.toJson(new WSWrapper(400, WSWrapper.Type.MESSAGE,
             new DataWrapper(MessageResponse.class.getTypeName(),

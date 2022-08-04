@@ -99,7 +99,7 @@ public class ServerEssentialsRest {
     RouteLoader.registerRoutes(javalin);
     javalin.start(config.server.host.isEmpty() ? null : config.server.host, config.server.port);
     if (!config.discord.token.isEmpty()) DiscordBot.start();
-    CommandParser.handleCommands();
+//    CommandParser.handleCommands();
   }
 
   public static void displaySystemInfo() {
