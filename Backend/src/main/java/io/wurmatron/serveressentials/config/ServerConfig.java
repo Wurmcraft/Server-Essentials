@@ -14,15 +14,11 @@ public class ServerConfig {
   public boolean forceLowercase;
   public boolean swaggerEnabled;
   public int cacheTime;
+  public int cleanupInterval;
 
-  public ServerConfig(
-      int port,
-      String host,
-      String corosOrigins,
-      long requestTimeout,
-      boolean forceLowercase,
-      boolean swaggerEnabled,
-      int cacheTime) {
+  public ServerConfig(int port, String host, String corosOrigins, long requestTimeout,
+      boolean forceLowercase, boolean swaggerEnabled, int cacheTime,
+      int cleanupInterval) {
     this.port = port;
     this.host = host;
     this.corosOrigins = corosOrigins;
@@ -30,6 +26,7 @@ public class ServerConfig {
     this.forceLowercase = forceLowercase;
     this.swaggerEnabled = swaggerEnabled;
     this.cacheTime = cacheTime;
+    this.cleanupInterval = cleanupInterval;
   }
 
   public ServerConfig() {
@@ -40,5 +37,6 @@ public class ServerConfig {
     this.forceLowercase = true;
     this.swaggerEnabled = false;
     this.cacheTime = 300;
+    this.cleanupInterval = 30 * 60; // 30m in seconds
   }
 }

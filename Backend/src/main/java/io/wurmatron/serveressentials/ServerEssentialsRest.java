@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -19,11 +20,14 @@ import io.wurmatron.serveressentials.discord.DiscordBot;
 import io.wurmatron.serveressentials.routes.EndpointSecurity;
 import io.wurmatron.serveressentials.routes.RouteLoader;
 import io.wurmatron.serveressentials.sql.DatabaseConnection;
+import io.wurmatron.serveressentials.sql.SQLCache;
 import io.wurmatron.serveressentials.sql.SQLGenerator;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +41,7 @@ public class ServerEssentialsRest {
   public static Config config;
   public static Javalin javalin;
   public static DatabaseConnection dbConnection;
+  public static ScheduledExecutorService executors;
 
   public static void main(String[] args) throws SQLException, IOException {
     displaySystemInfo();
@@ -48,6 +53,7 @@ public class ServerEssentialsRest {
       LOG.info("Please check your SQL server and settings for connectivity!");
       System.exit(-2);
     }
+    executors = Executors.newScheduledThreadPool(config.general.threads);
     javalin =
         Javalin.create(
             (cfg) -> {
@@ -56,20 +62,22 @@ public class ServerEssentialsRest {
               cfg.defaultContentType = "application/json";
               cfg.autogenerateEtags = true;
               cfg.showJavalinBanner = false;
-              if (!config.server.corosOrigins.isEmpty())
+              if (!config.server.corosOrigins.isEmpty()) {
                 cfg.enableCorsForOrigin(config.server.corosOrigins.split(","));
+              }
               cfg.asyncRequestTimeout = config.server.requestTimeout;
               cfg.enforceSsl = !config.general.testing;
               // Plugins
-              if (config.server.forceLowercase)
+              if (config.server.forceLowercase) {
                 cfg.registerPlugin(new RedirectToLowercasePathPlugin());
+              }
               if (config.server.swaggerEnabled) {
                 cfg.registerPlugin(
                     new OpenApiPlugin(
                         new OpenApiOptions(
-                                new Info()
-                                    .version(version)
-                                    .description("Server Essentials Rest API"))
+                            new Info()
+                                .version(version)
+                                .description("Server Essentials Rest API"))
                             .path("api/swagger")
                             .swagger(
                                 new SwaggerOptions("/swagger")
@@ -97,14 +105,19 @@ public class ServerEssentialsRest {
             });
     EndpointSecurity.addSecurityManaging(javalin);
     RouteLoader.registerRoutes(javalin);
-    javalin.start(config.server.host.isEmpty() ? null : config.server.host, config.server.port);
-    if (!config.discord.token.isEmpty()) DiscordBot.start();
-//    CommandParser.handleCommands();
+    SQLCache.setupScheduledTasks();
+    javalin.start(config.server.host.isEmpty() ? null : config.server.host,
+        config.server.port);
+    if (!config.discord.token.isEmpty()) {
+      DiscordBot.start();
+    }
+    CommandParser.handleCommands();
   }
 
   public static void displaySystemInfo() {
     LOG.debug("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-    LOG.debug("OS: " + System.getProperty("os.name") + "-" + System.getProperty("os.arch"));
+    LOG.debug(
+        "OS: " + System.getProperty("os.name") + "-" + System.getProperty("os.arch"));
     LOG.debug("CPU: " + Runtime.getRuntime().availableProcessors() + " cores");
     LOG.debug("Java: " + System.getProperty("java.runtime.version"));
     LOG.debug(

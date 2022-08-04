@@ -36,29 +36,31 @@ public class DiscordBot {
   public static Snowflake verifiedRank;
 
   public static void start() {
-    LOG.info("Discord Bot is starting");
-    client =
-        DiscordClientBuilder.create(ServerEssentialsRest.config.discord.token)
-            .build()
-            .login()
-            .block();
-    addEvents();
-    setupVariables();
-    createChannelMap();
-    ApplicationCommandRequest verifyCommand = ApplicationCommandRequest.builder()
-        .name("verify")
-        .description("Generates a code to verify in-game")
-        .addOption(ApplicationCommandOptionData.builder()
-            .name("username")
-            .description("Your in-Game username")
-            .type(ApplicationCommandOption.Type.STRING.getValue())
-            .required(true)
-            .build()
-        ).build();
-    long applicationId = client.getRestClient().getApplicationId().block();
-    client.getRestClient().getApplicationService()
-        .createGlobalApplicationCommand(applicationId, verifyCommand).subscribe();
-    client.onDisconnect().block();
+    ServerEssentialsRest.executors.execute(() -> {
+      LOG.info("Discord Bot is starting");
+      client =
+          DiscordClientBuilder.create(ServerEssentialsRest.config.discord.token)
+              .build()
+              .login()
+              .block();
+      addEvents();
+      setupVariables();
+      createChannelMap();
+      ApplicationCommandRequest verifyCommand = ApplicationCommandRequest.builder()
+          .name("verify")
+          .description("Generates a code to verify in-game")
+          .addOption(ApplicationCommandOptionData.builder()
+              .name("username")
+              .description("Your in-Game username")
+              .type(ApplicationCommandOption.Type.STRING.getValue())
+              .required(true)
+              .build()
+          ).build();
+      long applicationId = client.getRestClient().getApplicationId().block();
+      client.getRestClient().getApplicationService()
+          .createGlobalApplicationCommand(applicationId, verifyCommand).subscribe();
+      client.onDisconnect().block();
+    });
   }
 
   private static void setupVariables() {

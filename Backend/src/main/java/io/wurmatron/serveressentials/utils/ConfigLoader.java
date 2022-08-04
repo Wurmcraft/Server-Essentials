@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -40,7 +41,8 @@ public class ConfigLoader {
           setupAndHandleConfig();
         } else {
           LOG.error("Failed to delete " + configFile.getAbsolutePath() + "'!");
-          throw new IOException("Failed to delete " + configFile.getAbsolutePath() + "'!");
+          throw new IOException(
+              "Failed to delete " + configFile.getAbsolutePath() + "'!");
         }
       }
       LOG.error("Unable to access / load config file ('config.json')");
@@ -48,7 +50,8 @@ public class ConfigLoader {
       // Make sure config dir exists
       if (!SAVE_DIR.exists() && !SAVE_DIR.mkdirs()) {
         LOG.error("Failed to create dir '" + SAVE_DIR.getAbsolutePath() + "'");
-        throw new IOException("Failed to create dir '" + SAVE_DIR.getAbsolutePath() + "'");
+        throw new IOException(
+            "Failed to create dir '" + SAVE_DIR.getAbsolutePath() + "'");
       }
       // Create and save new instance
       config = new Config();
@@ -82,7 +85,9 @@ public class ConfigLoader {
               toml.getString("config.database.database"),
               toml.getString("config.database.sqlParams"),
               toml.getString("config.database.connector"));
-      GeneralConfig generalConfig = new GeneralConfig(toml.getBoolean("config.general.testing"));
+      GeneralConfig generalConfig = new GeneralConfig(
+          toml.getBoolean("config.general.testing"),
+          Math.toIntExact(toml.getLong("config.general.threads")));
       ServerConfig sererConfig =
           new ServerConfig(
               Math.toIntExact(toml.getLong("config.server.port")),
@@ -91,10 +96,13 @@ public class ConfigLoader {
               toml.getLong("config.server.requestTimeout"),
               toml.getBoolean("config.server.forceLowercase"),
               toml.getBoolean("config.server.swaggerEnabled"),
-              Math.toIntExact(toml.getLong("config.server.cacheTime")));
+              Math.toIntExact(toml.getLong("config.server.cacheTime")),
+              Math.toIntExact(toml.getLong("config.server.cleanupInterval")));
       DiscordConfig discordConfig =
           new DiscordConfig(
-              toml.getString("config.discord.token"), toml.getMap("config.discord.channelMap"), toml.getString("config.discord.verifiedRankID"));
+              toml.getString("config.discord.token"),
+              toml.getMap("config.discord.channelMap"),
+              toml.getString("config.discord.verifiedRankID"));
       return new Config(generalConfig, dbConfig, sererConfig, discordConfig);
     } catch (Exception e) {
       e.printStackTrace();
