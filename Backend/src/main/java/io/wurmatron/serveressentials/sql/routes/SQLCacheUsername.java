@@ -104,7 +104,7 @@ public class SQLCacheUsername extends SQLCache {
 
   /** Cleanup the stored cache and look for expired entries */
   public static void cleanupCache() {
-    LOG.info("Username Cache cleanup has begun!");
+    LOG.debug("Username Cache cleanup has begun!");
     List<String> toBeRemoved = new ArrayList<>();
     for (String uuid : usernameCache.keySet())
       if (needsUpdate(usernameCache.get(uuid))) toBeRemoved.add(uuid);
@@ -112,7 +112,7 @@ public class SQLCacheUsername extends SQLCache {
     int count = 0;
     for (String uuid : toBeRemoved) SQLCacheAccount.invalidate(uuid);
     count++;
-    LOG.info("Username Cache has been cleaned, " + count + " entries have been removed!");
+    LOG.debug("Username Cache has been cleaned, " + count + " entries have been removed!");
   }
 
   /** Removes the expired entries from the database */

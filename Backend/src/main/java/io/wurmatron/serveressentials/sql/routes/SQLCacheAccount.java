@@ -142,7 +142,7 @@ public class SQLCacheAccount extends SQLCache {
 
   /** Cleanup the stored cache and look for expired entries */
   public static void cleanupCache() {
-    LOG.info("Account Cache cleanup has begun!");
+    LOG.debug("Account Cache cleanup has begun!");
     // ID Cache
     List<String> toBeRemoved = new ArrayList<>();
     for (CacheAccount entry : accountCache.values()) {
@@ -156,7 +156,7 @@ public class SQLCacheAccount extends SQLCache {
       count++;
       invalidate(accountEntry);
     }
-    LOG.info("Account Cache has been cleaned, " + count + " entries have been removed!");
+    LOG.debug("Account Cache has been cleaned, " + count + " entries have been removed!");
   }
 
   /** This should do nothing, its here to prevent an possible reflection issue */

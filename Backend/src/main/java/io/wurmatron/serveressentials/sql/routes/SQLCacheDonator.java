@@ -126,7 +126,7 @@ public class SQLCacheDonator extends SQLCache {
 
   /** Cleanup the stored cache and look for expired entries */
   public static void cleanupCache() {
-    LOG.info("Donator Cache cleanup has begun!");
+    LOG.debug("Donator Cache cleanup has begun!");
     // ID Cache
     List<String> toBeRemoved = new ArrayList<>();
     for (CacheDonator entry : donatorCache.values())
@@ -137,7 +137,7 @@ public class SQLCacheDonator extends SQLCache {
       count++;
       invalidate(donatorEntry);
     }
-    LOG.info("Donator Cache has been cleaned, " + count + " entries have been removed!");
+    LOG.debug("Donator Cache has been cleaned, " + count + " entries have been removed!");
   }
 
   /** This should do nothing, its here to prevent an possible reflection issue */

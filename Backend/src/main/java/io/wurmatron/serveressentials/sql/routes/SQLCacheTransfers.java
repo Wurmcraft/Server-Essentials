@@ -249,7 +249,7 @@ public class SQLCacheTransfers extends SQLCache {
 
   /** Removes the expired entries from the database */
   public static void cleanupDB() {
-    LOG.info("Cleanup on DB table, '" + TRANSFERS_TABLE + "' has started!");
+    LOG.debug("Cleanup on DB table, '" + TRANSFERS_TABLE + "' has started!");
     try {
       int count = 0;
       List<TransferEntry> dbData =
@@ -259,7 +259,7 @@ public class SQLCacheTransfers extends SQLCache {
           count++;
           delete(entry.transfer_id);
         }
-      LOG.info("Transfer DB has been cleaned, " + count + " entries have been removed!");
+      LOG.debug("Transfer DB has been cleaned, " + count + " entries have been removed!");
       return;
     } catch (Exception e) {
       LOG.debug("Failed to collect transfer entries from the database '(" + e.getMessage() + ")");

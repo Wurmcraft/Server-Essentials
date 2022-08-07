@@ -151,7 +151,7 @@ public class SQLCacheCurrency extends SQLCache {
 
   /** Run periodically to cleanup the cache and remove expired / invalid entries */
   public static void cleanupCache() {
-    LOG.info("Currency Cache cleanup has begun!");
+    LOG.debug("Currency Cache cleanup has begun!");
     List<String> toBeRemoved = new ArrayList<>();
     for (String name : currencyCache.keySet())
       if (needsUpdate(currencyCache.get(name))) toBeRemoved.add(name);

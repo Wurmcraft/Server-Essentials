@@ -226,7 +226,7 @@ public class SQLCacheMarket extends SQLCache {
 
   /** Run periodically to cleanup the cache and remove expired / invalid entries */
   public static void cleanupCache() {
-    LOG.info("Market Cache cleanup has begun!");
+    LOG.debug("Market Cache cleanup has begun!");
     List<String> toBeRemoved = new ArrayList<>();
     for (String key : marketCache.keySet())
       for (CacheMarket entry : marketCache.get(key))
@@ -240,7 +240,7 @@ public class SQLCacheMarket extends SQLCache {
       count += marketCache.get(serverID).size();
       invalidate(serverID);
     }
-    LOG.info("Market Cache has been cleaned, " + count + " entries have been removed!");
+    LOG.debug("Market Cache has been cleaned, " + count + " entries have been removed!");
   }
 
   /** Run periodically to cleanup the db and remove expired / invalid entries */

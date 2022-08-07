@@ -205,7 +205,7 @@ public class SQLCacheBan extends SQLCache {
 
   /** Run periodically to cleanup the cache and remove expired / invalid entries */
   public static void cleanupCache() {
-    LOG.info("Ban Cache cleanup has begun!");
+    LOG.debug("Ban Cache cleanup has begun!");
     // ID Cache
     List<Long> toToRemoved = new ArrayList<>();
     for (CacheBan ban : bansCache.values()) if (needsUpdate(ban)) toToRemoved.add(ban.ban.ban_id);
@@ -223,7 +223,7 @@ public class SQLCacheBan extends SQLCache {
       count++;
       invalidate(uuid);
     }
-    LOG.info("Ban Cache has been cleaned, " + count + " entries have been removed!");
+    LOG.debug("Ban Cache has been cleaned, " + count + " entries have been removed!");
   }
 
   /** Run periodically to cleanup the db and remove expired / invalid entries */

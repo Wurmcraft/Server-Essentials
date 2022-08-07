@@ -171,7 +171,7 @@ public class SQLCacheAutoRank extends SQLCache {
 
   /** Cleanup the stored cache and look for expired entries */
   public static void cleanupCache() {
-    LOG.info("AutoRank Cache cleanup has begun");
+    LOG.debug("AutoRank Cache cleanup has begun");
     // ID / Main cache
     List<String> toBeRemoved = new ArrayList<>();
     for (CacheAutoRank entry : autoRankCache.values())
@@ -182,7 +182,7 @@ public class SQLCacheAutoRank extends SQLCache {
       count++;
       invalidate(entry.toUpperCase());
     }
-    LOG.info("AutoRank Cache has been cleaned, " + count + " entries has been removed!");
+    LOG.debug("AutoRank Cache has been cleaned, " + count + " entries has been removed!");
   }
 
   /** This should do nothing, its here to prevent an possible reflection issue */

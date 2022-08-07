@@ -156,7 +156,7 @@ public class SQLCacheRank extends SQLCache {
 
   /** Cleanup the stored cache and look for expired entries */
   public static void cleanupCache() {
-    LOG.info("Rank Cache cleanup has begun!");
+    LOG.debug("Rank Cache cleanup has begun!");
     // ID Cache
     List<String> toBeRemoved = new ArrayList<>();
     for (CacheRank rank : rankCache.values())
@@ -167,7 +167,7 @@ public class SQLCacheRank extends SQLCache {
       count++;
       invalidate(name);
     }
-    LOG.info("RankCache has been cleaned, " + count + " entries have been removed!");
+    LOG.debug("RankCache has been cleaned, " + count + " entries have been removed!");
   }
 
   /** Removes the expired entries from the database */
