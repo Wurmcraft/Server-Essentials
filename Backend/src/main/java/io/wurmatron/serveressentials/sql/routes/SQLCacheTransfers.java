@@ -223,7 +223,7 @@ public class SQLCacheTransfers extends SQLCache {
 
   /** Cleanup the stored cache and look for expired entries */
   public static void cleanupCache() {
-    LOG.info("Transfer Cache cleanup has begun!");
+    LOG.debug("Transfer Cache cleanup has begun!");
     // ID Cache
     List<Long> toBeRemoved = new ArrayList<>();
     for (CacheTransfer entry : transferCache.values())
@@ -244,7 +244,7 @@ public class SQLCacheTransfers extends SQLCache {
       count += uuidTransferCache.get(uuid).transferCacheEntrys.length;
       invalidate(uuid);
     }
-    LOG.info("Transfer Cache has been cleaned, " + count + " entries have been removed!");
+    LOG.debug("Transfer Cache has been cleaned, " + count + " entries have been removed!");
   }
 
   /** Removes the expired entries from the database */

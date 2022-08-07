@@ -228,14 +228,14 @@ public class SQLCacheBan extends SQLCache {
 
   /** Run periodically to cleanup the db and remove expired / invalid entries */
   public static void cleanupDB() {
-    LOG.info("Checking for bans to timeout / update!");
+    LOG.debug("Checking for bans to timeout / update!");
     try {
       List<Ban> bans = getArray("*", BAN_TABLE, "", "", new Ban());
       int count = 0;
       for (Ban ban : bans) {
         if (ban.ban_status && handleBanUpdateCheck(ban)) count++;
       }
-      LOG.info(count + " bans have been updated!");
+      LOG.debug(count + " bans have been updated!");
     } catch (Exception e) {
       LOG.debug("Failed to fetch bans (" + e.getMessage() + ")");
     }

@@ -113,7 +113,7 @@ public class ConfigLoader {
     return config;
   }
 
-  private static String askQuestion(String question, String defaultVal) {
+  public static String askQuestion(String question, String defaultVal) {
     System.out.print(question + " (" + defaultVal +  ") > ");
     String nextLine = SCANNER.nextLine();
     if (nextLine == null || nextLine.isEmpty()) {

@@ -1,6 +1,9 @@
 package io.wurmatron.serveressentials.cli;
 
 import io.wurmatron.serveressentials.ServerEssentialsRest;
+import io.wurmatron.serveressentials.routes.EndpointSecurity;
+import io.wurmatron.serveressentials.utils.ConfigLoader;
+import io.wurmatron.serveressentials.utils.EncryptionUtils;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -30,11 +33,30 @@ public class CommandParser {
     line = line.toLowerCase();
     if (line.startsWith("stop")) {
       stop(line.split(" "));
-    } else if(line.startsWith("help")) {
-     help();
+    } else if (line.startsWith("help")) {
+      help();
+    } else if (line.startsWith("add server") || line.startsWith("addserver")) {
+      addServer();
     } else {
       ServerEssentialsRest.LOG.info("Unknown command! Try help for a list of commands");
     }
+  }
+
+  private static void addServer() {
+    System.out.println();
+    System.out.println("- Add a new server");
+    String serverName = ConfigLoader.askQuestion("Name / ID of the server", "server");
+    String serverIP = ConfigLoader.askQuestion("IP of the server", "127.0.0.1");
+    String token = EncryptionUtils.generateRandomString(32);
+    String key = EncryptionUtils.generateRandomString(24);
+    EndpointSecurity.addServer(serverName, serverIP, token, key);
+    System.out.println("- Server '" + serverName
+        + "' can connect using the following (Please save in a safe place)");
+    System.out.println("Token '" + token + "'");
+    System.out.println("Key: '" + key + "'");
+    System.out.println(
+        "Make sure the server is connecting via the correct ip along with having the correct name, unless it wont connect");
+    System.out.println();
   }
 
   private static void stop(String[] args) {
@@ -55,9 +77,11 @@ public class CommandParser {
   private static void help() {
     displayHelp("stop", "Safely shutdown the management software");
     displayHelp("help", "Gives list of commands and uses");
+    displayHelp("add server",
+        "Helps add another server to the api, generating authentication for said server");
   }
 
   private static void displayHelp(String command, String message) {
-    System.out.printf("- %-10s | %30s %n", command, message);
+    System.out.printf("- %-10s | %-80s %n", command, message);
   }
 }
