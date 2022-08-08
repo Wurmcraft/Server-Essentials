@@ -1,12 +1,19 @@
 package io.wurmatron.serveressentials.cli;
 
+import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
+
 import io.wurmatron.serveressentials.ServerEssentialsRest;
+import io.wurmatron.serveressentials.models.DataWrapper;
 import io.wurmatron.serveressentials.models.ServerStatus;
+import io.wurmatron.serveressentials.models.WSWrapper;
+import io.wurmatron.serveressentials.models.WSWrapper.Type;
+import io.wurmatron.serveressentials.models.data_wrapper.ChatMessage;
 import io.wurmatron.serveressentials.routes.EndpointSecurity;
 import io.wurmatron.serveressentials.routes.informational.StatusRoutes;
 import io.wurmatron.serveressentials.routes.ws.WebSocketComRoute;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
 import io.wurmatron.serveressentials.utils.EncryptionUtils;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import joptsimple.internal.Strings;
@@ -43,6 +50,8 @@ public class CommandParser {
       addServer();
     } else if (line.startsWith("list")) {
       list(line.split(" "));
+    } else if (line.startsWith("broadcast") || line.startsWith("say")) {
+      broadcast(line.split(" "));
     } else {
       ServerEssentialsRest.LOG.info("Unknown command! Try help for a list of commands");
     }
@@ -75,7 +84,7 @@ public class CommandParser {
           System.out.println("Players: " + Strings.join(status.onlinePlayers, ", "));
           found = true;
         }
-        if(!found) {
+        if (!found) {
           System.out.println("No players found");
         }
       } else if (args[1].equalsIgnoreCase("servers") || args[1].equalsIgnoreCase(
@@ -103,6 +112,20 @@ public class CommandParser {
     }
   }
 
+  private static void broadcast(String[] args) {
+    if (args.length > 1) {
+      String message = Strings.join(Arrays.copyOfRange(args, 1, args.length), " ");
+      WebSocketComRoute.sendToAllOthers(GSON.toJson(new WSWrapper(200, Type.MESSAGE,
+              new DataWrapper("broadcast",
+                  GSON.toJson(
+                      new ChatMessage("API", "Broadcast", "Broadcast", message, ""))))),
+          null);
+      ServerEssentialsRest.LOG.info("Broadcast: " + message);
+    } else {
+      System.out.println("broadcast <message>");
+    }
+  }
+
   private static void help() {
     displayHelp("stop", "Safely shutdown the management software");
     displayHelp("help", "Gives list of commands and uses");
@@ -110,9 +133,11 @@ public class CommandParser {
         "Helps add another server to the api, generating authentication for said server");
     displayHelp("list <players, servers>",
         "Helps add another server to the api, generating authentication for said server");
+    displayHelp("broadcast <message>",
+        "Send a message on the global channel to all servers, to all players");
   }
 
   private static void displayHelp(String command, String message) {
-    System.out.printf("- %-10s | %-80s %n", command, message);
+    System.out.printf("- %-20s | %-80s %n", command, message);
   }
 }
