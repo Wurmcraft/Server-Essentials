@@ -1,11 +1,15 @@
 package io.wurmatron.serveressentials.cli;
 
 import io.wurmatron.serveressentials.ServerEssentialsRest;
+import io.wurmatron.serveressentials.models.ServerStatus;
 import io.wurmatron.serveressentials.routes.EndpointSecurity;
+import io.wurmatron.serveressentials.routes.informational.StatusRoutes;
+import io.wurmatron.serveressentials.routes.ws.WebSocketComRoute;
 import io.wurmatron.serveressentials.utils.ConfigLoader;
 import io.wurmatron.serveressentials.utils.EncryptionUtils;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import joptsimple.internal.Strings;
 
 public class CommandParser {
 
@@ -37,6 +41,8 @@ public class CommandParser {
       help();
     } else if (line.startsWith("add server") || line.startsWith("addserver")) {
       addServer();
+    } else if (line.startsWith("list")) {
+      list(line.split(" "));
     } else {
       ServerEssentialsRest.LOG.info("Unknown command! Try help for a list of commands");
     }
@@ -59,6 +65,29 @@ public class CommandParser {
     System.out.println();
   }
 
+  private static void list(String[] args) {
+    if (args.length == 2) {
+      if (args[1].equalsIgnoreCase("players")) {
+        boolean found = false;
+        for (ServerStatus status : StatusRoutes.lastServerStatus.values()) {
+          System.out.println(
+              "- " + status.serverID + " (" + status.onlinePlayers.length + ")");
+          System.out.println("Players: " + Strings.join(status.onlinePlayers, ", "));
+          found = true;
+        }
+        if(!found) {
+          System.out.println("No players found");
+        }
+      } else if (args[1].equalsIgnoreCase("servers") || args[1].equalsIgnoreCase(
+          "server")) {
+        System.out.println("Active Servers: " + Strings.join(
+            WebSocketComRoute.activeConnections.values(), ", "));
+      }
+    } else {
+      ServerEssentialsRest.LOG.info("list <players, servers>");
+    }
+  }
+
   private static void stop(String[] args) {
     if (args.length == 1) {
       ServerEssentialsRest.LOG.info("Shutting Down!");
@@ -78,6 +107,8 @@ public class CommandParser {
     displayHelp("stop", "Safely shutdown the management software");
     displayHelp("help", "Gives list of commands and uses");
     displayHelp("add server",
+        "Helps add another server to the api, generating authentication for said server");
+    displayHelp("list <players, servers>",
         "Helps add another server to the api, generating authentication for said server");
   }
 
