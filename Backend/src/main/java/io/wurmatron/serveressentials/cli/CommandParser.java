@@ -8,6 +8,7 @@ import io.wurmatron.serveressentials.models.ServerStatus;
 import io.wurmatron.serveressentials.models.WSWrapper;
 import io.wurmatron.serveressentials.models.WSWrapper.Type;
 import io.wurmatron.serveressentials.models.data_wrapper.ChatMessage;
+import io.wurmatron.serveressentials.models.data_wrapper.ShutdownMessage;
 import io.wurmatron.serveressentials.routes.EndpointSecurity;
 import io.wurmatron.serveressentials.routes.informational.StatusRoutes;
 import io.wurmatron.serveressentials.routes.ws.WebSocketComRoute;
@@ -107,7 +108,11 @@ public class CommandParser {
       } catch (Exception e) {
         ServerEssentialsRest.LOG.error(e.getMessage());
       }
-      // TODO Sent shutdown message to servers
+      WebSocketComRoute.sendToAllOthers(GSON.toJson(new WSWrapper(200, Type.MESSAGE,
+              new DataWrapper("shutdown",
+                  GSON.toJson(
+                      new ShutdownMessage("API", "Command", "Shutdown via stop command"))))),
+          null);
       System.exit(1);
     }
   }
