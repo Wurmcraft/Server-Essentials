@@ -61,6 +61,11 @@ public class SocketController {
 
   public void handleTextMessage(WSWrapper wrapper) {
     ServerEssentials.LOG.info("WS Message: " + wrapper.type + " " + wrapper.data);
+    // TODO Handle Messages
+    // Broadcast
+    // Chat
+    // Discord
+    // Shutdown
   }
 
   public void send(WSWrapper wrapper) throws IOException, WebSocketException {

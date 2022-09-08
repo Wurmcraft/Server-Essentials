@@ -64,7 +64,9 @@ public class ServerEssentials {
     SECore.dataLoader = getDataLoader();
     SECore.moduleConfigs = ConfigLoader.loadModuleConfigs();
     scheduledService = Executors.newScheduledThreadPool(config.performance.maxThreads);
-    socketController = new SocketController();
+    if (SECore.dataLoader instanceof RestDataLoader && config.performance.useWebsocket) {
+      socketController = new SocketController();
+    }
     if (SECore.moduleConfigs.get("GENERAL") != null
         && SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
       ModuleGeneral.sendStatusUpdate(true, "Pre-Initialization");

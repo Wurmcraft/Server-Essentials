@@ -18,7 +18,8 @@ public class ModuleBan {
       } else
         ServerEssentials.LOG.info("Not following global bans, followRestBans is false");
     } else {
-      // TODO Unable to load
+      ServerEssentials.LOG.warn("Module 'Ban' does not work in 'File' Storage mode!");
+      SECore.modules.remove("BAN");
     }
   }
 
