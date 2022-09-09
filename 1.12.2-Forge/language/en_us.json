@@ -200,5 +200,6 @@
   "COMMAND_RANK_ADD_COLOR_PRIORITY": "&Color Priority has been set to {@NUM@} for rank {@NAME@}",
   "COMMAND_RANK_ADD_COLOR": "&bColor for rank {@NAME@} has been set to {@COLOR@}",
   "COMMAND_VERIFY": "&bYou have been verified, Please allow 10min to fully sync, &bthe discord bot will notify when its completed.",
-  "COMMAND_VERIFY_FAILED": "&cFailed to verify discord account, please make sure you entered the code correctly"
+  "COMMAND_VERIFY_FAILED": "&cFailed to verify discord account, please make sure you entered the code correctly",
+  "COMMAND_HELP_FORMAT": "&l&b{@COMMAND@} &d> &6{@DESCRIPTION@}"
 }

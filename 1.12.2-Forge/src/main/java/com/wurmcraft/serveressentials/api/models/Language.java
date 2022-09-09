@@ -222,4 +222,5 @@ public class Language {
   public String COMMAND_RANK_ADD_COLOR;
   public String COMMAND_VERIFY;
   public String COMMAND_VERIFY_FAILED;
+  public String COMMAND_HELP_FORMAT;
 }
