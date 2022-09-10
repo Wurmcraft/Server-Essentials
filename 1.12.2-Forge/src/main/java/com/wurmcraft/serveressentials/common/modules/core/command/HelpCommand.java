@@ -20,7 +20,7 @@ public class HelpCommand {
 
   @Command(args =  {}, usage = {},canConsoleUse = true)
   public void helpPage0(ServerPlayer player) {
-    help(player, 0);
+    help(player, 1);
   }
 
   @Command(
@@ -31,14 +31,21 @@ public class HelpCommand {
     if (commands == null || commands.size() == 0) {
       commands = generateHelpLines();
     }
+    if(page == 0) {
+      page = 1;
+    }
+    page = page - 1;
+    int maxPages = (commands.size() / COMMANDS_PER_PAGE);
+    if(page > maxPages) {
+      page = maxPages;
+    }
     HelpLine[] commandsOnPage = getListOfCommands(player, page * COMMANDS_PER_PAGE,
         COMMANDS_PER_PAGE);
-    ChatHelper.send(player.sender, player.lang.SPACER);
+    String spacer = player.lang.SPACER;
+    spacer = spacer.substring(spacer.length() /2)  + " " + (page + 1) + " / " + (maxPages + 1) + " "  + spacer.substring(spacer.length() /2);
+    ChatHelper.send(player.sender, spacer);
     for (HelpLine command : commandsOnPage) {
-      ChatHelper.send(player.sender,
-          player.lang.COMMAND_HELP_FORMAT.replaceAll("\\{@COMMAND@}",
-                  command.commandName)
-              .replaceAll("\\{@DESCRIPTION@}", command.description));
+      ChatHelper.send(player.sender, command.commandName);
     }
   }
 
@@ -53,7 +60,7 @@ public class HelpCommand {
   }
 
   private static HelpLine getHelpInfo(ICommandSender sender, ICommand command) {
-    String usageName = command.getUsage(sender);
+    String usageName = command.getUsage(sender).replaceAll("\n", "\n&b");
     return new HelpLine(usageName, "");
   }
 
