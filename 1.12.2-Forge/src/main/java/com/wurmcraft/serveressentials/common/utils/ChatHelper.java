@@ -11,6 +11,7 @@ import com.wurmcraft.serveressentials.api.models.local.Bulletin;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.command.RankUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
+import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import com.wurmcraft.serveressentials.common.data.ws.SocketController;
 import com.wurmcraft.serveressentials.common.modules.chat.ConfigChat;
 import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
@@ -64,29 +65,31 @@ public class ChatHelper {
               "chat.ignore.bypass")) send(player, message);
     }
     LOG.info("[Chat]: " + message.getFormattedText());
-    // TODO Config / non-web socket support? possibly via matterbridge?
-    try {
-      ServerEssentials.socketController.send(
-          new WSWrapper(
-              200,
-              WSWrapper.Type.MESSAGE,
-              new DataWrapper(
-                  "chat",
-                  GSON.toJson(
-                      new ChatMessage(
-                          "Minecraft",
-                          ServerEssentials.config.general.serverID,
-                          getName(
-                              sender,
-                              SECore.dataLoader.get(
-                                  DataLoader.DataType.ACCOUNT,
-                                  sender.getGameProfile().getId().toString(),
-                                  new Account())),
-                          message.getText(),
-                          ch.name)))));
-    } catch (Exception e) {
-      LOG.warn("Failed to send message via webSocket!");
-      e.printStackTrace();
+    if(SECore.dataLoader instanceof RestDataLoader && ServerEssentials.config.performance.useWebsocket) {
+      // TODO Config / non-web socket support? possibly via matterbridge?
+      try {
+        ServerEssentials.socketController.send(
+            new WSWrapper(
+                200,
+                WSWrapper.Type.MESSAGE,
+                new DataWrapper(
+                    "chat",
+                    GSON.toJson(
+                        new ChatMessage(
+                            "Minecraft",
+                            ServerEssentials.config.general.serverID,
+                            getName(
+                                sender,
+                                SECore.dataLoader.get(
+                                    DataLoader.DataType.ACCOUNT,
+                                    sender.getGameProfile().getId().toString(),
+                                    new Account())),
+                            message.getText(),
+                            ch.name)))));
+      } catch (Exception e) {
+        LOG.warn("Failed to send message via webSocket!");
+        e.printStackTrace();
+      }
     }
   }
 

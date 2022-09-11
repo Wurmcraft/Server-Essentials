@@ -24,8 +24,12 @@ public class SpawnCommand {
       usage = {})
   public void spawn(ServerPlayer player) {
     Location spawn = PlayerUtils.getSpawn(player.global.rank);
-    TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, spawn);
-    ChatHelper.send(player.sender, player.lang.COMMAND_SPAWN);
+    if(spawn != null) {
+      TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, spawn);
+      ChatHelper.send(player.sender, player.lang.COMMAND_SPAWN);
+    } else {
+      ChatHelper.send(player.sender, player.lang.COMMAND_SPAWN_NOTSET);
+    }
   }
 
   @Command(

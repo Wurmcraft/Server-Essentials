@@ -15,7 +15,7 @@ public class ConfigGlobal {
     this.general = new General();
     this.storage = new Storage();
     this.performance = new Performance();
-    this.enabledModules = new String[] {"General"};
+    this.enabledModules = new String[] {"General", "AutoRank", "Chat", "Economy", "Rank"};
     this.configVersion = Integer.toHexString(hashCode());
   }
 
