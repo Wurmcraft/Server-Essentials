@@ -166,7 +166,7 @@ public class PlayerUtils {
     HashMap<String, Location> spawnPos =
         ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).spawn;
     // Simple Match (if possible)
-    if (ranks.length == 1) {
+    if (ranks.length == 1 && !spawnPos.containsKey("*")) {
       return spawnPos.getOrDefault(ranks[0], null);
     }
     // Highest Rank
