@@ -2,18 +2,30 @@ buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
 
-version = '1.0'
-group = 'io.wurmatron.serveressentials'
-archivesBaseName = 'modid'
+plugins {
+    id "com.github.johnrengelman.shadow" version "2.0.4"
+    id "com.diffplug.gradle.spotless" version "3.28.1"
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+
+String build_number = System.getenv().BUILD_NUMBER
+if (build_number == null) {
+    build_number = "CustomBuild"
+} else {
+    build_number = "Jenkins-${build_number}"
+}
+version = "${mod_version}-${build_number}"
+
+group = 'com.wurmcraft.serveressentials'
+archivesBaseName = 'Server-Essentials'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
@@ -66,6 +78,11 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.39'
+    // Libs
+    implementation "org.reflections:reflections:${reflections_version}"
+    implementation "com.boundary:high-scale-lib:${highscalelib_version}"
+    implementation "org.javassist:javassist:${javassist_version}"
+    implementation "com.neovisionaries:nv-websocket-client:${websocket_version}"
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
