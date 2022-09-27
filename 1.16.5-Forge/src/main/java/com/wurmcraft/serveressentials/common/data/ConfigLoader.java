@@ -3,6 +3,7 @@ package com.wurmcraft.serveressentials.common.data;
 import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
+import com.wurmcraft.serveressentials.api.loading.ModuleConfig;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -60,18 +61,18 @@ public class ConfigLoader {
     }
   }
 
-//  public static NonBlockingHashMap<String, Object> loadModuleConfigs() {
-//    List<Object> moduleConfigs = AnnotationLoader.loadModuleConfigs();
-//    NonBlockingHashMap<String, Object> instances = new NonBlockingHashMap<>();
-//    for (Object configInstance : moduleConfigs) {
-//      String moduleName =
-//          configInstance.getClass().getDeclaredAnnotation(ModuleConfig.class).module();
-//      if (!moduleName.isEmpty())
-//        instances.put(moduleName.toUpperCase(), loadModuleConfig(moduleName, configInstance));
-//    }
-//    LOG.info(moduleConfigs.size() + " module config(s) have been loaded");
-//    return instances;
-//  }
+  public static NonBlockingHashMap<String, Object> loadModuleConfigs() {
+    List<Object> moduleConfigs = AnnotationLoader.loadModuleConfigs();
+    NonBlockingHashMap<String, Object> instances = new NonBlockingHashMap<>();
+    for (Object configInstance : moduleConfigs) {
+      String moduleName =
+          configInstance.getClass().getDeclaredAnnotation(ModuleConfig.class).module();
+      if (!moduleName.isEmpty())
+        instances.put(moduleName.toUpperCase(), loadModuleConfig(moduleName, configInstance));
+    }
+    LOG.info(moduleConfigs.size() + " module config(s) have been loaded");
+    return instances;
+  }
 
   /**
    * Loads a module, creating a new config file if needed

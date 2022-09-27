@@ -3,6 +3,11 @@ package com.wurmcraft.serveressentials;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.CommandDispatcher;
+import com.wurmcraft.serveressentials.api.SECore;
+import com.wurmcraft.serveressentials.api.loading.Module;
+import com.wurmcraft.serveressentials.common.data.AnnotationLoader;
+import com.wurmcraft.serveressentials.common.data.ConfigLoader;
+import java.util.List;
 import net.minecraft.command.CommandSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -13,6 +18,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 @Mod(ServerEssentials.MODID)
 public class ServerEssentials {
@@ -30,6 +36,11 @@ public class ServerEssentials {
     }
 
     private void commonSetup(FMLCommonSetupEvent e) {
+        // Initial Setup
+        SECore.modules = collectModules();
+        SECore.moduleConfigs = ConfigLoader.loadModuleConfigs();
+
+        // Register 'Major' Events
         MinecraftForge.EVENT_BUS.register(new ServerEssentials());
     }
 
@@ -40,5 +51,28 @@ public class ServerEssentials {
     @SubscribeEvent
     public static void onRegisterCommandEvent(RegisterCommandsEvent e) {
         CommandDispatcher<CommandSource> commandDispatcher = e.getDispatcher();
+    }
+
+    /**
+     * Creates a hashmap with the loaded modules
+     *
+     * @return list of sorted modules, [moduleName, module Instance]
+     */
+    public static NonBlockingHashMap<String, Object> collectModules() {
+        StringBuilder builder = new StringBuilder();
+        List<Object> modules = AnnotationLoader.loadModules();
+        NonBlockingHashMap<String, Object> loadedModules = new NonBlockingHashMap<>();
+        for (Object module : modules) {
+            Module m = module.getClass().getDeclaredAnnotation(Module.class);
+            loadedModules.put(m.name().toUpperCase(), module);
+            builder.append(m.name()).append(",");
+        }
+        String moduleNames = builder.toString();
+        if (!moduleNames.isEmpty()) {
+            moduleNames = moduleNames.substring(0,
+                moduleNames.length() - 1); // Remove trailing ,
+        }
+        LOG.info("Modules: [" + moduleNames + "]");
+        return loadedModules;
     }
 }
