@@ -4,6 +4,7 @@ import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
 import com.wurmcraft.serveressentials.api.loading.ModuleConfig;
+import com.wurmcraft.serveressentials.api.models.config.ConfigGlobal;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,34 +19,34 @@ public class ConfigLoader {
   public static final File SAVE_DIR = new File("Server-Essentials");
   public static final File GLOBAL_CONFIG = new File(SAVE_DIR + File.separator + "global.json");
 
-//  public static ConfigGlobal loadGlobalConfig() {
-//    if (GLOBAL_CONFIG.exists()) {
-//      try {
-//        ConfigGlobal config =
-//            GSON.fromJson(
-//                Strings.join(Files.readAllLines(GLOBAL_CONFIG.toPath()), '\n'), ConfigGlobal.class);
-//        LOG.info("Storage Type: '" + config.storage.storageType + "'");
-//        LOG.info("Debug Mode: " + config.general.debug);
-//        ConfigGlobal defaultConfig = new ConfigGlobal();
-//        if (defaultConfig.configVersion.equals(config.configVersion)) return config;
-//        else {
-//          LOG.warn("Config version does not match the defaults, adding defaults!");
-//          config.configVersion = defaultConfig.configVersion;
-//          save(GLOBAL_CONFIG, config);
-//          return config;
-//        }
-//      } catch (IOException e) {
-//        e.printStackTrace();
-//        LOG.error("Failed to read '" + GLOBAL_CONFIG.getAbsolutePath() + "'");
-//      }
-//    } else {
-//      ConfigGlobal global = new ConfigGlobal();
-//      save(GLOBAL_CONFIG, global);
-//      LOG.info("Global defaults have been set");
-//      return global;
-//    }
-//    return null;
-//  }
+  public static ConfigGlobal loadGlobalConfig() {
+    if (GLOBAL_CONFIG.exists()) {
+      try {
+        ConfigGlobal config =
+            GSON.fromJson(
+                Strings.join(Files.readAllLines(GLOBAL_CONFIG.toPath()), '\n'), ConfigGlobal.class);
+        LOG.info("Storage Type: '" + config.storage.storageType + "'");
+        LOG.info("Debug Mode: " + config.general.debug);
+        ConfigGlobal defaultConfig = new ConfigGlobal();
+        if (defaultConfig.configVersion.equals(config.configVersion)) return config;
+        else {
+          LOG.warn("Config version does not match the defaults, adding defaults!");
+          config.configVersion = defaultConfig.configVersion;
+          save(GLOBAL_CONFIG, config);
+          return config;
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+        LOG.error("Failed to read '" + GLOBAL_CONFIG.getAbsolutePath() + "'");
+      }
+    } else {
+      ConfigGlobal global = new ConfigGlobal();
+      save(GLOBAL_CONFIG, global);
+      LOG.info("Global defaults have been set");
+      return global;
+    }
+    return null;
+  }
 
   public static void save(File file, Object config) {
     try {
