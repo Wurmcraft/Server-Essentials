@@ -7,6 +7,8 @@ import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.loading.Module;
 import com.wurmcraft.serveressentials.common.data.AnnotationLoader;
 import com.wurmcraft.serveressentials.common.data.ConfigLoader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import net.minecraft.command.CommandSource;
 import net.minecraftforge.common.MinecraftForge;
@@ -39,7 +41,8 @@ public class ServerEssentials {
         // Initial Setup
         SECore.modules = collectModules();
         SECore.moduleConfigs = ConfigLoader.loadModuleConfigs();
-
+        // General
+        setupModules();
         // Register 'Major' Events
         MinecraftForge.EVENT_BUS.register(new ServerEssentials());
     }
@@ -74,5 +77,25 @@ public class ServerEssentials {
         }
         LOG.info("Modules: [" + moduleNames + "]");
         return loadedModules;
+    }
+
+    /**
+     * Using reflection to call the setup method on each module's instance
+     */
+    private void setupModules() {
+        for (String module : SECore.modules.keySet()) {
+            Object instance = SECore.modules.get(module);
+            Module m = instance.getClass().getDeclaredAnnotation(Module.class);
+            try {
+                Method method = instance.getClass().getDeclaredMethod(m.setupMethod());
+                method.invoke(instance);
+            } catch (NoSuchMethodException f) {
+                f.printStackTrace();
+                LOG.warn("Failed to load module '" + module + "'");
+            } catch (InvocationTargetException | IllegalAccessException g) {
+                g.printStackTrace();
+                LOG.warn("Failed to initialize module '" + module + "'");
+            }
+        }
     }
 }
