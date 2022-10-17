@@ -18,5 +18,4 @@ public class ConfigCore {
     this.langStorageURL =
         "https://raw.githubusercontent.com/Wurmcraft/Server-Essentials/dev/1.16.5-Forge/language";
   }
-
 }

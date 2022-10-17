@@ -8,9 +8,15 @@ import com.wurmcraft.serveressentials.api.loading.Module;
 import com.wurmcraft.serveressentials.api.models.config.ConfigGlobal;
 import com.wurmcraft.serveressentials.common.data.AnnotationLoader;
 import com.wurmcraft.serveressentials.common.data.ConfigLoader;
+import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
+import com.wurmcraft.serveressentials.common.data.loader.FileDataLoader;
+import com.wurmcraft.serveressentials.common.data.loader.IDataLoader;
+import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import net.minecraft.command.CommandSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -33,6 +39,7 @@ public class ServerEssentials {
   public static final Logger LOG = LogManager.getLogger("[" + NAME + "]");
   public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   public static ConfigGlobal config;
+  public static ScheduledExecutorService scheduledService;
 
   public ServerEssentials() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
@@ -44,8 +51,10 @@ public class ServerEssentials {
     SECore.modules = collectModules();
     config = ConfigLoader.loadGlobalConfig();
     SECore.moduleConfigs = ConfigLoader.loadModuleConfigs();
+    scheduledService = Executors.newScheduledThreadPool(config.performance.maxThreads);
     // General
     setupModules();
+    SECore.dataLoader = getDataLoader();
     // Register 'Major' Events
     MinecraftForge.EVENT_BUS.register(new ServerEssentials());
   }
@@ -109,5 +118,17 @@ public class ServerEssentials {
 
   public static boolean isModuleEnabled(String name) {
     return SECore.modules.keySet().stream().anyMatch(name::equalsIgnoreCase);
+  }
+
+  public static IDataLoader getDataLoader() {
+    LOG.info("Storage Type: '" + config.storage.storageType + "'");
+    if (config.storage.storageType.equalsIgnoreCase("File")) {
+      return new FileDataLoader();
+    }
+    if (config.storage.storageType.equalsIgnoreCase("Rest")) {
+      return new RestDataLoader();
+    }
+    LOG.warn("Failed to load requested storage type, using default 'Cache-Only'");
+    return new DataLoader();
   }
 }
