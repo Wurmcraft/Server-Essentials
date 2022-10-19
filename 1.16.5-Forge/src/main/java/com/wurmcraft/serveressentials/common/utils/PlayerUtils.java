@@ -1,7 +1,6 @@
 package com.wurmcraft.serveressentials.common.utils;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class PlayerUtils {

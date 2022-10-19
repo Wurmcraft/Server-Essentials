@@ -1,6 +1,5 @@
 package com.wurmcraft.serveressentials.common.modules.core;
 
-import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.loading.Module;
 import com.wurmcraft.serveressentials.common.modules.core.events.MainPlayerDataEvents;
 import net.minecraftforge.common.MinecraftForge;

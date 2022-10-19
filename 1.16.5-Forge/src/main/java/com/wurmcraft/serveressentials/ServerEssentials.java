@@ -12,6 +12,8 @@ import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.FileDataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.IDataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
+import com.wurmcraft.serveressentials.common.data.ws.SocketController;
+import com.wurmcraft.serveressentials.common.modules.general.ModuleGeneral;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -40,6 +42,7 @@ public class ServerEssentials {
   public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   public static ConfigGlobal config;
   public static ScheduledExecutorService scheduledService;
+  public static SocketController socketController;
 
   public ServerEssentials() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
@@ -52,6 +55,12 @@ public class ServerEssentials {
     config = ConfigLoader.loadGlobalConfig();
     SECore.moduleConfigs = ConfigLoader.loadModuleConfigs();
     scheduledService = Executors.newScheduledThreadPool(config.performance.maxThreads);
+    if (SECore.dataLoader instanceof RestDataLoader && config.performance.useWebsocket) {
+      socketController = new SocketController();
+      if (SECore.moduleConfigs.get("GENERAL") != null) {
+        ModuleGeneral.sendStatusUpdate(true, "Starting");
+      }
+    }
     // General
     setupModules();
     SECore.dataLoader = getDataLoader();

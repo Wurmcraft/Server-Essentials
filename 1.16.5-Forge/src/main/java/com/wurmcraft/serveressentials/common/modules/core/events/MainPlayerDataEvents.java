@@ -11,6 +11,7 @@ import com.wurmcraft.serveressentials.api.models.account.BankAccount;
 import com.wurmcraft.serveressentials.api.models.account.ServerTime;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
+import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.time.Instant;
 import java.util.UUID;
@@ -57,7 +58,7 @@ public class MainPlayerDataEvents {
                   new String[] {DEFAULT_RANK},
                   new String[0],
                   new String[0],
-                  DEFAULT_LANG,
+                  SECore.moduleConfigs.get("CORE") != null && !((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang.isEmpty() ? ((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang : DEFAULT_LANG,
                   false,
                   0,
                   "",
@@ -116,7 +117,6 @@ public class MainPlayerDataEvents {
               + "'");
     }
   }
-
 
   /**
    * Checks if the account was created, printing and triggering the event accordingly
