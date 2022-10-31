@@ -92,7 +92,7 @@ public class MainPlayerDataEvents {
       } else {
         LOG.info(
             "Loading user '"
-                + e.getPlayer().getDisplayName().toString()
+                + e.getPlayer().getGameProfile().getName()
                 + "' ("
                 + e.getPlayer().getGameProfile().getId().toString()
                 + ") [Existing]");
@@ -104,7 +104,7 @@ public class MainPlayerDataEvents {
         if (playerCacheTimeout.get(e.getPlayer().getGameProfile().getId().toString()).cancel(false))
           LOG.debug(
               "Canceling Cache cleanup for user '"
-                  + e.getPlayer().getDisplayName().toString()
+                  + e.getPlayer().getGameProfile().getName()
                   + "' ("
                   + e.getPlayer().getGameProfile().getId().toString()
                   + ")");
@@ -136,7 +136,7 @@ public class MainPlayerDataEvents {
     if (user && local) {
       LOG.info(
           "Loading user '"
-              + player.getDisplayName().toString()
+              +  player.getGameProfile().getName()
               + "' ("
               + player.getGameProfile().getId().toString()
               + ") [New]");
@@ -144,13 +144,13 @@ public class MainPlayerDataEvents {
           "Created New User ('"
               + player.getGameProfile().getId().toString()
               + "') \""
-              + player.getDisplayName().toString()
+              + player.getGameProfile().getName()
               + "\"");
       MinecraftForge.EVENT_BUS.post(new PlayerLoadEvent(player, userAccount, localAccount, true));
     } else if (local) {
       LOG.info(
           "Loading user '"
-              + player.getDisplayName().toString()
+              +  player.getGameProfile().getName()
               + "' ("
               + player.getGameProfile().getId().toString()
               + ") [New To Server]");
@@ -158,13 +158,13 @@ public class MainPlayerDataEvents {
           "Created New Local User ('"
               + player.getGameProfile().getId().toString()
               + "') \""
-              + player.getDisplayName().toString()
+              +  player.getGameProfile().getName()
               + "\"");
       MinecraftForge.EVENT_BUS.post(new PlayerLoadEvent(player, userAccount, localAccount, false));
     } else if (user) {
       LOG.info(
           "Loading user '"
-              + player.getDisplayName().toString()
+              +  player.getGameProfile().getName()
               + "' ("
               + player.getGameProfile().getId().toString()
               + ") [New To Network]");
@@ -172,7 +172,7 @@ public class MainPlayerDataEvents {
           "Created New Global User ('"
               + player.getGameProfile().getId().toString()
               + "') \""
-              + player.getDisplayName().toString()
+              +  player.getGameProfile().getName()
               + "\"");
       MinecraftForge.EVENT_BUS.post(new PlayerLoadEvent(player, userAccount, localAccount, false));
     } else LOG.warn("Failed to create new user");
@@ -182,7 +182,7 @@ public class MainPlayerDataEvents {
   public void onPlayerLogout(PlayerLoggedOutEvent e) {
     LOG.info(
         "Scheduling unloading for user '"
-            + e.getPlayer().getDisplayName().toString()
+            + e.getPlayer().getGameProfile().getName()
             + "' ("
             + e.getPlayer().getGameProfile().getId().toString()
             + ") in "
