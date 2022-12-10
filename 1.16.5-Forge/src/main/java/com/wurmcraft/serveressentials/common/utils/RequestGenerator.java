@@ -1,6 +1,7 @@
 package com.wurmcraft.serveressentials.common.utils;
 
 import com.wurmcraft.serveressentials.ServerEssentials;
+import com.wurmcraft.serveressentials.api.SECore;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,10 +23,9 @@ public class RequestGenerator {
 
   public static final String USER_AGENT = "Mozilla/5.0";
 
-  // TODO Set URL
   // Connection Specific
-  public static final String BASE_URL = parseConfigURL("");
-  public static String token = "";
+  public static final String BASE_URL = parseConfigURL(ServerEssentials.config.storage.baseURL);
+  public static String token = ServerEssentials.config.storage.token;
 
   // Regex
   public static final Pattern IP_REGEX =

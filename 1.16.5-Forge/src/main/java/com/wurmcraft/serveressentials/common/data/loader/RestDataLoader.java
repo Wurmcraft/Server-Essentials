@@ -282,8 +282,9 @@ public class RestDataLoader extends FileDataLoader {
   private RequestGenerator.HttpResponse findAndExecutePath(DataType type, String key)
       throws IOException {
     String path = findPath(type, key);
-    if (!type.path.equals(path)) return RequestGenerator.get(path);
-    else {
+    if (!type.path.equals(path)) {
+      return RequestGenerator.get(path);
+    } else {
       String[] keys = key.split(";");
       Map<String, String> query = new HashMap<>();
       String[] queryKeys = type.pathType.split(";");

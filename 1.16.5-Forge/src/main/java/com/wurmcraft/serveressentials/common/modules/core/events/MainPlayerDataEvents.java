@@ -32,7 +32,7 @@ public class MainPlayerDataEvents {
 
   // TODO From Config
   public static final String DEFAULT_RANK = "default";
-  public static final String DEFAULT_LANG = "en_us";
+  public static final String DEFAULT_LANG = ((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang;
 
   @SubscribeEvent(priority = EventPriority.HIGH)
   public void onPlayerJoin(PlayerLoggedInEvent e) {
