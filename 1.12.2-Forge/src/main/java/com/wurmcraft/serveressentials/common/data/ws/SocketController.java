@@ -7,9 +7,12 @@ import com.neovisionaries.ws.client.WebSocketFactory;
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.WSWrapper;
+import com.wurmcraft.serveressentials.api.models.data_wrapper.ChatMessage;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
+import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.RequestGenerator;
 import java.io.IOException;
+import net.minecraft.util.text.TextFormatting;
 
 public class SocketController {
 
@@ -60,9 +63,15 @@ public class SocketController {
   }
 
   public void handleTextMessage(WSWrapper wrapper) {
-    ServerEssentials.LOG.info("WS Message: " + wrapper.type + " " + wrapper.data);
+    ServerEssentials.LOG.debug("WS Message: " + wrapper.type + " " + wrapper.data);
+    if (wrapper.data.type.equals("broadcast")) {
+      ChatMessage broadcast = ServerEssentials.GSON.fromJson(wrapper.data.data,
+          ChatMessage.class);
+      ChatHelper.sendToAll(
+          TextFormatting.RED + "[" + broadcast.senderName + "] " + TextFormatting.GOLD
+              + broadcast.message);
+    }
     // TODO Handle Messages
-    // Broadcast
     // Chat
     // Discord
     // Shutdown
