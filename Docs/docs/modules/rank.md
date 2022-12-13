@@ -10,6 +10,7 @@ Requirements: `Core`
 
 | Name        | Permission Node            | Description                                                                 | Default Aliases                         | Recommended Security  |
 | ----------- | ---------------------------|-----------------------------------------------------------------------------|-----------------------------------------|-----------------------|
+| Rank        | `command.rank`             | Allows for changing a user's rank(s) or creating/deleting ranks             |                                         | `Medium`              |
 
 ### Non-Command Permission
 
