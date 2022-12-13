@@ -224,4 +224,8 @@ public class Language {
   public String COMMAND_VERIFY;
   public String COMMAND_VERIFY_FAILED;
   public String COMMAND_HELP_FORMAT;
+  public String COMMAND_LOCKDOWN_DISABLED;
+  public String COMMAND_LOCKDOWN_ENABLED;
+  public String SECURITY_BLACKLIST;
+  public String SECURITY_ALT;
 }

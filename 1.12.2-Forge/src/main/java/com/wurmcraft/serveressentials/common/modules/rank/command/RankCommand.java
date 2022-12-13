@@ -1,4 +1,4 @@
-package com.wurmcraft.serveressentials.common.modules.rank;
+package com.wurmcraft.serveressentials.common.modules.rank.command;
 
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;

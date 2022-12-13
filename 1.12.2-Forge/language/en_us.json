@@ -194,7 +194,7 @@
   "COMMAND_RANK_INFO_COLOR_PRIORITY": "&bColor Priority: {@NUM@}",
   "COMMAND_RANK_ADD_PERMS": "&bPerm {@PERM@} added to rank {@NAME@}",
   "COMMAND_RANK_ADD_INHERITANCE": "&bInheritance {@INHERITANCE@} added to rank {@NAME@}",
-  "COMMAND_RANK_ADD_PREFIX" : "&bPrefix {@PREFIX@} has been set for rank {@NAME@}",
+  "COMMAND_RANK_ADD_PREFIX": "&bPrefix {@PREFIX@} has been set for rank {@NAME@}",
   "COMMAND_RANK_ADD_SUFFIX": "&bSuffix {@SUFFIX@} has been set for rank {@NAME@}",
   "COMMAND_RANK_ADD_PREFIX_PRIORITY": "&bPrefix Priority has been set to {@NUM@} for rank {@NAME@}",
   "COMMAND_RANK_ADD_SUFFIX_PRIORITY": "&Suffix Priority has been set to {@NUM@} for rank {@NAME@}",
@@ -202,5 +202,9 @@
   "COMMAND_RANK_ADD_COLOR": "&bColor for rank {@NAME@} has been set to {@COLOR@}",
   "COMMAND_VERIFY": "&bYou have been verified, Please allow 10min to fully sync, &bthe discord bot will notify when its completed.",
   "COMMAND_VERIFY_FAILED": "&cFailed to verify discord account, please make sure you entered the code correctly",
-  "COMMAND_HELP_FORMAT": "&l&b{@COMMAND@} &d> &6{@DESCRIPTION@}"
+  "COMMAND_HELP_FORMAT": "&l&b{@COMMAND@} &d> &6{@DESCRIPTION@}",
+  "COMMAND_LOCKDOWN_DISABLED": "&cLockdown is now disabled",
+  "COMMAND_LOCKDOWN_ENABLED": "&cLockdown has been enabled!",
+  "SECURITY_BLACKLIST": "&bYou cannot join with the mod '%MOD%'",
+  "SECURITY_ALT": "&bPlayer %PLAYER% and %PLAYER2% are connected via the same ip address"
 }
