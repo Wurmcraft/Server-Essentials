@@ -5,6 +5,7 @@ import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 import com.wurmcraft.serveressentials.api.models.*;
 import com.wurmcraft.serveressentials.api.models.local.Bulletin;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
+import com.wurmcraft.serveressentials.common.modules.protect.models.RegionClaim;
 import javax.annotation.Nullable;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
@@ -34,7 +35,8 @@ public class DataLoader implements IDataLoader {
     CHANNEL(null, null, "name", Channel.class, Channel[].class, true),
     BULLETIN(null, null, "title", Bulletin.class, Bulletin[].class, true),
     WARP(null, null, "name", Warp.class, Warp[].class, true),
-    KIT(null, null, "name", Kit.class, Kit[].class, true);
+    KIT(null, null, "name", Kit.class, Kit[].class, true),
+    CLAIM(null,null, "regionID", RegionClaim.class, RegionClaim[].class, true);
 
     public String path;
     String pathType;
