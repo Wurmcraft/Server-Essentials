@@ -10,8 +10,10 @@ import com.wurmcraft.serveressentials.common.modules.protect.models.Claim;
 import com.wurmcraft.serveressentials.common.modules.protect.models.TrustInfo.Action;
 import com.wurmcraft.serveressentials.common.modules.protect.utils.ProtectionHelper;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
+import java.lang.reflect.Field;
 import java.util.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickEmpty;
@@ -148,6 +150,8 @@ public class ProtectionEvents {
       "PROTECT")).defenseRange;
   private static int minDistance = ((ConfigProtect) SECore.moduleConfigs.get(
       "PROTECT")).minClaimSize;
+  private static boolean preventNearbyExplosions = ((ConfigProtect) SECore.moduleConfigs.get(
+      "PROTECT")).preventNearbyExplosions;
 
   private boolean isInteractionAllowedArea(BlockPos pos, EntityPlayer player) {
     for (int x = -maxCheck; x < maxCheck; x = x + minDistance) {
@@ -181,13 +185,15 @@ public class ProtectionEvents {
     }
   }
 
-
   @SubscribeEvent(priority = EventPriority.HIGH)
-  public void onExplosion(ExplosionEvent e) {
+  public void onExplosion(ExplosionEvent.Detonate e) {
     if (e.getExplosion().getExplosivePlacedBy() instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) e.getExplosion().getExplosivePlacedBy();
       if (!allowedToExplode(e.getExplosion().getAffectedBlockPositions(), player)) {
         e.setCanceled(true);
+        ServerEssentials.LOG.info("Explosion has been canceled at " + e.getExplosion()
+            .getAffectedBlockPositions().get(0).toString() + " by " + e.getExplosion()
+            .getExplosivePlacedBy().getDisplayName().getFormattedText());
         Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
             SECore.dataLoader.get(DataType.ACCOUNT,
                 player.getGameProfile().getId().toString(), new Account()).lang,
@@ -196,12 +202,26 @@ public class ProtectionEvents {
       }
     } else {
       int dim = e.getExplosion().getExplosivePlacedBy() != null ? e.getExplosion()
-          .getExplosivePlacedBy().dimension : Integer.MIN_VALUE;
+          .getExplosivePlacedBy().dimension : e.getWorld().provider.getDimension();
       if (dim == Integer.MIN_VALUE) {
         ServerEssentials.LOG.warn(
-            "Unable to determine explosion source, \"I won't interfere\"");
+            "Unable to determine explosion source, \"I won't interfere\" ("
+                + e.getExplosion().getExplosivePlacedBy() + ")");
       } else if (hasClaim(e.getExplosion().getAffectedBlockPositions(), dim)) {
-        e.setCanceled(true);
+        if (preventNearbyExplosions) {
+          e.setCanceled(true);
+        } else {
+          String fieldName = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment") ? "affectedBlockPositions" : "field_149155_e";
+          try {
+            Field field = e.getExplosion().getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(e.getExplosion(),safeSpots(e.getExplosion().getAffectedBlockPositions(), dim));
+          } catch (Exception f) {
+            f.printStackTrace();
+            ServerEssentials.LOG.info("Failed to override explosion field, preventing explosion to protect claim");
+            e.setCanceled(true);
+          }
+        }
       }
     }
   }
@@ -221,10 +241,20 @@ public class ProtectionEvents {
     for (BlockPos pos : explosionList) {
       Claim claim = ProtectionHelper.getClaim(pos, dim);
       if (claim != null) {
-        return false;
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
+  public static List<BlockPos> safeSpots(List<BlockPos> possibleSpots, int dim) {
+    List<BlockPos> safeSpots = new ArrayList<>();
+    for (BlockPos pos : possibleSpots) {
+      Claim claim = ProtectionHelper.getClaim(pos, dim);
+      if (claim == null) {
+        safeSpots.add(pos);
+      }
+    }
+    return safeSpots;
+  }
 }
