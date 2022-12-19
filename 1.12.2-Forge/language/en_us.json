@@ -176,7 +176,6 @@
   "COMMAND_PAY": "&bYou have sent {@AMOUNT@} to {@PLAYER@}",
   "COMMAND_TAXES_PAY": "Pay: .{@AMOUNT@}%",
   "COMMAND_TAXES_BANK": "Bank: .{@AMOUNT@}%",
-  "COMMAND_TAXES_BANK": "Bank: .{@AMOUNT@}%",
   "COMMAND_TAXES_COMMAND": "Command: .{@AMOUNT@}%",
   "COMMAND_TAXES_INCOME": "Income: .{@AMOUNT@}%",
   "COMMAND_TAXES_SALES": "Sales: .{@AMOUNT@}%",
@@ -210,5 +209,5 @@
   "PROTECT_BREAK": "&cYou don't have permission to break this block!",
   "PROTECT_PLACE": "&cYou don't have permission to place a block here!",
   "PROTECT_CLAIM_ENTRY": "&bYou have entered {@NAME@}'s claim",
-  "PROTECT_CLAIM_EXIT": "&bYou have not left {@NAME@}'s claim"
+  "PROTECT_CLAIM_EXIT": "&bYou have now left {@NAME@}'s claim"
 }

@@ -1,5 +1,6 @@
 package com.wurmcraft.serveressentials.common.modules.protect.event;
 
+import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Language;
@@ -49,24 +50,24 @@ public class ClaimNotifyEvents {
       // Check if player has moved
       Claim currentClaim = ProtectionHelper.getClaim(player.getPosition(),
           player.dimension);
-      if (!lastPos.equals(player.getPosition())) {
+      if (lastPos != null && !lastPos.equals(player.getPosition())) {
         if (currentClaim != null && previousClaim != null && !currentClaim.owner.equals(
             previousClaim.owner)) {
           locationCache.put(player.getGameProfile().getId(), player.getPosition());
           lastClaim.put(player.getGameProfile().getId(), currentClaim);
           notifyClaimChange(player, currentClaim, true);
-        } else if (lastClaim == null && currentClaim != null) {
+        } else if (previousClaim == null && currentClaim != null) {
           locationCache.put(player.getGameProfile().getId(), player.getPosition());
           lastClaim.put(player.getGameProfile().getId(), currentClaim);
           notifyClaimChange(player, currentClaim, true);
-        } else if (currentClaim == null && lastClaim != null) {
+        } else if (currentClaim == null && previousClaim != null) {
           locationCache.put(player.getGameProfile().getId(), player.getPosition());
           lastClaim.put(player.getGameProfile().getId(), null);
           notifyClaimChange(player, null, false);
-        } else {
-          lastClaim.put(player.getGameProfile().getId(), null);
-          locationCache.put(player.getGameProfile().getId(), player.getPosition());
         }
+      } else {
+        lastClaim.put(player.getGameProfile().getId(), null);
+        locationCache.put(player.getGameProfile().getId(), player.getPosition());
       }
     }
   }
@@ -76,16 +77,19 @@ public class ClaimNotifyEvents {
         SECore.dataLoader.get(DataType.ACCOUNT,
             player.getGameProfile().getId().toString(), new Account()).lang,
         new Language());
-    if (entry) {
-      if (claim != null) {
-        ChatHelper.send(player, lang.PROTECT_CLAIM_ENTRY.replaceAll("\\{@NAME@}",
-            Objects.requireNonNull(
-                UsernameCache.getLastKnownUsername(UUID.fromString(claim.owner)))));
+    String name = "Error";
+    if (claim != null) {
+      name = UsernameCache.getLastKnownUsername(UUID.fromString(claim.owner));
+      if (name == null) {
+        ServerEssentials.LOG.warn("Claim has invalid / unknown uuid as its owner!");
+        ServerEssentials.LOG.warn(ServerEssentials.GSON.toJson(claim));
+        name = "Error";
       }
+    }
+    if (entry) {
+      ChatHelper.send(player, lang.PROTECT_CLAIM_ENTRY.replaceAll("\\{@NAME@}", name));
     } else {
-      ChatHelper.send(player, lang.PROTECT_CLAIM_EXIT.replaceAll("\\{@NAME@}",
-          Objects.requireNonNull(
-              UsernameCache.getLastKnownUsername(UUID.fromString(claim.owner)))));
+      ChatHelper.send(player, lang.PROTECT_CLAIM_EXIT.replaceAll("\\{@NAME@}", name));
     }
   }
 
