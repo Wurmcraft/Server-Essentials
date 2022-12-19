@@ -14,6 +14,7 @@ import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import com.wurmcraft.serveressentials.common.data.ws.SocketController;
 import com.wurmcraft.serveressentials.common.modules.chat.event.PlayerChatEvent;
+import com.wurmcraft.serveressentials.common.modules.general.event.HomeSpawnEvent;
 import com.wurmcraft.serveressentials.common.modules.general.event.InventoryTrackingEvents;
 import com.wurmcraft.serveressentials.common.modules.general.event.PlaytimeTrackerEvents;
 import com.wurmcraft.serveressentials.common.utils.RequestGenerator;
@@ -34,16 +35,21 @@ public class ModuleGeneral {
   public void setup() {
     MinecraftForge.EVENT_BUS.register(new InventoryTrackingEvents());
     MinecraftForge.EVENT_BUS.register(new PlaytimeTrackerEvents());
-    if (statusSchedule == null && SECore.dataLoader instanceof RestDataLoader)
+    if (statusSchedule == null && SECore.dataLoader instanceof RestDataLoader) {
       statusSchedule =
           ServerEssentials.scheduledService.scheduleAtFixedRate(
               () -> sendStatusUpdate(true, "Online"),
               ((ConfigGeneral) (SECore.moduleConfigs.get("GENERAL"))).statusSync,
               ((ConfigGeneral) (SECore.moduleConfigs.get("GENERAL"))).statusSync,
               TimeUnit.SECONDS);
+    }
+    if (((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).spawnAtHome) {
+      MinecraftForge.EVENT_BUS.register(new HomeSpawnEvent());
+    }
   }
 
-  public void reload() {}
+  public void reload() {
+  }
 
   public static void sendStatusUpdate(boolean useWebSocket, String status) {
     boolean socket = ServerEssentials.config.performance.useWebsocket;
@@ -70,8 +76,10 @@ public class ModuleGeneral {
 
   public static ServerStatus generateStatus(String status) {
     // TODO Compute Special Status, Invis, Management, Etc..
-    String[][] playersData = new String[][] {new String[] {}, new String[] {}};
-    if (status.equalsIgnoreCase("Online")) playersData = getPlayerInfo();
+    String[][] playersData = new String[][]{new String[]{}, new String[]{}};
+    if (status.equalsIgnoreCase("Online")) {
+      playersData = getPlayerInfo();
+    }
     return new ServerStatus(
         ServerEssentials.config.general.serverID,
         computeDelay(),
@@ -92,7 +100,8 @@ public class ModuleGeneral {
     List<String> playerInfo = new ArrayList<>();
     if (FMLCommonHandler.instance().getMinecraftServerInstance() != null) {
       for (EntityPlayer player :
-          FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+          FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
+              .getPlayers()) {
         onlinePlayers.add(player.getGameProfile().getId().toString());
         Account account =
             SECore.dataLoader.get(
@@ -102,10 +111,12 @@ public class ModuleGeneral {
         playerInfo.add(
             player.getDisplayNameString()
                 + ";"
-                + PlayerChatEvent.getRankValue("prefix", PlayerChatEvent.getRanks(account))
+                + PlayerChatEvent.getRankValue("prefix",
+                PlayerChatEvent.getRanks(account))
                 + ";");
       }
     }
-    return new String[][] {onlinePlayers.toArray(new String[0]), playerInfo.toArray(new String[0])};
+    return new String[][]{onlinePlayers.toArray(new String[0]),
+        playerInfo.toArray(new String[0])};
   }
 }

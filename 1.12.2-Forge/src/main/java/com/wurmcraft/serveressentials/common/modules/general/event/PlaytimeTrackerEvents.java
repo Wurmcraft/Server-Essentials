@@ -6,13 +6,19 @@ import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.LastPos;
 import com.wurmcraft.serveressentials.api.models.account.ServerTime;
+import com.wurmcraft.serveressentials.api.models.local.Home;
+import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.api.models.local.Location;
 import com.wurmcraft.serveressentials.common.command.CommandUtils;
+import com.wurmcraft.serveressentials.common.command.RankUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
+import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
 import com.wurmcraft.serveressentials.common.modules.general.ConfigGeneral;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
+import com.wurmcraft.serveressentials.common.utils.TeleportUtils;
+import com.wurmcraft.serveressentials.common.utils.WorldUtils;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,11 +26,14 @@ import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
@@ -40,6 +49,8 @@ public class PlaytimeTrackerEvents {
   public static long afkTime =
       CommandUtils.convertToTime(((ConfigGeneral) (SECore.moduleConfigs.get("GENERAL"))).afkTimer)
           / ((ConfigGeneral) (SECore.moduleConfigs.get("GENERAL"))).afkCheckTimer;
+
+  private static List<EntityPlayer> deadPlayers = new ArrayList<>();
 
   @SubscribeEvent
   public void playerLoginEvent(PlayerEvent.PlayerLoggedInEvent e) {
@@ -214,6 +225,23 @@ public class PlaytimeTrackerEvents {
         ChatHelper.send(
             randPlayer,
             lang.ANNOUNCEMENT_AFK_DISABLED.replaceAll("\\{@NAME@}", player.getDisplayNameString()));
+      }
+    }
+  }
+
+  @SubscribeEvent
+  public void onLivingDeath(LivingDeathEvent e) {
+    if (e.getEntityLiving() instanceof EntityPlayer) {
+      EntityPlayer player = (EntityPlayer) e.getEntityLiving();
+      Account account = SECore.dataLoader.get(DataType.ACCOUNT,player.getGameProfile().getId().toString(), new Account());
+      if (RankUtils.hasPermission(account, "general.back.death")) {
+        LocalAccount playerData = SECore.dataLoader.get(DataType.LOCAL_ACCOUNT,player.getGameProfile().getId().toString(), new LocalAccount());
+        playerData.lastLocation = new Location(player.posX, player.posY,
+            player.posZ, player.dimension, player.cameraPitch, player.cameraYaw);
+        SECore.dataLoader.register(DataType.LOCAL_ACCOUNT, playerData.uuid,playerData);
+      }
+      if (e.getEntityLiving() instanceof EntityPlayer) {
+        deadPlayers.add((EntityPlayer) e.getEntityLiving());
       }
     }
   }
