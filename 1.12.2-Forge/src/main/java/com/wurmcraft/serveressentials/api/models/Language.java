@@ -232,4 +232,6 @@ public class Language {
   // Protect
   public String PROTECT_BREAK;
   public String PROTECT_PLACE;
+  public String PROTECT_CLAIM_ENTRY;
+  public String PROTECT_CLAIM_EXIT;
 }

@@ -7,6 +7,7 @@ import com.wurmcraft.serveressentials.common.modules.protect.models.RegionClaim;
 import com.wurmcraft.serveressentials.common.modules.protect.models.RegionPos;
 import com.wurmcraft.serveressentials.common.modules.protect.models.TrustInfo.Action;
 import java.util.NoSuchElementException;
+import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 
@@ -16,6 +17,7 @@ public class ProtectionHelper {
     return null;
   }
 
+  @Nullable
   public static Claim getClaim(BlockPos pos, int dim) {
     RegionPos region = RegionHelper.getRegionPos(pos, dim);
     try {
