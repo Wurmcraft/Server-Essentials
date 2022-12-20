@@ -52,7 +52,7 @@ public class ChannelCommand {
       subCommandAliases = {"add", "c", "a"},
       canConsoleUse = true)
   public void create(ServerPlayer player, String name) {
-    Channel ch = new Channel(name, "[" + name + "]", false, new HashMap<>(), true, "");
+    Channel ch = new Channel(name, "[" + name + "]", false, new HashMap<>(), true, "",true, new String[0]);
     if (SECore.dataLoader.register(DataLoader.DataType.CHANNEL, ch.name, ch)) {
       ChatHelper.send(
           player.sender, player.lang.COMMAND_CHANNEL_CREATED.replaceAll("\\{@NAME@}", name));

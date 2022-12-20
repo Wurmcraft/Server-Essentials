@@ -7,7 +7,6 @@ public class ConfigAutorank {
 
   public boolean announceRackup;
 
-
   public ConfigAutorank(boolean announceRackup) {
     this.announceRackup = announceRackup;
   }

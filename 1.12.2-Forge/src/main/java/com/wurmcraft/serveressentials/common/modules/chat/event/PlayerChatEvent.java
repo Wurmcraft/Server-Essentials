@@ -156,9 +156,9 @@ public class PlayerChatEvent {
               ServerEssentials.config.general.serverID
             });
     // Channel Specific
-    if (channel.chatReplacment != null && channel.chatReplacment.size() > 0)
-      for (String regex : channel.chatReplacment.keySet())
-        msg = msg.replaceAll(regex, ChatHelper.replaceColor(channel.chatReplacment.get(regex)));
+    if (channel.chatReplacement != null && channel.chatReplacement.size() > 0)
+      for (String regex : channel.chatReplacement.keySet())
+        msg = msg.replaceAll(regex, ChatHelper.replaceColor(channel.chatReplacement.get(regex)));
     // Player Replacement
     if (RankUtils.hasPermission(account, "chat.replacement")) {
       msg =

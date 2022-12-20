@@ -8,17 +8,20 @@ public class ConfigTransfer {
   public String transferID;
   public String[] itemBlacklist;
   public double costToTransferItem;
+  public boolean allowLargeTransfers;
 
   public ConfigTransfer(String transferID, String[] itemBlacklist,
-      double costToTransferItem) {
+      double costToTransferItem, boolean allowLargeTransfers) {
     this.transferID = transferID;
     this.itemBlacklist = itemBlacklist;
     this.costToTransferItem = costToTransferItem;
+    this.allowLargeTransfers = allowLargeTransfers;
   }
 
   public ConfigTransfer() {
     this.transferID = "";
     this.itemBlacklist = new String[0];
     this.costToTransferItem = 0.0;
+    this.allowLargeTransfers = false;
   }
 }
