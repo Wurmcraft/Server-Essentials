@@ -228,6 +228,8 @@ public class Language {
   public String COMMAND_LOCKDOWN_ENABLED;
   public String SECURITY_BLACKLIST;
   public String SECURITY_ALT;
+  public String COMMAND_VANISH;
+  public String COMMAND_VANISH_UNDO;
 
   // Protect
   public String PROTECT_BREAK;

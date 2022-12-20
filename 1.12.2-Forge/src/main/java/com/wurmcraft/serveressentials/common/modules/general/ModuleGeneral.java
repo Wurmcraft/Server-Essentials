@@ -17,6 +17,7 @@ import com.wurmcraft.serveressentials.common.modules.chat.event.PlayerChatEvent;
 import com.wurmcraft.serveressentials.common.modules.general.event.HomeSpawnEvent;
 import com.wurmcraft.serveressentials.common.modules.general.event.InventoryTrackingEvents;
 import com.wurmcraft.serveressentials.common.modules.general.event.PlaytimeTrackerEvents;
+import com.wurmcraft.serveressentials.common.modules.general.event.VanishEvent;
 import com.wurmcraft.serveressentials.common.utils.RequestGenerator;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class ModuleGeneral {
   public void setup() {
     MinecraftForge.EVENT_BUS.register(new InventoryTrackingEvents());
     MinecraftForge.EVENT_BUS.register(new PlaytimeTrackerEvents());
+    MinecraftForge.EVENT_BUS.register(new VanishEvent());
     if (statusSchedule == null && SECore.dataLoader instanceof RestDataLoader) {
       statusSchedule =
           ServerEssentials.scheduledService.scheduleAtFixedRate(

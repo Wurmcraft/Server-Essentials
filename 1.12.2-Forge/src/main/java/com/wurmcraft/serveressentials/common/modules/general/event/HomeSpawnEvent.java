@@ -16,9 +16,6 @@ public class HomeSpawnEvent {
 
   @SubscribeEvent
   public void onRespawn(PlayerRespawnEvent e) {
-//    if (!vanishedPlayers.isEmpty() && vanishedPlayers.contains(e.player)) {
-//      GeneralUtils.updateVanish(e.player, false);
-//    }
     LocalAccount localAccount = SECore.dataLoader.get(
         DataType.LOCAL_ACCOUNT, e.player.getGameProfile().getId().toString(), new LocalAccount());
     Account account = SECore.dataLoader.get(DataType.ACCOUNT, e.player.getGameProfile().getId().toString(), new Account());
