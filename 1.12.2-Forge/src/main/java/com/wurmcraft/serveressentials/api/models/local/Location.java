@@ -17,4 +17,8 @@ public class Location {
     this.pitch = pitch;
     this.yaw = yaw;
   }
+
+  public Location() {
+
+  }
 }

@@ -8,4 +8,8 @@ public class Home extends Location {
     super(x, y, z, dim, pitch, yaw);
     this.name = name;
   }
+
+  public Home() {
+    super();
+  }
 }

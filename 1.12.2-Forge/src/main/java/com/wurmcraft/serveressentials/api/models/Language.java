@@ -13,6 +13,7 @@ public class Language {
   public String INVALID_DIMENSION;
   public String NO_MONEY;
   public String NUMBER_REQUIRED;
+  public String COMMAND_ERROR;
 
   // Chat
   public String SPACER;
@@ -230,6 +231,8 @@ public class Language {
   public String SECURITY_ALT;
   public String COMMAND_VANISH;
   public String COMMAND_VANISH_UNDO;
+  public String COMMAND_AUTORANK_CREATE_BASIC;
+  public String COMMAND_AUTORANK_CREATE;
 
   // Protect
   public String PROTECT_BREAK;

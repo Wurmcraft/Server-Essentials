@@ -2,16 +2,21 @@ package com.wurmcraft.serveressentials.common.command;
 
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
+import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.command.Command;
 import com.wurmcraft.serveressentials.api.command.CommandArgument;
 import com.wurmcraft.serveressentials.api.command.CommandConfig;
+import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.models.*;
 import com.wurmcraft.serveressentials.api.models.Currency;
 import com.wurmcraft.serveressentials.api.models.local.Home;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
+import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
+import com.wurmcraft.serveressentials.common.modules.security.TrustedList;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
+import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.lang.reflect.Method;
 import java.util.*;
 import javax.annotation.Nullable;
@@ -37,26 +42,36 @@ public class SECommand extends CommandBase {
       throws NullPointerException, InstantiationException, IllegalAccessException {
     this.config = config;
     this.instance = instance.newInstance();
-    if (config == null || config.name == null || config.name.isEmpty())
+    if (config == null || config.name == null || config.name.isEmpty()) {
       throw new NullPointerException("Invalid Command Name, Unable to make command");
-    if (instance == null) // TODO Check for valid command instance
-    throw new NullPointerException("Invalid Command Class, Unable to make command");
-    for (Method method : instance.getDeclaredMethods())
+    }
+    if (!instance.isAnnotationPresent(ModuleCommand.class) && !instance.getAnnotation(
+        ModuleCommand.class).name().isEmpty() && !instance.getAnnotation(
+        ModuleCommand.class).module().isEmpty()) {
+      throw new NullPointerException("Invalid Command Class, Unable to make command");
+    }
+    for (Method method : instance.getDeclaredMethods()) {
       if (method.isAnnotationPresent(Command.class)
-          && !isValidArguments(method.getDeclaredAnnotation(Command.class).args()))
+          && !isValidArguments(method.getDeclaredAnnotation(Command.class).args())) {
         throw new NullPointerException("Invalid Command Arguments");
+      }
+    }
     // Generate Command Arguments
     arguments = new HashMap<>();
     subCommandArguments = new HashMap<>();
-    for (Method method : instance.getDeclaredMethods())
+    for (Method method : instance.getDeclaredMethods()) {
       if (method.isAnnotationPresent(Command.class)) {
         Command command = method.getDeclaredAnnotation(Command.class);
         if (command.isSubCommand()) {
           subCommandArguments.put(method.getName(), method);
-          for (String subAliases : command.subCommandAliases())
+          for (String subAliases : command.subCommandAliases()) {
             subCommandArguments.put(subAliases, method);
-        } else arguments.put(command.args(), method);
+          }
+        } else {
+          arguments.put(command.args(), method);
+        }
       }
+    }
     // Create Usage
     List<String> usageArr = new ArrayList<>();
     for (CommandArgument[] arg : arguments.keySet()) {
@@ -64,9 +79,11 @@ public class SECommand extends CommandBase {
       for (int index = 0; index < arg.length; index++) {
         CommandArgument a = arg[index];
         Command command = arguments.get(arg).getDeclaredAnnotation(Command.class);
-        if (a.equals(CommandArgument.STRING) && command.usage().length > index)
+        if (a.equals(CommandArgument.STRING) && command.usage().length > index) {
           temp = temp + " <" + command.usage()[index] + ">";
-        else temp = temp + " <" + a.name().toLowerCase() + ">";
+        } else {
+          temp = temp + " <" + a.name().toLowerCase() + ">";
+        }
       }
       usageArr.add(temp);
     }
@@ -75,19 +92,26 @@ public class SECommand extends CommandBase {
       String temp = "/" + getName() + " " + sub;
       Method method = subCommandArguments.get(sub);
       Command command = method.getDeclaredAnnotation(Command.class);
-      for (int index = 0; index < command.args().length; index++)
-        if (command.args()[index].equals(CommandArgument.STRING) && command.usage().length > index)
+      for (int index = 0; index < command.args().length; index++) {
+        if (command.args()[index].equals(CommandArgument.STRING)
+            && command.usage().length > index) {
           temp = temp + " <" + command.usage()[index] + ">";
-        else temp = temp + " <" + command.args()[index].name().toLowerCase() + ">";
+        } else {
+          temp = temp + " <" + command.args()[index].name().toLowerCase() + ">";
+        }
+      }
       usageArr.add(temp);
     }
     usage = usageArr.toArray(new String[0]);
   }
 
   public static boolean isValidArguments(CommandArgument[] arguments) {
-    for (int index = 0; index < arguments.length; index++)
-      if (arguments[index] == CommandArgument.STRING_ARR && index != arguments.length - 1)
+    for (int index = 0; index < arguments.length; index++) {
+      if (arguments[index] == CommandArgument.STRING_ARR
+          && index != arguments.length - 1) {
         return false;
+      }
+    }
     return true;
   }
 
@@ -103,14 +127,14 @@ public class SECommand extends CommandBase {
 
   @Override
   public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
-    // TODO Check secure status
     ServerPlayer userData;
     if (sender instanceof EntityPlayer) {
       String uuid = ((EntityPlayer) sender).getGameProfile().getId().toString();
       userData =
           new ServerPlayer(
               (EntityPlayer) sender,
-              SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, uuid, new LocalAccount()),
+              SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, uuid,
+                  new LocalAccount()),
               SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid, new Account()));
       if (!config.enabled) {
         ChatHelper.send(sender, userData.lang.DISABLED);
@@ -119,16 +143,26 @@ public class SECommand extends CommandBase {
       // Check Min Rank
       if (!config.minRank.isEmpty()
           && !RankUtils.isGreaterThan(config.minRank, userData.global.rank)) {
-        ChatHelper.send(sender, new TextComponentTranslation("commands.generic.permission"));
+        ChatHelper.send(sender,
+            new TextComponentTranslation("commands.generic.permission"));
         return;
       }
       // Currency Check
       if (!config.currencyCost.isEmpty()) {
-        for (String name : config.currencyCost.keySet())
+        for (String name : config.currencyCost.keySet()) {
           if (!EcoUtils.canBuy(name, config.currencyCost.get(name), userData.global)) {
             // TODO Need currency msg
             return;
           }
+        }
+      }
+      // Check for trusted user
+      if (config.secure && !TrustedList.trustedUsers.contains(uuid)) {
+        ChatHelper.send(sender,
+            new TextComponentTranslation("commands.generic.permission"));
+        LOG.debug(
+            "User '" + ((EntityPlayer) sender).getDisplayNameString() + "' tried to run '"
+                + config.name + "' however its a secure command, preventing");
       }
     } else {
       userData = new ServerPlayer(sender);
@@ -136,7 +170,12 @@ public class SECommand extends CommandBase {
         ChatHelper.send(sender, userData.lang.DISABLED);
         return;
       }
+      if (config.secure) {
+        ChatHelper.send(sender,
+            new TextComponentTranslation("commands.generic.permission"));
+      }
     }
+    // Run Command
     if (runMethod(userData, args)) {
       if (!config.currencyCost.isEmpty()) {
         // TODO Consume Currency
@@ -167,16 +206,22 @@ public class SECommand extends CommandBase {
               player,
               command.args(),
               command.isSubCommand() ? Arrays.copyOfRange(args, 1, args.length) : args);
-      if (conv != null) converted.addAll(Arrays.asList(conv));
+      if (conv != null) {
+        converted.addAll(Arrays.asList(conv));
+      }
       try {
         Object output = method.invoke(instance, converted.toArray(new Object[0]));
-        if (output instanceof Boolean) return (boolean) output;
-        if (output == null) return true;
+        if (output instanceof Boolean) {
+          return (boolean) output;
+        }
+        if (output == null) {
+          return true;
+        }
       } catch (Exception e) {
         LOG.info("Command: /" + getName() + " " + String.join(" ", args));
         e.printStackTrace();
         LOG.warn("Failed to execute command");
-        // TODO Print Command Errored
+        ChatHelper.send(player.sender, player.lang.COMMAND_ERROR);
         return false;
       }
     }
@@ -186,37 +231,48 @@ public class SECommand extends CommandBase {
   private Method findMethod(ServerPlayer player, String[] args) {
     // Empty Case
     if (args.length == 0) {
-      for (CommandArgument[] a : arguments.keySet())
-        if (a == null || a.length == 0) return arguments.get(a);
+      for (CommandArgument[] a : arguments.keySet()) {
+        if (a == null || a.length == 0) {
+          return arguments.get(a);
+        }
+      }
       return null;
     }
     // Sub Command Search
     if (subCommandArguments.size() > 0 && args.length > 0) {
-      for (String arg : subCommandArguments.keySet())
+      for (String arg : subCommandArguments.keySet()) {
         if (arg.equalsIgnoreCase(args[0])
             && (args.length - 1)
-                == subCommandArguments
-                    .get(arg)
-                    .getDeclaredAnnotation(Command.class)
-                    .args()
-                    .length) {
+            == subCommandArguments
+            .get(arg)
+            .getDeclaredAnnotation(Command.class)
+            .args()
+            .length) {
           Object[] convertedArgs =
               convertArguments(
                   player,
-                  subCommandArguments.get(arg).getDeclaredAnnotation(Command.class).args(),
+                  subCommandArguments.get(arg).getDeclaredAnnotation(Command.class)
+                      .args(),
                   Arrays.copyOfRange(args, 1, args.length));
           if (convertedArgs != null
-              || subCommandArguments.get(arg).getDeclaredAnnotation(Command.class).args().length
-                  == 0) return subCommandArguments.get(arg);
+              || subCommandArguments.get(arg).getDeclaredAnnotation(Command.class)
+              .args().length
+              == 0) {
+            return subCommandArguments.get(arg);
+          }
         }
+      }
     }
     // Default Search
     for (CommandArgument[] testArgs : arguments.keySet()) {
       // Size Match or has String Array
       if (testArgs.length == args.length
-          || testArgs.length > 0 && testArgs[testArgs.length - 1] == CommandArgument.STRING_ARR) {
+          || testArgs.length > 0
+          && testArgs[testArgs.length - 1] == CommandArgument.STRING_ARR) {
         Object[] convertedArgs = convertArguments(player, testArgs, args);
-        if (convertedArgs != null) return arguments.get(testArgs);
+        if (convertedArgs != null) {
+          return arguments.get(testArgs);
+        }
       }
     }
     return null;
@@ -228,15 +284,18 @@ public class SECommand extends CommandBase {
       if (args[args.length - 1] == CommandArgument.STRING_ARR) {
         List<Object> converted = new ArrayList<>();
         for (int index = 0; index < args.length; index++) {
-          if (args[index] != CommandArgument.STRING_ARR)
+          if (args[index] != CommandArgument.STRING_ARR) {
             converted.add(convert(player, userArgs[index], args[index]));
-          else converted.add(Arrays.copyOfRange(userArgs, index, userArgs.length));
+          } else {
+            converted.add(Arrays.copyOfRange(userArgs, index, userArgs.length));
+          }
         }
         return converted.toArray(new Object[0]);
       } else {
         Object[] converted = new Object[args.length];
-        for (int index = 0; index < args.length; index++)
+        for (int index = 0; index < args.length; index++) {
           converted[index] = convert(player, userArgs[index], args[index]);
+        }
         return converted;
       }
     } catch (Exception e) {
@@ -277,21 +336,33 @@ public class SECommand extends CommandBase {
             .getFromKey(DataLoader.DataType.KIT, new Kit())
             .values()
             .toArray(new Kit[0]);
-    for (Kit kit : kits) if (kit.name.equalsIgnoreCase(arg)) return kit;
+    for (Kit kit : kits) {
+      if (kit.name.equalsIgnoreCase(arg)) {
+        return kit;
+      }
+    }
     return null;
   }
 
   public EntityPlayer getPlayer(String name) {
     for (EntityPlayer player :
-        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers())
-      if (player.getDisplayNameString().equalsIgnoreCase(name)) return player;
-    // TODO Get based on nick
+        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
+            .getPlayers()) {
+      Account account = SECore.dataLoader.get(DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account());
+      if (player.getDisplayNameString().equalsIgnoreCase(name) || name.equalsIgnoreCase(ChatHelper.getName(player, account))) {
+        return player;
+      }
+    }
     return null;
   }
 
   public Home getHome(ServerPlayer player, String name) {
     Home[] homes = player.local.homes;
-    for (Home home : homes) if (home.name.equalsIgnoreCase(name)) return home;
+    for (Home home : homes) {
+      if (home.name.equalsIgnoreCase(name)) {
+        return home;
+      }
+    }
     return null;
   }
 
@@ -301,38 +372,59 @@ public class SECommand extends CommandBase {
             .getFromKey(DataLoader.DataType.WARP, new Warp[0])
             .values()
             .toArray(new Warp[0]);
-    for (Warp warp : warps) if (warp.name.startsWith(name)) return warp;
+    for (Warp warp : warps) {
+      if (warp.name.startsWith(name)) {
+        return warp;
+      }
+    }
     return null;
   }
 
   public Currency getCurrency(String name) {
     // Attempt to get currency (match)
     for (String currency :
-        SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency()).keySet())
-      if (name.equalsIgnoreCase(currency))
-        return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, currency, new Currency());
+        SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency())
+            .keySet()) {
+      if (name.equalsIgnoreCase(currency)) {
+        return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, currency,
+            new Currency());
+      }
+    }
     // Attempt to find based on starting match
     for (String currency :
-        SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency()).keySet())
-      if (currency.startsWith(name))
-        return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, currency, new Currency());
+        SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency())
+            .keySet()) {
+      if (currency.startsWith(name)) {
+        return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, currency,
+            new Currency());
+      }
+    }
     return null;
   }
 
   public Channel getChannel(String name) {
     // Direct Match
     Channel ch = SECore.dataLoader.get(DataLoader.DataType.CHANNEL, name, new Channel());
-    if (ch != null) return ch;
+    if (ch != null) {
+      return ch;
+    }
     // Attempt to get currency (match)
     for (String channel :
-        SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel()).keySet())
-      if (name.equalsIgnoreCase(channel))
-        return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, channel, new Channel());
+        SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel())
+            .keySet()) {
+      if (name.equalsIgnoreCase(channel)) {
+        return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, channel,
+            new Channel());
+      }
+    }
     // Attempt to find based on starting match
     for (String channel :
-        SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel()).keySet())
-      if (channel.startsWith(name))
+        SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel())
+            .keySet()) {
+      if (channel.startsWith(name)) {
         return SECore.dataLoader.get(DataLoader.DataType.CHANNEL, channel, new Channel());
+      }
+    }
     return null;
   }
 
@@ -351,32 +443,36 @@ public class SECommand extends CommandBase {
   }
 
   private static String upperFirstLetter(String str) {
-    if (str.length() > 1) return str.substring(0, 1).toUpperCase() + str.substring(2).toLowerCase();
+    if (str.length() > 1) {
+      return str.substring(0, 1).toUpperCase() + str.substring(2).toLowerCase();
+    }
     return str;
   }
 
   @Override
   public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
     if (sender instanceof EntityPlayer) {
-      return true; // TODO Remove
-      //            if (config.secure) {
-      //                // TODO Check if is secure user
-      //            }
-      //            Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT,
-      // ((EntityPlayer) sender).getGameProfile().getId().toString(), new Account());
-      //            return RankUtils.hasPermission(account, config.permissionNode);
+      EntityPlayer player = (EntityPlayer) sender;
+      Account account = SECore.dataLoader.get(DataType.ACCOUNT,
+          player.getGameProfile().getId().toString(), new Account());
+      return RankUtils.hasPermission(account, config.permissionNode);
     }
     return !config.secure;
   }
 
   @Override
   public List<String> getTabCompletions(
-      MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+      MinecraftServer server, ICommandSender sender, String[] args,
+      @Nullable BlockPos targetPos) {
     int currentIndex = 0;
     CommandArgument arg;
-    if (!args[0].isEmpty())
-      for (int index = 0; index < args.length; index++)
-        if (args[index].isEmpty()) currentIndex = index;
+    if (!args[0].isEmpty()) {
+      for (int index = 0; index < args.length; index++) {
+        if (args[index].isEmpty()) {
+          currentIndex = index;
+        }
+      }
+    }
     List<String> tabComplete = new ArrayList<>();
     // Autofill arguments
     for (CommandArgument[] a : arguments.keySet()) {
@@ -386,15 +482,18 @@ public class SECommand extends CommandBase {
         tabComplete.addAll(
             CommandUtils.predict(
                 args[currentIndex],
-                CommandUtils.generatePossibleAutoFill(sender, arg, command.usage()[currentIndex])));
+                CommandUtils.generatePossibleAutoFill(sender, arg,
+                    command.usage()[currentIndex])));
       }
     }
     if (args[0].isEmpty()) {
-      for (String sub : subCommandArguments.keySet())
+      for (String sub : subCommandArguments.keySet()) {
         tabComplete.addAll(CommandUtils.predict(args[0], Collections.singletonList(sub)));
+      }
     } else if (subCommandArguments.containsKey(args[0].toLowerCase())) {
       Command command =
-          subCommandArguments.get(args[0].toLowerCase()).getDeclaredAnnotation(Command.class);
+          subCommandArguments.get(args[0].toLowerCase())
+              .getDeclaredAnnotation(Command.class);
       if (command.args().length > (currentIndex - 1)) {
         arg = command.args()[currentIndex - 1];
         tabComplete.addAll(

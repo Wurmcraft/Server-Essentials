@@ -9,7 +9,11 @@ import com.wurmcraft.serveressentials.api.command.CommandArgument;
 import com.wurmcraft.serveressentials.api.command.CommandConfig;
 import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.models.*;
+import com.wurmcraft.serveressentials.api.models.local.Home;
+import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
+import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
+import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,6 +28,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.logging.log4j.util.Strings;
+import scala.reflect.internal.TypeDebugging;
 
 public class CommandUtils {
 
@@ -158,9 +163,9 @@ public class CommandUtils {
       for (EntityPlayer player :
           FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
               .getPlayers()) {
-        autofill.add(
-            player
-                .getDisplayNameString()); // TODO Replace Username with "Name" / nick when possible
+        Account account = SECore.dataLoader.get(DataType.ACCOUNT,
+            player.getGameProfile().getId().toString(), new Account());
+        autofill.add(ChatHelper.getName(player, account));
       }
     } else if (arg == CommandArgument.RANK) {
       for (Rank rank : SECore.dataLoader.getFromKey(DataLoader.DataType.RANK, new Rank())
@@ -168,7 +173,13 @@ public class CommandUtils {
         autofill.add(rank.name);
       }
     } else if (arg == CommandArgument.HOME) {
-      // TODO Autofill with user homes
+      if (sender instanceof EntityPlayer) {
+        EntityPlayer player = (EntityPlayer) sender;
+        for (Home home : SECore.dataLoader.get(DataType.LOCAL_ACCOUNT,
+            player.getGameProfile().getId().toString(), new LocalAccount()).homes) {
+          autofill.add(home.name);
+        }
+      }
     } else if (arg == CommandArgument.MODULE) {
       autofill.addAll(SECore.modules.keySet());
     } else if (arg == CommandArgument.CURRENCY) {
@@ -178,7 +189,22 @@ public class CommandUtils {
         autofill.add(currency.display_name);
       }
     } else if (arg == CommandArgument.WARP) {
-      // TODO Autofill warps (user access only)
+      if (sender instanceof EntityPlayer) {
+        EntityPlayer player = (EntityPlayer) sender;
+        Account account = SECore.dataLoader.get(DataType.ACCOUNT,
+            player.getGameProfile().getId().toString(), new Account());
+        for (Warp warp : SECore.dataLoader.getFromKey(DataType.WARP, new Warp())
+            .values()) {
+          if (RankUtils.hasPermission(account, "command.warp." + warp.name)) {
+            autofill.add(warp.name);
+          }
+        }
+      } else {
+        for (Warp warp : SECore.dataLoader.getFromKey(DataType.WARP, new Warp())
+            .values()) {
+          autofill.add(warp.name);
+        }
+      }
     } else if (arg == CommandArgument.DATA_TYPE) {
       for (DataLoader.DataType type : DataLoader.DataType.values()) {
         autofill.add(type.name().toLowerCase());
