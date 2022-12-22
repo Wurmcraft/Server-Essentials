@@ -17,6 +17,8 @@ import com.wurmcraft.serveressentials.common.modules.general.event.HomeSpawnEven
 import com.wurmcraft.serveressentials.common.modules.general.event.InventoryTrackingEvents;
 import com.wurmcraft.serveressentials.common.modules.general.event.GeneralEvents;
 import com.wurmcraft.serveressentials.common.modules.general.event.VanishEvent;
+import com.wurmcraft.serveressentials.common.modules.security.ConfigSecurity;
+import com.wurmcraft.serveressentials.common.modules.security.ModuleSecurity;
 import com.wurmcraft.serveressentials.common.utils.RequestGenerator;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -76,10 +78,12 @@ public class ModuleGeneral {
   }
 
   public static ServerStatus generateStatus(String status) {
-    // TODO Compute Special Status, Invis, Management, Etc..
     String[][] playersData = new String[][]{new String[]{}, new String[]{}};
     if (status.equalsIgnoreCase("Online")) {
       playersData = getPlayerInfo();
+      if(SECore.modules.contains("SECURITY") && ((ConfigSecurity)SECore.moduleConfigs.get("SECURITY")).lockdownEnabled) {
+        status = "Lockdown";
+      }
     }
     return new ServerStatus(
         ServerEssentials.config.general.serverID,
@@ -91,9 +95,30 @@ public class ModuleGeneral {
         "{}");
   }
 
-  // TODO Implement
   private static long computeDelay() {
-    return 100;
+    return (long) (getSum(
+            FMLCommonHandler.instance()
+                .getMinecraftServerInstance()
+                .worldTickTimes
+                .get(
+                    FMLCommonHandler.instance()
+                        .getMinecraftServerInstance()
+                        .getWorld(0)
+                        .provider
+                        .getDimension()))
+            * 1.0E-006D);
+  }
+
+
+  private static double getSum(long[] times) {
+    long timesum = 0L;
+    for (long time : times) {
+      timesum += time;
+    }
+    if (times == null) {
+      return 0;
+    }
+    return timesum / times.length;
   }
 
   public static String[][] getPlayerInfo() {
@@ -103,6 +128,8 @@ public class ModuleGeneral {
       for (EntityPlayer player :
           FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
               .getPlayers()) {
+        if(VanishEvent.vanishedPlayers.contains(player))
+          continue;
         onlinePlayers.add(player.getGameProfile().getId().toString());
         Account account =
             SECore.dataLoader.get(

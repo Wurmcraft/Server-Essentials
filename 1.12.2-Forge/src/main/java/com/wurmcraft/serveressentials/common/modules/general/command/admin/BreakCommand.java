@@ -89,11 +89,4 @@ public class BreakCommand {
             .equalsIgnoreCase(block.getUnlocalizedName()))
       destroyConnected(world, block, blockPos.down(), ++currentDepth);
   }
-
-  // TODO Implement
-  @Command(
-      args = {},
-      usage = {},
-      isSubCommand = true)
-  public void toggle(ServerPlayer player) {}
 }
