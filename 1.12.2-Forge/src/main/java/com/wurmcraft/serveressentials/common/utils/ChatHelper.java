@@ -5,14 +5,17 @@ import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
-import com.wurmcraft.serveressentials.api.models.*;
+import com.wurmcraft.serveressentials.api.models.Account;
+import com.wurmcraft.serveressentials.api.models.Channel;
+import com.wurmcraft.serveressentials.api.models.DataWrapper;
+import com.wurmcraft.serveressentials.api.models.Language;
+import com.wurmcraft.serveressentials.api.models.WSWrapper;
 import com.wurmcraft.serveressentials.api.models.data_wrapper.ChatMessage;
 import com.wurmcraft.serveressentials.api.models.local.Bulletin;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.command.RankUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
-import com.wurmcraft.serveressentials.common.data.ws.SocketController;
 import com.wurmcraft.serveressentials.common.modules.chat.ConfigChat;
 import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
 import java.util.ArrayList;
@@ -49,23 +52,29 @@ public class ChatHelper {
 
   public static void sendToAll(String msg) {
     for (EntityPlayer player :
-        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers())
+        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
+            .getPlayers()) {
       sendTo(player, msg);
+    }
     LOG.info("[Broadcast]: " + msg);
   }
 
-  public static void sendFrom(EntityPlayerMP sender, Channel ch, TextComponentString message) {
+  public static void sendFrom(EntityPlayerMP sender, Channel ch,
+      TextComponentString message) {
     HashMap<EntityPlayer, LocalAccount> playersInChannel = getInChannel(ch);
     for (EntityPlayer player : playersInChannel.keySet()) {
       LocalAccount local = playersInChannel.get(player);
       boolean ignored = isIgnored(local, sender.getGameProfile().getId().toString());
       if (!ignored
           || RankUtils.hasPermission(
-              SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, local.uuid, new Account()),
-              "chat.ignore.bypass")) send(player, message);
+          SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, local.uuid, new Account()),
+          "chat.ignore.bypass")) {
+        send(player, message);
+      }
     }
     LOG.info("[Chat]: " + message.getFormattedText());
-    if(SECore.dataLoader instanceof RestDataLoader && ServerEssentials.config.performance.useWebsocket) {
+    if (SECore.dataLoader instanceof RestDataLoader
+        && ServerEssentials.config.performance.useWebsocket) {
       // TODO Config / non-web socket support? possibly via matterbridge?
       try {
         ServerEssentials.socketController.send(
@@ -104,15 +113,15 @@ public class ChatHelper {
     }
     String msgColor =
         SECore.dataLoader.get(
-                DataLoader.DataType.LANGUAGE,
-                ((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang,
-                new Language())
+            DataLoader.DataType.LANGUAGE,
+            ((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang,
+            new Language())
             .MESSAGE_COLOR;
     String format =
         replaceColor(
             msgColor
                 + ((ConfigChat) SECore.moduleConfigs.get("CHAT"))
-                    .messageFormat.replaceAll("%MSG%", msg));
+                .messageFormat.replaceAll("%MSG%", msg));
     String dir = format.substring(format.indexOf("{") + 1, format.indexOf("}"));
     String[] split = dir.split(",");
     format =
@@ -126,11 +135,11 @@ public class ChatHelper {
             .replaceAll(
                 "%NAME%",
                 getName(
-                        sender,
-                        SECore.dataLoader.get(
-                            DataLoader.DataType.ACCOUNT,
-                            sender.getGameProfile().getId().toString(),
-                            new Account()))
+                    sender,
+                    SECore.dataLoader.get(
+                        DataLoader.DataType.ACCOUNT,
+                        sender.getGameProfile().getId().toString(),
+                        new Account()))
                     .trim())
             .replaceAll("%USERNAME%", sender.getDisplayNameString()));
     String sentMessage =
@@ -139,33 +148,36 @@ public class ChatHelper {
             .replaceAll(
                 "%NAME%",
                 getName(
-                        receiver,
-                        SECore.dataLoader.get(
-                            DataLoader.DataType.ACCOUNT,
-                            receiver.getGameProfile().getId().toString(),
-                            new Account()))
+                    receiver,
+                    SECore.dataLoader.get(
+                        DataLoader.DataType.ACCOUNT,
+                        receiver.getGameProfile().getId().toString(),
+                        new Account()))
                     .trim())
             .replaceAll("%USERNAME%", receiver.getDisplayNameString());
     send(sender, sentMessage);
     lastMessageCache.put(
-        receiver.getGameProfile().getId().toString(), sender.getGameProfile().getId().toString());
+        receiver.getGameProfile().getId().toString(),
+        sender.getGameProfile().getId().toString());
     if (socialSpy.size() > 0) {
       for (EntityPlayer spy : ChatHelper.socialSpy) {
         if (spy.getGameProfile()
-                .getId()
-                .toString()
-                .equals(sender.getGameProfile().getId().toString())
+            .getId()
+            .toString()
+            .equals(sender.getGameProfile().getId().toString())
             || spy.getGameProfile()
-                .getId()
-                .toString()
-                .equals(receiver.getGameProfile().getId().toString())) continue;
+            .getId()
+            .toString()
+            .equals(receiver.getGameProfile().getId().toString())) {
+          continue;
+        }
         Language lang =
             SECore.dataLoader.get(
                 DataLoader.DataType.LANGUAGE,
                 SECore.dataLoader.get(
-                        DataLoader.DataType.ACCOUNT,
-                        spy.getGameProfile().getId().toString(),
-                        new Account())
+                    DataLoader.DataType.ACCOUNT,
+                    spy.getGameProfile().getId().toString(),
+                    new Account())
                     .lang,
                 new Language());
         send(
@@ -184,33 +196,43 @@ public class ChatHelper {
   }
 
   public static boolean isIgnored(LocalAccount current, String senderUUID) {
-    if (current.ignoredUsers == null || current.ignoredUsers.length == 0) return false;
-    for (String uuid : current.ignoredUsers) if (uuid.equals(senderUUID)) return true;
+    if (current.ignoredUsers == null || current.ignoredUsers.length == 0) {
+      return false;
+    }
+    for (String uuid : current.ignoredUsers) {
+      if (uuid.equals(senderUUID)) {
+        return true;
+      }
+    }
     return false;
   }
 
   public static HashMap<EntityPlayer, LocalAccount> getInChannel(Channel ch) {
     HashMap<EntityPlayer, LocalAccount> players = new HashMap<>();
     for (EntityPlayer player :
-        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
+            .getPlayers()) {
       LocalAccount local =
           SECore.dataLoader.get(
               DataLoader.DataType.LOCAL_ACCOUNT,
               player.getGameProfile().getId().toString(),
               new LocalAccount());
-      if (ch.name.equals(local.channel)) players.put(player, local);
+      if (ch.name.equals(local.channel)) {
+        players.put(player, local);
+      }
     }
     return players;
   }
 
   public static String getName(EntityPlayer player, Account account) {
-    if (account.display_name == null || account.display_name.isEmpty())
+    if (account.display_name == null || account.display_name.isEmpty()) {
       return player.getDisplayNameString();
-    else
+    } else {
       return ((ConfigChat) SECore.moduleConfigs.get("CHAT"))
           .nickFormat
           .replaceAll("%NICK%", account.display_name)
           .replaceAll("%USERNAME%", player.getDisplayNameString());
+    }
   }
 
   public static void send(EntityPlayer player, Bulletin bulletin) {
@@ -218,14 +240,23 @@ public class ChatHelper {
         SECore.dataLoader.get(
             DataLoader.DataType.LANGUAGE,
             SECore.dataLoader.get(
-                    DataLoader.DataType.ACCOUNT,
-                    player.getGameProfile().getId().toString(),
-                    new Account())
+                DataLoader.DataType.ACCOUNT,
+                player.getGameProfile().getId().toString(),
+                new Account())
                 .lang,
             new Language());
     send(player, lang.SPACER);
-    send(player, bulletin.title); // TODO Center Title
+    send(player, centerText(bulletin.title));
     send(player, bulletin.message);
     send(player, lang.SPACER);
+  }
+
+  public static String centerText(String text) {
+    int leftAlign = (41 / 2) - (text.length() / 2);
+    StringBuilder textBuilder = new StringBuilder(text);
+    for (int count = 0; count < leftAlign; count++) {
+      textBuilder.insert(0, " ");
+    }
+    return textBuilder.toString();
   }
 }

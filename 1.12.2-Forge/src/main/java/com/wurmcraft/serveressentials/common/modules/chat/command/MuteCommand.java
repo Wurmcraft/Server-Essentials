@@ -114,7 +114,7 @@ public class MuteCommand {
             Account account = GSON.fromJson(response.response, Account.class);
             muteRemote(player, account.uuid, inputs);
           } else {
-            // TODO Send Not Found Error
+            ChatHelper.send(player.sender,player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", uuid));
           }
         } catch (Exception e) {
           LOG.warn("Failed to get response from API, (" + e.getMessage() + ")");

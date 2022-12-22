@@ -19,6 +19,7 @@ import com.wurmcraft.serveressentials.common.data.loader.IDataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import com.wurmcraft.serveressentials.common.data.ws.SocketController;
 import com.wurmcraft.serveressentials.common.modules.general.ModuleGeneral;
+import com.wurmcraft.serveressentials.common.utils.ItemStackConverter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -50,6 +51,7 @@ public class ServerEssentials {
   public static final Logger LOG = LogManager.getLogger(NAME);
   public static final Gson GSON =
       new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+  public static ItemStackConverter stackConverter = new ItemStackConverter();
 
   public static ConfigGlobal config;
   public static ScheduledExecutorService scheduledService;

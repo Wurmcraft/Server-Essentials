@@ -3,6 +3,7 @@ package com.wurmcraft.serveressentials.common.modules.general.utils.inventory;
 import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
+import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.Vault;
 import com.wurmcraft.serveressentials.common.data.ConfigLoader;
@@ -86,7 +87,7 @@ public class VaultInventory extends InventoryBasic {
   public ItemStack getStackInSlot(int index) {
     if (index > 8 && index < vault.maxPages * 45) {
       int x = (index - 9) + (45 * page);
-      return ItemStackConverter.getData(vault.items[x]);
+      return ServerEssentials.stackConverter.getData(vault.items[x]);
     }
     if (index < 9) return menu[index];
     return ItemStack.EMPTY;
@@ -143,11 +144,11 @@ public class VaultInventory extends InventoryBasic {
   public void setInventorySlotContents(int index, ItemStack stack) {
     if (index > 8 && index < (45 * vault.maxPages) + 9) {
       if (vault.items.length > index) { // place into existing vault
-        vault.items[index - 9 + (page * 45)] = ItemStackConverter.toString(stack);
+        vault.items[index - 9 + (page * 45)] = ServerEssentials.stackConverter.toString(stack);
         markDirty();
       } else { // Expand Vault to fit new items
         vault.items = Arrays.copyOf(vault.items, 45 * (index / 45));
-        vault.items[index - 9 + +(page * 45)] = ItemStackConverter.toString(stack);
+        vault.items[index - 9 + +(page * 45)] = ServerEssentials.stackConverter.toString(stack);
         markDirty();
       }
       super.markDirty();
@@ -187,7 +188,7 @@ public class VaultInventory extends InventoryBasic {
   @Override
   public boolean isEmpty() {
     for (String item : vault.items) {
-      ItemStack stack = ItemStackConverter.getData(item);
+      ItemStack stack = ServerEssentials.stackConverter.getData(item);
       if (!stack.isEmpty()) return false;
     }
     return true;

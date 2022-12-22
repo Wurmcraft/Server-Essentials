@@ -1,5 +1,6 @@
 package com.wurmcraft.serveressentials.common.modules.general.command.item;
 
+import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.command.Command;
 import com.wurmcraft.serveressentials.api.command.CommandArgument;
 import com.wurmcraft.serveressentials.api.command.ModuleCommand;
@@ -18,7 +19,7 @@ public class GiveItemCommand {
       args = {CommandArgument.STRING},
       usage = {"item"})
   public void getItem(ServerPlayer player, String item) {
-    ItemStack stack = ItemStackConverter.getData(item);
+    ItemStack stack = ServerEssentials.stackConverter.getData(item);
     if (stack != null) {
       ChatHelper.send(
           player.sender,

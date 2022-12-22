@@ -14,6 +14,9 @@ public class Language {
   public String NO_MONEY;
   public String NUMBER_REQUIRED;
   public String COMMAND_ERROR;
+  public String LANGUAGE_INVALID;
+  public String LANGUAGE_CHANGE;
+  public String COMMAND_LANG;
 
   // Chat
   public String SPACER;
@@ -233,6 +236,7 @@ public class Language {
   public String COMMAND_VANISH_UNDO;
   public String COMMAND_AUTORANK_CREATE_BASIC;
   public String COMMAND_AUTORANK_CREATE;
+  public String COMMAND_SENDTOSPAWN;
 
   // Protect
   public String PROTECT_BREAK;

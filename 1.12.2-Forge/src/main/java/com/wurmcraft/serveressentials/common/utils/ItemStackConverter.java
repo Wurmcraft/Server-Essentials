@@ -1,7 +1,6 @@
 package com.wurmcraft.serveressentials.common.utils;
 
 import com.wurmcraft.serveressentials.ServerEssentials;
-import com.wurmcraft.serveressentials.api.models.DataWrapper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
@@ -12,10 +11,8 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
-public class ItemStackConverter {
-
-  // Config
-  public static boolean cacheConversions = true;
+// Copied from WurmTweaks2
+public class ItemStackConverter implements IDataConverter<ItemStack> {
 
   // Formatting Characters
   public static final String COUNT = "x";
@@ -25,15 +22,21 @@ public class ItemStackConverter {
 
   // Cache
   public static final NonBlockingHashMap<ItemStack, String> cache = new NonBlockingHashMap<>();
-  public static final NonBlockingHashMap<String, ItemStack> reverseCache =
-      new NonBlockingHashMap<>();
+  public static final NonBlockingHashMap<String, ItemStack> reverseCache = new NonBlockingHashMap<>();
 
-  private static int getMeta(String data) {
+  @Override
+  public String getName() {
+    return "ItemStack";
+  }
+
+  @Override
+  public int getMeta(String data) {
     if (data.contains(META)) {
       try {
-        String metaNum =
-            data.substring(
-                data.indexOf(META) + 1, data.contains(NBT) ? data.indexOf(NBT) : data.indexOf(">"));
+        String metaNum = data.substring(data.indexOf(META) + 1,
+            data.contains(NBT) ?
+                data.indexOf(NBT) :
+                data.indexOf(">"));
         return Integer.parseInt(metaNum);
       } catch (NumberFormatException e) {
         e.printStackTrace();
@@ -42,7 +45,8 @@ public class ItemStackConverter {
     return 0;
   }
 
-  private static int getDataSize(String data) {
+  @Override
+  public int getDataSize(String data) {
     if (data.contains(COUNT + SEPARATOR)) {
       try {
         String sizeNum = data.substring(1, data.indexOf("x"));
@@ -54,17 +58,15 @@ public class ItemStackConverter {
     return 1;
   }
 
-  private static DataWrapper getName(String data) {
+  @Override
+  public DataWrapper getName(String data) {
     String modid = "minecraft";
     String name = "air";
     boolean hasMeta = data.contains(META);
     boolean hasNBT = data.contains(NBT);
-    int spacerCount =
-        StringUtils.countMatches(
-            hasMeta
-                ? data.substring(1, data.indexOf(META) - 1)
-                : (hasNBT ? data.substring(1, data.indexOf(NBT) - 1) : data),
-            SEPARATOR);
+    int spacerCount = StringUtils.countMatches(
+        hasMeta ? data.substring(1, data.indexOf(META) - 1)
+            : (hasNBT ? data.substring(1, data.indexOf(NBT) - 1) : data), SEPARATOR);
     boolean hasModIDOrStackSize = spacerCount > 0;
     if (hasMeta && !hasModIDOrStackSize) {
       name = data.substring(1, data.indexOf(META));
@@ -75,7 +77,8 @@ public class ItemStackConverter {
     }
     if (hasModIDOrStackSize) {
       boolean hasStackSize = data.contains(COUNT + SEPARATOR);
-      int endPos = hasMeta ? data.indexOf(META) : (hasNBT ? data.indexOf(NBT) : data.length() - 1);
+      int endPos = hasMeta ? data.indexOf(META)
+          : (hasNBT ? data.indexOf(NBT) : data.length() - 1);
       String helper = data.substring(data.indexOf(SEPARATOR) + 1, endPos);
       if (hasStackSize && spacerCount == 1) {
         name = helper;
@@ -92,21 +95,23 @@ public class ItemStackConverter {
     return new DataWrapper(modid, name);
   }
 
-  private static String getExtraData(String data) {
+  @Override
+  public String getExtraData(String data) {
     if (data.contains(NBT)) {
-      return data.substring(data.indexOf(NBT), data.length() - 1);
+      return data.substring(data.indexOf(NBT) + 1, data.length() - 1);
     }
     return null;
   }
 
-  private static Object getBasicData(String data) {
-    return ForgeRegistries.ITEMS.getValue(
-        new ResourceLocation(getName(data).type, getName(data).data));
+  @Override
+  public Object getBasicData(String data) {
+    return ForgeRegistries.ITEMS.getValue(getName(data).toResourceLocation());
   }
 
-  public static ItemStack getData(String data) {
-    if (data == null || data.isEmpty()) return ItemStack.EMPTY;
-    if (cacheConversions && reverseCache.containsKey(data)) {
+  @Override
+  public ItemStack getData(String data) {
+    if (reverseCache.containsKey(data)) {
+      System.out.println("Cache: " + data + " " + reverseCache.get(data));
       return reverseCache.get(data).copy();
     }
     Item item = (Item) getBasicData(data);
@@ -117,21 +122,23 @@ public class ItemStackConverter {
         NBTTagCompound nbtData = JsonToNBT.getTagFromJson(nbt);
         stack.setTagCompound(nbtData);
       } catch (NBTException e) {
-        ServerEssentials.LOG.warn("Failed to load NBT for '" + data + "', creating without NBT");
+        ServerEssentials.LOG
+            .warn("Failed to load NBT for '" + data + "', creating without NBT");
       }
     }
-    if (cacheConversions) {
-      cache.put(stack.copy(), data);
-      reverseCache.put(data, stack.copy());
-    }
+
+    cache.put(stack.copy(), data);
+    reverseCache.put(data, stack.copy());
+
     return stack;
   }
 
-  public static String toString(ItemStack data) {
+  @Override
+  public String toString(ItemStack data) {
     if (data.isEmpty()) {
       return "<empty>";
     }
-    if (cacheConversions && cache.containsKey(data)) {
+    if (cache.containsKey(data)) {
       return cache.get(data);
     }
     StringBuilder builder = new StringBuilder();
@@ -142,9 +149,8 @@ public class ItemStackConverter {
       builder.append(SEPARATOR);
     }
     ResourceLocation name = data.getItem().getRegistryName();
-    if (name != null
-        && !name.getResourceDomain().isEmpty()
-        && !name.getResourceDomain().equalsIgnoreCase("minecraft")) {
+    if (name != null && !name.getResourceDomain().isEmpty() && !name.getResourceDomain()
+        .equalsIgnoreCase("minecraft")) {
       builder.append(name.getResourceDomain());
       builder.append(SEPARATOR);
     }
@@ -158,15 +164,16 @@ public class ItemStackConverter {
       builder.append(data.getTagCompound().toString());
     }
     builder.append(">");
-    if (cacheConversions) {
-      cache.put(data.copy(), builder.toString());
-      reverseCache.put(builder.toString(), data.copy());
-    }
+
+    cache.put(data.copy(), builder.toString());
+    reverseCache.put(builder.toString(), data.copy());
+
     return builder.toString();
   }
 
-  public static boolean isValid(String data) {
-    if (cacheConversions && reverseCache.containsKey(data)) {
+  @Override
+  public boolean isValid(String data) {
+    if (reverseCache.containsKey(data)) {
       return true;
     }
     try {
