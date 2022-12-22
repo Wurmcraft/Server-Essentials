@@ -237,6 +237,12 @@ public class Language {
   public String COMMAND_AUTORANK_CREATE_BASIC;
   public String COMMAND_AUTORANK_CREATE;
   public String COMMAND_SENDTOSPAWN;
+  public String COMMAND_SMITE;
+  public String COMMAND_SMITE_OTHER;
+  public String COMMAND_FREEZE_UNDO;
+  public String COMMAND_FREEZE_UNDO_OTHER;
+  public String COMMAND_FREEZE;
+  public String COMMAND_FREEZE_OTHER;
 
   // Protect
   public String PROTECT_BREAK;

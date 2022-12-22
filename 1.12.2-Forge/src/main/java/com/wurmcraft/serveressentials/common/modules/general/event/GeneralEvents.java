@@ -6,7 +6,6 @@ import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.LastPos;
 import com.wurmcraft.serveressentials.api.models.account.ServerTime;
-import com.wurmcraft.serveressentials.api.models.local.Home;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.api.models.local.Location;
 import com.wurmcraft.serveressentials.common.command.CommandUtils;
@@ -17,27 +16,26 @@ import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
 import com.wurmcraft.serveressentials.common.modules.general.ConfigGeneral;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
-import com.wurmcraft.serveressentials.common.utils.TeleportUtils;
-import com.wurmcraft.serveressentials.common.utils.WorldUtils;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
-public class PlaytimeTrackerEvents {
+public class GeneralEvents {
 
   // Time Tracking
   public static NonBlockingHashMap<EntityPlayer, Long> loginTime = new NonBlockingHashMap<>();
@@ -51,6 +49,7 @@ public class PlaytimeTrackerEvents {
           / ((ConfigGeneral) (SECore.moduleConfigs.get("GENERAL"))).afkCheckTimer;
 
   private static List<EntityPlayer> deadPlayers = new ArrayList<>();
+  private static HashMap<EntityPlayer, BlockPos> frozenPlayers = new HashMap<>();
 
   @SubscribeEvent
   public void playerLoginEvent(PlayerEvent.PlayerLoggedInEvent e) {
@@ -146,6 +145,13 @@ public class PlaytimeTrackerEvents {
                     e.player.dimension,
                     e.player.rotationPitch,
                     e.player.rotationYaw)));
+    }
+    if (frozenPlayers.size() > 0 && frozenPlayers.keySet().contains(e.player)) {
+      BlockPos lockedPos = frozenPlayers.get(e.player);
+      if (e.player.getPosition() != lockedPos) {
+        e.player
+            .setPositionAndUpdate(lockedPos.getX(), lockedPos.getY(), lockedPos.getZ());
+      }
     }
   }
 
@@ -245,4 +251,31 @@ public class PlaytimeTrackerEvents {
       }
     }
   }
+
+  public static void addFrozen(EntityPlayer player, BlockPos pos) {
+    if (!frozenPlayers.keySet().contains(player)) {
+      player.capabilities.disableDamage = true;
+      frozenPlayers.put(player, pos);
+    }
+  }
+
+  public static void removeFrozen(EntityPlayer player) {
+    if (frozenPlayers.size() > 0 && frozenPlayers.keySet().contains(player)) {
+      frozenPlayers.remove(player);
+      player.capabilities.disableDamage = false;
+    }
+  }
+
+  public static void toggleFrozen(EntityPlayer player, BlockPos pos) {
+    if (frozenPlayers.keySet().contains(player)) {
+      removeFrozen(player);
+    } else {
+      addFrozen(player, pos);
+    }
+  }
+
+  public static boolean isFrozen(EntityPlayer player) {
+    return frozenPlayers.keySet().contains(player);
+  }
+
 }

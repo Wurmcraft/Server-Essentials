@@ -12,11 +12,10 @@ import com.wurmcraft.serveressentials.api.models.ServerStatus;
 import com.wurmcraft.serveressentials.api.models.WSWrapper;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
-import com.wurmcraft.serveressentials.common.data.ws.SocketController;
 import com.wurmcraft.serveressentials.common.modules.chat.event.PlayerChatEvent;
 import com.wurmcraft.serveressentials.common.modules.general.event.HomeSpawnEvent;
 import com.wurmcraft.serveressentials.common.modules.general.event.InventoryTrackingEvents;
-import com.wurmcraft.serveressentials.common.modules.general.event.PlaytimeTrackerEvents;
+import com.wurmcraft.serveressentials.common.modules.general.event.GeneralEvents;
 import com.wurmcraft.serveressentials.common.modules.general.event.VanishEvent;
 import com.wurmcraft.serveressentials.common.utils.RequestGenerator;
 import java.time.Instant;
@@ -35,7 +34,7 @@ public class ModuleGeneral {
 
   public void setup() {
     MinecraftForge.EVENT_BUS.register(new InventoryTrackingEvents());
-    MinecraftForge.EVENT_BUS.register(new PlaytimeTrackerEvents());
+    MinecraftForge.EVENT_BUS.register(new GeneralEvents());
     MinecraftForge.EVENT_BUS.register(new VanishEvent());
     if (statusSchedule == null && SECore.dataLoader instanceof RestDataLoader) {
       statusSchedule =

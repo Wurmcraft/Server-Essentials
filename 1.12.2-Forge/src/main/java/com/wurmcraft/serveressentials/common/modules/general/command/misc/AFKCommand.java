@@ -3,7 +3,7 @@ package com.wurmcraft.serveressentials.common.modules.general.command.misc;
 import com.wurmcraft.serveressentials.api.command.Command;
 import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.models.ServerPlayer;
-import com.wurmcraft.serveressentials.common.modules.general.event.PlaytimeTrackerEvents;
+import com.wurmcraft.serveressentials.common.modules.general.event.GeneralEvents;
 
 @ModuleCommand(
     module = "General",
@@ -15,7 +15,7 @@ public class AFKCommand {
       args = {},
       usage = {})
   public void afk(ServerPlayer player) {
-    PlaytimeTrackerEvents.afk(
-        player.player, !PlaytimeTrackerEvents.afkPlayers.contains(player.player));
+    GeneralEvents.afk(
+        player.player, !GeneralEvents.afkPlayers.contains(player.player));
   }
 }
