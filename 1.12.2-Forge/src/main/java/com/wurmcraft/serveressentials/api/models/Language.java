@@ -243,6 +243,8 @@ public class Language {
   public String COMMAND_FREEZE_UNDO_OTHER;
   public String COMMAND_FREEZE;
   public String COMMAND_FREEZE_OTHER;
+  public String COMMAND_PLAYTIME_TOTAL;
+  public String COMMAND_PLAYTIME_SPECIFIC;
 
   // Protect
   public String PROTECT_BREAK;
