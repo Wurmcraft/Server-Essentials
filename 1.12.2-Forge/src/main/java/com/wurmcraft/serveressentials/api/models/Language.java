@@ -247,6 +247,8 @@ public class Language {
   public String COMMAND_PLAYTIME_SPECIFIC;
   public String COMMAND_RULES_DELETED;
   public String COMMAND_RULES_CREATED;
+  public String COMMAND_RANDOM_MESSAGE_DELETED;
+  public String COMMAND_RANDOM_MESSAGE_CREATED;
 
   // Protect
   public String PROTECT_BREAK;
