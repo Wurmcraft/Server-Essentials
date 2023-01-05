@@ -221,6 +221,8 @@
   "COMMAND_FREEZE_OTHER": "&bYou have frozen {@PLAYER@}",
   "COMMAND_PLAYTIME_TOTAL": "&bTotal: {@AMOUNT@}",
   "COMMAND_PLAYTIME_SPECIFIC": "&b{@SERVER@} playtime is {@AMOUNT@}",
+  "COMMAND_RULES_DELETED": "&bRule '{@RULE@}' deleted!",
+  "COMMAND_RULES_CREATED": "&bRule created!",
   "SECURITY_BLACKLIST": "&bYou cannot join with the mod '%MOD%'",
   "SECURITY_ALT": "&bPlayer %PLAYER% and %PLAYER2% are connected via the same ip address",
   "PROTECT_BREAK": "&cYou don't have permission to break this block!",

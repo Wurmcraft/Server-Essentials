@@ -245,6 +245,8 @@ public class Language {
   public String COMMAND_FREEZE_OTHER;
   public String COMMAND_PLAYTIME_TOTAL;
   public String COMMAND_PLAYTIME_SPECIFIC;
+  public String COMMAND_RULES_DELETED;
+  public String COMMAND_RULES_CREATED;
 
   // Protect
   public String PROTECT_BREAK;
