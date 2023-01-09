@@ -14,6 +14,7 @@ import com.wurmcraft.serveressentials.api.models.local.Home;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
+import com.wurmcraft.serveressentials.common.modules.economy.ConfigEconomy;
 import com.wurmcraft.serveressentials.common.modules.security.TrustedList;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
@@ -151,7 +152,7 @@ public class SECommand extends CommandBase {
       if (!config.currencyCost.isEmpty()) {
         for (String name : config.currencyCost.keySet()) {
           if (!EcoUtils.canBuy(name, config.currencyCost.get(name), userData.global)) {
-            // TODO Need currency msg
+            ChatHelper.send(sender, userData.lang.NO_MONEY);
             return;
           }
         }
@@ -178,7 +179,9 @@ public class SECommand extends CommandBase {
     // Run Command
     if (runMethod(userData, args)) {
       if (!config.currencyCost.isEmpty()) {
-        // TODO Consume Currency
+        for (String name : config.currencyCost.keySet()) {
+          EcoUtils.buy(userData.global, name, config.currencyCost.get(name));
+        }
         // TODO Set cooldown
       }
     } else {
@@ -348,8 +351,10 @@ public class SECommand extends CommandBase {
     for (EntityPlayer player :
         FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
             .getPlayers()) {
-      Account account = SECore.dataLoader.get(DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account());
-      if (player.getDisplayNameString().equalsIgnoreCase(name) || name.equalsIgnoreCase(ChatHelper.getName(player, account))) {
+      Account account = SECore.dataLoader.get(DataType.ACCOUNT,
+          player.getGameProfile().getId().toString(), new Account());
+      if (player.getDisplayNameString().equalsIgnoreCase(name) || name.equalsIgnoreCase(
+          ChatHelper.getName(player, account))) {
         return player;
       }
     }

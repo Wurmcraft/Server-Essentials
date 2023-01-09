@@ -143,6 +143,10 @@ public class PlayerChatEvent {
   }
 
   private boolean isMuted(Account account) {
+    if (account == null || account.mute_time == null) {
+      // TODO Trigger Autocorrect
+      return false;
+    }
     if (account.mute_time < Instant.EPOCH.getEpochSecond()) {
       Account latestAccount = PlayerUtils.getLatestAccount(account.uuid);
       if (latestAccount.muted && account.mute_time < Instant.EPOCH.getEpochSecond()) {

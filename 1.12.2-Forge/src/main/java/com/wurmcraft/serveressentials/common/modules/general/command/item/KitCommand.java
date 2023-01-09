@@ -8,11 +8,15 @@ import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Kit;
 import com.wurmcraft.serveressentials.api.models.ServerPlayer;
+import com.wurmcraft.serveressentials.api.models.Vault;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.command.CommandUtils;
 import com.wurmcraft.serveressentials.common.command.RankUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
+import com.wurmcraft.serveressentials.common.modules.general.command.perk.VaultCommand;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
+import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -153,13 +157,7 @@ public class KitCommand {
     // Give overflow items to player
     for (ItemStack stack : unsortedItems) {
       if (!player.inventory.addItemStackToInventory(stack)) {
-        player.world.spawnEntity(
-            new EntityItem(
-                player.world,
-                player.posX,
-                player.posY,
-                player.posZ,
-                stack)); // TODO Replace with placement into server overflow vault
+        VaultCommand.addToMailbox(player,stack);
       }
     }
     // Update kit usage

@@ -5,7 +5,9 @@ import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
+import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.security.TrustedList;
+import java.util.*;
 
 public class RankUtils {
 
@@ -69,6 +71,12 @@ public class RankUtils {
     if (perm.equals("*")) { // Assuming Trusted Required
       return TrustedList.trustedUsers.contains(account.uuid);
     }
+    // Check for invalid account
+    if (account == null) {
+      // TODO Trigger Autocorrect
+      return false;
+    }
+
     // Perm Indexing
     String core = "";
     String base = "";
@@ -84,7 +92,16 @@ public class RankUtils {
       core = perm;
     }
 
-    for (String p : account.perms) {
+    List<String> permissions = new ArrayList<>();
+    if (account.perms != null) {
+      Collections.addAll(permissions, account.perms);
+    }
+    for (String rank : account.rank) {
+      Collections.addAll(permissions, permList(rank));
+    }
+
+    // User specific perms
+    for (String p : permissions) {
       if (perm.equals(p) || p.equals("*")) {
         return true;
       }
@@ -117,5 +134,15 @@ public class RankUtils {
       }
     }
     return false;
+  }
+
+  public static String[] permList(String rank) {
+    List<String> rankPermList = new ArrayList<>();
+    Rank r = SECore.dataLoader.get(DataType.RANK, rank, new Rank());
+    Collections.addAll(rankPermList, r.permissions);
+    for (String rk : r.inheritance) {
+      Collections.addAll(rankPermList, permList(rk));
+    }
+    return rankPermList.toArray(new String[0]);
   }
 }

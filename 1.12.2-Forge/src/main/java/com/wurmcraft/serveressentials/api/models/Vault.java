@@ -6,6 +6,7 @@ public class Vault {
   public String name;
   public String[] items;
   public int maxPages;
+  public boolean canAdd;
 
   public Vault(String ownerUUID, String name, String[] items, int maxPages) {
     this.ownerUUID = ownerUUID;
