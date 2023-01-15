@@ -19,6 +19,7 @@ public class Language {
   public String COMMAND_LANG;
   public String COMMAND_DELAY;
   public String COMMAND_DELAY_MOVE;
+  public String COMMAND_COOLDOWN;
 
   // Chat
   public String SPACER;

@@ -182,12 +182,16 @@ public class SECommand extends CommandBase {
       }
     }
     // Check for command cooldown
-    long rankCooldown = CommandUtils.getLowest(userData.global.rank, config.rankCooldown);
     long rankDelay = CommandUtils.getLowest(userData.global.rank, config.rankDelay);
     if (rankDelay == 0) {
-      if (Instant.now().getEpochSecond() + rankCooldown > userData.local.commandUsage.get(
+      if (!userData.local.commandUsage.containsKey(config.name)
+          || Instant.now().getEpochSecond() > userData.local.commandUsage.get(
           config.name)) {
         runCommand(userData, sender, args, config);
+      } else {
+        ChatHelper.send(sender, userData.lang.COMMAND_COOLDOWN.replaceAll("\\{@TIME@}",
+            "" + (userData.local.commandUsage.get(config.name) - Instant.now()
+                .getEpochSecond())));
       }
     } else {
       DelayedCommand delayedCommand = new DelayedCommand(userData, sender, args, config,
@@ -197,8 +201,8 @@ public class SECommand extends CommandBase {
       delayedCommands.add(delayedCommand);
       ChatHelper.send(sender,
           userData.lang.COMMAND_DELAY.replaceAll("\\{@TIME@}", "" + rankDelay));
+      runCommand(userData, sender, args, config);
     }
-    runCommand(userData, sender, args, config);
   }
 
   public void runCommand(ServerPlayer userData, ICommandSender sender, String[] args,
@@ -209,8 +213,12 @@ public class SECommand extends CommandBase {
         for (String name : config.currencyCost.keySet()) {
           EcoUtils.buy(userData.global, name, config.currencyCost.get(name));
         }
-        userData.local.commandUsage.put(config.name, Instant.now().getEpochSecond());
       }
+      userData.local.commandUsage.put(config.name,
+          Instant.now().getEpochSecond() + CommandUtils.getLowest(userData.global.rank,
+              config.rankCooldown));
+      SECore.dataLoader.update(DataType.LOCAL_ACCOUNT, userData.local.uuid,
+          userData.local);
     } else {
       ChatHelper.send(sender, getUsage(sender));
     }
