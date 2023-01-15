@@ -56,5 +56,4 @@ public class BanEvents {
       f.printStackTrace();
     }
   }
-
 }

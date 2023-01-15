@@ -144,7 +144,7 @@ public class PlayerChatEvent {
 
   private boolean isMuted(Account account) {
     if (account == null || account.mute_time == null) {
-      // TODO Trigger Autocorrect
+      LOG.warn("Player tried to talk but was unable to, Unable to correct!");
       return false;
     }
     if (account.mute_time < Instant.EPOCH.getEpochSecond()) {

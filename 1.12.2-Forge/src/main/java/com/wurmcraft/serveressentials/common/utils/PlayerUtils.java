@@ -174,6 +174,19 @@ public class PlayerUtils {
     return amount;
   }
 
+  public static int maxVaults(Account global) {
+    int amount = ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).minHomes;
+    if (global.perks != null) {
+      for (String perk : global.perks) {
+        if (perk.startsWith("vault.")) {
+          int extraAmount = Integer.parseInt(perk.substring(5));
+          amount += extraAmount;
+        }
+      }
+    }
+    return amount;
+  }
+
   public static Location getSpawn(String[] ranks) {
     HashMap<String, Location> spawnPos =
         ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).spawn;

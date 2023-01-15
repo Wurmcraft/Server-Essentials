@@ -15,6 +15,7 @@ import com.wurmcraft.serveressentials.common.data.loader.FileDataLoader;
 import com.wurmcraft.serveressentials.common.modules.general.ConfigGeneral;
 import com.wurmcraft.serveressentials.common.modules.general.utils.inventory.VaultInventory;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
+import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.io.File;
 import java.nio.file.Files;
 import net.minecraft.entity.item.EntityItem;
@@ -56,7 +57,6 @@ public class VaultCommand {
     } else {
       Vault vault = getVault(player.player.getGameProfile().getId().toString(),
           vaultName);
-      // TODO Check for expiration
       if (vault != null) {
         player.player.displayGUIChest(
             new VaultInventory(player.player, player.lang, vault, 0));
@@ -81,10 +81,17 @@ public class VaultCommand {
           return;
         }
       }
-      // TODO Check max vault count
-      Vault vault = new Vault(player.player.getGameProfile().getId().toString(), name, 2);
-      player.player.displayGUIChest(
-          new VaultInventory(player.player, player.lang, vault, 0));
+      int maxCount = PlayerUtils.maxVaults(player.global);
+      if (maxCount + 1 > vaultCount(player.player.getGameProfile().getId().toString())) {
+        Vault vault = new Vault(player.player.getGameProfile().getId().toString(), name,
+            2);
+        player.player.displayGUIChest(
+            new VaultInventory(player.player, player.lang, vault, 0));
+      } else {
+        ChatHelper.send(player.sender,
+            player.lang.COMMAND_VAULT_MAX_VAULTS.replaceAll("\\{@NUM@}",
+                "" + (maxCount - 1)));
+      }
     } else if (arg.equalsIgnoreCase("delete")
         || arg.equalsIgnoreCase("del")
         || arg.equalsIgnoreCase("d")
@@ -131,6 +138,21 @@ public class VaultCommand {
             + File.separator
             + name
             + ".json");
+  }
+
+  public static int vaultCount(String uuid) {
+    File dir = new File(
+        ConfigLoader.SAVE_DIR
+            + File.separator
+            + FileDataLoader.SAVE_FOLDER
+            + File.separator
+            + "vaults"
+            + File.separator
+            + uuid);
+    if (dir.exists()) {
+      return dir.list().length;
+    }
+    return 0;
   }
 
   public static void destroyVault(EntityPlayer player, Vault vault) {

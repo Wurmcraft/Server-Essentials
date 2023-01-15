@@ -178,6 +178,7 @@ public class Language {
   public String COMMAND_VAULT_NONE;
   public String COMMAND_VAULT_DELETE;
   public String COMMAND_VAULT_INVALID;
+  public String COMMAND_VAULT_MAX_VAULTS;
   public String COMMAND_GIVEITEM;
   public String COMMAND_GIVEITEM_NONE;
   public String COMMAND_CONVERT_HAND;
