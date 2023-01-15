@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -420,5 +421,25 @@ public class CommandUtils {
 
     }
     return -1.0;
+  }
+
+  public static long getLowest(String[] rank, Map<String, Long> cooldown) {
+    if (cooldown == null || cooldown.isEmpty()) {
+      return 0;
+    }
+    long smallest = Long.MAX_VALUE;
+    for (String r : cooldown.keySet()) {
+      if (cooldown.get(r) < smallest) {
+        for (String f : rank) {
+          if (r.equals(f)) {
+            smallest = cooldown.get(r);
+          }
+        }
+      }
+    }
+    if (cooldown.containsKey("*") && cooldown.get("*") < smallest) {
+      smallest = cooldown.get("*");
+    }
+    return smallest;
   }
 }

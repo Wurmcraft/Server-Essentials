@@ -17,6 +17,8 @@ public class Language {
   public String LANGUAGE_INVALID;
   public String LANGUAGE_CHANGE;
   public String COMMAND_LANG;
+  public String COMMAND_DELAY;
+  public String COMMAND_DELAY_MOVE;
 
   // Chat
   public String SPACER;

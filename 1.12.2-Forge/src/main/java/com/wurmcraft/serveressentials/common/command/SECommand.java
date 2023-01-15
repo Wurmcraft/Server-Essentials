@@ -19,6 +19,7 @@ import com.wurmcraft.serveressentials.common.modules.security.TrustedList;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.lang.reflect.Method;
+import java.time.Instant;
 import java.util.*;
 import javax.annotation.Nullable;
 import net.minecraft.command.CommandBase;
@@ -29,6 +30,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.logging.log4j.util.Strings;
+import org.cliffc.high_scale_lib.NonBlockingHashMap;
+import org.cliffc.high_scale_lib.NonBlockingHashSet;
 
 public class SECommand extends CommandBase {
 
@@ -38,6 +41,8 @@ public class SECommand extends CommandBase {
   public String[] usage;
   public HashMap<CommandArgument[], Method> arguments;
   public HashMap<String, Method> subCommandArguments;
+
+  public static NonBlockingHashSet<DelayedCommand> delayedCommands = new NonBlockingHashSet<DelayedCommand>();
 
   public SECommand(CommandConfig config, Class<?> instance)
       throws NullPointerException, InstantiationException, IllegalAccessException {
@@ -176,13 +181,35 @@ public class SECommand extends CommandBase {
             new TextComponentTranslation("commands.generic.permission"));
       }
     }
+    // Check for command cooldown
+    long rankCooldown = CommandUtils.getLowest(userData.global.rank, config.rankCooldown);
+    long rankDelay = CommandUtils.getLowest(userData.global.rank, config.rankDelay);
+    if (rankDelay == 0) {
+      if (Instant.now().getEpochSecond() + rankCooldown > userData.local.commandUsage.get(
+          config.name)) {
+        runCommand(userData, sender, args, config);
+      }
+    } else {
+      DelayedCommand delayedCommand = new DelayedCommand(userData, sender, args, config,
+          this, sender.getCommandSenderEntity() instanceof EntityPlayer
+          ? userData.player.getPosition() : null,
+          Instant.now().getEpochSecond() + rankDelay);
+      delayedCommands.add(delayedCommand);
+      ChatHelper.send(sender,
+          userData.lang.COMMAND_DELAY.replaceAll("\\{@TIME@}", "" + rankDelay));
+    }
+    runCommand(userData, sender, args, config);
+  }
+
+  public void runCommand(ServerPlayer userData, ICommandSender sender, String[] args,
+      CommandConfig config) {
     // Run Command
     if (runMethod(userData, args)) {
       if (!config.currencyCost.isEmpty()) {
         for (String name : config.currencyCost.keySet()) {
           EcoUtils.buy(userData.global, name, config.currencyCost.get(name));
         }
-        // TODO Set cooldown
+        userData.local.commandUsage.put(config.name, Instant.now().getEpochSecond());
       }
     } else {
       ChatHelper.send(sender, getUsage(sender));

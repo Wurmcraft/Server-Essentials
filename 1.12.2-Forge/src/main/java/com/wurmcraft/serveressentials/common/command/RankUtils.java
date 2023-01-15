@@ -7,6 +7,7 @@ import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.security.TrustedList;
+import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import java.util.*;
 
 public class RankUtils {
@@ -73,7 +74,7 @@ public class RankUtils {
     }
     // Check for invalid account
     if (account == null) {
-      // TODO Trigger Autocorrect
+      ServerEssentials.LOG.warn("Player is missing an account!, Unable to find player");
       return false;
     }
 

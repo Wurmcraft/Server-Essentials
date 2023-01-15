@@ -12,6 +12,7 @@ public class LocalAccount {
   public Location lastLocation;
   public Home[] homes;
   public HashMap<String, Long> kitUsage;
+  public HashMap<String, Long> commandUsage;
 
   public LocalAccount(String uuid) {
     this.uuid = uuid;
@@ -19,17 +20,13 @@ public class LocalAccount {
     this.socialSpy = false;
     this.homes = new Home[0];
     kitUsage = new HashMap<>();
+    commandUsage = new HashMap<>();
   }
 
-  public LocalAccount(
-      String uuid,
-      String channel,
-      String[] ignoredUsers,
+  public LocalAccount(String uuid, String channel, String[] ignoredUsers,
       boolean socialSpy,
-      long teleportTimer,
-      Location lastLocation,
-      Home[] homes,
-      HashMap<String, Long> kitUsage) {
+      long teleportTimer, Location lastLocation, Home[] homes,
+      HashMap<String, Long> kitUsage, HashMap<String, Long> commandUsage) {
     this.uuid = uuid;
     this.channel = channel;
     this.ignoredUsers = ignoredUsers;
@@ -38,6 +35,7 @@ public class LocalAccount {
     this.lastLocation = lastLocation;
     this.homes = homes;
     this.kitUsage = kitUsage;
+    this.commandUsage = commandUsage;
   }
 
   public LocalAccount() {}

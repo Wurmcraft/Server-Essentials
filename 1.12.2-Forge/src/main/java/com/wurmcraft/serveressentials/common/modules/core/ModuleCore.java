@@ -5,7 +5,7 @@ import static com.wurmcraft.serveressentials.common.data.ConfigLoader.SAVE_DIR;
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.loading.Module;
-import com.wurmcraft.serveressentials.common.data.ConfigLoader;
+import com.wurmcraft.serveressentials.common.command.DelayedCommandTicker;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import com.wurmcraft.serveressentials.common.modules.core.event.PlayerDataTrackerEvent;
 import com.wurmcraft.serveressentials.common.modules.core.event.RestPlayerTrackerEvent;
@@ -26,6 +26,7 @@ public class ModuleCore {
       MinecraftForge.EVENT_BUS.register(new RestPlayerTrackerEvent());
     }
     MinecraftForge.EVENT_BUS.register(new PlayerDataTrackerEvent());
+    MinecraftForge.EVENT_BUS.register(new DelayedCommandTicker());
   }
 
   private boolean hasFileDate() {
@@ -38,7 +39,7 @@ public class ModuleCore {
 
   private static void updateToDatabase() {
     FMLCommonHandler.instance().getMinecraftServerInstance().saveAllWorlds(true);
-    FMLCommonHandler.instance().exitJava(69420,false);
+    FMLCommonHandler.instance().exitJava(69420, false);
     ServerEssentials.LOG.warn("Not Implemented!");
     // TODO Implement
   }

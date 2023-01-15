@@ -25,6 +25,8 @@
   "ITEM_UPGRADE": "&bUpgrade / Purchase",
   "NO_MONEY": "&cYou cannot afford to do this!",
   "NUMBER_REQUIRED": "&c{@NUM@} must be a number",
+  "COMMAND_DELAY": "&bDon't move, running in {@TIME@}",
+  "COMMAND_DELAY_MOVE": "&bCommand Canceled!",
   "ANNOUNCEMENT_RANKUP_PERSONAL": "&bYou have ranked up to {@RANK@}",
   "ANNOUNCEMENT_RANKUP_SERVER": "&b{@NAME@} has ranked up to {@RANK@}",
   "ANNOUNCEMENT_AFK_ENABLED": "&b{@NAME@} is now AFK!",
