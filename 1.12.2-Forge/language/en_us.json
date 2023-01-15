@@ -33,6 +33,7 @@
   "ANNOUNCEMENT_AFK_ENABLED": "&b{@NAME@} is now AFK!",
   "ANNOUNCEMENT_AFK_DISABLED": "&b{@NAME@} is no longer AFK!",
   "BANNED": "&cYou are banned, for {@REASON@} until {@TIME@}",
+  "DM_CONFIRM": "&bMessage send to {@PLAYER@} confirmed!",
   "COMMAND_BASE_VERSION": "&bServer Essentials Version: &c{@VERSION@}",
   "COMMAND_BASE_MODULES": "&bModules: &c{@MODULES@}",
   "COMMAND_BASE_STORAGE": "&bStorage: &c{@STORAGE@}",

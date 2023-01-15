@@ -28,6 +28,7 @@ public class Language {
   public String MESSAGE_COLOR;
   public String SOCIAL_SPY_TAG;
   public String HOME_OVER;
+  public String DM_CONFIRM;
 
   // Ban
   public String BANNED;

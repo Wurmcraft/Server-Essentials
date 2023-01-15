@@ -46,7 +46,6 @@ public class ReplyCommand {
                               ServerEssentials.config.general.serverID,
                               msg,
                               lastMsg)))));
-          // TODO Send Confirmation Message
         } catch (Exception e) {
           LOG.warn("Failed to send DM though bridge");
           e.printStackTrace();

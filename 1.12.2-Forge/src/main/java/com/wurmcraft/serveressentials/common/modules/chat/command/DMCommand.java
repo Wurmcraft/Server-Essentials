@@ -56,7 +56,6 @@ public class DMCommand {
                               ServerEssentials.config.general.serverID,
                               msg,
                               uuid)))));
-          // TODO Send Confirmation Message
         } catch (Exception e) {
           LOG.warn("Failed to send DM though bridge");
           e.printStackTrace();

@@ -21,7 +21,9 @@ import io.wurmatron.serveressentials.models.DiscordVerify;
 import io.wurmatron.serveressentials.models.MessageResponse;
 import io.wurmatron.serveressentials.models.ServerStatus;
 import io.wurmatron.serveressentials.models.WSWrapper;
+import io.wurmatron.serveressentials.models.WSWrapper.Type;
 import io.wurmatron.serveressentials.models.data_wrapper.ChatMessage;
+import io.wurmatron.serveressentials.models.data_wrapper.ConfirmMessage;
 import io.wurmatron.serveressentials.routes.EndpointSecurity;
 import io.wurmatron.serveressentials.routes.Route;
 import io.wurmatron.serveressentials.routes.informational.StatusRoutes;
@@ -135,7 +137,10 @@ public class WebSocketComRoute {
         try {
           DMMessage dmMSG = GSON.fromJson(dataWrapper.data.data, DMMessage.class);
           if (sendToOtherPlayerUUID(GSON.toJson(dmMSG), dmMSG.receiverID)) {
-            // ctx.send() TODO Send Confirmation
+            ConfirmMessage confirm = new ConfirmMessage(dmMSG.senderUUID,
+                dmMSG.receiverID);
+            ctx.send(new WSWrapper(200, Type.UPDATE,
+                new DataWrapper("Confirmation", GSON.toJson(confirm))));
           }
         } catch (Exception e) {
           LOG.warn("Failed to parse message from '" + activeConnections.get(ctx) + "'");
