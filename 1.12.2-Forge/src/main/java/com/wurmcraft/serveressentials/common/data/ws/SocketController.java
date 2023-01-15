@@ -6,12 +6,17 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
+import com.wurmcraft.serveressentials.api.models.Channel;
 import com.wurmcraft.serveressentials.api.models.WSWrapper;
 import com.wurmcraft.serveressentials.api.models.data_wrapper.ChatMessage;
+import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
+import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.RequestGenerator;
 import java.io.IOException;
+import java.util.HashMap;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
 
 public class SocketController {
@@ -71,10 +76,23 @@ public class SocketController {
           TextFormatting.RED + "[" + broadcast.senderName + "] " + TextFormatting.GOLD
               + broadcast.message);
     }
-    // TODO Handle Messages
-    // Chat
-    // Discord
-    // Shutdown
+    if (wrapper.data.type.equals("chat")) {
+      ChatMessage msg = ServerEssentials.GSON.fromJson(wrapper.data.data,
+          ChatMessage.class);
+      Channel ch = SECore.dataLoader.get(DataType.CHANNEL, msg.channel, new Channel());
+      if (ch != null) {
+        HashMap<EntityPlayer, LocalAccount> players = ChatHelper.getInChannel(ch);
+        for (EntityPlayer player : players.keySet()) {
+          if (!ChatHelper.isIgnored(players.get(player), msg.senderName)) {
+            ChatHelper.send(player, msg.senderName + " " + msg.message); // TODO Format?
+          }
+        }
+      } else {
+        // TODO Handle Channel mismatch
+      }
+    }
+    // TODO Handle Discord
+    // TODO Handle Network Shutdown
   }
 
   public void send(WSWrapper wrapper) throws IOException, WebSocketException {
