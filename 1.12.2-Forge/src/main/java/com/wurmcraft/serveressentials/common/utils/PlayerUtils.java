@@ -162,10 +162,14 @@ public class PlayerUtils {
   }
 
   public static int maxHomes(Account global) {
+    return getPerkLevel(global, "home");
+  }
+
+  public static int getPerkLevel(Account global, String name) {
     int amount = ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).minHomes;
     if (global.perks != null) {
       for (String perk : global.perks) {
-        if (perk.startsWith("home.")) {
+        if (perk.startsWith(name + ".")) {
           int extraAmount = Integer.parseInt(perk.substring(5));
           amount += extraAmount;
         }
@@ -175,16 +179,7 @@ public class PlayerUtils {
   }
 
   public static int maxVaults(Account global) {
-    int amount = ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).minHomes;
-    if (global.perks != null) {
-      for (String perk : global.perks) {
-        if (perk.startsWith("vault.")) {
-          int extraAmount = Integer.parseInt(perk.substring(5));
-          amount += extraAmount;
-        }
-      }
-    }
-    return amount;
+    return getPerkLevel(global, "vault");
   }
 
   public static Location getSpawn(String[] ranks) {

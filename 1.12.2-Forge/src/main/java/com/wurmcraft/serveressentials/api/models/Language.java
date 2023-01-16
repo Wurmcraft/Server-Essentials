@@ -254,6 +254,9 @@ public class Language {
   public String COMMAND_RULES_CREATED;
   public String COMMAND_RANDOM_MESSAGE_DELETED;
   public String COMMAND_RANDOM_MESSAGE_CREATED;
+  public String COMMAND_PERK_LIST_PERK;
+  public String COMMAND_PERK_NONE;
+  public String COMMAND_PERK_BUY;
 
   // Protect
   public String PROTECT_BREAK;
