@@ -71,10 +71,22 @@ public class RankCommand {
             rank.color_priority + ""));
   }
 
+
   @Command(args = {CommandArgument.RANK, CommandArgument.STRING,
-      CommandArgument.STRING}, usage = {"rank",
+      CommandArgument.STRING, CommandArgument.STRING}, usage = {"rank", "add, remove",
       "perm, inheritance, prefix, suffix, prefix_priority, suffix_priority, color, color_priority",
-      "data"})
+      "data"}, isSubCommand = true, canConsoleUse = true)
+  public void modify(ServerPlayer player, Rank rank, String action, String type,
+      String data) {
+    if (action.equalsIgnoreCase("add") || action.equalsIgnoreCase("a")) {
+      add(player, rank, type, data);
+    } else if (action.equalsIgnoreCase("delete") || action.equalsIgnoreCase("del")
+        || action.equalsIgnoreCase("d") || action.equalsIgnoreCase("remove")
+        || action.equalsIgnoreCase("rem") || action.equalsIgnoreCase("r")) {
+      remove(player, rank, type, data);
+    }
+  }
+
   public static void add(ServerPlayer player, Rank rank, String type, String data) {
     if (type.equalsIgnoreCase("perm") || type.equals("perms") || type.equalsIgnoreCase(
         "permission") || type.equalsIgnoreCase("permissions")) {
@@ -164,8 +176,6 @@ public class RankCommand {
     }
   }
 
-  @Command(args = {CommandArgument.RANK, CommandArgument.STRING,
-      CommandArgument.STRING}, usage = {"rank", "perm, inheritance", "data"})
   public static void remove(ServerPlayer player, Rank rank, String type, String data) {
     if (type.equalsIgnoreCase("perm") || type.equals("perms") || type.equalsIgnoreCase(
         "permission") || type.equalsIgnoreCase("permissions")) {
