@@ -1,15 +1,15 @@
 site_name: Server Essentials Wiki
-site_url: https://se-wiki.wurmatron.io/
+site_url: https://wiki.wurmatron.io/server-essentials/
 theme:
   name: material
 nav:
     - 'User Guide':
-        - 'Getting Started': 'guides/getting-started.md'
-        - 'Claiming / Protect an Area': 'guides/claiming.md'
-        - 'Discord Bot': 'guides/discord-bot.md'
-        - 'Trading': 'guides/trading.md'
-        - 'Server Transfer': 'guides/transfer.md'
-        - 'Ranks': 'guides/ranks.md'
+        - 'Getting Started': 'user-guides/getting-started'
+        - 'Claiming / Protect an Area': 'user-guides/claiming'
+        - 'Discord Bot': 'user-guides/discord-bot'
+        - 'Trading': 'user-guides/trading'
+        - 'Server Transfer': 'user-guides/server-transfer'
+        - 'Ranks': 'user-guides/ranks'
     - 'Modules':
         - 'Core': 'modules/core.md'
         - 'Chat': 'modules/chat.md'
@@ -28,33 +28,33 @@ nav:
         - 'Language': 'modules/language.md'
     - 'Commands': 'commands'
     - 'Setup Guide':
-        - 'Getting Started': 'guides/setup-guide.md'
-        - 'Creating a Rank': 'guides/rank-creation.md'
-        - 'Creating a Rankup Condition': 'guides/rank-up.md'
-        - 'Creating a Currency': 'guides/currency-creation.md'
-        - 'Creating a trade network': 'guides/inter-server-trade-setup.md'
-        - 'Discord Bot Setup': 'guides/discord-bot-setup.md'
-        - 'Ptredactyl Intergration': 'guides/ptredactyl-intergration.md'
+        - 'Getting Started': 'setup-guides/getting-started'
+        - 'Creating a Rank': 'setup-guides/rank-creation'
+        - 'Creating a Rankup Condition': 'setup-guides/rankup-condition'
+        - 'Creating a Currency': 'setup-guides/currency-creation'
+        - 'Creating a trade network': 'setup-guides/trade-network'
+        - 'Discord Bot Setup': 'setup-guides/discord-setup'
+        - 'Ptredactyl Intergration': 'setup-guides/ptredactyl-intergration'
     - 'Administration Guide':
-        - 'Getting Started': 'guides/admin-guide.md'
-        - 'Collecting Information': 'guides/panel-guide.md'
-        - 'Discord Bot (User-Interactions)': 'guides/discord-bot.md'
-        - 'Network Explination': 'guides/network-explination.md'
-        - 'Common Issues / Fixes': 'guides/common-fixes.md'
+        - 'Getting Started': 'admin-guides/getting-started'
+        - 'Collecting Information': 'admin-guides/info-collection'
+        - 'Discord Bot (User-Interactions)': 'gadmin-guides/discordbot-intergration'
+        - 'Network Explination': 'admin-guides/network-explanation'
+        - 'Common Issues / Fixes': 'admin-guides/common-issues'
     - 'Panel Guide':
-        - 'Getting Started': 'guides/panel-guide.md'
+        - 'Getting Started': 'panel-guides/getting-started.md'
     - 'Configuration':
         - 'Backend':
-            - 'Internal': 'configuration/internl.md'
-            - 'Logs': 'configuration/logs.md'
-            - 'Config': 'configuration/backend-config.md'
-            - 'Discord': 'configuration/backend-discord.md'
-            - 'Ptredactyl': 'configuration/ptredactyl.md'
+            - 'Internal': 'config/backend-internal'
+            - 'Logs': 'config/backend-logs'
+            - 'Config': 'config/backend-config'
+            - 'Discord': 'config/backend-discord'
+            - 'Ptredactyl': 'config/pterodactyl'
         - 'Mod':
-            - 'Modules': 'configuration/modules.md'
-            - 'Commands': 'configuration/commands.md'
-            - 'General': 'configuration/general.md'
-            - 'Discord': 'configuration/discord.md'
+            - 'Modules': 'config/mod-modules'
+            - 'Commands': 'config/mod-commands'
+            - 'General': 'config/mod-general'
+            - 'Discord': 'config/mod-discord'
     - 'Links':
         - 'CurseForge': 'https://www.curseforge.com/minecraft/mc-mods/server-essentials/'
         - 'Github': 'https://github.com/Wurmcraft/Server-Essentials/'
