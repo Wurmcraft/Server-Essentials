@@ -10,6 +10,8 @@
 
 [- Setup Trade Network](setup-trade-network)
 
+[- Create a Custom Command](custom-commands)
+
 [- Discord Bot Setup](discordbot-setup)
 
 [- Pterodactyl Integration](pterodactyl-intergration)

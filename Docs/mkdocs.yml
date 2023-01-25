@@ -33,6 +33,7 @@ nav:
         - 'Creating a Rankup Condition': 'setup-guides/rankup-condition'
         - 'Creating a Currency': 'setup-guides/currency-creation'
         - 'Creating a trade network': 'setup-guides/trade-network'
+        - 'Creating a Custom Command': 'setup-guides/custom-command'
         - 'Discord Bot Setup': 'setup-guides/discord-setup'
         - 'Ptredactyl Intergration': 'setup-guides/ptredactyl-intergration'
     - 'Administration Guide':
