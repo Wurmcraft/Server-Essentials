@@ -37,9 +37,11 @@ public class RegionHelper {
   }
 
   public static Claim findClaim(BlockPos pos, RegionClaim claim) {
-    for (Claim c : claim.claims) {
-      if (matches(c, pos)) {
-        return c;
+    if (claim != null) {
+      for (Claim c : claim.claims) {
+        if (matches(c, pos)) {
+          return c;
+        }
       }
     }
     return null;

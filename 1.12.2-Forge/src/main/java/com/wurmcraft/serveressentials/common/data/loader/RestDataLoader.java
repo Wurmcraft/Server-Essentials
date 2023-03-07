@@ -345,6 +345,8 @@ public class RestDataLoader extends FileDataLoader {
         cache(type, getKey(data), data);
         if (type.fileCache) updateOrCreateFileCache(type, getKey(data), data);
         return true;
+      } else {
+        LOG.warn("Failed to update '" + type.key + "' (" + response.response + ")");
       }
     } catch (IOException e) {
       e.printStackTrace();

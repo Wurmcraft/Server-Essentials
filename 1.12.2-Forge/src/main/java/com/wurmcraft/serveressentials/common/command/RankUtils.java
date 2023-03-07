@@ -138,7 +138,15 @@ public class RankUtils {
   }
 
   public static String[] permList(String rank) {
+    if (rank.isEmpty()) {
+      return new String[0];
+    }
     List<String> rankPermList = new ArrayList<>();
+    if (rank.equals("*")) {
+      for(Rank r : SECore.dataLoader.getFromKey(DataType.RANK,new Rank()).values())
+        Collections.addAll(rankPermList, permList(r.name));
+      return rankPermList.toArray(new String[0]);
+    }
     Rank r = SECore.dataLoader.get(DataType.RANK, rank, new Rank());
     Collections.addAll(rankPermList, r.permissions);
     for (String rk : r.inheritance) {

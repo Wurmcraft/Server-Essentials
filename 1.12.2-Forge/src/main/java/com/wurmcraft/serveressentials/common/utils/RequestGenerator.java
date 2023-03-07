@@ -87,10 +87,15 @@ public class RequestGenerator {
       http.getOutputStream().write(bodyJson.getBytes(StandardCharsets.UTF_8));
     }
     // Collect and return
-    String httpBody =
-        new BufferedReader(new InputStreamReader(http.getInputStream()))
-            .lines()
-            .collect(Collectors.joining("\n"));
+    String httpBody = "";
+    try {
+       httpBody =
+          new BufferedReader(new InputStreamReader(http.getInputStream()))
+              .lines()
+              .collect(Collectors.joining("\n"));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     return new HttpResponse(http.getResponseCode(), http.getHeaderFields(), httpBody);
   }
 
