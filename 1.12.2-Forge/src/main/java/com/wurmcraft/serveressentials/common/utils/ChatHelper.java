@@ -26,6 +26,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
@@ -40,6 +42,12 @@ public class ChatHelper {
 
   public static void send(ICommandSender sender, String message) {
     send(sender, new TextComponentString(replaceColor(message)));
+  }
+
+  public static void sendTranslated(ICommandSender sender, String key, TextFormatting color) {
+    TextComponentTranslation translation = new TextComponentTranslation(key);
+    translation.getStyle().setColor(color);
+    send(sender, translation);
   }
 
   public static String replaceColor(String message) {

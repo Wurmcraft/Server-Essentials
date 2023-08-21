@@ -28,6 +28,10 @@ public class TPACommand {
       args = {CommandArgument.PLAYER},
       usage = "player")
   public void tpPlayer(ServerPlayer player, EntityPlayerMP otherPlayer) {
+    if(otherPlayer.getGameProfile().getId().equals(player.player.getGameProfile().getId())) {
+      ChatHelper.send(player.player, player.lang.COMMAND_TP_SELF);
+      return;
+    }
     ChatHelper.send(
         player.player,
         player.lang.COMMAND_TPA.replaceAll("\\{@PLAYER@}", otherPlayer.getDisplayNameString()));

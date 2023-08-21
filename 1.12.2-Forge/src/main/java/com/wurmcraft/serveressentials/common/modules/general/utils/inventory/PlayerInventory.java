@@ -43,6 +43,9 @@ public class PlayerInventory extends InventoryBasic {
                   viewer.getGameProfile().getId().toString(),
                   new Account()),
               "command.echest.modify");
+      if (owner.getGameProfile().getId().equals(viewer.getGameProfile().getId())) {
+        canModify = true;
+      }
     } else {
       canModify =
           RankUtils.hasPermission(
@@ -112,7 +115,8 @@ public class PlayerInventory extends InventoryBasic {
         super.markDirty();
         if (allowUpdate) {
           for (int id = 0; id < owner.getInventoryEnderChest().getSizeInventory(); ++id) {
-            owner.getInventoryEnderChest().setInventorySlotContents(id, getStackInSlot(id));
+            owner.getInventoryEnderChest()
+                .setInventorySlotContents(id, getStackInSlot(id));
           }
         }
       }

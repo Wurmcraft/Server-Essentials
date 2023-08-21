@@ -179,12 +179,17 @@ public class SECommand extends CommandBase {
       if (config.secure) {
         ChatHelper.send(sender,
             new TextComponentTranslation("commands.generic.permission"));
+        return;
       }
+      runCommand(userData, sender, args, config);
     }
     // Check for command cooldown
-    long rankDelay = CommandUtils.getLowest(userData.global.rank, config.rankDelay);
+    long rankDelay = 0;
+    if (userData.sender instanceof EntityPlayer) {
+      rankDelay = CommandUtils.getLowest(userData.global.rank, config.rankDelay);
+    }
     if (rankDelay == 0) {
-      if (!userData.local.commandUsage.containsKey(config.name)
+      if (!(userData.sender instanceof EntityPlayer) || !userData.local.commandUsage.containsKey(config.name)
           || Instant.now().getEpochSecond() > userData.local.commandUsage.get(
           config.name)) {
         runCommand(userData, sender, args, config);
@@ -214,11 +219,13 @@ public class SECommand extends CommandBase {
           EcoUtils.buy(userData.global, name, config.currencyCost.get(name));
         }
       }
-      userData.local.commandUsage.put(config.name,
-          Instant.now().getEpochSecond() + CommandUtils.getLowest(userData.global.rank,
-              config.rankCooldown));
-      SECore.dataLoader.update(DataType.LOCAL_ACCOUNT, userData.local.uuid,
-          userData.local);
+      if (userData.sender instanceof EntityPlayer) {
+        userData.local.commandUsage.put(config.name,
+            Instant.now().getEpochSecond() + CommandUtils.getLowest(userData.global.rank,
+                config.rankCooldown));
+        SECore.dataLoader.update(DataType.LOCAL_ACCOUNT, userData.local.uuid,
+            userData.local);
+      }
     } else {
       ChatHelper.send(sender, getUsage(sender));
     }

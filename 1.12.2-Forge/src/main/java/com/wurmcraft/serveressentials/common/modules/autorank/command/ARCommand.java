@@ -11,6 +11,7 @@ import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.common.command.CommandUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
+import com.wurmcraft.serveressentials.common.modules.autorank.event.RankupEvents;
 import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
 import com.wurmcraft.serveressentials.common.modules.economy.ConfigEconomy;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
@@ -31,6 +32,7 @@ public class ARCommand {
   )
   public void check(ServerPlayer player) {
     displayAutoRankRequirements(player.global, player.sender);
+    RankupEvents.checkAndHandleUpdate(player.player,player.global);
   }
 
   @Command(
@@ -116,8 +118,9 @@ public class ARCommand {
                     "" + PlayerUtils.getTotalPlaytime(account))
                 .replaceAll("\\{@AMOUNT@}", "" + ar.play_time));
       }
+      ChatHelper.send(sender, lang.SPACER);
     }
-    if (nextRanks.size() == 0) {
+    if (nextRanks.isEmpty()) {
       ChatHelper.send(sender, lang.COMMAND_AR_MAX);
     }
   }

@@ -102,6 +102,7 @@ public class Language {
   public String COMMAND_DELHOME;
   public String COMMAND_DELHOME_OTHER;
   public String COMMAND_TPA;
+  public String COMMAND_TP_SELF;
   public String COMMAND_TPA_OTHER;
   public String COMMAND_TPACCEPT_NONE;
   public String COMMAND_TPACCEPT;
