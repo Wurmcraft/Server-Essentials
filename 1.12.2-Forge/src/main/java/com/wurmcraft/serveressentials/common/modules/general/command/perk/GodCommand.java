@@ -20,9 +20,11 @@ public class GodCommand {
   public void selfGod(ServerPlayer player) {
     if (player.player.capabilities.disableDamage) {
       player.player.capabilities.disableDamage = false;
+      player.player.sendPlayerAbilities();
       ChatHelper.send(player.sender, player.lang.COMMAND_GOD_OFF);
     } else {
       player.player.capabilities.disableDamage = true;
+      player.player.sendPlayerAbilities();
       ChatHelper.send(player.sender, player.lang.COMMAND_GOD_ON);
     }
   }
@@ -34,11 +36,13 @@ public class GodCommand {
     if (RankUtils.hasPermission(player.global, "command.god.other")) {
       if (otherPlayer.capabilities.disableDamage) {
         otherPlayer.capabilities.disableDamage = false;
+        otherPlayer.sendPlayerAbilities();
         Language otherLang = CommandUtils.getPlayerLang(otherPlayer);
         ChatHelper.send(otherPlayer, otherLang.COMMAND_GOD_ON);
         ChatHelper.send(player.sender, player.lang.COMMAND_GOD_OFF_OTHER);
       } else {
         otherPlayer.capabilities.disableDamage = true;
+        otherPlayer.sendPlayerAbilities();
         Language otherLang = CommandUtils.getPlayerLang(otherPlayer);
         ChatHelper.send(otherPlayer, otherLang.COMMAND_GOD_ON);
         ChatHelper.send(player.sender, player.lang.COMMAND_GOD_ON_OTHER);

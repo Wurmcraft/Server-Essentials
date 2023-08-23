@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 import java.util.UUID;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -97,5 +98,13 @@ public class DeletePlayerFileCommand {
         e.printStackTrace();
       }
     }
+  }
+
+  @Command(
+      args = {CommandArgument.PLAYER},
+      usage = {"player"},
+      canConsoleUse = true)
+  public void deleteOnlinePlayer(ServerPlayer player, EntityPlayer otherPlayer) {
+    deletePlayerFile(player, otherPlayer.getGameProfile().getId().toString());
   }
 }

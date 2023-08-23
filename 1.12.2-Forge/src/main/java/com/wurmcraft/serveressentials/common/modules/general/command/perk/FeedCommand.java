@@ -21,8 +21,7 @@ public class FeedCommand {
       args = {},
       usage = {})
   public void feedSelf(ServerPlayer player) {
-    player.player.getFoodStats().setFoodLevel(20);
-    player.player.getFoodStats().setFoodSaturationLevel(50);
+    player.player.getFoodStats().addStats(20, 50);
     ChatHelper.send(player.sender, player.lang.COMMAND_FEED);
   }
 
@@ -31,8 +30,7 @@ public class FeedCommand {
       usage = {"player"})
   public void feedOther(ServerPlayer player, EntityPlayer otherPlayer) {
     if (RankUtils.hasPermission(player.global, "command.feed.other")) {
-      otherPlayer.getFoodStats().setFoodLevel(20);
-      otherPlayer.getFoodStats().setFoodSaturationLevel(50);
+      otherPlayer.getFoodStats().addStats(20, 50);
       Language otherLang = CommandUtils.getPlayerLang(otherPlayer);
       ChatHelper.send(
           player.sender,

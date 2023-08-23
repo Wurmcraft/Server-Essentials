@@ -15,15 +15,17 @@ public class BurnCommand {
 
   @Command(
       args = {CommandArgument.PLAYER},
-      usage = {"player"})
-  public void burnPlayer(ServerPlayer player, EntityPlayer otherPlayer) {
-    burnPlayer(player, otherPlayer, 10);
+      usage = {"player"},
+      canConsoleUse = true)
+  public void burnDefaultTime(ServerPlayer player, EntityPlayer otherPlayer) {
+    burnTime(player, otherPlayer, 10);
   }
 
   @Command(
-      args = {CommandArgument.PLAYER},
-      usage = {"player", "time"})
-  public void burnPlayer(ServerPlayer player, EntityPlayer otherPlayer, int time) {
+      args = {CommandArgument.PLAYER, CommandArgument.INTEGER},
+      usage = {"player", "time"},
+      canConsoleUse = true)
+  public void burnTime(ServerPlayer player, EntityPlayer otherPlayer, int time) {
     otherPlayer.setFire(time);
     ChatHelper.send(
         player.sender,

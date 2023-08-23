@@ -17,12 +17,19 @@ public class BalanceCommand {
   public void balance(ServerPlayer player) {
     Account account = PlayerUtils.getLatestAccount(
         player.player.getGameProfile().getId().toString());
+    displayBankInfo(player, account);
+  }
+
+  private void displayBankInfo(ServerPlayer player, Account account) {
     ChatHelper.send(player.sender, player.lang.SPACER);
     for (BankAccount bank : account.wallet) {
       ChatHelper.sendTo(player.sender,
           player.lang.COMMAND_BALANCE_BANK_INFO.replaceAll("\\{@TYPE@}", bank.accountType)
               .replaceAll("\\{@NAME@}", bank.currencyName)
               .replaceAll("\\{@AMOUNT@}", bank.amount + ""));
+    }
+    if(account.wallet == null || account.wallet.length == 0) {
+      ChatHelper.send(player.sender, player.lang.COMMAND_BALANCE_EMPTY);
     }
     ChatHelper.send(player.sender, player.lang.SPACER);
   }
@@ -31,14 +38,7 @@ public class BalanceCommand {
   public void balanceOther(ServerPlayer player, EntityPlayer otherPlayer) {
     Account account = PlayerUtils.getLatestAccount(
         otherPlayer.getGameProfile().getId().toString());
-    ChatHelper.send(player.sender, player.lang.SPACER);
-    for (BankAccount bank : account.wallet) {
-      ChatHelper.sendTo(player.sender,
-          player.lang.COMMAND_BALANCE_BANK_INFO.replaceAll("\\{@TYPE@}", bank.accountType)
-              .replaceAll("\\{@NAME@}", bank.currencyName)
-              .replaceAll("\\{@AMOUNT@}", bank.amount + ""));
-    }
-    ChatHelper.send(player.sender, player.lang.SPACER);
+    displayBankInfo(player, account);
   }
 
 

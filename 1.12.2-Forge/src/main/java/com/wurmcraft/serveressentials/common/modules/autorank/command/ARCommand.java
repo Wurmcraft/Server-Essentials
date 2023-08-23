@@ -36,8 +36,8 @@ public class ARCommand {
   }
 
   @Command(
-      args = {CommandArgument.PLAYER},
-      usage = {"player"},
+      args = {CommandArgument.STRING},
+      usage = {"uuid"},
       isSubCommand = true,
       subCommandAliases = {"c"},
       canConsoleUse = true
@@ -49,11 +49,22 @@ public class ARCommand {
       if (account != null) {
         displayAutoRankRequirements(account, player.sender);
       } else {
-        ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND);
+        ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND.replace("@PLAYER@",  other));
       }
     } else {
-      ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND);
+      ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND.replace("@PLAYER@",  other));
     }
+  }
+
+  @Command(
+      args = {CommandArgument.PLAYER},
+      usage = {"player"},
+      isSubCommand = true,
+      subCommandAliases = {"c"},
+      canConsoleUse = true
+  )
+  public void check(ServerPlayer player, EntityPlayer otherPlayer) {
+    check(player, otherPlayer.getGameProfile().getId().toString());
   }
 
   @Command(

@@ -204,6 +204,7 @@ public class Language {
   public String COMMAND_BAN_LOOKUP_REASON;
   public String COMMAND_BAN_LOOKUP_TIME;
   public String COMMAND_BALANCE_BANK_INFO;
+  public String COMMAND_BALANCE_EMPTY;
   public String COMMAND_PAY;
   public String COMMAND_PAY_OTHER;
   public String COMMAND_TAXES_PAY;

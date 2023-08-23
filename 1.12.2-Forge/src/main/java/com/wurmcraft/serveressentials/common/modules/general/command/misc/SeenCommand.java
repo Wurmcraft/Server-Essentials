@@ -31,8 +31,8 @@ public class SeenCommand {
           player
               .lang
               .COMMAND_SEEN
-              .replaceAll("\\{@PLAYER@}", "" + PlayerUtils.getUsernameForInput(uuid))
+              .replaceAll("\\{@PLAYER@}", PlayerUtils.getUsernameForInput(uuid))
               .replaceAll("\\{@TIME@}", CommandUtils.displayTime(lastSeen / 1000)));
-    } else ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND);
+    } else ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
   }
 }

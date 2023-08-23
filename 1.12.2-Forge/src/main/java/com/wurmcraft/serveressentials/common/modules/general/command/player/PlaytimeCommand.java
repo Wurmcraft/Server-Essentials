@@ -2,6 +2,7 @@ package com.wurmcraft.serveressentials.common.modules.general.command.player;
 
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.command.Command;
+import com.wurmcraft.serveressentials.api.command.CommandArgument;
 import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.ServerPlayer;
@@ -30,7 +31,7 @@ public class PlaytimeCommand {
     ChatHelper.send(player.sender, player.lang.SPACER);
   }
 
-  @Command(args = {}, usage = {})
+  @Command(args = {CommandArgument.STRING}, usage = {"Username"})
   public void displayPlaytime(ServerPlayer player, String username) {
     ChatHelper.send(player.sender, player.lang.SPACER);
     Account account = SECore.dataLoader.get(DataType.ACCOUNT,

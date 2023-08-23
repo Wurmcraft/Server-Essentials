@@ -28,7 +28,7 @@ public class WhoIsCommand {
     ChatHelper.send(
         player.sender,
         player.lang.COMMAND_WHOIS_UUID.replaceAll(
-            "\\{@UUID}", otherPlayer.getGameProfile().getId().toString()));
+            "\\{@UUID@}", otherPlayer.getGameProfile().getId().toString()));
     ChatHelper.send(
         player.sender,
         player.lang.COMMAND_WHOIS_NAME.replaceAll(

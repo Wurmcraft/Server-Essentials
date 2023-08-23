@@ -27,6 +27,6 @@ public class TimeCommand {
       canConsoleUse = true)
   public void setTime(ServerPlayer player, int time) {
     FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld().setWorldTime(time);
-    ChatHelper.send(player.sender, player.lang.COMMAND_TIME.replaceAll("\\{@TIME@}", "' + time"));
+    ChatHelper.send(player.sender, player.lang.COMMAND_TIME.replaceAll("\\{@TIME@}", "" + time));
   }
 }

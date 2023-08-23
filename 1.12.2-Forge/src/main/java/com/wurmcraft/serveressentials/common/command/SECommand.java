@@ -189,7 +189,8 @@ public class SECommand extends CommandBase {
       rankDelay = CommandUtils.getLowest(userData.global.rank, config.rankDelay);
     }
     if (rankDelay == 0) {
-      if (!(userData.sender instanceof EntityPlayer) || !userData.local.commandUsage.containsKey(config.name)
+      if (!(userData.sender instanceof EntityPlayer)
+          || !userData.local.commandUsage.containsKey(config.name)
           || Instant.now().getEpochSecond() > userData.local.commandUsage.get(
           config.name)) {
         runCommand(userData, sender, args, config);
@@ -485,6 +486,9 @@ public class SECommand extends CommandBase {
       aliases.add(ali.toLowerCase());
       aliases.add(ali.toUpperCase());
       aliases.add(upperFirstLetter(ali));
+      if (!aliases.contains(ali)) {
+        aliases.add(ali);
+      }
     }
     return aliases;
   }

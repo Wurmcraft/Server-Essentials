@@ -13,6 +13,7 @@ import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.command.CommandUtils;
 import com.wurmcraft.serveressentials.common.command.RankUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
+import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.general.command.perk.VaultCommand;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import java.io.File;
@@ -70,9 +71,12 @@ public class KitCommand {
       canConsoleUse = true)
   public void list(ServerPlayer player) {
     StringBuilder builder = new StringBuilder();
-    for (Kit kit : SECore.dataLoader.getFromKey(DataLoader.DataType.KIT, new Kit())
-        .values()) {
-      builder.append(kit.name).append(", ");
+    try {
+      for (Kit kit : SECore.dataLoader.getFromKey(DataLoader.DataType.KIT, new Kit())
+          .values()) {
+        builder.append(kit.name).append(", ");
+      }
+    } catch (Exception e) {
     }
     ChatHelper.send(
         player.sender,
@@ -157,7 +161,7 @@ public class KitCommand {
     // Give overflow items to player
     for (ItemStack stack : unsortedItems) {
       if (!player.inventory.addItemStackToInventory(stack)) {
-        VaultCommand.addToMailbox(player,stack);
+        VaultCommand.addToMailbox(player, stack);
       }
     }
     // Update kit usage

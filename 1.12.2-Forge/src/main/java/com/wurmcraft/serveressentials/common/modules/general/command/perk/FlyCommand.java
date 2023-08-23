@@ -24,11 +24,12 @@ public class FlyCommand {
     if (player.player.capabilities.allowFlying) {
       player.player.capabilities.allowFlying = false;
       player.player.capabilities.isFlying = false;
+      player.player.sendPlayerAbilities();
       ChatHelper.send(player.sender, player.lang.COMMAND_FLY_OFF);
     } else {
       player.player.capabilities.allowFlying = true;
-      player.player.capabilities.isCreativeMode = false;
       player.player.capabilities.isFlying = true;
+      player.player.sendPlayerAbilities();
       ChatHelper.send(player.sender, player.lang.COMMAND_FLY_ON);
     }
   }
@@ -41,6 +42,7 @@ public class FlyCommand {
       if (otherPlayer.capabilities.allowFlying) {
         otherPlayer.capabilities.allowFlying = false;
         otherPlayer.capabilities.isFlying = false;
+        otherPlayer.sendPlayerAbilities();
         Language otherLang = CommandUtils.getPlayerLang(otherPlayer);
         ChatHelper.send(otherPlayer, otherLang.COMMAND_FLY_OFF);
         ChatHelper.send(
@@ -49,8 +51,8 @@ public class FlyCommand {
                 "\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
       } else {
         otherPlayer.capabilities.allowFlying = true;
-        otherPlayer.capabilities.isCreativeMode = false;
         otherPlayer.capabilities.isFlying = true;
+        otherPlayer.sendPlayerAbilities();
         Language otherLang = CommandUtils.getPlayerLang(otherPlayer);
         ChatHelper.send(otherPlayer, otherLang.COMMAND_FLY_ON);
         ChatHelper.send(
