@@ -17,45 +17,50 @@ public class EcoUtils {
    * @param user account to find the currency from
    */
   public static boolean canBuy(String currency, double amount, Account user) {
-    if (user != null && user.wallet != null)
+    if (user != null && user.wallet != null) {
       for (BankAccount account : user.wallet) {
         if (account.currencyName.equalsIgnoreCase(currency)) {
           return account.amount >= amount;
         }
       }
+    }
     return false;
   }
 
   public static double balance(Account account, String currency) {
     if (account.wallet != null && account.wallet.length > 0) {
       for (BankAccount bank : account.wallet) {
-        if (bank.currencyName.equalsIgnoreCase(currency)) return bank.amount;
+        if (bank.currencyName.equalsIgnoreCase(currency)) {
+          return bank.amount;
+        }
       }
     }
     return 0.00;
   }
 
   public static void buy(Account account, String currency, double amount) {
-      for(BankAccount bank : account.wallet)
-        if(bank.currencyName.equals(currency)) {
-          bank.amount = bank.amount - amount;
-          SECore.dataLoader.update(DataType.ACCOUNT,account.uuid, account);
-          return;
-        }
+    for (BankAccount bank : account.wallet) {
+      if (bank.currencyName.equals(currency)) {
+        bank.amount = bank.amount - amount;
+        SECore.dataLoader.update(DataType.ACCOUNT, account.uuid, account);
+        return;
+      }
+    }
   }
 
   public static void earn(Account account, String currency, double amount) {
-    for(BankAccount bank : account.wallet)
-      if(bank.currencyName.equals(currency)) {
+    for (BankAccount bank : account.wallet) {
+      if (bank.currencyName.equals(currency)) {
         bank.amount = bank.amount + amount;
-        SECore.dataLoader.update(DataType.ACCOUNT,account.uuid, account);
+        SECore.dataLoader.update(DataType.ACCOUNT, account.uuid, account);
         return;
       }
+    }
   }
 
   public static double computeTax(double amount) {
     Taxes taxes = ((ConfigEconomy) SECore.moduleConfigs.get("ECONOMY")).taxes;
-    if(taxes.payTaxMultiplayer > 0) {
+    if (taxes.payTaxMultiplayer > 0) {
       return amount + (amount * taxes.payTaxMultiplayer);
     }
     return amount;

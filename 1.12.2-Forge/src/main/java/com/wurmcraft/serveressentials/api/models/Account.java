@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -83,7 +84,8 @@ public class Account {
     this.system_perms = systemPerms;
   }
 
-  public Account() {}
+  public Account() {
+  }
 
   @Override
   public Account clone() {
@@ -93,8 +95,12 @@ public class Account {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof Account)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Account)) {
+      return false;
+    }
     Account account = (Account) o;
     return Objects.equals(uuid, account.uuid)
         && Objects.equals(username, account.username)

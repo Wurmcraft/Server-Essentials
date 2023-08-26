@@ -13,7 +13,6 @@ import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.api.models.WSWrapper;
 import com.wurmcraft.serveressentials.api.models.data_wrapper.DMMessage;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
-import com.wurmcraft.serveressentials.common.data.ws.SocketController;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,9 +39,11 @@ public class DMCommand {
       EntityPlayer otherEntity = PlayerUtils.getFromUUID(uuid);
       if (otherEntity != null) { // Local Message
         ChatHelper.send(player.player, otherEntity, msg);
-      } else if (SECore.dataLoader.getClass().equals(RestDataLoader.class)) { // Remote Message
+      } else if (SECore.dataLoader.getClass()
+          .equals(RestDataLoader.class)) { // Remote Message
         try {
-          ChatHelper.lastMessageCache.put(uuid, player.player.getGameProfile().getId().toString());
+          ChatHelper.lastMessageCache.put(uuid,
+              player.player.getGameProfile().getId().toString());
           ServerEssentials.socketController.send(
               new WSWrapper(
                   201,
@@ -61,6 +62,8 @@ public class DMCommand {
           e.printStackTrace();
         }
       }
-    } else ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND);
+    } else {
+      ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND);
+    }
   }
 }

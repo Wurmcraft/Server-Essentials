@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -24,7 +25,7 @@ import org.reflections8.scanners.SubTypesScanner;
 public class RouteLoader {
 
   public static final String[] SUPPORTED_ROUTE_METHODS = {
-    "GET", "POST", "PUT", "DELETE", "PATCH", "BEFORE", "WS", "WS/BEFORE"
+      "GET", "POST", "PUT", "DELETE", "PATCH", "BEFORE", "WS", "WS/BEFORE"
   };
   public static final Reflections REFLECTIONS =
       new Reflections(
@@ -151,43 +152,37 @@ public class RouteLoader {
     //      }
     //    }
     switch (route.method().toUpperCase()) {
-      case "GET":
-        {
-          javalin.get(route.path(), handler);
-          break;
-        }
-      case "POST":
-        {
-          javalin.post(route.path(), handler);
-          break;
-        }
-      case "PUT":
-        {
-          javalin.put(route.path(), handler);
-          break;
-        }
-      case "DELETE":
-        {
-          javalin.delete(route.path(), handler);
-          break;
-        }
-      case "PATCH":
-        {
-          javalin.patch(route.path(), handler);
-          break;
-        }
-      case "BEFORE":
-        {
-          javalin.before(route.path(), handler);
-          break;
-        }
-              case "WS": {
-                javalin.ws(route.path(), (Consumer<WsConfig>) field.get(field.getClass()));
+      case "GET": {
+        javalin.get(route.path(), handler);
+        break;
+      }
+      case "POST": {
+        javalin.post(route.path(), handler);
+        break;
+      }
+      case "PUT": {
+        javalin.put(route.path(), handler);
+        break;
+      }
+      case "DELETE": {
+        javalin.delete(route.path(), handler);
+        break;
+      }
+      case "PATCH": {
+        javalin.patch(route.path(), handler);
+        break;
+      }
+      case "BEFORE": {
+        javalin.before(route.path(), handler);
+        break;
+      }
+      case "WS": {
+        javalin.ws(route.path(), (Consumer<WsConfig>) field.get(field.getClass()));
 //                    roles);
-              }
-              case "WS/BEFORE": {
-                javalin.wsBefore(route.path(), (Consumer<WsConfig>) field.get(field.getClass()));
-              }
+      }
+      case "WS/BEFORE": {
+        javalin.wsBefore(route.path(), (Consumer<WsConfig>) field.get(field.getClass()));
+      }
     }
   }
 }

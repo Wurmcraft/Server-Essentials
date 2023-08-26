@@ -24,7 +24,7 @@ public class SpawnCommand {
       usage = {})
   public void spawn(ServerPlayer player) {
     Location spawn = PlayerUtils.getSpawn(player.global.rank);
-    if(spawn != null) {
+    if (spawn != null) {
       TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, spawn);
       ChatHelper.send(player.sender, player.lang.COMMAND_SPAWN);
     } else {
@@ -39,13 +39,16 @@ public class SpawnCommand {
       subCommandAliases = {"s"})
   public void setSpawn(ServerPlayer player, String arg, String rank) {
     if (RankUtils.hasPermission(player.global, "command.setspawn")) {
-      if (arg.equalsIgnoreCase("set"))
+      if (arg.equalsIgnoreCase("set")) {
         FMLCommonHandler.instance()
             .getMinecraftServerInstance()
             .commandManager
             .executeCommand(player.sender, "/setSpawn " + rank);
-    } else
-      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
+      }
+    } else {
+      ChatHelper.send(player.sender,
+          new TextComponentTranslation("commands.generic.permission"));
+    }
   }
 
   @Command(
@@ -54,13 +57,17 @@ public class SpawnCommand {
   public void spawnSpecific(ServerPlayer player, String arg) {
     if (!arg.equalsIgnoreCase("set")) {
       if (RankUtils.hasPermission(player.global, "command.spawn." + arg.toLowerCase())) {
-        Location spawn = PlayerUtils.getSpawn(new String[] {arg});
+        Location spawn = PlayerUtils.getSpawn(new String[]{arg});
         if (spawn != null) {
           TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, spawn);
           ChatHelper.send(player.sender, player.lang.COMMAND_SPAWN);
         }
-      } else
-        ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
-    } else setSpawn(player, "set", "*");
+      } else {
+        ChatHelper.send(player.sender,
+            new TextComponentTranslation("commands.generic.permission"));
+      }
+    } else {
+      setSpawn(player, "set", "*");
+    }
   }
 }

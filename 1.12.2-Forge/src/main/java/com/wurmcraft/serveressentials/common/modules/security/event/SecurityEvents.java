@@ -9,7 +9,6 @@ import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.security.ConfigSecurity;
 import com.wurmcraft.serveressentials.common.modules.security.TrustedList;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
-import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.UUID;
@@ -129,7 +128,10 @@ public class SecurityEvents {
             if (RankUtils.hasPermission(SECore.dataLoader.get(DataType.ACCOUNT,
                     p.getGameProfile().getId().toString(), new Account()),
                 "security.alt.notify")) {
-              Language  lang = SECore.dataLoader.get(DataType.LANGUAGE, SECore.dataLoader.get(DataType.ACCOUNT, p.getGameProfile().getId().toString(), new Account()).lang, new Language());
+              Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
+                  SECore.dataLoader.get(DataType.ACCOUNT,
+                      p.getGameProfile().getId().toString(), new Account()).lang,
+                  new Language());
               ChatHelper.send(p, lang.SECURITY_ALT
                   .replaceAll("%PLAYER%", player.getDisplayNameString())
                   .replaceAll("%PLAYER2%",
@@ -149,7 +151,10 @@ public class SecurityEvents {
         for (String blacklist : config.modBlacklist) {
           if (playerMods.equalsIgnoreCase(blacklist)) {
             EntityPlayerMP player = (EntityPlayerMP) e.player;
-            Language  lang = SECore.dataLoader.get(DataType.LANGUAGE, SECore.dataLoader.get(DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account()).lang, new Language());
+            Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
+                SECore.dataLoader.get(DataType.ACCOUNT,
+                    player.getGameProfile().getId().toString(), new Account()).lang,
+                new Language());
             player.connection.disconnect(new TextComponentString(
                 lang.SECURITY_BLACKLIST
                     .replaceAll("%MOD%", blacklist.toUpperCase())));

@@ -37,7 +37,9 @@ public class FeedCommand {
           player.lang.COMMAND_FEED_OTHER.replaceAll(
               "\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
       ChatHelper.send(otherPlayer, otherLang.COMMAND_FEED);
-    } else
-      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
+    } else {
+      ChatHelper.send(player.sender,
+          new TextComponentTranslation("commands.generic.permission"));
+    }
   }
 }

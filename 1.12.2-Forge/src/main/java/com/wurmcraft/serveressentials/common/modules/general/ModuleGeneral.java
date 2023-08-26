@@ -13,12 +13,11 @@ import com.wurmcraft.serveressentials.api.models.WSWrapper;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import com.wurmcraft.serveressentials.common.modules.chat.event.PlayerChatEvent;
+import com.wurmcraft.serveressentials.common.modules.general.event.GeneralEvents;
 import com.wurmcraft.serveressentials.common.modules.general.event.HomeSpawnEvent;
 import com.wurmcraft.serveressentials.common.modules.general.event.InventoryTrackingEvents;
-import com.wurmcraft.serveressentials.common.modules.general.event.GeneralEvents;
 import com.wurmcraft.serveressentials.common.modules.general.event.VanishEvent;
 import com.wurmcraft.serveressentials.common.modules.security.ConfigSecurity;
-import com.wurmcraft.serveressentials.common.modules.security.ModuleSecurity;
 import com.wurmcraft.serveressentials.common.utils.RequestGenerator;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -81,7 +80,8 @@ public class ModuleGeneral {
     String[][] playersData = new String[][]{new String[]{}, new String[]{}};
     if (status.equalsIgnoreCase("Online")) {
       playersData = getPlayerInfo();
-      if(SECore.modules.contains("SECURITY") && ((ConfigSecurity)SECore.moduleConfigs.get("SECURITY")).lockdownEnabled) {
+      if (SECore.modules.contains("SECURITY")
+          && ((ConfigSecurity) SECore.moduleConfigs.get("SECURITY")).lockdownEnabled) {
         status = "Lockdown";
       }
     }
@@ -97,16 +97,16 @@ public class ModuleGeneral {
 
   private static long computeDelay() {
     return (long) (getSum(
-            FMLCommonHandler.instance()
-                .getMinecraftServerInstance()
-                .worldTickTimes
-                .get(
-                    FMLCommonHandler.instance()
-                        .getMinecraftServerInstance()
-                        .getWorld(0)
-                        .provider
-                        .getDimension()))
-            * 1.0E-006D);
+        FMLCommonHandler.instance()
+            .getMinecraftServerInstance()
+            .worldTickTimes
+            .get(
+                FMLCommonHandler.instance()
+                    .getMinecraftServerInstance()
+                    .getWorld(0)
+                    .provider
+                    .getDimension()))
+        * 1.0E-006D);
   }
 
 
@@ -128,8 +128,9 @@ public class ModuleGeneral {
       for (EntityPlayer player :
           FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
               .getPlayers()) {
-        if(VanishEvent.vanishedPlayers.contains(player))
+        if (VanishEvent.vanishedPlayers.contains(player)) {
           continue;
+        }
         onlinePlayers.add(player.getGameProfile().getId().toString());
         Account account =
             SECore.dataLoader.get(

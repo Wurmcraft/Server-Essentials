@@ -3,6 +3,8 @@ package com.wurmcraft.serveressentials;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.loading.Module;
 import com.wurmcraft.serveressentials.api.models.config.ConfigGlobal;
@@ -13,13 +15,23 @@ import com.wurmcraft.serveressentials.common.data.loader.FileDataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.IDataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import com.wurmcraft.serveressentials.common.data.ws.SocketController;
+import com.wurmcraft.serveressentials.common.modules.core.command.SECommand;
 import com.wurmcraft.serveressentials.common.modules.general.ModuleGeneral;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
+import net.minecraft.command.arguments.EntityAnchorArgument;
+import net.minecraft.command.arguments.EntityArgument;
+import net.minecraft.command.arguments.ILocationArgument;
+import net.minecraft.command.arguments.LocationInput;
+import net.minecraft.command.arguments.RotationArgument;
+import net.minecraft.command.arguments.Vec3Argument;
+import net.minecraft.command.impl.TeleportCommand;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -65,7 +77,7 @@ public class ServerEssentials {
     setupModules();
     SECore.dataLoader = getDataLoader();
     // Register 'Major' Events
-    MinecraftForge.EVENT_BUS.register(new ServerEssentials());
+    MinecraftForge.EVENT_BUS.register(ServerEssentials.class);
   }
 
   public void clientSetup(FMLClientSetupEvent e) {
@@ -75,6 +87,7 @@ public class ServerEssentials {
   @SubscribeEvent
   public static void onRegisterCommandEvent(RegisterCommandsEvent e) {
     CommandDispatcher<CommandSource> commandDispatcher = e.getDispatcher();
+    SECommand.register(commandDispatcher);
   }
 
   /**

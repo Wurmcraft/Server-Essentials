@@ -35,14 +35,10 @@ public class SECommand {
       return reader.readString();
     }
 
-
-    public <S> CompletableFuture<Suggestions> listSuggestions(
-        CommandContext<S> p_listSuggestions_1_, SuggestionsBuilder p_listSuggestions_2_) {
-      if (p_listSuggestions_1_.getSource() instanceof ISuggestionProvider) {
-        return ISuggestionProvider.suggest(EXAMPLES, p_listSuggestions_2_);
-      } else {
-        return Suggestions.empty();
-      }
+    @Override
+    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context,
+        SuggestionsBuilder builder) {
+      return builder.suggest("test").buildFuture();
     }
 
     public Collection<String> getExamples() {

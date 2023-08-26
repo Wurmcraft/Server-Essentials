@@ -27,7 +27,8 @@ public class TpHereCommand {
   public void teleportHere(ServerPlayer player, EntityPlayer otherPlayer) {
     ChatHelper.send(
         player.player,
-        player.lang.COMMAND_TPHERE.replaceAll("\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
+        player.lang.COMMAND_TPHERE.replaceAll("\\{@PLAYER@}",
+            otherPlayer.getDisplayNameString()));
     Language otherLang = CommandUtils.getPlayerLang(otherPlayer);
     TeleportUtils.teleportTo(
         (EntityPlayerMP) otherPlayer,

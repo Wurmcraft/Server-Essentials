@@ -33,7 +33,9 @@ public class SetSpawnCommand {
   public void setSpawn(ServerPlayer player, String rank) {
     HashMap<String, Location> spawnLocations =
         ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).spawn;
-    if (spawnLocations == null) spawnLocations = new HashMap<>();
+    if (spawnLocations == null) {
+      spawnLocations = new HashMap<>();
+    }
     spawnLocations.put(
         rank,
         new Location(
@@ -50,7 +52,8 @@ public class SetSpawnCommand {
       Files.write(
           configFile.toPath(),
           Collections.singleton(GSON.toJson(SECore.moduleConfigs.get("GENERAL"))));
-      ChatHelper.send(player.sender, player.lang.COMMAND_SETSPAWN.replaceAll("\\{@NAME@}", rank));
+      ChatHelper.send(player.sender,
+          player.lang.COMMAND_SETSPAWN.replaceAll("\\{@NAME@}", rank));
     } catch (IOException e) {
       e.printStackTrace();
     }

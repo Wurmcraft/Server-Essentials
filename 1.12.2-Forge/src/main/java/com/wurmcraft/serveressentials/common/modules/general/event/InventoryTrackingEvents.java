@@ -12,7 +12,8 @@ public class InventoryTrackingEvents {
 
   @SubscribeEvent
   public void onPlayerTick(TickEvent.PlayerTickEvent e) {
-    if (openPlayerInventory.size() > 0 && openPlayerInventory.containsKey(e.player))
+    if (openPlayerInventory.size() > 0 && openPlayerInventory.containsKey(e.player)) {
       openPlayerInventory.get(e.player).update();
+    }
   }
 }

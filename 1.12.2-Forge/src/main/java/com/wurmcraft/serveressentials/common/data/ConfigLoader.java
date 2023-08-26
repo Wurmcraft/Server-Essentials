@@ -17,19 +17,22 @@ import org.cliffc.high_scale_lib.NonBlockingHashMap;
 public class ConfigLoader {
 
   public static final File SAVE_DIR = new File("Server-Essentials");
-  public static final File GLOBAL_CONFIG = new File(SAVE_DIR + File.separator + "global.json");
+  public static final File GLOBAL_CONFIG = new File(
+      SAVE_DIR + File.separator + "global.json");
 
   public static ConfigGlobal loadGlobalConfig() {
     if (GLOBAL_CONFIG.exists()) {
       try {
         ConfigGlobal config =
             GSON.fromJson(
-                Strings.join(Files.readAllLines(GLOBAL_CONFIG.toPath()), '\n'), ConfigGlobal.class);
+                Strings.join(Files.readAllLines(GLOBAL_CONFIG.toPath()), '\n'),
+                ConfigGlobal.class);
         LOG.info("Storage Type: '" + config.storage.storageType + "'");
         LOG.info("Debug Mode: " + config.general.debug);
         ConfigGlobal defaultConfig = new ConfigGlobal();
-        if (defaultConfig.configVersion.equals(config.configVersion)) return config;
-        else {
+        if (defaultConfig.configVersion.equals(config.configVersion)) {
+          return config;
+        } else {
           LOG.warn("Config version does not match the defaults, adding defaults!");
           config.configVersion = defaultConfig.configVersion;
           save(GLOBAL_CONFIG, config);
@@ -50,7 +53,9 @@ public class ConfigLoader {
 
   public static void save(File file, Object config) {
     try {
-      if (!file.getParentFile().exists()) file.getParentFile().mkdirs();
+      if (!file.getParentFile().exists()) {
+        file.getParentFile().mkdirs();
+      }
       Files.write(
           file.toPath(),
           GSON.toJson(config).getBytes(),
@@ -68,8 +73,10 @@ public class ConfigLoader {
     for (Object configInstance : moduleConfigs) {
       String moduleName =
           configInstance.getClass().getDeclaredAnnotation(ModuleConfig.class).module();
-      if (!moduleName.isEmpty())
-        instances.put(moduleName.toUpperCase(), loadModuleConfig(moduleName, configInstance));
+      if (!moduleName.isEmpty()) {
+        instances.put(moduleName.toUpperCase(),
+            loadModuleConfig(moduleName, configInstance));
+      }
     }
     LOG.info(moduleConfigs.size() + " module config(s) have been loaded");
     return instances;
@@ -83,7 +90,8 @@ public class ConfigLoader {
    */
   public static Object loadModuleConfig(String moduleName, Object configInstance) {
     File configFile =
-        new File(SAVE_DIR + File.separator + "Modules" + File.separator + moduleName + ".json");
+        new File(SAVE_DIR + File.separator + "Modules" + File.separator + moduleName
+            + ".json");
     if (configFile.exists()) {
       try {
         List<String> json = Files.readAllLines(configFile.toPath());
@@ -99,15 +107,18 @@ public class ConfigLoader {
                 + ")");
       }
     } else {
-      if (!configFile.getParentFile().exists())
-        if (!configFile.getParentFile().mkdirs())
+      if (!configFile.getParentFile().exists()) {
+        if (!configFile.getParentFile().mkdirs()) {
           LOG.warn(
               "Failed to create directory for module config's ("
                   + configFile.getParentFile().getAbsolutePath()
                   + ")");
+        }
+      }
       try {
         if (configFile.createNewFile()) {
-          Files.write(configFile.toPath(), Collections.singleton(GSON.toJson(configInstance)));
+          Files.write(configFile.toPath(),
+              Collections.singleton(GSON.toJson(configInstance)));
           LOG.debug(
               "Creating default config file for module '"
                   + moduleName

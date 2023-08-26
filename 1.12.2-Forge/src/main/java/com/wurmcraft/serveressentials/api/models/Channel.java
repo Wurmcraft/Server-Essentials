@@ -13,7 +13,8 @@ public class Channel {
   public boolean allowLinks;
   public String[] linkBlacklist;
 
-  public Channel() {}
+  public Channel() {
+  }
 
   public Channel(String name, String prefix, boolean logChat,
       Map<String, String> chatReplacement, boolean enabled, String chatFormat,

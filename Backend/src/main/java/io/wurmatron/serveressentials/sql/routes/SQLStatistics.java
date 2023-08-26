@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -55,8 +56,8 @@ public class SQLStatistics extends SQLGenerator {
       update(
           STATISTICS_TABLE,
           columnsToUpdate,
-          new String[] {"server_id", "uuid", "event_type", "timestamp"},
-          new String[] {stat.server_id, stat.uuid, stat.event_type, "" + stat.timestamp},
+          new String[]{"server_id", "uuid", "event_type", "timestamp"},
+          new String[]{stat.server_id, stat.uuid, stat.event_type, "" + stat.timestamp},
           stat);
       return true;
     } catch (Exception e) {
@@ -102,12 +103,13 @@ public class SQLStatistics extends SQLGenerator {
       return getArray(
           "*",
           STATISTICS_TABLE,
-          new String[] {"server_id", "uuid"},
-          new String[] {serverID, uuid},
+          new String[]{"server_id", "uuid"},
+          new String[]{serverID, uuid},
           new TrackedStat());
     } catch (Exception e) {
       LOG.debug(
-          "Failed to get for uuid '" + uuid + "' on '" + serverID + "' (" + e.getMessage() + ")");
+          "Failed to get for uuid '" + uuid + "' on '" + serverID + "' (" + e.getMessage()
+              + ")");
     }
     return new ArrayList<>();
   }
@@ -139,8 +141,8 @@ public class SQLStatistics extends SQLGenerator {
       return getArray(
           "*",
           STATISTICS_TABLE,
-          new String[] {"server_id", "event_type"},
-          new String[] {serverID, eventType},
+          new String[]{"server_id", "event_type"},
+          new String[]{serverID, eventType},
           new TrackedStat());
     } catch (Exception e) {
       LOG.debug(
@@ -167,8 +169,8 @@ public class SQLStatistics extends SQLGenerator {
     try {
       delete(
           STATISTICS_TABLE,
-          new String[] {"server_id", "uuid", "event_type"},
-          new String[] {serverID, uuid, eventType});
+          new String[]{"server_id", "uuid", "event_type"},
+          new String[]{serverID, uuid, eventType});
       return true;
     } catch (Exception e) {
       LOG.debug(

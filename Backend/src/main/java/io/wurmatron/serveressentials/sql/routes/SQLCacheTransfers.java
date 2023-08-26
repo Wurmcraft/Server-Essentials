@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -35,10 +36,13 @@ public class SQLCacheTransfers extends SQLCache {
   @Nullable
   public static TransferEntry getID(long transferID) {
     // Attempt to get from cache
-    if (transferCache.containsKey(transferID))
-      if (!needsUpdate(transferCache.get(transferID)))
+    if (transferCache.containsKey(transferID)) {
+      if (!needsUpdate(transferCache.get(transferID))) {
         return transferCache.get(transferID).transferEntry;
-      else transferCache.remove(transferID);
+      } else {
+        transferCache.remove(transferID);
+      }
+    }
     // Not in cache / invalid
     try {
       TransferEntry entry =
@@ -48,7 +52,8 @@ public class SQLCacheTransfers extends SQLCache {
         return entry;
       }
     } catch (Exception e) {
-      LOG.debug("Failed to find transfer with id '" + transferID + "' (" + e.getMessage() + ")");
+      LOG.debug("Failed to find transfer with id '" + transferID + "' (" + e.getMessage()
+          + ")");
     }
     // Transfer Entry, does not exist
     return null;
@@ -62,11 +67,14 @@ public class SQLCacheTransfers extends SQLCache {
    */
   public static List<TransferEntry> getUUID(String uuid) {
     // Attempt to get from cache
-    if (uuidTransferCache.containsKey(uuid))
-      if (!needsUpdate(uuidTransferCache.get(uuid)))
+    if (uuidTransferCache.containsKey(uuid)) {
+      if (!needsUpdate(uuidTransferCache.get(uuid))) {
         return getTransfersFromIDs(
             convertToLongArr(uuidTransferCache.get(uuid).transferCacheEntrys));
-      else uuidTransferCache.remove(uuid);
+      } else {
+        uuidTransferCache.remove(uuid);
+      }
+    }
     // Not in cache / invalid
     try {
       List<TransferEntry> entries =
@@ -78,11 +86,13 @@ public class SQLCacheTransfers extends SQLCache {
           cacheForUUID.add(entry.transfer_id + "");
           transferCache.put(entry.transfer_id, new CacheTransfer(entry));
         }
-        uuidTransferCache.put(uuid, new CacheTransferUUID(cacheForUUID.toArray(new String[0])));
+        uuidTransferCache.put(uuid,
+            new CacheTransferUUID(cacheForUUID.toArray(new String[0])));
         return entries;
       }
     } catch (Exception e) {
-      LOG.debug("Failed to find transfer id's for uuid '" + uuid + "' (" + e.getMessage() + ")");
+      LOG.debug("Failed to find transfer id's for uuid '" + uuid + "' (" + e.getMessage()
+          + ")");
     }
     return new ArrayList<>();
   }
@@ -95,7 +105,9 @@ public class SQLCacheTransfers extends SQLCache {
    */
   private static long[] convertToLongArr(String[] arr) {
     long[] longArr = new long[arr.length];
-    for (int x = 0; x < arr.length; x++) longArr[x] = Long.parseLong(arr[x]);
+    for (int x = 0; x < arr.length; x++) {
+      longArr[x] = Long.parseLong(arr[x]);
+    }
     return longArr;
   }
 
@@ -110,7 +122,9 @@ public class SQLCacheTransfers extends SQLCache {
     List<TransferEntry> transfers = new ArrayList<>();
     for (long transferID : ids) {
       TransferEntry entry = getID(transferID);
-      if (entry != null) transfers.add(entry);
+      if (entry != null) {
+        transfers.add(entry);
+      }
     }
     return transfers;
   }
@@ -135,7 +149,8 @@ public class SQLCacheTransfers extends SQLCache {
       return entry;
     } catch (Exception e) {
       LOG.debug(
-          "Failed to add transfer id with id '" + entry.transfer_id + "' (" + e.getMessage() + ")");
+          "Failed to add transfer id with id '" + entry.transfer_id + "' ("
+              + e.getMessage() + ")");
       LOG.debug("TransferEntry: " + GSON.toJson(entry));
     }
     return null;
@@ -151,11 +166,13 @@ public class SQLCacheTransfers extends SQLCache {
    */
   public static boolean update(TransferEntry entry, String[] columnsToUpdate) {
     try {
-      update(TRANSFERS_TABLE, columnsToUpdate, "transfer_id", entry.transfer_id + "", entry);
+      update(TRANSFERS_TABLE, columnsToUpdate, "transfer_id", entry.transfer_id + "",
+          entry);
       if (transferCache.containsKey(entry.transfer_id)) { // Exists in cache, updating
         transferCache.get(entry.transfer_id).transferEntry =
             updateInfoLocal(
-                columnsToUpdate, entry, transferCache.get(entry.transfer_id).transferEntry);
+                columnsToUpdate, entry,
+                transferCache.get(entry.transfer_id).transferEntry);
         transferCache.get(entry.transfer_id).lastSync = System.currentTimeMillis();
       } else { // Missing from cache
         transferCache.put(entry.transfer_id, new CacheTransfer(entry));
@@ -187,7 +204,8 @@ public class SQLCacheTransfers extends SQLCache {
       return true;
     } catch (Exception e) {
       LOG.debug(
-          "Failed to delete transferEntry with id '" + transferID + "' (" + e.getMessage() + ")");
+          "Failed to delete transferEntry with id '" + transferID + "' (" + e.getMessage()
+              + ")");
     }
     return false;
   }
@@ -201,7 +219,8 @@ public class SQLCacheTransfers extends SQLCache {
   public static void invalidate(long transferID) {
     transferCache.remove(transferID);
     LOG.debug(
-        "TransferEntry '" + transferID + " has been invalidated, will update on next request!");
+        "TransferEntry '" + transferID
+            + " has been invalidated, will update on next request!");
   }
 
   /**
@@ -216,8 +235,10 @@ public class SQLCacheTransfers extends SQLCache {
             + uuid
             + "' have been invalidated, will update on next request!");
     CacheTransferUUID uuidCache =
-        uuidTransferCache.getOrDefault(uuid, new CacheTransferUUID(new String[] {}));
-    for (String id : uuidCache.transferCacheEntrys) invalidate(id);
+        uuidTransferCache.getOrDefault(uuid, new CacheTransferUUID(new String[]{}));
+    for (String id : uuidCache.transferCacheEntrys) {
+      invalidate(id);
+    }
     uuidTransferCache.remove(uuid);
   }
 
@@ -226,13 +247,18 @@ public class SQLCacheTransfers extends SQLCache {
     LOG.debug("Transfer Cache cleanup has begun!");
     // ID Cache
     List<Long> toBeRemoved = new ArrayList<>();
-    for (CacheTransfer entry : transferCache.values())
-      if (needsUpdate(entry)) toBeRemoved.add(entry.transferEntry.transfer_id);
+    for (CacheTransfer entry : transferCache.values()) {
+      if (needsUpdate(entry)) {
+        toBeRemoved.add(entry.transferEntry.transfer_id);
+      }
+    }
     // UUID Cache
     List<String> toBeRemovedUUID = new ArrayList<>();
     for (String uuid : uuidTransferCache.keySet()) {
       CacheTransferUUID uuidCache = uuidTransferCache.get(uuid);
-      if (needsUpdate(uuidCache)) toBeRemovedUUID.add(uuid);
+      if (needsUpdate(uuidCache)) {
+        toBeRemovedUUID.add(uuid);
+      }
     }
     // Remove from cache
     int count = 0;
@@ -244,7 +270,8 @@ public class SQLCacheTransfers extends SQLCache {
       count += uuidTransferCache.get(uuid).transferCacheEntrys.length;
       invalidate(uuid);
     }
-    LOG.debug("Transfer Cache has been cleaned, " + count + " entries have been removed!");
+    LOG.debug(
+        "Transfer Cache has been cleaned, " + count + " entries have been removed!");
   }
 
   /** Removes the expired entries from the database */
@@ -254,15 +281,17 @@ public class SQLCacheTransfers extends SQLCache {
       int count = 0;
       List<TransferEntry> dbData =
           getAll("transfer_id, start_time", TRANSFERS_TABLE, new TransferEntry());
-      for (TransferEntry entry : dbData)
+      for (TransferEntry entry : dbData) {
         if (entry.start_time + 10000 < Instant.now().getEpochSecond()) {
           count++;
           delete(entry.transfer_id);
         }
+      }
       LOG.debug("Transfer DB has been cleaned, " + count + " entries have been removed!");
       return;
     } catch (Exception e) {
-      LOG.debug("Failed to collect transfer entries from the database '(" + e.getMessage() + ")");
+      LOG.debug("Failed to collect transfer entries from the database '(" + e.getMessage()
+          + ")");
     }
     LOG.warn("Failed to cleanup DB table '" + TRANSFERS_TABLE + "'");
   }

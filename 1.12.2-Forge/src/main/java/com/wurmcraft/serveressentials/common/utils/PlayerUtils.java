@@ -92,10 +92,11 @@ public class PlayerUtils {
   public static String getUUIDForInput(String input) {
     String uuid = validateUUID(input);
     if (uuid == null && SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
-      uuid =  validateUUIDRemote(input);
+      uuid = validateUUIDRemote(input);
     }
-    if(uuid == null)
+    if (uuid == null) {
       uuid = validateUUID(input);
+    }
     return uuid;
   }
 

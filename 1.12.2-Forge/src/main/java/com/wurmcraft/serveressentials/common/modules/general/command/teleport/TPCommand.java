@@ -37,7 +37,8 @@ public class TPCommand {
             player.player.rotationYaw));
     ChatHelper.send(
         player.player,
-        player.lang.COMMAND_TP.replaceAll("\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
+        player.lang.COMMAND_TP.replaceAll("\\{@PLAYER@}",
+            otherPlayer.getDisplayNameString()));
   }
 
   @Command(
@@ -46,8 +47,9 @@ public class TPCommand {
       canConsoleUse = true)
   public void teleportPlayer2Player(
       ServerPlayer player, EntityPlayer teleportee, EntityPlayer target) {
-    if(teleportee == null  || target == null) {
-      ChatHelper.send(player.sender,player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", "none"));
+    if (teleportee == null || target == null) {
+      ChatHelper.send(player.sender,
+          player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", "none"));
       return;
     }
     TeleportUtils.teleportTo(

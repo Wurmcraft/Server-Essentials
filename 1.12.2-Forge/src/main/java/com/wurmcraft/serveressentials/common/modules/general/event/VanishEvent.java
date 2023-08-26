@@ -9,12 +9,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketSpawnPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import org.cliffc.high_scale_lib.NonBlockingHashSet;
 
@@ -26,10 +24,12 @@ public class VanishEvent {
 
   @SubscribeEvent
   public void onUpdate(WorldTickEvent e) {
-    if(update == 0) {
-      PotionEffect effect = new PotionEffect(Potion.getPotionFromResourceLocation("invisibility"),200, 2,true,false);
-      for(EntityPlayer player : vanishedPlayers)
+    if (update == 0) {
+      PotionEffect effect = new PotionEffect(
+          Potion.getPotionFromResourceLocation("invisibility"), 200, 2, true, false);
+      for (EntityPlayer player : vanishedPlayers) {
         player.addPotionEffect(effect);
+      }
       update = 160;
     } else {
       update--;

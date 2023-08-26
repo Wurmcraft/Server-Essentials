@@ -18,7 +18,8 @@ public class SocialSpyCommand {
       usage = {})
   public void socialSpy(ServerPlayer player) {
     player.local.socialSpy = !player.local.socialSpy;
-    SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, player.local.uuid, player.local);
+    SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, player.local.uuid,
+        player.local);
     if (player.local.socialSpy) {
       ChatHelper.send(player.player, player.lang.COMMAND_SOCIALSPY_ENABLED);
       ChatHelper.socialSpy.add(player.player);

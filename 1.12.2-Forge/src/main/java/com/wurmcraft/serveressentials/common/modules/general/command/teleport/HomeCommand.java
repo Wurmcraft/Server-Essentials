@@ -38,12 +38,16 @@ public class HomeCommand {
   public void defaultHome(ServerPlayer player) {
     Home home =
         PlayerUtils.getHome(
-            player.local, ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName);
-    if (home != null) home(player, home);
-    else {
-      if (player.local.homes != null && player.local.homes.length > 0)
+            player.local,
+            ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName);
+    if (home != null) {
+      home(player, home);
+    } else {
+      if (player.local.homes != null && player.local.homes.length > 0) {
         home(player, player.local.homes[0]);
-      else ChatHelper.send(player.sender, player.lang.COMMAND_HOME_NONE);
+      } else {
+        ChatHelper.send(player.sender, player.lang.COMMAND_HOME_NONE);
+      }
     }
   }
 
@@ -52,16 +56,18 @@ public class HomeCommand {
       usage = {"name"})
   public void home(ServerPlayer player, Home home) {
     if (home != null) {
-      if (TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, home, true)) {
+      if (TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, home,
+          true)) {
         ChatHelper.send(
             player.sender, player.lang.COMMAND_HOME.replaceAll("\\{@NAME@}", home.name));
-      } else
+      } else {
         ChatHelper.send(
             player.sender,
             player.lang.TELEPORT_TIMER.replaceAll(
                 "\\{@TIME@}",
                 CommandUtils.displayTime(
                     (System.currentTimeMillis() - player.local.teleportTimer) / 1000)));
+      }
     }
   }
 
@@ -89,11 +95,12 @@ public class HomeCommand {
           .commandManager
           .executeCommand(player.sender, "delHome " + arg);
     } else {
-      for (Home home : player.local.homes)
+      for (Home home : player.local.homes) {
         if (arg.equalsIgnoreCase(home.name)) {
           home(player, home);
           return;
         }
+      }
       ChatHelper.send(player.sender, player.lang.COMMAND_HOME_EXIST);
     }
   }
@@ -119,36 +126,48 @@ public class HomeCommand {
           if (arg.equalsIgnoreCase("list") || arg.equalsIgnoreCase("l")) {
             displayHomes(local.homes, player.sender, player.lang);
           } else {
-            for (Home home : local.homes)
+            for (Home home : local.homes) {
               if (arg.equalsIgnoreCase(home.name)) {
                 if (TeleportUtils.teleportTo(
                     (EntityPlayerMP) player.player, player.local, home, true)) {
                   ChatHelper.send(
-                      player.sender, player.lang.COMMAND_HOME.replaceAll("%NAME%", home.name));
-                } else
+                      player.sender,
+                      player.lang.COMMAND_HOME.replaceAll("%NAME%", home.name));
+                } else {
                   ChatHelper.send(
                       player.sender,
                       player.lang.TELEPORT_TIMER.replaceAll(
                           "%TIME%",
                           CommandUtils.displayTime(
-                              (System.currentTimeMillis() - player.local.teleportTimer) / 1000)));
+                              (System.currentTimeMillis() - player.local.teleportTimer)
+                                  / 1000)));
+                }
                 return;
               }
+            }
             ChatHelper.send(player.sender, player.lang.COMMAND_HOME_EXIST);
           }
-        } else
+        } else {
           ChatHelper.send(
-              player.sender, player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
-      } else
+              player.sender,
+              player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
+        }
+      } else {
         ChatHelper.send(
-            player.sender, player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
-    } else
-      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
+            player.sender,
+            player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
+      }
+    } else {
+      ChatHelper.send(player.sender,
+          new TextComponentTranslation("commands.generic.permission"));
+    }
   }
 
   private static void displayHomes(Home[] homes, ICommandSender sender, Language lang) {
     ChatHelper.send(sender, lang.SPACER);
-    for (Home home : homes) ChatHelper.send(sender, homeInfo(home, lang));
+    for (Home home : homes) {
+      ChatHelper.send(sender, homeInfo(home, lang));
+    }
     ChatHelper.send(sender, lang.SPACER);
   }
 
@@ -163,11 +182,15 @@ public class HomeCommand {
                     HoverEvent.Action.SHOW_TEXT,
                     new TextComponentString(
                         lang.HOME_OVER
-                            .replaceAll("\\{@X@}", Integer.toString((int) Math.round(home.x)))
-                            .replaceAll("\\{@Y@}", Integer.toString((int) Math.round(home.y)))
-                            .replaceAll("\\{@Z@}", Integer.toString((int) Math.round(home.z)))
+                            .replaceAll("\\{@X@}",
+                                Integer.toString((int) Math.round(home.x)))
+                            .replaceAll("\\{@Y@}",
+                                Integer.toString((int) Math.round(home.y)))
+                            .replaceAll("\\{@Z@}",
+                                Integer.toString((int) Math.round(home.z)))
                             .replaceAll("\\{@DIM@}", Integer.toString(home.dim)))))
-            .setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/home " + home.name)));
+            .setClickEvent(
+                new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/home " + home.name)));
     return homeInfo;
   }
 }

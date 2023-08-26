@@ -17,7 +17,9 @@ import java.util.List;
 import joptsimple.internal.Strings;
 import org.postgresql.util.PGobject;
 
-/** Direct access to the SQL database / connection Used to interact wit the database */
+/**
+ * Direct access to the SQL database / connection Used to interact wit the database
+ */
 public class SQLGenerator {
 
   // Columns
@@ -117,8 +119,10 @@ public class SQLGenerator {
    * @param dataType instance of the data, to be created out of
    * @return instance of the data, with the request data from the db filled in
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
+   * @throws IllegalAccessException Issue with reflection to add data to the object
+   * instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object
+   * instance
    */
   protected static <T> T get(String columns, String table, String key, String data,
       T dataType)
@@ -149,10 +153,12 @@ public class SQLGenerator {
    * @param dataType instance of the data, to be created out of
    * @return instance of the data, with the request data from the db filled in
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
-   * @throws InstantiationException Issues with reflection, trying to copy requested object instance
-   *     to fill in data
+   * @throws IllegalAccessException Issue with reflection to add data to the object
+   * instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object
+   * instance
+   * @throws InstantiationException Issues with reflection, trying to copy requested
+   * object instance to fill in data
    */
   protected static <T> List<T> getArray(
       String columns, String table, String key, String data, T dataType)
@@ -184,10 +190,12 @@ public class SQLGenerator {
    * @param dataType instance of the data, to be created out of
    * @return instance of the data, with the request data from the db filled in
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
-   * @throws InstantiationException Issues with reflection, trying to copy requested object instance
-   *     to fill in data
+   * @throws IllegalAccessException Issue with reflection to add data to the object
+   * instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object
+   * instance
+   * @throws InstantiationException Issues with reflection, trying to copy requested
+   * object instance to fill in data
    */
   protected static <T> List<T> getArray(
       String columns, String table, String[] key, String[] data, T dataType)
@@ -236,9 +244,10 @@ public class SQLGenerator {
    * @param dataType instance of the data, to be created out of
    * @return instance of the data, with the request data from the db filled in
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object instance
-   * @throws InstantiationException Issues with reflection, trying to copy requested object instance
-   *     to fill in data
+   * @throws IllegalAccessException Issue with reflection to add data to the object
+   * instance
+   * @throws InstantiationException Issues with reflection, trying to copy requested
+   * object instance to fill in data
    */
   protected static <T> List<T> getAll(String columns, String table, T dataType)
       throws SQLException, IllegalAccessException, InstantiationException {
@@ -254,13 +263,16 @@ public class SQLGenerator {
    * @param table table to insert this data into
    * @param columns columns you want to insert the data into
    * @param data instance of the data to send to the database
-   * @param generatedKey Should return the auto incremented value generated for this sql entry
+   * @param generatedKey Should return the auto incremented value generated for this sql
+   * entry
    * @return see SQL.execute() for more info
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
-   * @throws NoSuchFieldException Issue with collecting the data from the object instance, via
-   *     reflection
+   * @throws IllegalAccessException Issue with reflection to add data to the object
+   * instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object
+   * instance
+   * @throws NoSuchFieldException Issue with collecting the data from the object instance,
+   * via reflection
    * @see PreparedStatement#execute()
    */
   protected static <T> int insert(String table, String[] columns, T data,
@@ -311,10 +323,12 @@ public class SQLGenerator {
    * @param data instance of the data to be updated in the database
    * @return see SQL.execute() for more info
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
-   * @throws NoSuchFieldException Issue with collecting the data from the object instance, via
-   *     reflection
+   * @throws IllegalAccessException Issue with reflection to add data to the object
+   * instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object
+   * instance
+   * @throws NoSuchFieldException Issue with collecting the data from the object instance,
+   * via reflection
    * @see PreparedStatement#execute()
    */
   protected static <T> boolean update(
@@ -361,10 +375,12 @@ public class SQLGenerator {
    * @param data instance of the data to be updated in the database
    * @return see SQL.execute() for more info
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
-   * @throws NoSuchFieldException Issue with collecting the data from the object instance, via
-   *     reflection
+   * @throws IllegalAccessException Issue with reflection to add data to the object
+   * instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object
+   * instance
+   * @throws NoSuchFieldException Issue with collecting the data from the object instance,
+   * via reflection
    * @see PreparedStatement#execute()
    */
   protected static <T> boolean update(
@@ -503,8 +519,10 @@ public class SQLGenerator {
    * @param dataType data instance to collect the data for
    * @return instance of the provided instance with the data from the database
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
+   * @throws IllegalAccessException Issue with reflection to add data to the object
+   * instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object
+   * instance
    */
   protected static <T> T to(ResultSet result, T dataType, boolean next)
       throws SQLException, IllegalAccessException, IllegalArgumentException {
@@ -599,9 +617,12 @@ public class SQLGenerator {
    * @param dataType data instance to collect the data for
    * @return instance of the provided instance with the data from the database
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
-   * @throws InstantiationException Issue with reflection trying to create a new object instance
+   * @throws IllegalAccessException Issue with reflection to add data to the object
+   * instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object
+   * instance
+   * @throws InstantiationException Issue with reflection trying to create a new object
+   * instance
    */
   protected static <T> List<T> toArray(ResultSet result, T dataType)
       throws SQLException, IllegalAccessException, IllegalArgumentException,
@@ -619,8 +640,8 @@ public class SQLGenerator {
   }
 
   /**
-   * Generates the string for use with SQLGenerator params, based on the amount needed and its
-   * columns
+   * Generates the string for use with SQLGenerator params, based on the amount needed and
+   * its columns
    *
    * @param count amount of arguments to generate
    * @param format format of the arguments to generate
@@ -657,8 +678,10 @@ public class SQLGenerator {
    * @param columns columns of the data for the SQL request
    * @param data data to collect the data to be used for the params
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws NoSuchFieldException Issue with reflection to get data from the object instance
-   * @throws IllegalAccessException Issue with reflection to get data from the object instance
+   * @throws NoSuchFieldException Issue with reflection to get data from the object
+   * instance
+   * @throws IllegalAccessException Issue with reflection to get data from the object
+   * instance
    */
   private static <T> PreparedStatement addArguments(
       PreparedStatement pStatement, String[] columns, T data)
@@ -697,15 +720,17 @@ public class SQLGenerator {
   }
 
   /**
-   * Mimics how a database update is completed, without the need to request the update from the
-   * database
+   * Mimics how a database update is completed, without the need to request the update
+   * from the database
    *
    * @param columnsToUpdate columns in the database that have been updated
    * @param updateData data that was used to update the database
    * @param localInfo data from the database, before the update
    * @return Updated version of the data, (should be in-sync with the database)
-   * @throws NoSuchFieldException Issue with reflection to collect data from the object instance
-   * @throws IllegalAccessException Issue with reflection to collect data from the object instance
+   * @throws NoSuchFieldException Issue with reflection to collect data from the object
+   * instance
+   * @throws IllegalAccessException Issue with reflection to collect data from the object
+   * instance
    */
   protected static <T> T updateInfoLocal(String[] columnsToUpdate, T updateData,
       T localInfo)

@@ -4,6 +4,7 @@ import com.wurmcraft.serveressentials.api.loading.ModuleConfig;
 
 @ModuleConfig(module = "Donation")
 public class ConfigDonation {
+
   public String donateURL;
 
   public ConfigDonation(String donateURL) {

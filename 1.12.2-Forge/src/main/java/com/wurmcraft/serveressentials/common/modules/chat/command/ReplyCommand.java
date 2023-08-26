@@ -13,7 +13,6 @@ import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.api.models.WSWrapper;
 import com.wurmcraft.serveressentials.api.models.data_wrapper.DMMessage;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
-import com.wurmcraft.serveressentials.common.data.ws.SocketController;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,10 +27,12 @@ public class ReplyCommand {
     if (ChatHelper.lastMessageCache.containsKey(
         player.player.getGameProfile().getId().toString())) {
       String lastMsg =
-          ChatHelper.lastMessageCache.get(player.player.getGameProfile().getId().toString());
+          ChatHelper.lastMessageCache.get(
+              player.player.getGameProfile().getId().toString());
       EntityPlayer otherPlayer = PlayerUtils.getFromUUID(lastMsg);
-      if (otherPlayer != null) ChatHelper.send(player.player, otherPlayer, msg);
-      else if (SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
+      if (otherPlayer != null) {
+        ChatHelper.send(player.player, otherPlayer, msg);
+      } else if (SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
         try {
           ServerEssentials.socketController.send(
               new WSWrapper(
@@ -50,8 +51,12 @@ public class ReplyCommand {
           LOG.warn("Failed to send DM though bridge");
           e.printStackTrace();
         }
-      } else ChatHelper.send(player.sender, player.lang.COMMAND_REPLY_INVALID);
-    } else ChatHelper.send(player.sender, player.lang.COMMAND_REPLY_INVALID);
+      } else {
+        ChatHelper.send(player.sender, player.lang.COMMAND_REPLY_INVALID);
+      }
+    } else {
+      ChatHelper.send(player.sender, player.lang.COMMAND_REPLY_INVALID);
+    }
   }
 
   @Command(

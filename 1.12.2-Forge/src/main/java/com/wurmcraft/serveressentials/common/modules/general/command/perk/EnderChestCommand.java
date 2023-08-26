@@ -22,7 +22,8 @@ public class EnderChestCommand {
       usage = {})
   public void echest(ServerPlayer player) {
     player.player.displayGUIChest(
-        new PlayerInventory((EntityPlayerMP) player.player, (EntityPlayerMP) player.player, true));
+        new PlayerInventory((EntityPlayerMP) player.player,
+            (EntityPlayerMP) player.player, true));
   }
 
   @Command(
@@ -31,8 +32,11 @@ public class EnderChestCommand {
   public void echest(ServerPlayer player, EntityPlayer otherPlayer) {
     if (RankUtils.hasPermission(player.global, "command.echest.other")) {
       player.player.displayGUIChest(
-          new PlayerInventory((EntityPlayerMP) otherPlayer, (EntityPlayerMP) player.player, true));
-    } else
-      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
+          new PlayerInventory((EntityPlayerMP) otherPlayer,
+              (EntityPlayerMP) player.player, true));
+    } else {
+      ChatHelper.send(player.sender,
+          new TextComponentTranslation("commands.generic.permission"));
+    }
   }
 }

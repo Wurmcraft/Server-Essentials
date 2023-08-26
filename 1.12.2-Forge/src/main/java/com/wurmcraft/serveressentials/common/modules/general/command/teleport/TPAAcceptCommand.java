@@ -34,9 +34,9 @@ public class TPAAcceptCommand {
           SECore.dataLoader.get(
               DataLoader.DataType.LANGUAGE,
               SECore.dataLoader.get(
-                      DataLoader.DataType.ACCOUNT,
-                      otherPlayer.getGameProfile().getId().toString(),
-                      new Account())
+                  DataLoader.DataType.ACCOUNT,
+                  otherPlayer.getGameProfile().getId().toString(),
+                  new Account())
                   .lang,
               new Language());
       ChatHelper.send(
@@ -55,7 +55,9 @@ public class TPAAcceptCommand {
               player.player.posZ,
               player.player.dimension,
               otherPlayer.rotationPitch,
-              otherPlayer.rotationYaw))) TPACommand.activeRequests.remove(player.player);
+              otherPlayer.rotationYaw))) {
+        TPACommand.activeRequests.remove(player.player);
+      }
     } else if (TPAHereCommand.activeRequests.containsKey(player.player)) {
       EntityPlayer otherPlayer = TPAHereCommand.activeRequests.get(player.player);
       ChatHelper.send(
@@ -66,9 +68,9 @@ public class TPAAcceptCommand {
           SECore.dataLoader.get(
               DataLoader.DataType.LANGUAGE,
               SECore.dataLoader.get(
-                      DataLoader.DataType.ACCOUNT,
-                      otherPlayer.getGameProfile().getId().toString(),
-                      new Account())
+                  DataLoader.DataType.ACCOUNT,
+                  otherPlayer.getGameProfile().getId().toString(),
+                  new Account())
                   .lang,
               new Language());
       ChatHelper.send(
@@ -84,7 +86,11 @@ public class TPAAcceptCommand {
               otherPlayer.posZ,
               otherPlayer.dimension,
               player.player.rotationYaw,
-              player.player.rotationPitch))) TPAHereCommand.activeRequests.remove(player.player);
-    } else ChatHelper.send(player.sender, player.lang.COMMAND_TPACCEPT_NONE);
+              player.player.rotationPitch))) {
+        TPAHereCommand.activeRequests.remove(player.player);
+      }
+    } else {
+      ChatHelper.send(player.sender, player.lang.COMMAND_TPACCEPT_NONE);
+    }
   }
 }

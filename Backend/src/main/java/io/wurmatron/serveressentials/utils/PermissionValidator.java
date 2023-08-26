@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -26,7 +27,9 @@ public class PermissionValidator {
         for (int x = 0; x < actualLength; x++) {
           String actualPoint = getPermPoint(actual, x);
           String testPoint = getPermPoint(test, x);
-          if (!actualPoint.equalsIgnoreCase(testPoint)) return false;
+          if (!actualPoint.equalsIgnoreCase(testPoint)) {
+            return false;
+          }
         }
         return true;
       }
@@ -51,7 +54,9 @@ public class PermissionValidator {
       for (int x = 0; x < wildcardIndex; x++) {
         String actualPoint = getPermPoint(actual, x);
         String testPoint = getPermPoint(test, x);
-        if (!actualPoint.equalsIgnoreCase(testPoint)) return false;
+        if (!actualPoint.equalsIgnoreCase(testPoint)) {
+          return false;
+        }
       }
       return true;
     }
@@ -67,7 +72,11 @@ public class PermissionValidator {
   private static int wildcardIndex(String perm) {
     long count = perm.chars().filter(ch -> ch == '.').count();
     String[] split = perm.split("\\.");
-    for (int x = 0; x < count; x++) if (split[x].equalsIgnoreCase(WILDCARD)) return x;
+    for (int x = 0; x < count; x++) {
+      if (split[x].equalsIgnoreCase(WILDCARD)) {
+        return x;
+      }
+    }
     return -1;
   }
 

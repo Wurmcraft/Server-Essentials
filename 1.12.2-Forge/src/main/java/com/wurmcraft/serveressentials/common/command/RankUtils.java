@@ -7,8 +7,9 @@ import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.security.TrustedList;
-import com.wurmcraft.serveressentials.common.utils.ChatHelper;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class RankUtils {
 
@@ -143,8 +144,9 @@ public class RankUtils {
     }
     List<String> rankPermList = new ArrayList<>();
     if (rank.equals("*")) {
-      for(Rank r : SECore.dataLoader.getFromKey(DataType.RANK,new Rank()).values())
+      for (Rank r : SECore.dataLoader.getFromKey(DataType.RANK, new Rank()).values()) {
         Collections.addAll(rankPermList, permList(r.name));
+      }
       return rankPermList.toArray(new String[0]);
     }
     Rank r = SECore.dataLoader.get(DataType.RANK, rank, new Rank());

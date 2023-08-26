@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -31,9 +32,13 @@ public class SQLCacheDonator extends SQLCache {
   @Nullable
   public static Donator getDonator(String uuid) {
     // Attempt to get from cache
-    if (donatorCache.containsKey(uuid))
-      if (!needsUpdate(donatorCache.get(uuid))) return donatorCache.get(uuid).donator;
-      else donatorCache.remove(uuid);
+    if (donatorCache.containsKey(uuid)) {
+      if (!needsUpdate(donatorCache.get(uuid))) {
+        return donatorCache.get(uuid).donator;
+      } else {
+        donatorCache.remove(uuid);
+      }
+    }
     // Not in cache / invalid
     try {
       Donator donator = get("*", DONATOR_TABLE, "uuid", uuid, new Donator());
@@ -42,7 +47,8 @@ public class SQLCacheDonator extends SQLCache {
         return donator;
       }
     } catch (Exception e) {
-      LOG.debug("Failed to find donator with uuid ' " + uuid + "' (" + e.getMessage() + ")");
+      LOG.debug(
+          "Failed to find donator with uuid ' " + uuid + "' (" + e.getMessage() + ")");
     }
     // Donator does not exist
     return null;
@@ -62,7 +68,9 @@ public class SQLCacheDonator extends SQLCache {
       donatorCache.put(donator.uuid, new CacheDonator(donator));
       return donator;
     } catch (Exception e) {
-      LOG.debug("Failed to add donator with uuid '" + donator.uuid + "' (" + e.getMessage() + ")");
+      LOG.debug(
+          "Failed to add donator with uuid '" + donator.uuid + "' (" + e.getMessage()
+              + ")");
       LOG.debug("Donator: " + GSON.toJson(donator));
     }
     return null;
@@ -81,7 +89,8 @@ public class SQLCacheDonator extends SQLCache {
       update(DONATOR_TABLE, columnsToUpdate, "uuid", donator.uuid, donator);
       if (donatorCache.containsKey(donator.uuid)) { // Exists in cache, updating
         donatorCache.get(donator.uuid).donator =
-            updateInfoLocal(columnsToUpdate, donator, donatorCache.get(donator.uuid).donator);
+            updateInfoLocal(columnsToUpdate, donator,
+                donatorCache.get(donator.uuid).donator);
         donatorCache.get(donator.uuid).lastSync = System.currentTimeMillis();
       } else { // Missing from cache
         donatorCache.put(donator.uuid, new CacheDonator(donator));
@@ -89,7 +98,8 @@ public class SQLCacheDonator extends SQLCache {
       return true;
     } catch (Exception e) {
       LOG.debug(
-          "Failed to update donator with uuid '" + donator.uuid + "' (" + e.getMessage() + ")");
+          "Failed to update donator with uuid '" + donator.uuid + "' (" + e.getMessage()
+              + ")");
       LOG.debug("Donator: " + GSON.toJson(donator));
     }
     return false;
@@ -108,7 +118,8 @@ public class SQLCacheDonator extends SQLCache {
       invalidate(uuid);
       return true;
     } catch (Exception e) {
-      LOG.debug("Failed to delete donator with uuid '" + uuid + "' (" + e.getMessage() + ")");
+      LOG.debug(
+          "Failed to delete donator with uuid '" + uuid + "' (" + e.getMessage() + ")");
     }
     return false;
   }
@@ -129,8 +140,11 @@ public class SQLCacheDonator extends SQLCache {
     LOG.debug("Donator Cache cleanup has begun!");
     // ID Cache
     List<String> toBeRemoved = new ArrayList<>();
-    for (CacheDonator entry : donatorCache.values())
-      if (needsUpdate(entry)) toBeRemoved.add(entry.donator.uuid);
+    for (CacheDonator entry : donatorCache.values()) {
+      if (needsUpdate(entry)) {
+        toBeRemoved.add(entry.donator.uuid);
+      }
+    }
     // Remove from Cache
     int count = 0;
     for (String donatorEntry : toBeRemoved) {
@@ -141,7 +155,8 @@ public class SQLCacheDonator extends SQLCache {
   }
 
   /** This should do nothing, its here to prevent an possible reflection issue */
-  public static void cleanupDB() {}
+  public static void cleanupDB() {
+  }
 
   /** Get the columns for the Donator Table */
   public static String[] getColumns() {

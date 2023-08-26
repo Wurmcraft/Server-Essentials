@@ -24,10 +24,11 @@ public class RTPCommand {
       usage = {})
   public void rtp(ServerPlayer player) {
     int radius = ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).rtpRadius;
-    String[] blacklist = ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).rtpBiomeBlacklist;
+    String[] blacklist = ((ConfigGeneral) SECore.moduleConfigs.get(
+        "GENERAL")).rtpBiomeBlacklist;
     Location spawn = PlayerUtils.getSpawn(player.global.rank);
     World world = player.player.world;
-    if (spawn == null)
+    if (spawn == null) {
       spawn =
           new Location(
               world.getSpawnPoint().getX(),
@@ -36,28 +37,39 @@ public class RTPCommand {
               0,
               0,
               0);
+    }
     top:
     while (true) {
       double x = world.rand.nextInt(radius);
       double z = world.rand.nextInt(radius);
-      if (world.rand.nextBoolean()) x = spawn.x + x;
-      else x = spawn.x - x;
-      if (world.rand.nextBoolean()) z = spawn.z + z;
-      else z = spawn.z - z;
+      if (world.rand.nextBoolean()) {
+        x = spawn.x + x;
+      } else {
+        x = spawn.x - x;
+      }
+      if (world.rand.nextBoolean()) {
+        z = spawn.z + z;
+      } else {
+        z = spawn.z - z;
+      }
       int y = WorldUtils.findTop(world, (int) x, (int) z);
       if (isSafeLocation(world, (int) x, y, (int) z)) {
         Biome biome = player.player.world.getBiome(new BlockPos(x, spawn.y, z));
         String biomeName = WorldUtils.getBiomeName(biome);
         // Check for blacklist
-        for (String list : blacklist)
+        for (String list : blacklist) {
           if (list.equalsIgnoreCase(biomeName)) {
             continue top;
           }
+        }
         // Valid Location
         boolean valid = false;
         for (int validDim :
-            ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).rtpDimensionWhitelist)
-          if (player.player.dimension == validDim) valid = true;
+            ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).rtpDimensionWhitelist) {
+          if (player.player.dimension == validDim) {
+            valid = true;
+          }
+        }
         if (!valid) {
           ChatHelper.send(player.sender, player.lang.COMMAND_RTP_DIM);
           return;

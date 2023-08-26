@@ -8,7 +8,6 @@ import com.wurmcraft.serveressentials.api.command.CustomCommandJson.CommandType;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.common.data.ConfigLoader;
-import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
@@ -65,7 +64,8 @@ public class CustomCommand extends CommandBase {
       Account account = SECore.dataLoader.get(DataType.ACCOUNT,
           ((EntityPlayer) sender).getGameProfile().getId().toString(), new Account());
       // Min Rank Check
-      if (command.minRank != null &&  !command.minRank.isEmpty() && RankUtils.isGreaterThan(command.minRank, account.rank)) {
+      if (command.minRank != null && !command.minRank.isEmpty()
+          && RankUtils.isGreaterThan(command.minRank, account.rank)) {
         return false;
       }
       return RankUtils.hasPermission(account, command.permissionNode);
@@ -127,7 +127,9 @@ public class CustomCommand extends CommandBase {
   public static void createDefaultCommands() {
     CustomCommandJson websiteComamnd = new CustomCommandJson("Website",
         new String[]{"Web", "Site"},
-        new CommandFunc[]{new CommandFunc(CommandType.MESSAGE, new String[]{"https://wiki.wurmatron.io/serveressentials", "https://github.com/Wurmcraft/Server-Essentials"})}, "",
+        new CommandFunc[]{new CommandFunc(CommandType.MESSAGE,
+            new String[]{"https://wiki.wurmatron.io/serveressentials",
+                "https://github.com/Wurmcraft/Server-Essentials"})}, "",
         "customcommand.website", false, new String[0], new String[0], new String[0],
         true);
     try {

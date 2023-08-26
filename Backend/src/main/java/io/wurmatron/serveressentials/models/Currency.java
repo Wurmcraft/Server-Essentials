@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -28,7 +29,8 @@ public class Currency {
     this.tax = tax;
   }
 
-  public Currency() {}
+  public Currency() {
+  }
 
   @Override
   public String toString() {
@@ -37,8 +39,12 @@ public class Currency {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof Currency)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Currency)) {
+      return false;
+    }
     Currency currency = (Currency) o;
     return Double.compare(currency.global_worth, global_worth) == 0
         && Double.compare(currency.sell_worth, sell_worth) == 0

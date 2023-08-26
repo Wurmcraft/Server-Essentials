@@ -29,7 +29,7 @@ public class ProtectionHelper {
     return null;
   }
 
-  public static boolean isAllowed(Claim claim,EntityPlayer player, Action action) {
+  public static boolean isAllowed(Claim claim, EntityPlayer player, Action action) {
     return false;
   }
 }

@@ -10,7 +10,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -19,7 +23,8 @@ public class RequestGenerator {
   public static final String USER_AGENT = "Mozilla/5.0";
 
   // Connection Specific
-  public static final String BASE_URL = parseConfigURL(ServerEssentials.config.storage.baseURL);
+  public static final String BASE_URL = parseConfigURL(
+      ServerEssentials.config.storage.baseURL);
   public static String token = "";
 
   // Regex
@@ -33,20 +38,24 @@ public class RequestGenerator {
   }
 
   /**
-   * Check and adds leading and trailing parts of a url if they are missing This does not check if
-   * the url is valid or not, it simple makes sure it has the leading and trailing of a url
+   * Check and adds leading and trailing parts of a url if they are missing This does not
+   * check if the url is valid or not, it simple makes sure it has the leading and
+   * trailing of a url
    *
    * @param url string to be tested / converted into a url
    */
   private static String parseConfigURL(String url) {
     // Check for trailing /
-    if (!url.endsWith("/")) url = url + "/";
+    if (!url.endsWith("/")) {
+      url = url + "/";
+    }
     // Check for leading http or https
-    if (!url.startsWith("http://") && !url.startsWith("https://"))
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
       url =
           IP_REGEX.matcher(url.substring(0, url.length() - 1)).find()
               ? "http://" + url
               : "https://" + url;
+    }
     return url;
   }
 
@@ -69,7 +78,8 @@ public class RequestGenerator {
    * @return collected data from the connection placed into a wrapper
    * @throws IOException error with the url connection
    */
-  private static HttpResponse http(String type, String url, Object data) throws IOException {
+  private static HttpResponse http(String type, String url, Object data)
+      throws IOException {
     // Setup Http Connection
     URL sendURL = new URL(BASE_URL + url);
     URLConnection connection = sendURL.openConnection();
@@ -89,7 +99,7 @@ public class RequestGenerator {
     // Collect and return
     String httpBody = "";
     try {
-       httpBody =
+      httpBody =
           new BufferedReader(new InputStreamReader(http.getInputStream()))
               .lines()
               .collect(Collectors.joining("\n"));
@@ -107,11 +117,14 @@ public class RequestGenerator {
    * @return response instance (status, headers, response)
    * @throws IOException error with the url connection
    */
-  public static HttpResponse get(String path, Map<String, String> queryParams) throws IOException {
+  public static HttpResponse get(String path, Map<String, String> queryParams)
+      throws IOException {
     StringBuilder builder = new StringBuilder();
-    if (queryParams != null && queryParams.size() > 0)
-      for (String key : queryParams.keySet())
+    if (queryParams != null && queryParams.size() > 0) {
+      for (String key : queryParams.keySet()) {
         builder.append("?").append(key).append("=").append(queryParams.get(key));
+      }
+    }
     return http("GET", path + builder, null);
   }
 

@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -20,26 +21,27 @@ import java.util.stream.Collectors;
 public class DatabasePopulator {
 
   public static String[] tables = {
-    "actions",
-    "autoranks",
-    "bans",
-    "currencys",
-    "donator",
-    "logging",
-    "markets",
-    "ranks",
-    "statistics",
-    "transfers",
-    "users"
+      "actions",
+      "autoranks",
+      "bans",
+      "currencys",
+      "donator",
+      "logging",
+      "markets",
+      "ranks",
+      "statistics",
+      "transfers",
+      "users"
   };
 
   /** Checks if all the tables exist within the sql database if not they are created */
   public static void setupDB(Connection c) {
-    for (String table : tables)
+    for (String table : tables) {
       if (!checkIfExists(c, table)) {
         LOG.info("SQL Table '" + table + "' does not exist!, Creating... ");
         createTable(c, table);
       }
+    }
   }
 
   /**
@@ -51,24 +53,27 @@ public class DatabasePopulator {
   private static boolean checkIfExists(Connection c, String tableName) {
     try {
       String sqlStatment = "";
-      if (config.database.connector.equalsIgnoreCase("mysql"))
+      if (config.database.connector.equalsIgnoreCase("mysql")) {
         sqlStatment =
             "SELECT * FROM information_schema.tables where table_name='"
                 + tableName
                 + "' AND table_schema='"
                 + ServerEssentialsRest.config.database.database
                 + "'";
-      else if (config.database.connector.equalsIgnoreCase("postgresql")) {
+      } else if (config.database.connector.equalsIgnoreCase("postgresql")) {
         sqlStatment =
             "SELECT * FROM information_schema.tables where table_name='"
                 + tableName
                 + "' AND table_schema='public'";
       }
       ResultSet set = c.createStatement().executeQuery(sqlStatment);
-      if (!set.next()) return false;
+      if (!set.next()) {
+        return false;
+      }
     } catch (Exception e) {
       LOG.debug(
-          "Failed to check if table exists ' " + tableName + "' (" + e.getLocalizedMessage() + ")");
+          "Failed to check if table exists ' " + tableName + "' ("
+              + e.getLocalizedMessage() + ")");
     }
     return true;
   }
@@ -91,7 +96,8 @@ public class DatabasePopulator {
       c.createStatement().execute(tableSQL);
       LOG.info("Table '" + tableName + "' Created!");
     } catch (Exception e) {
-      LOG.warn("Failed to create table '" + tableName + "' (" + e.getLocalizedMessage() + ")");
+      LOG.warn(
+          "Failed to create table '" + tableName + "' (" + e.getLocalizedMessage() + ")");
     }
   }
 
@@ -102,7 +108,8 @@ public class DatabasePopulator {
    * @return the file read into a single string
    */
   private static String readSQLSetupFile(String fileName) {
-    InputStream in = DatabasePopulator.class.getClassLoader().getResourceAsStream(fileName);
+    InputStream in = DatabasePopulator.class.getClassLoader()
+        .getResourceAsStream(fileName);
     if (in != null) {
       BufferedReader reader = new BufferedReader(new InputStreamReader(in));
       return reader.lines().collect(Collectors.joining());

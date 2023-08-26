@@ -2,16 +2,16 @@ package com.wurmcraft.serveressentials.api.command;
 
 public class CustomCommandJson {
 
-    public String name;
-    public String[] aliases;
-    public CommandFunc[] functions;
-    public String minRank;
-    public String permissionNode;
-    public boolean secure;
-    public String[] rankCooldown;
-    public String[] rankDelay;
-    public String[] currencyCost;
-    public boolean canConsoleRun;
+  public String name;
+  public String[] aliases;
+  public CommandFunc[] functions;
+  public String minRank;
+  public String permissionNode;
+  public boolean secure;
+  public String[] rankCooldown;
+  public String[] rankDelay;
+  public String[] currencyCost;
+  public boolean canConsoleRun;
 
   public CustomCommandJson(String name, String[] aliases, CommandFunc[] functions,
       String minRank, String permissionNode, boolean secure, String[] rankCooldown,
@@ -29,8 +29,9 @@ public class CustomCommandJson {
   }
 
   public static class CommandFunc {
-      public CommandType type;
-      public String[] values;
+
+    public CommandType type;
+    public String[] values;
 
     public CommandFunc(CommandType type, String[] values) {
       this.type = type;
@@ -38,8 +39,8 @@ public class CustomCommandJson {
     }
   }
 
-    public enum CommandType {
-      MESSAGE, COMMAND, CONSOLE_COMMAND,
-    }
+  public enum CommandType {
+    MESSAGE, COMMAND, CONSOLE_COMMAND,
+  }
 
 }

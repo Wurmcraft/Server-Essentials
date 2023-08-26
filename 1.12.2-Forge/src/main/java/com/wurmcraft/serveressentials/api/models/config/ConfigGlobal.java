@@ -15,7 +15,7 @@ public class ConfigGlobal {
     this.general = new General();
     this.storage = new Storage();
     this.performance = new Performance();
-    this.enabledModules = new String[] {"General", "AutoRank", "Chat", "Economy", "Rank"};
+    this.enabledModules = new String[]{"General", "AutoRank", "Chat", "Economy", "Rank"};
     this.configVersion = Integer.toHexString(hashCode());
   }
 
@@ -107,7 +107,8 @@ public class ConfigGlobal {
 
     @Override
     public int hashCode() {
-      return Objects.hash(maxThreads, playerCacheTimeout, playerSyncInterval, useWebsocket);
+      return Objects.hash(maxThreads, playerCacheTimeout, playerSyncInterval,
+          useWebsocket);
     }
   }
 

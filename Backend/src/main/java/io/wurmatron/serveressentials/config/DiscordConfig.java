@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -17,7 +18,9 @@ public class DiscordConfig {
   public DiscordConfig(String token, Map<String, Object> map, String verifiedRankID) {
     this.token = token;
     this.channelMap = new HashMap<>();
-    for (String m : map.keySet()) channelMap.put(m, (String) map.get(m));
+    for (String m : map.keySet()) {
+      channelMap.put(m, (String) map.get(m));
+    }
     this.verifiedRankID = verifiedRankID;
   }
 

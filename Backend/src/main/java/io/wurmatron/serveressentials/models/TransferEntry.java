@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -25,7 +26,8 @@ public class TransferEntry {
    * @param serverID id of the server that the transfer was started on
    */
   public TransferEntry(
-      long transferID, String uuid, long startTime, ItemWrapper[] items, String serverID) {
+      long transferID, String uuid, long startTime, ItemWrapper[] items,
+      String serverID) {
     this.transfer_id = transferID;
     this.uuid = uuid;
     this.start_time = startTime;
@@ -33,12 +35,17 @@ public class TransferEntry {
     this.server_id = serverID;
   }
 
-  public TransferEntry() {}
+  public TransferEntry() {
+  }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof TransferEntry)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof TransferEntry)) {
+      return false;
+    }
     TransferEntry that = (TransferEntry) o;
     return transfer_id.equals(that.transfer_id)
         && start_time.equals(that.start_time)

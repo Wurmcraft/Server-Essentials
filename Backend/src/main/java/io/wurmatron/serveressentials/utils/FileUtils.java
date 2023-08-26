@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -27,14 +28,12 @@ public class FileUtils {
    */
   public static <T> String toString(T data, String type) {
     switch (type.toUpperCase()) {
-      case ("TOML"):
-        {
-          return Toml.serialize("config", data);
-        }
-      case ("JSON"):
-        {
-          return GSON.toJson(data);
-        }
+      case ("TOML"): {
+        return Toml.serialize("config", data);
+      }
+      case ("JSON"): {
+        return GSON.toJson(data);
+      }
       default:
         return "";
     }
@@ -62,10 +61,13 @@ public class FileUtils {
    * @return if the file was created without errors
    */
   public static boolean write(File file, String data) {
-    if (!file.getParentFile().exists()) file.getParentFile().mkdirs();
+    if (!file.getParentFile().exists()) {
+      file.getParentFile().mkdirs();
+    }
     try {
       Files.write(
-          file.toPath(), data.getBytes(), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+          file.toPath(), data.getBytes(), StandardOpenOption.CREATE_NEW,
+          StandardOpenOption.WRITE);
       return true;
     } catch (IOException e) {
       e.printStackTrace();

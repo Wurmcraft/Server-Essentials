@@ -27,24 +27,26 @@ public class BaseCommand {
       usage = {"version, modules, storage"},
       canConsoleUse = true)
   public void info(ServerPlayer player, String arg) {
-    if (arg.equalsIgnoreCase("version"))
+    if (arg.equalsIgnoreCase("version")) {
       ChatHelper.send(
           player.sender,
-          player.lang.COMMAND_BASE_VERSION.replaceAll("\\{@VERSION@}", ServerEssentials.VERSION));
-    else if (arg.equalsIgnoreCase("modules"))
+          player.lang.COMMAND_BASE_VERSION.replaceAll("\\{@VERSION@}",
+              ServerEssentials.VERSION));
+    } else if (arg.equalsIgnoreCase("modules")) {
       ChatHelper.send(
           player.sender,
           player.lang.COMMAND_BASE_MODULES.replaceAll(
               "\\{@MODULES@}", Strings.join(SECore.modules.keySet(), ", ")));
-    else if (arg.equalsIgnoreCase("storage"))
+    } else if (arg.equalsIgnoreCase("storage")) {
       ChatHelper.send(
           player.sender,
           player.lang.COMMAND_BASE_STORAGE.replaceAll(
               "\\{@STORAGE@}",
               ServerEssentials.config.storage.storageType.toUpperCase()
                   + (ServerEssentials.config.storage.storageType.equalsIgnoreCase("Rest")
-                      ? "(" + ServerEssentials.config.storage.baseURL + ")"
-                      : "")));
+                  ? "(" + ServerEssentials.config.storage.baseURL + ")"
+                  : "")));
+    }
   }
 
   @Command(
@@ -53,17 +55,19 @@ public class BaseCommand {
       canConsoleUse = true)
   public void status(ServerPlayer player, String arg, String module) {
     if (arg.equalsIgnoreCase("reload") && !module.isEmpty()) {
-      for (String m : SECore.modules.keySet())
+      for (String m : SECore.modules.keySet()) {
         if (m.equalsIgnoreCase(module)) {
           reloadModule(player, module, m);
           return;
         }
+      }
     } else if (arg.equalsIgnoreCase("info")) {
-      for (String m : SECore.modules.keySet())
+      for (String m : SECore.modules.keySet()) {
         if (m.equalsIgnoreCase(module)) {
           displayModuleInfo(player, m);
           return;
         }
+      }
     }
   }
 
@@ -74,14 +78,17 @@ public class BaseCommand {
       if (SECore.moduleConfigs.containsKey(m)) {
         Object config =
             ConfigLoader.loadModuleConfig(m, AnnotationLoader.getModuleConfigInstance(m));
-        if (config != null) SECore.moduleConfigs.put(m.toUpperCase(), config);
+        if (config != null) {
+          SECore.moduleConfigs.put(m.toUpperCase(), config);
+        }
       }
       // Reload Module
       Method reloadMethod =
           moduleInstance
               .getClass()
               .getMethod(
-                  moduleInstance.getClass().getDeclaredAnnotation(Module.class).reloadMethod());
+                  moduleInstance.getClass().getDeclaredAnnotation(Module.class)
+                      .reloadMethod());
       reloadMethod.invoke(moduleInstance);
       ChatHelper.send(
           player.sender,
@@ -93,7 +100,8 @@ public class BaseCommand {
     }
     ChatHelper.send(
         player.sender,
-        player.lang.COMMAND_BASE_RELOAD_FAIL.replaceAll("\\{@MODULE@}", module.toUpperCase()));
+        player.lang.COMMAND_BASE_RELOAD_FAIL.replaceAll("\\{@MODULE@}",
+            module.toUpperCase()));
   }
 
   private static void displayModuleInfo(ServerPlayer player, String name) {

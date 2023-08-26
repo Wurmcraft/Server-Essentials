@@ -17,13 +17,14 @@ public class SunCommand {
       usage = {},
       canConsoleUse = true)
   public void sun(ServerPlayer player) {
-    if (player.player == null)
-      for (WorldServer world : FMLCommonHandler.instance().getMinecraftServerInstance().worlds) {
+    if (player.player == null) {
+      for (WorldServer world : FMLCommonHandler.instance()
+          .getMinecraftServerInstance().worlds) {
         world.getWorldInfo().setRaining(false);
         world.getWorldInfo().setRainTime(0);
         world.getWorldInfo().setThundering(false);
       }
-    else {
+    } else {
       player.player.world.getWorldInfo().setRaining(false);
       player.player.world.getWorldInfo().setRainTime(0);
       player.player.world.getWorldInfo().setThundering(false);
@@ -37,7 +38,8 @@ public class SunCommand {
       canConsoleUse = true)
   public void sun(ServerPlayer player, int dim) {
     try {
-      World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dim);
+      World world = FMLCommonHandler.instance().getMinecraftServerInstance()
+          .getWorld(dim);
       world.getWorldInfo().setRaining(false);
       world.getWorldInfo().setRainTime(0);
       world.getWorldInfo().setThundering(false);

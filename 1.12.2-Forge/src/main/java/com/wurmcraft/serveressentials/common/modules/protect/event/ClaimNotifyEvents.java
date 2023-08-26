@@ -10,7 +10,6 @@ import com.wurmcraft.serveressentials.common.modules.protect.models.Claim;
 import com.wurmcraft.serveressentials.common.modules.protect.utils.ProtectionHelper;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;

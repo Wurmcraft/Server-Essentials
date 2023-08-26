@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -30,19 +31,24 @@ public class SQLCacheCurrency extends SQLCache {
   @Nullable
   public static Currency get(String name) {
     // Check for name in cache
-    if (currencyCache.containsKey(name.toUpperCase()))
-      if (!needsUpdate(currencyCache.get(name.toUpperCase())))
+    if (currencyCache.containsKey(name.toUpperCase())) {
+      if (!needsUpdate(currencyCache.get(name.toUpperCase()))) {
         return currencyCache.get(name.toUpperCase()).currency;
-      else invalidate(name.toUpperCase());
+      } else {
+        invalidate(name.toUpperCase());
+      }
+    }
     // Invalid / missing
     try {
       Currency currency = get("*", CURRENCY_TABLE, "display_name", name, new Currency());
       if (currency != null) {
-        currencyCache.put(currency.display_name.toUpperCase(), new CacheCurrency(currency));
+        currencyCache.put(currency.display_name.toUpperCase(),
+            new CacheCurrency(currency));
         return currency.clone();
       }
     } catch (Exception e) {
-      LOG.debug("Failed to GET currency with name '" + name + "' (" + e.getMessage() + ")");
+      LOG.debug(
+          "Failed to GET currency with name '" + name + "' (" + e.getMessage() + ")");
     }
     return null;
   }
@@ -78,11 +84,13 @@ public class SQLCacheCurrency extends SQLCache {
           Arrays.copyOfRange(CURRENCYS_COLUMNS, 1, CURRENCYS_COLUMNS.length),
           currency,
           false);
-      currencyCache.put(currency.display_name.toUpperCase(), new CacheCurrency(currency.clone()));
+      currencyCache.put(currency.display_name.toUpperCase(),
+          new CacheCurrency(currency.clone()));
       return currency;
     } catch (Exception e) {
       LOG.debug(
-          "Failed to create currency '" + currency.display_name + "' (" + e.getMessage() + ")");
+          "Failed to create currency '" + currency.display_name + "' (" + e.getMessage()
+              + ")");
       LOG.debug("Currency: " + GSON.toJson(currency));
     }
     return null;
@@ -99,7 +107,8 @@ public class SQLCacheCurrency extends SQLCache {
    */
   public static boolean update(Currency currency, String[] columnsToUpdate) {
     try {
-      update(CURRENCY_TABLE, columnsToUpdate, "display_name", "" + currency.display_name, currency);
+      update(CURRENCY_TABLE, columnsToUpdate, "display_name", "" + currency.display_name,
+          currency);
       if (currencyCache.containsKey(currency.display_name.toUpperCase())) {
         currencyCache.get(currency.display_name.toUpperCase()).currency =
             updateInfoLocal(
@@ -108,7 +117,10 @@ public class SQLCacheCurrency extends SQLCache {
                 currencyCache.get(currency.display_name.toUpperCase()).currency);
         currencyCache.get(currency.display_name.toUpperCase()).lastSync =
             System.currentTimeMillis();
-      } else currencyCache.put(currency.display_name.toUpperCase(), new CacheCurrency(currency));
+      } else {
+        currencyCache.put(currency.display_name.toUpperCase(),
+            new CacheCurrency(currency));
+      }
       return true;
     } catch (Exception e) {
       LOG.debug(
@@ -146,15 +158,19 @@ public class SQLCacheCurrency extends SQLCache {
    */
   public static void invalidate(String name) {
     currencyCache.remove(name.toUpperCase());
-    LOG.debug("Currency '" + name + "' has been invalidated, will update on next request!");
+    LOG.debug(
+        "Currency '" + name + "' has been invalidated, will update on next request!");
   }
 
   /** Run periodically to cleanup the cache and remove expired / invalid entries */
   public static void cleanupCache() {
     LOG.debug("Currency Cache cleanup has begun!");
     List<String> toBeRemoved = new ArrayList<>();
-    for (String name : currencyCache.keySet())
-      if (needsUpdate(currencyCache.get(name))) toBeRemoved.add(name);
+    for (String name : currencyCache.keySet()) {
+      if (needsUpdate(currencyCache.get(name))) {
+        toBeRemoved.add(name);
+      }
+    }
     // Remove from Cache
     int count = 0;
     //  Cache
@@ -162,11 +178,13 @@ public class SQLCacheCurrency extends SQLCache {
       count++;
       invalidate(name);
     }
-    LOG.debug("Currency Cache has been cleaned, " + count + " entries have been removed!");
+    LOG.debug(
+        "Currency Cache has been cleaned, " + count + " entries have been removed!");
   }
 
   /** Run periodically to cleanup the db and remove expired / invalid entries */
-  public static void cleanupDB() {}
+  public static void cleanupDB() {
+  }
 
   /** Get all the columns except the id */
   public static String[] getColumns() {

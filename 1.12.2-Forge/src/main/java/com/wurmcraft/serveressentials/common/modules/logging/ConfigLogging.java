@@ -22,6 +22,7 @@ public class ConfigLogging {
   }
 
   public static class SQL {
+
     public String username;
     public String password;
     public String host;

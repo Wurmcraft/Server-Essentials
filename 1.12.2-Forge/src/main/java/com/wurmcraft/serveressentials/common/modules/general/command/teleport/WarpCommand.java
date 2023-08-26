@@ -21,8 +21,10 @@ public class WarpCommand {
       usage = {"name"})
   public void warp(ServerPlayer player, Warp warp) {
     if (TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, warp)
-        && RankUtils.hasPermission(player.global, "command.warp." + warp.name))
-      ChatHelper.send(player.sender, player.lang.COMMAND_WARP.replaceAll("\\{@NAME@}", warp.name));
+        && RankUtils.hasPermission(player.global, "command.warp." + warp.name)) {
+      ChatHelper.send(player.sender,
+          player.lang.COMMAND_WARP.replaceAll("\\{@NAME@}", warp.name));
+    }
   }
 
   @Command(
@@ -39,15 +41,18 @@ public class WarpCommand {
               .values()
               .toArray(new Warp[0]);
       StringBuilder builder = new StringBuilder();
-      for (Warp warp : warps)
-        if (RankUtils.hasPermission(player.global, "command.warp." + warp.name))
+      for (Warp warp : warps) {
+        if (RankUtils.hasPermission(player.global, "command.warp." + warp.name)) {
           builder.append(warp.name).append(", ");
+        }
+      }
       ChatHelper.send(
           player.sender,
           player.lang.COMMAND_WARP_LIST.replaceAll(
               "\\{@LIST@}", builder.substring(0, builder.length() - 2)));
     } catch (Exception e) {
-      ChatHelper.send(player.sender, player.lang.COMMAND_WARP_LIST.replaceAll("\\{@LIST@}", "[]"));
+      ChatHelper.send(player.sender,
+          player.lang.COMMAND_WARP_LIST.replaceAll("\\{@LIST@}", "[]"));
     }
   }
 

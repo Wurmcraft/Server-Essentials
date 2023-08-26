@@ -15,8 +15,9 @@ public class ModuleBan {
     if (SECore.dataLoader instanceof RestDataLoader) {
       if (((ConfigBan) SECore.moduleConfigs.get("BAN")).followRestBans) {
         MinecraftForge.EVENT_BUS.register(new BanEvents());
-      } else
+      } else {
         ServerEssentials.LOG.info("Not following global bans, followRestBans is false");
+      }
     } else {
       ServerEssentials.LOG.warn("Module 'Ban' does not work in 'File' Storage mode!");
       SECore.modules.remove("BAN");

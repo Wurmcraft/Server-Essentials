@@ -3,7 +3,20 @@ package com.wurmcraft.serveressentials.common.data.loader;
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
 import com.wurmcraft.serveressentials.ServerEssentials;
-import com.wurmcraft.serveressentials.api.models.*;
+import com.wurmcraft.serveressentials.api.models.Account;
+import com.wurmcraft.serveressentials.api.models.Action;
+import com.wurmcraft.serveressentials.api.models.AutoRank;
+import com.wurmcraft.serveressentials.api.models.Ban;
+import com.wurmcraft.serveressentials.api.models.Channel;
+import com.wurmcraft.serveressentials.api.models.Currency;
+import com.wurmcraft.serveressentials.api.models.Donator;
+import com.wurmcraft.serveressentials.api.models.Kit;
+import com.wurmcraft.serveressentials.api.models.Language;
+import com.wurmcraft.serveressentials.api.models.LogEntry;
+import com.wurmcraft.serveressentials.api.models.MarketEntry;
+import com.wurmcraft.serveressentials.api.models.Rank;
+import com.wurmcraft.serveressentials.api.models.TransferEntry;
+import com.wurmcraft.serveressentials.api.models.Warp;
 import com.wurmcraft.serveressentials.api.models.local.Bulletin;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.modules.protect.models.RegionClaim;
@@ -250,6 +263,7 @@ public class DataLoader implements IDataLoader {
    * @param type of data stored
    */
   protected long getTimeout(DataType type) {
-    return (long) ServerEssentials.config.performance.dataloaderInterval * 60 * 1000; // 5m
+    return (long) ServerEssentials.config.performance.dataloaderInterval * 60
+        * 1000; // 5m
   }
 }

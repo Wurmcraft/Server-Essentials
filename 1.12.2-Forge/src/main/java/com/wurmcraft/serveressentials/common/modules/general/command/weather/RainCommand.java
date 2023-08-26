@@ -17,13 +17,14 @@ public class RainCommand {
       usage = {},
       canConsoleUse = true)
   public void rain(ServerPlayer player) {
-    if (player.player == null)
-      for (WorldServer world : FMLCommonHandler.instance().getMinecraftServerInstance().worlds) {
+    if (player.player == null) {
+      for (WorldServer world : FMLCommonHandler.instance()
+          .getMinecraftServerInstance().worlds) {
         world.getWorldInfo().setRaining(true);
         world.getWorldInfo().setRainTime(world.rand.nextInt(168000) + 12000);
         world.getWorldInfo().setThundering(false);
       }
-    else {
+    } else {
       player.player.world.getWorldInfo().setRaining(true);
       player
           .player
@@ -41,7 +42,8 @@ public class RainCommand {
       canConsoleUse = true)
   public void rain(ServerPlayer player, int dim) {
     try {
-      World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dim);
+      World world = FMLCommonHandler.instance().getMinecraftServerInstance()
+          .getWorld(dim);
       world.getWorldInfo().setRaining(true);
       world.getWorldInfo().setRainTime(world.rand.nextInt(168000) + 12000);
       world.getWorldInfo().setThundering(false);

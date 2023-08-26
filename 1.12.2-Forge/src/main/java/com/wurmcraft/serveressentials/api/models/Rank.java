@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -53,12 +54,17 @@ public class Rank {
     this.color_priority = colorPriority;
   }
 
-  public Rank() {}
+  public Rank() {
+  }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof Rank)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Rank)) {
+      return false;
+    }
     Rank rank = (Rank) o;
     return prefix_priority.equals(rank.prefix_priority)
         && suffix_priority.equals(rank.suffix_priority)

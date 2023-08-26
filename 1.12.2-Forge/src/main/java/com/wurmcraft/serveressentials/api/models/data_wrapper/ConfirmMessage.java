@@ -1,7 +1,7 @@
 package com.wurmcraft.serveressentials.api.models.data_wrapper;
 
 public class ConfirmMessage {
-  
+
   public String sender;
   public String receiver;
 

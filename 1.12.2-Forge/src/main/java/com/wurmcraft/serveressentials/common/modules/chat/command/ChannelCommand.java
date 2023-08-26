@@ -14,7 +14,6 @@ import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.chat.ConfigChat;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
-import io.netty.channel.epoll.Epoll;
 import java.util.HashMap;
 import net.minecraft.util.text.TextComponentTranslation;
 

@@ -16,5 +16,6 @@ public enum CommandArgument {
   CHANNEL,
   KIT;
 
-  CommandArgument() {}
+  CommandArgument() {
+  }
 }

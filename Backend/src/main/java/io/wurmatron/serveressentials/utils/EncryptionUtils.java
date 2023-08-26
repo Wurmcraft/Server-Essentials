@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -48,7 +49,8 @@ public class EncryptionUtils {
   }
 
   public static final String[] CHARS = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
-      "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "2", "3", "4", "5", "6", "7", "8", "9"};
+      "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "2",
+      "3", "4", "5", "6", "7", "8", "9"};
 
   private static Random RAND = new Random();
 

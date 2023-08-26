@@ -31,7 +31,8 @@ public class SetHomeCommand {
       args = {},
       usage = {})
   public void setDefaultHome(ServerPlayer player) {
-    setHome(player, ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName);
+    setHome(player,
+        ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName);
   }
 
   @Command(
@@ -54,22 +55,27 @@ public class SetHomeCommand {
               name);
       // Add home to player
       if (isOverride) {
-        for (int index = 0; index < player.local.homes.length; index++)
+        for (int index = 0; index < player.local.homes.length; index++) {
           if (player.local.homes[index].name.equalsIgnoreCase(name)) {
             player.local.homes[index] = newHome;
             break;
           }
+        }
       } else {
-        if (player.local.homes == null) player.local.homes = new Home[0];
+        if (player.local.homes == null) {
+          player.local.homes = new Home[0];
+        }
         player.local.homes =
             Arrays.copyOfRange(player.local.homes, 0, player.local.homes.length + 1);
         player.local.homes[player.local.homes.length - 1] = newHome;
       }
-      SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, player.local.uuid, player.local);
+      SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, player.local.uuid,
+          player.local);
       // Send formatted message
       TextComponentString homeMSG =
           new TextComponentString(
-              ChatHelper.replaceColor(player.lang.COMMAND_SETHOME.replaceAll("\\{@NAME@}", name)));
+              ChatHelper.replaceColor(
+                  player.lang.COMMAND_SETHOME.replaceAll("\\{@NAME@}", name)));
       homeMSG.setStyle(
           homeMSG
               .getStyle()
@@ -80,9 +86,12 @@ public class SetHomeCommand {
                           player
                               .lang
                               .HOME_OVER
-                              .replaceAll("\\{@X@}", Integer.toString((int) Math.round(newHome.x)))
-                              .replaceAll("\\{@Y@}", Integer.toString((int) Math.round(newHome.y)))
-                              .replaceAll("\\{@Z@}", Integer.toString((int) Math.round(newHome.z)))
+                              .replaceAll("\\{@X@}",
+                                  Integer.toString((int) Math.round(newHome.x)))
+                              .replaceAll("\\{@Y@}",
+                                  Integer.toString((int) Math.round(newHome.y)))
+                              .replaceAll("\\{@Z@}",
+                                  Integer.toString((int) Math.round(newHome.z)))
                               .replaceAll("\\{@DIM@}", Integer.toString(newHome.dim)))))
               .setClickEvent(
                   new ClickEvent(ClickEvent.Action.RUN_COMMAND, "home " + newHome.name)));
@@ -90,7 +99,8 @@ public class SetHomeCommand {
     } else {
       ChatHelper.send(
           player.sender,
-          player.lang.COMMAND_SETHOME_MAX.replaceAll("\\{@MAX@}", Integer.toString(maxHomes)));
+          player.lang.COMMAND_SETHOME_MAX.replaceAll("\\{@MAX@}",
+              Integer.toString(maxHomes)));
     }
   }
 
@@ -110,7 +120,8 @@ public class SetHomeCommand {
       if (offlineUUID != null) {
         int maxHomes =
             PlayerUtils.maxHomes(
-                SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, offlineUUID, new Account()));
+                SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, offlineUUID,
+                    new Account()));
         LocalAccount local =
             SECore.dataLoader.get(
                 DataLoader.DataType.LOCAL_ACCOUNT, offlineUUID, new LocalAccount());
@@ -131,11 +142,12 @@ public class SetHomeCommand {
                   name);
           // Add home to player
           if (isOverride) {
-            for (int index = 0; index < local.homes.length; index++)
+            for (int index = 0; index < local.homes.length; index++) {
               if (local.homes[index].name.equalsIgnoreCase(name)) {
                 local.homes[index] = newHome;
                 return;
               }
+            }
           } else {
             local.homes = Arrays.copyOfRange(local.homes, 0, local.homes.length + 1);
             local.homes[local.homes.length - 1] = newHome;
@@ -150,7 +162,8 @@ public class SetHomeCommand {
                       .replaceAll("\\{@NAME@}", name)
                       .replaceAll(
                           "\\{@PLAYER@}",
-                          Objects.requireNonNull(PlayerUtils.getUsernameForInput(offlineUUID))));
+                          Objects.requireNonNull(
+                              PlayerUtils.getUsernameForInput(offlineUUID))));
           homeMSG.setStyle(
               homeMSG
                   .getStyle()
@@ -162,20 +175,29 @@ public class SetHomeCommand {
                                   .lang
                                   .HOME_OVER
                                   .replaceAll(
-                                      "\\{@X@}", Integer.toString((int) Math.round(newHome.x)))
+                                      "\\{@X@}",
+                                      Integer.toString((int) Math.round(newHome.x)))
                                   .replaceAll(
-                                      "\\{@Y@}", Integer.toString((int) Math.round(newHome.y)))
+                                      "\\{@Y@}",
+                                      Integer.toString((int) Math.round(newHome.y)))
                                   .replaceAll(
-                                      "\\{@Z@}", Integer.toString((int) Math.round(newHome.z)))
-                                  .replaceAll("\\{@DIM@}", Integer.toString(newHome.dim))))));
+                                      "\\{@Z@}",
+                                      Integer.toString((int) Math.round(newHome.z)))
+                                  .replaceAll("\\{@DIM@}",
+                                      Integer.toString(newHome.dim))))));
           ChatHelper.send(player.sender, homeMSG);
         } else {
           ChatHelper.send(
               player.sender,
-              player.lang.COMMAND_SETHOME_MAX.replaceAll("\\{@MAX@}", Integer.toString(maxHomes)));
+              player.lang.COMMAND_SETHOME_MAX.replaceAll("\\{@MAX@}",
+                  Integer.toString(maxHomes)));
         }
-      } else ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND);
-    } else
-      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
+      } else {
+        ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND);
+      }
+    } else {
+      ChatHelper.send(player.sender,
+          new TextComponentTranslation("commands.generic.permission"));
+    }
   }
 }

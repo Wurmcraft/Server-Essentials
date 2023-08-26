@@ -11,7 +11,8 @@ import com.wurmcraft.serveressentials.common.modules.protect.models.TrustInfo.Ac
 import com.wurmcraft.serveressentials.common.modules.protect.utils.ProtectionHelper;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.math.BlockPos;
@@ -211,14 +212,18 @@ public class ProtectionEvents {
         if (preventNearbyExplosions) {
           e.setCanceled(true);
         } else {
-          String fieldName = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment") ? "affectedBlockPositions" : "field_149155_e";
+          String fieldName =
+              (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")
+                  ? "affectedBlockPositions" : "field_149155_e";
           try {
             Field field = e.getExplosion().getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
-            field.set(e.getExplosion(),safeSpots(e.getExplosion().getAffectedBlockPositions(), dim));
+            field.set(e.getExplosion(),
+                safeSpots(e.getExplosion().getAffectedBlockPositions(), dim));
           } catch (Exception f) {
             f.printStackTrace();
-            ServerEssentials.LOG.info("Failed to override explosion field, preventing explosion to protect claim");
+            ServerEssentials.LOG.info(
+                "Failed to override explosion field, preventing explosion to protect claim");
             e.setCanceled(true);
           }
         }

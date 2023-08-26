@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -37,9 +38,13 @@ public class SQLCacheUsername extends SQLCache {
   @Nullable
   public static String getUsername(String uuid) {
     // Attempt to get from cache
-    if (usernameCache.containsKey(uuid))
-      if (!needsUpdate(usernameCache.get(uuid))) return usernameCache.get(uuid).username;
-      else invalidate(uuid);
+    if (usernameCache.containsKey(uuid)) {
+      if (!needsUpdate(usernameCache.get(uuid))) {
+        return usernameCache.get(uuid).username;
+      } else {
+        invalidate(uuid);
+      }
+    }
     // Not in cache / invalid
     try {
       Account account = get("*", USERS_TABLE, "uuid", uuid, new Account());
@@ -50,7 +55,8 @@ public class SQLCacheUsername extends SQLCache {
       }
     } catch (Exception e) {
       LOG.debug(
-          "Failed to find account username with uuid '" + uuid + "' (" + e.getMessage() + ")");
+          "Failed to find account username with uuid '" + uuid + "' (" + e.getMessage()
+              + ")");
     }
     // uuid does not exist
     return null;
@@ -69,9 +75,13 @@ public class SQLCacheUsername extends SQLCache {
   @Nullable
   public static String getUUID(String username) {
     // Attempt to get from cache
-    if (uuidCache.containsKey(username))
-      if (!needsUpdate(usernameCache.get(uuidCache.get(username)))) return uuidCache.get(username);
-      else invalidate(uuidCache.get(username));
+    if (uuidCache.containsKey(username)) {
+      if (!needsUpdate(usernameCache.get(uuidCache.get(username)))) {
+        return uuidCache.get(username);
+      } else {
+        invalidate(uuidCache.get(username));
+      }
+    }
     // Not in cache / invalid
     try {
       Account account = get("*", USERS_TABLE, "username", username, new Account());
@@ -81,7 +91,9 @@ public class SQLCacheUsername extends SQLCache {
         return account.uuid;
       }
     } catch (Exception e) {
-      LOG.debug("Failed to find account with username '" + username + "' (" + e.getMessage() + ")");
+      LOG.debug(
+          "Failed to find account with username '" + username + "' (" + e.getMessage()
+              + ")");
     }
     // Username does not exist
     return null;
@@ -97,24 +109,34 @@ public class SQLCacheUsername extends SQLCache {
     usernameCache.remove(uuid);
     for (Iterator<String> it = uuidCache.keySet().iterator(); it.hasNext(); ) {
       String username = it.next();
-      if (uuidCache.get(username).equalsIgnoreCase(uuid)) uuidCache.remove(username);
+      if (uuidCache.get(username).equalsIgnoreCase(uuid)) {
+        uuidCache.remove(username);
+      }
     }
-    LOG.debug("Username Entry '" + uuid + " has been invalidated, will update on next request!");
+    LOG.debug("Username Entry '" + uuid
+        + " has been invalidated, will update on next request!");
   }
 
   /** Cleanup the stored cache and look for expired entries */
   public static void cleanupCache() {
     LOG.debug("Username Cache cleanup has begun!");
     List<String> toBeRemoved = new ArrayList<>();
-    for (String uuid : usernameCache.keySet())
-      if (needsUpdate(usernameCache.get(uuid))) toBeRemoved.add(uuid);
+    for (String uuid : usernameCache.keySet()) {
+      if (needsUpdate(usernameCache.get(uuid))) {
+        toBeRemoved.add(uuid);
+      }
+    }
     // Remove from Cache
     int count = 0;
-    for (String uuid : toBeRemoved) SQLCacheAccount.invalidate(uuid);
+    for (String uuid : toBeRemoved) {
+      SQLCacheAccount.invalidate(uuid);
+    }
     count++;
-    LOG.debug("Username Cache has been cleaned, " + count + " entries have been removed!");
+    LOG.debug(
+        "Username Cache has been cleaned, " + count + " entries have been removed!");
   }
 
   /** Removes the expired entries from the database */
-  public static void cleanupDB() {}
+  public static void cleanupDB() {
+  }
 }

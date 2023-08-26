@@ -17,18 +17,22 @@ public class HomeSpawnEvent {
   @SubscribeEvent
   public void onRespawn(PlayerRespawnEvent e) {
     LocalAccount localAccount = SECore.dataLoader.get(
-        DataType.LOCAL_ACCOUNT, e.player.getGameProfile().getId().toString(), new LocalAccount());
-    Account account = SECore.dataLoader.get(DataType.ACCOUNT, e.player.getGameProfile().getId().toString(), new Account());
+        DataType.LOCAL_ACCOUNT, e.player.getGameProfile().getId().toString(),
+        new LocalAccount());
+    Account account = SECore.dataLoader.get(DataType.ACCOUNT,
+        e.player.getGameProfile().getId().toString(), new Account());
     if (localAccount.homes.length > 0) {
       for (Home home : localAccount.homes) {
-        if (home.name.equalsIgnoreCase(((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName)) {
-          TeleportUtils.teleportTo((EntityPlayerMP) e.player,localAccount, home, false);
+        if (home.name.equalsIgnoreCase(
+            ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName)) {
+          TeleportUtils.teleportTo((EntityPlayerMP) e.player, localAccount, home, false);
           return;
         }
       }
     }
-    if (e.player.getBedLocation() == null &&  PlayerUtils.getSpawn(account.rank) != null) {
-      TeleportUtils.teleportTo((EntityPlayerMP) e.player, localAccount, PlayerUtils.getSpawn(account.rank));
+    if (e.player.getBedLocation() == null && PlayerUtils.getSpawn(account.rank) != null) {
+      TeleportUtils.teleportTo((EntityPlayerMP) e.player, localAccount,
+          PlayerUtils.getSpawn(account.rank));
     }
   }
 

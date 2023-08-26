@@ -16,7 +16,8 @@ import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
 import com.wurmcraft.serveressentials.common.modules.economy.ConfigEconomy;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -32,7 +33,7 @@ public class ARCommand {
   )
   public void check(ServerPlayer player) {
     displayAutoRankRequirements(player.global, player.sender);
-    RankupEvents.checkAndHandleUpdate(player.player,player.global);
+    RankupEvents.checkAndHandleUpdate(player.player, player.global);
   }
 
   @Command(
@@ -49,10 +50,12 @@ public class ARCommand {
       if (account != null) {
         displayAutoRankRequirements(account, player.sender);
       } else {
-        ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND.replace("@PLAYER@",  other));
+        ChatHelper.send(player.sender,
+            player.lang.PLAYER_NOT_FOUND.replace("@PLAYER@", other));
       }
     } else {
-      ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND.replace("@PLAYER@",  other));
+      ChatHelper.send(player.sender,
+          player.lang.PLAYER_NOT_FOUND.replace("@PLAYER@", other));
     }
   }
 

@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -52,12 +53,17 @@ public class LogEntry {
     this.dim = dim;
   }
 
-  public LogEntry() {}
+  public LogEntry() {
+  }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof LogEntry)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof LogEntry)) {
+      return false;
+    }
     LogEntry logEntry = (LogEntry) o;
     return timestamp.equals(logEntry.timestamp)
         && x.equals(logEntry.x)

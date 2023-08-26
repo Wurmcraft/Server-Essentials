@@ -27,7 +27,8 @@ public class BulletinCommand {
     long t = CommandUtils.convertToTime(time);
     if (t > 0) {
       Bulletin bulletin =
-          new Bulletin(System.currentTimeMillis() + (t * 1000), title, msg, new ArrayList<>());
+          new Bulletin(System.currentTimeMillis() + (t * 1000), title, msg,
+              new ArrayList<>());
       SECore.dataLoader.register(DataLoader.DataType.BULLETIN, title, bulletin);
       ChatHelper.send(
           player.sender,
@@ -41,12 +42,15 @@ public class BulletinCommand {
                       (bulletin.expiration - System.currentTimeMillis()) / 1000)));
       // Send to all online players
       for (EntityPlayer online :
-          FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+          FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
+              .getPlayers()) {
         ChatHelper.send(online, bulletin);
         bulletin.viewedBy.add(online.getGameProfile().getId().toString());
       }
       SECore.dataLoader.update(DataLoader.DataType.BULLETIN, bulletin.title, bulletin);
-    } else ChatHelper.send(player.sender, player.lang.INVALID_TIME);
+    } else {
+      ChatHelper.send(player.sender, player.lang.INVALID_TIME);
+    }
   }
 
   @Command(

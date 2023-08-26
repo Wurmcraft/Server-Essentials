@@ -68,7 +68,7 @@ public class DeletePlayerFileCommand {
                   + uuid
                   + ".dat");
       deletedLocation.getParentFile().mkdirs();
-      if (deletedLocation.exists())
+      if (deletedLocation.exists()) {
         deletedLocation =
             new File(
                 ConfigLoader.SAVE_DIR
@@ -81,6 +81,7 @@ public class DeletePlayerFileCommand {
                     + "_"
                     + Instant.now().getEpochSecond()
                     + ".dat");
+      }
       try {
         byte[] playerData = Files.readAllBytes(playerFile.toPath());
         Files.write(

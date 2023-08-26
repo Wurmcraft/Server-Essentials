@@ -9,7 +9,6 @@ import com.wurmcraft.serveressentials.api.models.Vault;
 import com.wurmcraft.serveressentials.common.data.ConfigLoader;
 import com.wurmcraft.serveressentials.common.data.loader.FileDataLoader;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
-import com.wurmcraft.serveressentials.common.utils.ItemStackConverter;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
@@ -89,7 +88,9 @@ public class VaultInventory extends InventoryBasic {
       int x = (index - 9) + (45 * page);
       return ServerEssentials.stackConverter.getData(vault.items[x]);
     }
-    if (index < 9) return menu[index];
+    if (index < 9) {
+      return menu[index];
+    }
     return ItemStack.EMPTY;
   }
 
@@ -98,7 +99,9 @@ public class VaultInventory extends InventoryBasic {
     if (index > 8) {
       ItemStack stack = getStackInSlot(index);
       ItemStack decStack = stack.splitStack(count);
-      if (stack.getCount() <= 0) stack = ItemStack.EMPTY;
+      if (stack.getCount() <= 0) {
+        stack = ItemStack.EMPTY;
+      }
       setInventorySlotContents(index, stack);
       return decStack;
     }
@@ -113,7 +116,9 @@ public class VaultInventory extends InventoryBasic {
 
   @Override
   public ItemStack addItem(ItemStack stack) {
-    if (stack.isEmpty()) return ItemStack.EMPTY;
+    if (stack.isEmpty()) {
+      return ItemStack.EMPTY;
+    }
     for (int index = 9; index < (45 * vault.maxPages); index++) {
       ItemStack slot = getStackInSlot(index);
       if (slot.isEmpty()) {
@@ -144,11 +149,13 @@ public class VaultInventory extends InventoryBasic {
   public void setInventorySlotContents(int index, ItemStack stack) {
     if (index > 8 && index < (45 * vault.maxPages) + 9) {
       if (vault.items.length > index) { // place into existing vault
-        vault.items[index - 9 + (page * 45)] = ServerEssentials.stackConverter.toString(stack);
+        vault.items[index - 9 + (page * 45)] = ServerEssentials.stackConverter.toString(
+            stack);
         markDirty();
       } else { // Expand Vault to fit new items
         vault.items = Arrays.copyOf(vault.items, 45 * (index / 45));
-        vault.items[index - 9 + +(page * 45)] = ServerEssentials.stackConverter.toString(stack);
+        vault.items[index - 9 + +(page * 45)] = ServerEssentials.stackConverter.toString(
+            stack);
         markDirty();
       }
       super.markDirty();
@@ -181,7 +188,8 @@ public class VaultInventory extends InventoryBasic {
           StandardOpenOption.WRITE,
           StandardOpenOption.TRUNCATE_EXISTING);
     } catch (Exception e) {
-      LOG.warn("Failed to save vault '" + vault.name + "' for user '" + vault.ownerUUID + "'");
+      LOG.warn(
+          "Failed to save vault '" + vault.name + "' for user '" + vault.ownerUUID + "'");
     }
   }
 
@@ -189,15 +197,18 @@ public class VaultInventory extends InventoryBasic {
   public boolean isEmpty() {
     for (String item : vault.items) {
       ItemStack stack = ServerEssentials.stackConverter.getData(item);
-      if (!stack.isEmpty()) return false;
+      if (!stack.isEmpty()) {
+        return false;
+      }
     }
     return true;
   }
 
   @Override
   public void openInventory(EntityPlayer player) {
-    for (int index = 0; index < getSizeInventory(); index++)
+    for (int index = 0; index < getSizeInventory(); index++) {
       setInventorySlotContents(index, getStackInSlot(index));
+    }
   }
 
   @Override
@@ -209,11 +220,15 @@ public class VaultInventory extends InventoryBasic {
   private void handleAction(int index) {
     if (index == 1) { // Previous Page
       page = page - 1;
-      if (page < 0) page = vault.maxPages - 1;
+      if (page < 0) {
+        page = vault.maxPages - 1;
+      }
     }
     if (index == 7) { // Next Page
       page = page + 1;
-      if (page >= vault.maxPages) page = 0;
+      if (page >= vault.maxPages) {
+        page = 0;
+      }
     }
     if (index == 3) { // Options Menu
       // TODO Add Options Menu
@@ -252,7 +267,8 @@ public class VaultInventory extends InventoryBasic {
                 + ".json");
     if (save.exists()) {
       try {
-        return GSON.fromJson(String.join("\n", Files.readAllLines(save.toPath())), Vault.class);
+        return GSON.fromJson(String.join("\n", Files.readAllLines(save.toPath())),
+            Vault.class);
       } catch (Exception e) {
         LOG.warn("Failed to load vault 'default' for '" + ownerUUID + "'");
         e.printStackTrace();

@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -10,6 +11,7 @@ import com.wurmcraft.serveressentials.api.models.transfer.ItemWrapper;
 import java.util.Objects;
 
 public class MarketEntry {
+
   public String server_id;
   public String seller_uuid;
   public ItemWrapper item;
@@ -52,12 +54,17 @@ public class MarketEntry {
     this.transfer_id = transferID;
   }
 
-  public MarketEntry() {}
+  public MarketEntry() {
+  }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof MarketEntry)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof MarketEntry)) {
+      return false;
+    }
     MarketEntry that = (MarketEntry) o;
     return Objects.equals(server_id, that.server_id)
         && Objects.equals(seller_uuid, that.seller_uuid)

@@ -16,7 +16,7 @@ import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 public class SetWarpCommand {
 
   public static String[] NAME_BLACKLIST = {
-    "list", "l", "delete", "del", "remove", "rem", "d", "r", "create", "c"
+      "list", "l", "delete", "del", "remove", "rem", "d", "r", "create", "c"
   };
 
   @Command(
@@ -24,12 +24,14 @@ public class SetWarpCommand {
       usage = {"name"})
   public void setWarp(ServerPlayer player, String name) {
     // Check if name is invalid
-    for (String n : NAME_BLACKLIST)
+    for (String n : NAME_BLACKLIST) {
       if (n.equalsIgnoreCase(name)) {
         ChatHelper.send(
-            player.sender, player.lang.COMMAND_SETWARP_INVALID.replaceAll("\\{@NAME@}", name));
+            player.sender,
+            player.lang.COMMAND_SETWARP_INVALID.replaceAll("\\{@NAME@}", name));
         return;
       }
+    }
     // Create new warp
     Warp warp =
         new Warp(
@@ -40,11 +42,12 @@ public class SetWarpCommand {
             player.player.rotationPitch,
             player.player.rotationYaw,
             name);
-    if (SECore.dataLoader.register(DataLoader.DataType.WARP, warp.name, warp))
+    if (SECore.dataLoader.register(DataLoader.DataType.WARP, warp.name, warp)) {
       ChatHelper.send(
           player.sender, player.lang.COMMAND_SETWARP.replaceAll("\\{@NAME@}", warp.name));
-    else if (SECore.dataLoader.update(DataLoader.DataType.WARP, warp.name, warp))
+    } else if (SECore.dataLoader.update(DataLoader.DataType.WARP, warp.name, warp)) {
       ChatHelper.send(
           player.sender, player.lang.COMMAND_SETWARP.replaceAll("\\{@NAME@}", warp.name));
+    }
   }
 }

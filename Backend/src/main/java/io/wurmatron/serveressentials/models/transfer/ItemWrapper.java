@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -34,8 +35,12 @@ public class ItemWrapper implements SQLJson {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof ItemWrapper)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof ItemWrapper)) {
+      return false;
+    }
     ItemWrapper that = (ItemWrapper) o;
     return count == that.count
         && meta == that.meta

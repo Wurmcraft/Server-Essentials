@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -35,9 +36,13 @@ public class SQLCacheBan extends SQLCache {
   @Nullable
   public static Ban get(long banID) {
     // Attempt to get from cache
-    if (bansCache.containsKey(banID))
-      if (!needsUpdate(bansCache.get(banID))) return bansCache.get(banID).ban;
-      else invalidate(banID);
+    if (bansCache.containsKey(banID)) {
+      if (!needsUpdate(bansCache.get(banID))) {
+        return bansCache.get(banID).ban;
+      } else {
+        invalidate(banID);
+      }
+    }
     // Not in cache / invalid
     try {
       Ban ban = get("*", BAN_TABLE, "ban_id", "" + banID, new Ban());
@@ -64,9 +69,13 @@ public class SQLCacheBan extends SQLCache {
       if (!needsUpdate(uuidCache.get(uuid))) {
         int[] cachedEntries = uuidCache.get(uuid).banIDs;
         List<Ban> bans = new ArrayList<>();
-        for (int id : cachedEntries) bans.add(get(id));
+        for (int id : cachedEntries) {
+          bans.add(get(id));
+        }
         return bans.toArray(new Ban[0]);
-      } else invalidate(uuid);
+      } else {
+        invalidate(uuid);
+      }
     }
     // Not in cache / invalid
     try {
@@ -103,12 +112,16 @@ public class SQLCacheBan extends SQLCache {
     if (count > 0) {
       // Check if cache is complete
       if (bansCache.size() >= count) {
-        for (CacheBan ban : bansCache.values()) bans.add(get(ban.ban.ban_id));
+        for (CacheBan ban : bansCache.values()) {
+          bans.add(get(ban.ban.ban_id));
+        }
         return bans;
       } else {
         try {
           bansCache.clear();
-          for (Ban ban : bans) bansCache.put(ban.ban_id, new CacheBan(ban));
+          for (Ban ban : bans) {
+            bansCache.put(ban.ban_id, new CacheBan(ban));
+          }
           return bans;
         } catch (Exception e) {
           LOG.debug("Failed to fetch Ban's (" + e.getMessage() + ")");
@@ -132,15 +145,19 @@ public class SQLCacheBan extends SQLCache {
       // Check if discordID exists, if not remove
       if (ban.discord_id.isEmpty()) {
         List<String> columnList = new ArrayList<>();
-        for (String column : columns)
-          if (!column.equalsIgnoreCase("discord_id")) columnList.add(column);
+        for (String column : columns) {
+          if (!column.equalsIgnoreCase("discord_id")) {
+            columnList.add(column);
+          }
+        }
         columns = columnList.toArray(new String[0]);
       }
       ban.ban_id = insert(BAN_TABLE, columns, ban, true);
       bansCache.put(ban.ban_id, new CacheBan(ban));
       return ban;
     } catch (Exception e) {
-      LOG.debug("Failed to create new ban for uuid '" + ban.uuid + "' (" + e.getMessage() + ")");
+      LOG.debug("Failed to create new ban for uuid '" + ban.uuid + "' (" + e.getMessage()
+          + ")");
       LOG.debug("Ban: " + GSON.toJson(ban));
     }
     return null;
@@ -160,7 +177,8 @@ public class SQLCacheBan extends SQLCache {
       invalidate(ban.ban_id);
       return true;
     } catch (Exception e) {
-      LOG.debug("Failed to update ban for uuid '" + ban.uuid + "' (" + e.getMessage() + ")");
+      LOG.debug(
+          "Failed to update ban for uuid '" + ban.uuid + "' (" + e.getMessage() + ")");
       LOG.debug("BAN: " + GSON.toJson(ban));
     }
     return false;
@@ -200,7 +218,8 @@ public class SQLCacheBan extends SQLCache {
    */
   public static void invalidate(String uuid) {
     uuidCache.remove(uuid);
-    LOG.debug("Ban's for '" + uuid + "' has been invalidated, will update on next request");
+    LOG.debug(
+        "Ban's for '" + uuid + "' has been invalidated, will update on next request");
   }
 
   /** Run periodically to cleanup the cache and remove expired / invalid entries */
@@ -208,11 +227,18 @@ public class SQLCacheBan extends SQLCache {
     LOG.debug("Ban Cache cleanup has begun!");
     // ID Cache
     List<Long> toToRemoved = new ArrayList<>();
-    for (CacheBan ban : bansCache.values()) if (needsUpdate(ban)) toToRemoved.add(ban.ban.ban_id);
+    for (CacheBan ban : bansCache.values()) {
+      if (needsUpdate(ban)) {
+        toToRemoved.add(ban.ban.ban_id);
+      }
+    }
     // UUID Cache
     List<String> toBeRemovedUUID = new ArrayList<>();
-    for (String uuid : uuidCache.keySet())
-      if (needsUpdate(uuidCache.get(uuid))) toBeRemovedUUID.add(uuid);
+    for (String uuid : uuidCache.keySet()) {
+      if (needsUpdate(uuidCache.get(uuid))) {
+        toBeRemovedUUID.add(uuid);
+      }
+    }
     // Remove from Cache
     int count = 0;
     for (long id : toToRemoved) {
@@ -233,7 +259,9 @@ public class SQLCacheBan extends SQLCache {
       List<Ban> bans = getArray("*", BAN_TABLE, "", "", new Ban());
       int count = 0;
       for (Ban ban : bans) {
-        if (ban.ban_status && handleBanUpdateCheck(ban)) count++;
+        if (ban.ban_status && handleBanUpdateCheck(ban)) {
+          count++;
+        }
       }
       LOG.debug(count + " bans have been updated!");
     } catch (Exception e) {

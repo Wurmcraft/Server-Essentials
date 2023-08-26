@@ -10,7 +10,9 @@ import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.common.command.CommandUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import joptsimple.internal.Strings;
 
 @ModuleCommand(module = "Rank", name = "Rank")

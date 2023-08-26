@@ -6,7 +6,6 @@ import com.wurmcraft.serveressentials.api.command.CommandArgument;
 import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
-import com.wurmcraft.serveressentials.common.utils.ItemStackConverter;
 import net.minecraft.item.ItemStack;
 
 @ModuleCommand(
@@ -29,6 +28,8 @@ public class GiveItemCommand {
               .replaceAll("\\{@COUNT@}", stack.getCount() + "")
               .replaceAll("\\{@NAME@}", stack.getDisplayName()));
       player.player.inventory.addItemStackToInventory(stack);
-    } else ChatHelper.send(player.sender, player.lang.COMMAND_GIVEITEM_NONE);
+    } else {
+      ChatHelper.send(player.sender, player.lang.COMMAND_GIVEITEM_NONE);
+    }
   }
 }

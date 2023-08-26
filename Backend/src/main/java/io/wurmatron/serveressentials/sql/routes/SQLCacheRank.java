@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -32,9 +33,13 @@ public class SQLCacheRank extends SQLCache {
   @Nullable
   public static Rank get(String name) {
     // Attempt to get from cache
-    if (rankCache.contains(name))
-      if (!needsUpdate(rankCache.get(name))) return rankCache.get(name).rank;
-      else rankCache.remove(name);
+    if (rankCache.contains(name)) {
+      if (!needsUpdate(rankCache.get(name))) {
+        return rankCache.get(name).rank;
+      } else {
+        rankCache.remove(name);
+      }
+    }
     // Not in cache / invalid
     try {
       Rank rank = get("*", RANKS_TABLE, "name", "" + name, new Rank());
@@ -60,20 +65,26 @@ public class SQLCacheRank extends SQLCache {
     // Attempt to get from cache
     if (lastFullSync + (config.server.cacheTime * 1000L) > System.currentTimeMillis()) {
       List<Rank> ranks = new ArrayList<>();
-      for (CacheRank cache : rankCache.values())
-        if (!needsUpdate(cache)) ranks.add(cache.rank);
-        else { // Update entry
+      for (CacheRank cache : rankCache.values()) {
+        if (!needsUpdate(cache)) {
+          ranks.add(cache.rank);
+        } else { // Update entry
           invalidate(cache.rank.name);
           Rank rank = get(cache.rank.name);
-          if (rank != null) ranks.add(rank);
+          if (rank != null) {
+            ranks.add(rank);
+          }
         }
+      }
     }
     // Full Sync
     try {
       List<Rank> ranks = getArray("*", RANKS_TABLE, "", "", new Rank());
       if (ranks.size() > 0) {
         // Add to cache
-        for (Rank rank : ranks) rankCache.put(rank.name.toUpperCase(), new CacheRank(rank));
+        for (Rank rank : ranks) {
+          rankCache.put(rank.name.toUpperCase(), new CacheRank(rank));
+        }
         lastFullSync = System.currentTimeMillis();
         return ranks;
       }
@@ -93,11 +104,13 @@ public class SQLCacheRank extends SQLCache {
   public static Rank create(Rank rank) {
     try {
       rank.name = rank.name.toLowerCase();
-      insert(RANKS_TABLE, Arrays.copyOfRange(RANKS_COLUMNS, 1, RANKS_COLUMNS.length), rank, false);
+      insert(RANKS_TABLE, Arrays.copyOfRange(RANKS_COLUMNS, 1, RANKS_COLUMNS.length),
+          rank, false);
       rankCache.put(rank.name, new CacheRank(rank));
       return rank;
     } catch (Exception e) {
-      LOG.debug("Failed to add rank with name '" + rank.name + "'(" + e.getMessage() + ")");
+      LOG.debug(
+          "Failed to add rank with name '" + rank.name + "'(" + e.getMessage() + ")");
       LOG.debug("Rank: " + GSON.toJson(rank));
     }
     return null;
@@ -123,7 +136,8 @@ public class SQLCacheRank extends SQLCache {
       }
       return true;
     } catch (Exception e) {
-      LOG.debug("Failed to update rank with id '" + rank.name + "'(" + e.getMessage() + ")");
+      LOG.debug(
+          "Failed to update rank with id '" + rank.name + "'(" + e.getMessage() + ")");
       LOG.debug("Rank: " + GSON.toJson(rank));
     }
     return false;
@@ -151,7 +165,8 @@ public class SQLCacheRank extends SQLCache {
   /** @param name Name of the rank to remove from the cache */
   public static void invalidate(String name) {
     rankCache.remove(name);
-    LOG.debug("Rank '" + name + " has been invalidated, will be updated on next request!");
+    LOG.debug(
+        "Rank '" + name + " has been invalidated, will be updated on next request!");
   }
 
   /** Cleanup the stored cache and look for expired entries */
@@ -159,8 +174,11 @@ public class SQLCacheRank extends SQLCache {
     LOG.debug("Rank Cache cleanup has begun!");
     // ID Cache
     List<String> toBeRemoved = new ArrayList<>();
-    for (CacheRank rank : rankCache.values())
-      if (needsUpdate(rank)) toBeRemoved.add(rank.rank.name);
+    for (CacheRank rank : rankCache.values()) {
+      if (needsUpdate(rank)) {
+        toBeRemoved.add(rank.rank.name);
+      }
+    }
     // Remove from Cache
     int count = 0;
     for (String name : toBeRemoved) {
@@ -171,7 +189,8 @@ public class SQLCacheRank extends SQLCache {
   }
 
   /** Removes the expired entries from the database */
-  public static void cleanupDB() {}
+  public static void cleanupDB() {
+  }
 
   /**
    * List all the table columns besides the key, in this case 'rankID'

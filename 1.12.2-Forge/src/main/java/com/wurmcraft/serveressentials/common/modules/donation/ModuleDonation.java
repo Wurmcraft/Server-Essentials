@@ -12,10 +12,12 @@ public class ModuleDonation {
     if (SECore.dataLoader instanceof RestDataLoader) {
 
     } else {
-      ServerEssentials.LOG.warn("Module 'Donation' does not work in 'File' Storage mode!");
+      ServerEssentials.LOG.warn(
+          "Module 'Donation' does not work in 'File' Storage mode!");
       SECore.modules.remove("DONATION");
     }
   }
 
-  public void reload() {}
+  public void reload() {
+  }
 }

@@ -17,5 +17,6 @@ public class ModuleDiscord {
     }
   }
 
-  public void reload() {}
+  public void reload() {
+  }
 }

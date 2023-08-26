@@ -74,7 +74,8 @@ public class RankupEvents {
     }
     // Currency Check
     if (SECore.modules.get("ECONOMY") != null
-        && rank.currency_amount > 0 && !EcoUtils.canBuy(rank.currency_name, rank.currency_amount, account)) {
+        && rank.currency_amount > 0 && !EcoUtils.canBuy(rank.currency_name,
+        rank.currency_amount, account)) {
       return false;
     }
     // Check special cases

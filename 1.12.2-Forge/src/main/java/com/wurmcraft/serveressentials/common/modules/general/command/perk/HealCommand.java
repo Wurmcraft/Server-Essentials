@@ -34,7 +34,9 @@ public class HealCommand {
           player.sender,
           player.lang.COMMAND_HEAL_OTHER.replaceAll(
               "\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
-    } else
-      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
+    } else {
+      ChatHelper.send(player.sender,
+          new TextComponentTranslation("commands.generic.permission"));
+    }
   }
 }

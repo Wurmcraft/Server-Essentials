@@ -22,7 +22,8 @@ public class InvseeCommand {
       usage = {})
   public void invsee(ServerPlayer player) {
     player.player.displayGUIChest(
-        new PlayerInventory((EntityPlayerMP) player.player, (EntityPlayerMP) player.player, false));
+        new PlayerInventory((EntityPlayerMP) player.player,
+            (EntityPlayerMP) player.player, false));
   }
 
   @Command(
@@ -31,8 +32,11 @@ public class InvseeCommand {
   public void invsee(ServerPlayer player, EntityPlayer otherPlayer) {
     if (RankUtils.hasPermission(player.global, "command.invsee.other")) {
       player.player.displayGUIChest(
-          new PlayerInventory((EntityPlayerMP) otherPlayer, (EntityPlayerMP) player.player, false));
-    } else
-      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
+          new PlayerInventory((EntityPlayerMP) otherPlayer,
+              (EntityPlayerMP) player.player, false));
+    } else {
+      ChatHelper.send(player.sender,
+          new TextComponentTranslation("commands.generic.permission"));
+    }
   }
 }

@@ -26,10 +26,11 @@ public class MotdCommand {
       canConsoleUse = true)
   public void displayMotd(ServerPlayer player) {
     String[] motd = ((ConfigChat) SECore.moduleConfigs.get("CHAT")).motd;
-    for (String line : motd)
+    for (String line : motd) {
       ChatHelper.send(
           player.sender,
           line.replaceAll("%NAME%", ChatHelper.getName(player.player, player.global)));
+    }
   }
 
   @Command(
@@ -50,7 +51,9 @@ public class MotdCommand {
         e.printStackTrace();
       }
       ChatHelper.send(player.sender, player.lang.COMMAND_MOTD);
-    } else
-      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
+    } else {
+      ChatHelper.send(player.sender,
+          new TextComponentTranslation("commands.generic.permission"));
+    }
   }
 }

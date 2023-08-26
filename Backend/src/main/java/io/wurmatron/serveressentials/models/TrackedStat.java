@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -32,12 +33,17 @@ public class TrackedStat {
     this.event_data = eventData;
   }
 
-  public TrackedStat() {}
+  public TrackedStat() {
+  }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof TrackedStat)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof TrackedStat)) {
+      return false;
+    }
     TrackedStat that = (TrackedStat) o;
     return timestamp == that.timestamp
         && Objects.equals(server_id, that.server_id)

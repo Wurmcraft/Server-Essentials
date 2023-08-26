@@ -10,9 +10,7 @@ import static com.wurmcraft.serveressentials.ServerEssentials.stackConverter;
 
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.common.utils.DataWrapper;
-import com.wurmcraft.serveressentials.common.utils.ItemStackConverter;
 import java.util.Objects;
-import net.minecraft.item.ItemStack;
 
 public class ItemWrapper {
 

@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -13,7 +14,8 @@ public class Config {
   public DiscordConfig discord;
 
   public Config(
-      GeneralConfig general, DatabaseConfig database, ServerConfig server, DiscordConfig discord) {
+      GeneralConfig general, DatabaseConfig database, ServerConfig server,
+      DiscordConfig discord) {
     this.general = general;
     this.database = database;
     this.server = server;

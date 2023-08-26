@@ -33,7 +33,7 @@ public class PerkCommand {
   @Command(args = {CommandArgument.STRING}, usage = {
       "perk"}, isSubCommand = true, canConsoleUse = false)
   public void buy(ServerPlayer player, String perk) {
-    if(perk == null) {
+    if (perk == null) {
       ChatHelper.send(player.sender,
           player.lang.COMMAND_PERK_NONE.replaceAll("\\{@NAME@}", "" + perk));
       return;

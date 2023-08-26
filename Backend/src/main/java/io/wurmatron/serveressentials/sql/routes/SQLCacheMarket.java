@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -35,8 +36,9 @@ public class SQLCacheMarket extends SQLCache {
           invalidate(serverID);
           break;
         }
-        if (entry.marketEntry.seller_uuid.equals(sellerUUID))
+        if (entry.marketEntry.seller_uuid.equals(sellerUUID)) {
           sellerEntries.add(entry.marketEntry.clone());
+        }
         return sellerEntries;
       }
       // Missing / invalid
@@ -66,24 +68,31 @@ public class SQLCacheMarket extends SQLCache {
   public static List<MarketEntry> getServer(String serverID) {
     if (marketCache.containsKey(serverID)) {
       List<MarketEntry> entries = new ArrayList<>();
-      for (CacheMarket entry : marketCache.get(serverID))
-        if (!needsUpdate(entry)) entries.add(entry.marketEntry);
-        else {
+      for (CacheMarket entry : marketCache.get(serverID)) {
+        if (!needsUpdate(entry)) {
+          entries.add(entry.marketEntry);
+        } else {
           invalidate(serverID);
           break;
         }
-      if (entries.size() == marketCache.get(serverID).size()) return entries;
+      }
+      if (entries.size() == marketCache.get(serverID).size()) {
+        return entries;
+      }
     }
     // Missing / invalid
     try {
       List<MarketEntry> sqlEntries =
           getArray("*", MARKET_TABLE, "server_id", serverID, new MarketEntry());
       List<CacheMarket> sqlCache = new ArrayList<>();
-      for (MarketEntry entry : sqlEntries) sqlCache.add(new CacheMarket(entry.clone()));
+      for (MarketEntry entry : sqlEntries) {
+        sqlCache.add(new CacheMarket(entry.clone()));
+      }
       return sqlEntries;
     } catch (Exception e) {
       LOG.debug(
-          "Failed to get Market Entries for serverID '" + serverID + "' (" + e.getMessage() + ")");
+          "Failed to get Market Entries for serverID '" + serverID + "' ("
+              + e.getMessage() + ")");
     }
     return null;
   }
@@ -150,9 +159,9 @@ public class SQLCacheMarket extends SQLCache {
       update(
           MARKET_TABLE,
           columnsToUpdate,
-          new String[] {"seller_uuid", "server_id", "timestamp", "market_type"},
-          new String[] {
-            entry.seller_uuid, entry.server_id, "" + entry.timestamp, entry.market_type
+          new String[]{"seller_uuid", "server_id", "timestamp", "market_type"},
+          new String[]{
+              entry.seller_uuid, entry.server_id, "" + entry.timestamp, entry.market_type
           },
           entry);
       // Update Cache
@@ -194,8 +203,8 @@ public class SQLCacheMarket extends SQLCache {
     try {
       delete(
           MARKET_TABLE,
-          new String[] {"server_id", "seller_uuid", "timestamp"},
-          new String[] {serverID, uuid, "" + timestamp});
+          new String[]{"server_id", "seller_uuid", "timestamp"},
+          new String[]{serverID, uuid, "" + timestamp});
       invalidate(serverID);
       return true;
     } catch (Exception e) {
@@ -228,12 +237,14 @@ public class SQLCacheMarket extends SQLCache {
   public static void cleanupCache() {
     LOG.debug("Market Cache cleanup has begun!");
     List<String> toBeRemoved = new ArrayList<>();
-    for (String key : marketCache.keySet())
-      for (CacheMarket entry : marketCache.get(key))
+    for (String key : marketCache.keySet()) {
+      for (CacheMarket entry : marketCache.get(key)) {
         if (needsUpdate(entry)) {
           toBeRemoved.add(key);
           break;
         }
+      }
+    }
     // Remove from cache
     int count = 0;
     for (String serverID : toBeRemoved) {
@@ -245,5 +256,6 @@ public class SQLCacheMarket extends SQLCache {
 
   /** Run periodically to cleanup the db and remove expired / invalid entries */
   // TODO Implement Market Entry Timeout
-  public static void cleanupDB() {}
+  public static void cleanupDB() {
+  }
 }

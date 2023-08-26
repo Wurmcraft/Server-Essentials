@@ -4,7 +4,7 @@ import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.common.modules.security.event.SecurityEvents;
 import com.wurmcraft.serveressentials.common.utils.URLUtils;
 import java.util.ArrayList;
-import java.util.*;
+import java.util.List;
 
 public class TrustedList {
 

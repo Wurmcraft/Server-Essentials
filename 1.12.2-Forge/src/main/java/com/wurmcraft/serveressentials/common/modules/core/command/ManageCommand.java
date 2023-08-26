@@ -39,7 +39,9 @@ public class ManageCommand {
               .COMMAND_MANAGE_RELOAD_FAIL
               .replaceAll("\\{@DATA_TYPE@}", type.name())
               .replaceAll("\\{@KEY@}", key));
-    } else ChatHelper.send(player.sender, player.lang.COMMAND_MANAGE_STATUS_NEG);
+    } else {
+      ChatHelper.send(player.sender, player.lang.COMMAND_MANAGE_STATUS_NEG);
+    }
   }
 
   @Command(
@@ -52,6 +54,7 @@ public class ManageCommand {
     boolean status = SECore.dataLoader.get(type, key) != null;
     ChatHelper.send(
         player.sender,
-        status ? player.lang.COMMAND_MANAGE_STATUS : player.lang.COMMAND_MANAGE_STATUS_NEG);
+        status ? player.lang.COMMAND_MANAGE_STATUS
+            : player.lang.COMMAND_MANAGE_STATUS_NEG);
   }
 }

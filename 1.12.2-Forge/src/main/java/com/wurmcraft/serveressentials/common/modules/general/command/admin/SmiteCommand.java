@@ -8,7 +8,6 @@ import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -18,8 +17,10 @@ public class SmiteCommand {
   @Command(args = {}, usage = {})
   public void smiteSelf(ServerPlayer sender) {
     sender.player.getEntityWorld().addWeatherEffect(
-        new EntityLightningBolt(sender.player.getEntityWorld(), sender.player.getPosition().getX(),
-            sender.player.getPosition().getY(), sender.player.getPosition().getZ(), false));
+        new EntityLightningBolt(sender.player.getEntityWorld(),
+            sender.player.getPosition().getX(),
+            sender.player.getPosition().getY(), sender.player.getPosition().getZ(),
+            false));
     ChatHelper.send(sender.sender, sender.lang.COMMAND_SMITE);
   }
 
@@ -28,7 +29,10 @@ public class SmiteCommand {
     player.getEntityWorld().addWeatherEffect(
         new EntityLightningBolt(player.getEntityWorld(), player.getPosition().getX(),
             player.getPosition().getY(), player.getPosition().getZ(), false));
-    ChatHelper.send(sender.sender, sender.lang.COMMAND_SMITE_OTHER.replaceAll("\\{@PLAYER@}", ChatHelper.getName(player,
-        SECore.dataLoader.get(DataType.ACCOUNT,player.getGameProfile().getId().toString(), new Account()))));
+    ChatHelper.send(sender.sender,
+        sender.lang.COMMAND_SMITE_OTHER.replaceAll("\\{@PLAYER@}",
+            ChatHelper.getName(player,
+                SECore.dataLoader.get(DataType.ACCOUNT,
+                    player.getGameProfile().getId().toString(), new Account()))));
   }
 }

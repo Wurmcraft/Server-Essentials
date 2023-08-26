@@ -73,14 +73,16 @@ public class ConfigLoader {
   private static final Scanner SCANNER = new Scanner(System.in);
 
   private static Config askForConfiguration(Config config) {
-    System.out.println("New installation detected, if not, copy the config.toml and /internal from your previous installation.");
+    System.out.println(
+        "New installation detected, if not, copy the config.toml and /internal from your previous installation.");
     System.out.println();
     System.out.println("- General Setup");
     config.server.host = askQuestion("IP used to host the API from", "localhost");
     boolean set = false;
     while (!set) {
       try {
-        config.server.port = Integer.parseInt(askQuestion("Port to run the API on", "8080"));
+        config.server.port = Integer.parseInt(
+            askQuestion("Port to run the API on", "8080"));
         set = true;
       } catch (NumberFormatException e) {
         System.out.println("Invalid Port, Must be a number!");
@@ -91,7 +93,10 @@ public class ConfigLoader {
     System.out.println("- Database Setup");
     config.database.connector = askQuestion("What type of database 'postgresql', 'mysql'",
         "mysql");
-    config.database.host = askQuestion("IP / domain to connect to the {NAME} database".replaceAll("\\{NAME}", config.database.connector.equals("mysql") ? "mysql" : "postgres"), "localhost");
+    config.database.host = askQuestion(
+        "IP / domain to connect to the {NAME} database".replaceAll("\\{NAME}",
+            config.database.connector.equals("mysql") ? "mysql" : "postgres"),
+        "localhost");
     set = false;
     while (!set) {
       try {
@@ -103,18 +108,23 @@ public class ConfigLoader {
         System.out.println("Invalid Port, Must be a number!");
       }
     }
-    config.database.database = askQuestion("Name of the database to use", "server-essentials");
-    config.database.username = askQuestion("Username to connect to the database", "serveressentials");
-    config.database.password = askQuestion("Password for {USER} on the database".replaceAll("\\{USER}", config.database.username), "");
+    config.database.database = askQuestion("Name of the database to use",
+        "server-essentials");
+    config.database.username = askQuestion("Username to connect to the database",
+        "serveressentials");
+    config.database.password = askQuestion(
+        "Password for {USER} on the database".replaceAll("\\{USER}",
+            config.database.username), "");
     System.out.println();
     System.out.println("- Discord Bot Setup");
     config.discord.token = askQuestion("Token used by the bot to connect to discord", "");
-    config.discord.verifiedRankID = askQuestion("ID of the rank to give to users upon verification", "");
+    config.discord.verifiedRankID = askQuestion(
+        "ID of the rank to give to users upon verification", "");
     return config;
   }
 
   public static String askQuestion(String question, String defaultVal) {
-    System.out.print(question + " (" + defaultVal +  ") > ");
+    System.out.print(question + " (" + defaultVal + ") > ");
     String nextLine = SCANNER.nextLine();
     if (nextLine == null || nextLine.isEmpty()) {
       return defaultVal;

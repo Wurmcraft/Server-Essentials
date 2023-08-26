@@ -33,5 +33,6 @@ public class Kit {
     this.armor = armor;
   }
 
-  public Kit() {}
+  public Kit() {
+  }
 }

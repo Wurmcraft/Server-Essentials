@@ -32,20 +32,26 @@ public class FileDataLoader extends DataLoader {
     NonBlockingHashMap<String, T> cachedData = super.getFromKey(key, type);
     File saveDir =
         new File(
-            SAVE_DIR + File.separator + SAVE_FOLDER + File.separator + key.name().toLowerCase());
+            SAVE_DIR + File.separator + SAVE_FOLDER + File.separator + key.name()
+                .toLowerCase());
     if (saveDir.exists()) {
       // Check if the cache data count is the same (don't check for same entries only the same
       // count)
       if (saveDir.list() != null
           && cachedData != null
-          && saveDir.list().length == cachedData.size()) return cachedData;
+          && saveDir.list().length == cachedData.size()) {
+        return cachedData;
+      }
       // Load each file
       for (File file : saveDir.listFiles()) {
         try {
           T fileInstance = (T) load(file, type.getClass());
-          if (fileInstance != null)
+          if (fileInstance != null) {
             cache(key, file.getName().replaceAll(".json", ""), fileInstance);
-          else LOG.debug("Failed to load / cache '" + file.getName().replaceAll(".json", "") + "'");
+          } else {
+            LOG.debug("Failed to load / cache '" + file.getName().replaceAll(".json", "")
+                + "'");
+          }
         } catch (IOException e) {
           LOG.error("Failed to read '" + file.getAbsolutePath() + "'!");
         }
@@ -81,10 +87,11 @@ public class FileDataLoader extends DataLoader {
    */
   protected void cache(DataType type, String key, Object data) {
     if (storage.containsKey(type)) {
-      storage.get(type).put(key, new Object[] {System.currentTimeMillis(), data});
+      storage.get(type).put(key, new Object[]{System.currentTimeMillis(), data});
     } else {
       NonBlockingHashMap<String, Object[]> newCache = new NonBlockingHashMap<>();
-      newCache.put(key, new Object[] {System.currentTimeMillis() + getTimeout(type), data});
+      newCache.put(key,
+          new Object[]{System.currentTimeMillis() + getTimeout(type), data});
       storage.put(type, newCache);
     }
   }
@@ -108,8 +115,8 @@ public class FileDataLoader extends DataLoader {
   }
 
   /**
-   * Finds the requested data based on its key, if its cached its returned if not the file is
-   * attempted to be loaded
+   * Finds the requested data based on its key, if its cached its returned if not the file
+   * is attempted to be loaded
    *
    * @param type type of data to look for
    * @param key id of the data you are looking for
@@ -118,7 +125,9 @@ public class FileDataLoader extends DataLoader {
   @Override
   public Object get(DataType type, String key) {
     Object cachedData = super.get(type, key);
-    if (cachedData != null) return cachedData;
+    if (cachedData != null) {
+      return cachedData;
+    }
     File file = getFile(type, key);
     if (file.exists()) {
       try {
@@ -142,8 +151,8 @@ public class FileDataLoader extends DataLoader {
   }
 
   /**
-   * Finds the requested data based on its key, if its cached its returned if not the file is
-   * attempted to be loaded
+   * Finds the requested data based on its key, if its cached its returned if not the file
+   * is attempted to be loaded
    *
    * @param type type of data to look for
    * @param key id of the data you are looking for
@@ -184,7 +193,7 @@ public class FileDataLoader extends DataLoader {
                   + key
                   + "'");
         }
-      } else
+      } else {
         LOG.debug(
             "Failed to register '"
                 + file.getAbsolutePath()
@@ -193,6 +202,7 @@ public class FileDataLoader extends DataLoader {
                 + "' key '"
                 + key
                 + "'");
+      }
     }
     return false;
   }
@@ -224,7 +234,7 @@ public class FileDataLoader extends DataLoader {
                   + key
                   + "'");
         }
-      } else
+      } else {
         LOG.debug(
             "Failed to update '"
                 + file.getAbsolutePath()
@@ -233,6 +243,7 @@ public class FileDataLoader extends DataLoader {
                 + "' key '"
                 + key
                 + "'");
+      }
     }
     return false;
   }
@@ -246,11 +257,14 @@ public class FileDataLoader extends DataLoader {
    */
   @Override
   public boolean delete(DataType type, String key, boolean cacheOnly) {
-    if (cacheOnly) return super.delete(type, key, cacheOnly);
+    if (cacheOnly) {
+      return super.delete(type, key, cacheOnly);
+    }
     File file = getFile(type, key);
     if (file.exists() && file.delete()) {
       LOG.debug(
-          "Deleted file '" + file.getAbsolutePath() + "' type '" + type + "' key '" + key + "'");
+          "Deleted file '" + file.getAbsolutePath() + "' type '" + type + "' key '" + key
+              + "'");
       return true;
     }
     return false;

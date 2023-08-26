@@ -20,13 +20,14 @@ public class StormCommand {
       usage = {},
       canConsoleUse = true)
   public void storm(ServerPlayer player) {
-    if (player.player == null)
-      for (WorldServer world : FMLCommonHandler.instance().getMinecraftServerInstance().worlds) {
+    if (player.player == null) {
+      for (WorldServer world : FMLCommonHandler.instance()
+          .getMinecraftServerInstance().worlds) {
         world.getWorldInfo().setRaining(true);
         world.getWorldInfo().setRainTime(world.rand.nextInt(168000) + 12000);
         world.getWorldInfo().setThundering(true);
       }
-    else {
+    } else {
       player.player.world.getWorldInfo().setRaining(true);
       player
           .player
@@ -44,7 +45,8 @@ public class StormCommand {
       canConsoleUse = true)
   public void storm(ServerPlayer player, int dim) {
     try {
-      World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dim);
+      World world = FMLCommonHandler.instance().getMinecraftServerInstance()
+          .getWorld(dim);
       world.getWorldInfo().setRaining(true);
       world.getWorldInfo().setRainTime(world.rand.nextInt(168000) + 12000);
       world.getWorldInfo().setThundering(true);

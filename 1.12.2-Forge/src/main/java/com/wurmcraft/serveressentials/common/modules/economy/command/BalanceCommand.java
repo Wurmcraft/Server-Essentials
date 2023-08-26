@@ -28,7 +28,7 @@ public class BalanceCommand {
               .replaceAll("\\{@NAME@}", bank.currencyName)
               .replaceAll("\\{@AMOUNT@}", bank.amount + ""));
     }
-    if(account.wallet == null || account.wallet.length == 0) {
+    if (account.wallet == null || account.wallet.length == 0) {
       ChatHelper.send(player.sender, player.lang.COMMAND_BALANCE_EMPTY);
     }
     ChatHelper.send(player.sender, player.lang.SPACER);

@@ -11,7 +11,6 @@ import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.api.models.WSWrapper;
 import com.wurmcraft.serveressentials.api.models.WSWrapper.Type;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
-import com.wurmcraft.serveressentials.common.data.ws.SocketController;
 import com.wurmcraft.serveressentials.common.modules.discord.ConfigDiscord;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.RequestGenerator;
@@ -51,7 +50,8 @@ public class VerifyCommand {
         }
       }
     } catch (Exception e) {
-      ServerEssentials.LOG.warn("Failed to send post request to API (" + e.getMessage() + ")");
+      ServerEssentials.LOG.warn(
+          "Failed to send post request to API (" + e.getMessage() + ")");
     }
     ChatHelper.send(player.player, player.lang.COMMAND_VERIFY_FAILED);
   }

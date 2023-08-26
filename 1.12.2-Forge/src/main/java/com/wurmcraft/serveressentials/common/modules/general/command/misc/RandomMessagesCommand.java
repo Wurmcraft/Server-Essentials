@@ -38,7 +38,8 @@ public class RandomMessagesCommand {
   public void Delete(ServerPlayer player, int line) {
     String removedLine = randomMessage.remove(line);
     ChatHelper.send(player.sender,
-        player.lang.COMMAND_RANDOM_MESSAGE_DELETED.replaceAll("\\{@MESSAGE@}", removedLine));
+        player.lang.COMMAND_RANDOM_MESSAGE_DELETED.replaceAll("\\{@MESSAGE@}",
+            removedLine));
     saveMessages();
   }
 

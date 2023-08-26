@@ -34,6 +34,7 @@ public class ConfigChat {
     this.nickFormat = "*%NICK%";
     this.messageFormat = "%NAME% {->, <-} %MSG%";
     this.motd =
-        new String[] {"&bWelcome %NAME%,", "&bThis server is running with Server Essentials"};
+        new String[]{"&bWelcome %NAME%,",
+            "&bThis server is running with Server Essentials"};
   }
 }

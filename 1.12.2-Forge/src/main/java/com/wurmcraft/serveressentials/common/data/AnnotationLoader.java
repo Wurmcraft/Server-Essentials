@@ -14,14 +14,17 @@ import org.reflections.Reflections;
 
 public class AnnotationLoader {
 
-  private static final Reflections REFLECTIONS = new Reflections("com.wurmcraft.serveressentials");
+  private static final Reflections REFLECTIONS = new Reflections(
+      "com.wurmcraft.serveressentials");
 
-  /** Loads modules, makes sure they are valid */
+  /**
+   * Loads modules, makes sure they are valid
+   */
   public static List<Object> loadModules() {
     Set<Class<?>> clazzes = REFLECTIONS.getTypesAnnotatedWith(Module.class);
     String[] modules = getModuleNames(clazzes);
     List<Object> loadedModules = new ArrayList<>();
-    for (Class<?> clazz : clazzes)
+    for (Class<?> clazz : clazzes) {
       if (isValidModule(clazz, modules)) {
         try {
           Object instance = clazz.newInstance();
@@ -33,15 +36,19 @@ public class AnnotationLoader {
                   + clazz.getDeclaredAnnotation(Module.class).name()
                   + "'");
         }
-      } else
+      } else {
         ServerEssentials.LOG.info(
             "Module '"
                 + clazz.getDeclaredAnnotation(Module.class).name()
                 + "' has not been loaded!");
+      }
+    }
     return loadedModules;
   }
 
-  /** Load module config instances */
+  /**
+   * Load module config instances
+   */
   public static List<Object> loadModuleConfigs() {
     Set<Class<?>> clazzes = REFLECTIONS.getTypesAnnotatedWith(ModuleConfig.class);
     List<Object> moduleConfigs = new ArrayList<>();
@@ -69,7 +76,8 @@ public class AnnotationLoader {
   public static Object getModuleConfigInstance(String name) {
     Set<Class<?>> clazzes = REFLECTIONS.getTypesAnnotatedWith(ModuleConfig.class);
     for (Class<?> clazz : clazzes) {
-      if (clazz.getDeclaredAnnotation(ModuleConfig.class).module().equalsIgnoreCase(name)) {
+      if (clazz.getDeclaredAnnotation(ModuleConfig.class).module()
+          .equalsIgnoreCase(name)) {
         try {
           return clazz.newInstance();
         } catch (Exception e) {
@@ -95,12 +103,15 @@ public class AnnotationLoader {
     Module module = clazz.getDeclaredAnnotation(Module.class);
     boolean moduleIsEnabled = false;
     if (!module.forceAlwaysLoaded()) {
-      for (String enabledModule : ServerEssentials.config.enabledModules)
+      for (String enabledModule : ServerEssentials.config.enabledModules) {
         if (module.name().equalsIgnoreCase(enabledModule)) {
           moduleIsEnabled = true;
           break;
         }
-    } else moduleIsEnabled = true;
+      }
+    } else {
+      moduleIsEnabled = true;
+    }
     return moduleIsEnabled
         && !module.name().isEmpty()
         && hasDependencies(module.dependencies(), modules);
@@ -116,15 +127,20 @@ public class AnnotationLoader {
   private static boolean hasDependencies(String[] dependencies, String[] foundModules) {
     if (dependencies == null
         || dependencies.length == 0
-        || dependencies.length == 1 && dependencies[0].isEmpty()) return true;
+        || dependencies.length == 1 && dependencies[0].isEmpty()) {
+      return true;
+    }
     for (String module : dependencies) {
       boolean found = false;
-      for (String f : foundModules)
+      for (String f : foundModules) {
         if (module.equalsIgnoreCase(f)) {
           found = true;
           break;
         }
-      if (!found) return false;
+      }
+      if (!found) {
+        return false;
+      }
     }
     return true;
   }
@@ -137,8 +153,9 @@ public class AnnotationLoader {
    */
   private static String[] getModuleNames(Set<Class<?>> modules) {
     List<String> moduleNames = new ArrayList<>();
-    for (Class<?> module : modules)
+    for (Class<?> module : modules) {
       moduleNames.add(module.getDeclaredAnnotation(Module.class).name());
+    }
     return moduleNames.toArray(new String[0]);
   }
 
@@ -146,13 +163,24 @@ public class AnnotationLoader {
     // Check if required module is loaded
     String requiredModule = clazz.getDeclaredAnnotation(ModuleCommand.class).module();
     boolean found = false;
-    for (String module : modules) if (requiredModule.equalsIgnoreCase(module)) found = true;
-    if (!found) return false;
+    for (String module : modules) {
+      if (requiredModule.equalsIgnoreCase(module)) {
+        found = true;
+      }
+    }
+    if (!found) {
+      return false;
+    }
     // Check if a method with @Command exists
     boolean hasMethod = false;
-    for (Method method : clazz.getDeclaredMethods())
-      if (method.isAnnotationPresent(Command.class)) hasMethod = true;
-    if (!hasMethod) return false;
+    for (Method method : clazz.getDeclaredMethods()) {
+      if (method.isAnnotationPresent(Command.class)) {
+        hasMethod = true;
+      }
+    }
+    if (!hasMethod) {
+      return false;
+    }
     return true;
   }
 
@@ -160,16 +188,18 @@ public class AnnotationLoader {
     Set<Class<?>> clazzes = REFLECTIONS.getTypesAnnotatedWith(ModuleCommand.class);
     String[] modules = SECore.modules.keySet().toArray(new String[0]);
     List<Class<?>> loadedCommands = new ArrayList<>();
-    for (Class<?> clazz : clazzes)
+    for (Class<?> clazz : clazzes) {
       if (isValidCommand(clazz, modules)) {
         loadedCommands.add(clazz);
-      } else
+      } else {
         ServerEssentials.LOG.debug(
             "Command '"
                 + clazz.getDeclaredAnnotation(ModuleCommand.class).name()
                 + "' has not been loaded! requires, '"
                 + clazz.getDeclaredAnnotation(ModuleCommand.class).module()
                 + "'");
+      }
+    }
     return loadedCommands;
   }
 }

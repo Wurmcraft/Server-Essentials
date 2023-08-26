@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -35,7 +36,7 @@ public class WSWrapper {
 
   @Override
   public boolean equals(Object obj) {
-    if(obj instanceof WSWrapper) {
+    if (obj instanceof WSWrapper) {
       WSWrapper other = (WSWrapper) obj;
       return status == other.status && type.equals(other.type) && data.equals(other.data);
     }

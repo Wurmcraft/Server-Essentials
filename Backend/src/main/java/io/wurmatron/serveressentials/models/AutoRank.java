@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -40,7 +41,8 @@ public class AutoRank {
     this.special_events = specialEvents;
   }
 
-  public AutoRank() {}
+  public AutoRank() {
+  }
 
   @Override
   public String toString() {
@@ -49,8 +51,12 @@ public class AutoRank {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof AutoRank)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof AutoRank)) {
+      return false;
+    }
     AutoRank autoRank = (AutoRank) o;
     return play_time.equals(autoRank.play_time)
         && Double.compare(autoRank.currency_amount, currency_amount) == 0

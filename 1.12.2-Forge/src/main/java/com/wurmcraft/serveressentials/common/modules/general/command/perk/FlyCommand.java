@@ -60,7 +60,9 @@ public class FlyCommand {
             player.lang.COMMAND_FLY_ON_OTHER.replaceAll(
                 "\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
       }
-    } else
-      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
+    } else {
+      ChatHelper.send(player.sender,
+          new TextComponentTranslation("commands.generic.permission"));
+    }
   }
 }

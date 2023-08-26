@@ -3,17 +3,16 @@ package com.wurmcraft.serveressentials.common.modules.core.command;
 import com.wurmcraft.serveressentials.api.command.Command;
 import com.wurmcraft.serveressentials.api.command.CommandArgument;
 import com.wurmcraft.serveressentials.api.command.ModuleCommand;
-
 import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.common.command.CustomCommand;
 import com.wurmcraft.serveressentials.common.command.RankUtils;
 import com.wurmcraft.serveressentials.common.command.SECommand;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 @ModuleCommand(module = "Core", name = "help", defaultAliases = {"?"})
@@ -39,7 +38,7 @@ public class HelpCommand {
       page = 1;
     }
     List<HelpLine> playerSpecificHelp = getPlayerCommands(player);
-    if(page > playerSpecificHelp.size() / COMMANDS_PER_PAGE ) {
+    if (page > playerSpecificHelp.size() / COMMANDS_PER_PAGE) {
       page = playerSpecificHelp.size() / COMMANDS_PER_PAGE;
     }
     String spacer = player.lang.SPACER;

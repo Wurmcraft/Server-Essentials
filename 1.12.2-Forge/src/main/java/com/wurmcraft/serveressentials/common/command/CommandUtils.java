@@ -8,7 +8,13 @@ import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.command.CommandArgument;
 import com.wurmcraft.serveressentials.api.command.CommandConfig;
 import com.wurmcraft.serveressentials.api.command.ModuleCommand;
-import com.wurmcraft.serveressentials.api.models.*;
+import com.wurmcraft.serveressentials.api.models.Account;
+import com.wurmcraft.serveressentials.api.models.Channel;
+import com.wurmcraft.serveressentials.api.models.Currency;
+import com.wurmcraft.serveressentials.api.models.Kit;
+import com.wurmcraft.serveressentials.api.models.Language;
+import com.wurmcraft.serveressentials.api.models.Rank;
+import com.wurmcraft.serveressentials.api.models.Warp;
 import com.wurmcraft.serveressentials.api.models.local.Home;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
@@ -29,7 +35,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.logging.log4j.util.Strings;
-import scala.reflect.internal.TypeDebugging;
 
 public class CommandUtils {
 

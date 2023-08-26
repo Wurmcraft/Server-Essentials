@@ -34,12 +34,14 @@ public class IgnoreCommand {
     List<String> existing =
         new ArrayList<>(
             Arrays.asList(
-                player.local.ignoredUsers != null ? player.local.ignoredUsers : new String[0]));
+                player.local.ignoredUsers != null ? player.local.ignoredUsers
+                    : new String[0]));
     // Ignoring User
     if (!existing.contains(otherPlayer.getGameProfile().getId().toString())) {
       existing.add(otherPlayer.getGameProfile().getId().toString());
       player.local.ignoredUsers = existing.toArray(new String[0]);
-      SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, player.local.uuid, player.local);
+      SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, player.local.uuid,
+          player.local);
       ChatHelper.send(
           player.player,
           player.lang.COMMAND_IGNORE_IGNORED.replaceAll(
@@ -47,7 +49,8 @@ public class IgnoreCommand {
     } else { // Un-ignoring user
       existing.remove(otherPlayer.getGameProfile().getId().toString());
       player.local.ignoredUsers = existing.toArray(new String[0]);
-      SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, player.local.uuid, player.local);
+      SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, player.local.uuid,
+          player.local);
       ChatHelper.send(
           player.player,
           player.lang.COMMAND_IGNORE_UNDO.replaceAll(
@@ -69,7 +72,8 @@ public class IgnoreCommand {
       List<String> existing =
           new ArrayList<>(
               Arrays.asList(
-                  player.local.ignoredUsers != null ? player.local.ignoredUsers : new String[0]));
+                  player.local.ignoredUsers != null ? player.local.ignoredUsers
+                      : new String[0]));
       // Ignoring User
       if (!existing.contains(uuid)) {
         existing.add(uuid);
@@ -90,8 +94,10 @@ public class IgnoreCommand {
             player.lang.COMMAND_IGNORE_UNDO.replaceAll(
                 "\\{@USERNAME@}", PlayerUtils.getUsernameForInput(uuid)));
       }
-    } else
+    } else {
       ChatHelper.send(
-          player.sender, player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
+          player.sender,
+          player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
+    }
   }
 }

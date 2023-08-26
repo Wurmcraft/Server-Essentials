@@ -42,7 +42,8 @@ public class MuteCommand {
         account.mute_time = Instant.now().getEpochSecond() + muteTime;
         boolean updated =
             SECore.dataLoader.update(
-                DataLoader.DataType.ACCOUNT, muted.getGameProfile().getId().toString(), account);
+                DataLoader.DataType.ACCOUNT, muted.getGameProfile().getId().toString(),
+                account);
         if (updated) {
           ChatHelper.send(
               player.sender,
@@ -67,7 +68,8 @@ public class MuteCommand {
         account.mute_time = 0L;
         boolean updated =
             SECore.dataLoader.update(
-                DataLoader.DataType.ACCOUNT, muted.getGameProfile().getId().toString(), account);
+                DataLoader.DataType.ACCOUNT, muted.getGameProfile().getId().toString(),
+                account);
         if (updated) {
           ChatHelper.send(
               player.sender,
@@ -77,15 +79,18 @@ public class MuteCommand {
                   .replaceAll("\\{@TIME@}", CommandUtils.displayTime(muteTime))
                   .replaceAll("\\{@PLAYER@}", muted.getDisplayNameString()));
           ChatHelper.send(player.sender, player.lang.COMMAND_MUTE_MUTED_UNDO);
-        } else
+        } else {
           LOG.warn(
               "Failed to update user's mute ("
                   + player.player.getDisplayNameString()
                   + ") '"
                   + muted.getGameProfile().getId().toString()
                   + "'");
+        }
       }
-    } else ChatHelper.send(player.sender, player.lang.COMMAND_MUTE_LESS_THEN_0);
+    } else {
+      ChatHelper.send(player.sender, player.lang.COMMAND_MUTE_LESS_THEN_0);
+    }
   }
 
   @Command(
@@ -109,26 +114,32 @@ public class MuteCommand {
         muteRemote(player, uuid, inputs);
       } else { // Username?
         try {
-          RequestGenerator.HttpResponse response = RequestGenerator.get("api/lookup/uuid/" + uuid);
+          RequestGenerator.HttpResponse response = RequestGenerator.get(
+              "api/lookup/uuid/" + uuid);
           if (response.status == 200) {
             Account account = GSON.fromJson(response.response, Account.class);
             muteRemote(player, account.uuid, inputs);
           } else {
-            ChatHelper.send(player.sender,player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", uuid));
+            ChatHelper.send(player.sender,
+                player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", uuid));
           }
         } catch (Exception e) {
           LOG.warn("Failed to get response from API, (" + e.getMessage() + ")");
         }
       }
-    } else ChatHelper.send(player.sender, player.lang.DISABLED);
+    } else {
+      ChatHelper.send(player.sender, player.lang.DISABLED);
+    }
   }
 
   private static void muteRemote(ServerPlayer player, String uuid, String[] inputs) {
-    Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid, new Account());
+    Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid,
+        new Account());
     account.muted = !account.muted;
     long muteTime = convertToTime(inputs);
     account.mute_time = Instant.now().getEpochSecond() + muteTime;
-    boolean updated = SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, uuid, account);
+    boolean updated = SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, uuid,
+        account);
     if (account.muted) {
       if (updated) {
         ChatHelper.send(
@@ -138,7 +149,9 @@ public class MuteCommand {
                 .COMMAND_MUTE
                 .replaceAll("\\{@TIME@}", CommandUtils.displayTime(muteTime))
                 .replaceAll("\\{@PLAYER@}", uuid));
-      } else LOG.warn("Failed to update user's mute (" + uuid + ")");
+      } else {
+        LOG.warn("Failed to update user's mute (" + uuid + ")");
+      }
     } else {
       if (updated) {
         ChatHelper.send(
@@ -148,7 +161,9 @@ public class MuteCommand {
                 .COMMAND_MUTE_UNDO
                 .replaceAll("\\{@TIME@}", CommandUtils.displayTime(muteTime))
                 .replaceAll("\\{@PLAYER@}", uuid));
-      } else LOG.warn("Failed to update user's mute (" + uuid + ")");
+      } else {
+        LOG.warn("Failed to update user's mute (" + uuid + ")");
+      }
     }
   }
 }

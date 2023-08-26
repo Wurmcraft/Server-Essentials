@@ -9,7 +9,8 @@ public class DMMessage {
   public String receiverID;
 
   public DMMessage(
-      String senderUUID, String displayName, String locationID, String message, String receiverID) {
+      String senderUUID, String displayName, String locationID, String message,
+      String receiverID) {
     this.senderUUID = senderUUID;
     this.displayName = displayName;
     this.locationID = locationID;

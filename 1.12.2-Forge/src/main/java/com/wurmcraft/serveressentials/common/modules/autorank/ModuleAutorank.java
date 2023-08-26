@@ -14,8 +14,9 @@ public class ModuleAutorank {
   public void setup() {
     try {
       if (SECore.dataLoader.getFromKey(DataType.AUTORANK, new AutoRank()) == null
-          || (SECore.dataLoader.getFromKey(DataLoader.DataType.AUTORANK, new AutoRank()).size()
-              <= 0)) {
+          || (SECore.dataLoader.getFromKey(DataLoader.DataType.AUTORANK, new AutoRank())
+          .size()
+          <= 0)) {
         setupDefaultRankups();
       }
     } catch (Exception e) {
@@ -26,7 +27,8 @@ public class ModuleAutorank {
 
   public void reload() {
     for (String autoRank :
-        SECore.dataLoader.getFromKey(DataLoader.DataType.AUTORANK, new AutoRank()).keySet()) {
+        SECore.dataLoader.getFromKey(DataLoader.DataType.AUTORANK, new AutoRank())
+            .keySet()) {
       SECore.dataLoader.delete(DataLoader.DataType.AUTORANK, autoRank, true);
     }
   }

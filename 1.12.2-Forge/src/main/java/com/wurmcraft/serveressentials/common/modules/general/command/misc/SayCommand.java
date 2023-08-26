@@ -6,7 +6,6 @@ import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import joptsimple.internal.Strings;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -23,6 +22,6 @@ public class SayCommand {
 
   @Command(args = {CommandArgument.STRING}, usage = {"MSG"})
   public void sayCommand(ServerPlayer sender, String msg) {
-   sayCommand(sender, new String[] {msg});
+    sayCommand(sender, new String[]{msg});
   }
 }

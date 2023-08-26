@@ -21,7 +21,7 @@ public class RestPlayerTrackerEvent {
 
   @SubscribeEvent
   public void onPlayerLogin(PlayerLoadEvent e) {
-    if (!ServerEssentials.config.performance.useWebsocket)
+    if (!ServerEssentials.config.performance.useWebsocket) {
       userSync.put(
           e.player.getGameProfile().getId().toString(),
           ServerEssentials.scheduledService.scheduleAtFixedRate(
@@ -35,24 +35,30 @@ public class RestPlayerTrackerEvent {
                 if (SECore.dataLoader.delete(
                     DataLoader.DataType.ACCOUNT,
                     e.player.getGameProfile().getId().toString(),
-                    true))
+                    true)) {
                   SECore.dataLoader.get(
-                      DataLoader.DataType.ACCOUNT, e.player.getGameProfile().getId().toString());
+                      DataLoader.DataType.ACCOUNT,
+                      e.player.getGameProfile().getId().toString());
+                }
               },
               ServerEssentials.config.performance.playerSyncInterval,
               ServerEssentials.config.performance.playerSyncInterval,
               TimeUnit.SECONDS));
+    }
   }
 
   @SubscribeEvent
   public void onPlayerUnload(PlayerUnloadEvent e) {
-    if (!ServerEssentials.config.performance.useWebsocket && userSync.containsKey(e.account.uuid))
-      if (userSync.get(e.account.uuid).cancel(true))
+    if (!ServerEssentials.config.performance.useWebsocket && userSync.containsKey(
+        e.account.uuid)) {
+      if (userSync.get(e.account.uuid).cancel(true)) {
         LOG.debug(
             "Removing Sync for User '"
                 + UsernameCache.getLastKnownUsername(UUID.fromString(e.account.uuid))
                 + "' ("
                 + e.account.uuid
                 + ")");
+      }
+    }
   }
 }

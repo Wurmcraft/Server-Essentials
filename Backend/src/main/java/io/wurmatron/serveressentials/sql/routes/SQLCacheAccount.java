@@ -18,14 +18,17 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
 
-/** Interact with the Account's part of the database, with caching */
+/**
+ * Interact with the Account's part of the database, with caching
+ */
 public class SQLCacheAccount extends SQLCache {
 
   public static final String USERS_TABLE = "users";
 
   /**
-   * Gets the user's data from the cache, if not requests from database Note: If the data accuracy
-   * is important, consider invalidating the uuid before calling this, this will force an update
+   * Gets the user's data from the cache, if not requests from database Note: If the data
+   * accuracy is important, consider invalidating the uuid before calling this, this will
+   * force an update
    *
    * @param uuid uuid of the account to lookup
    * @return instance of the account, based on the uuid
@@ -130,8 +133,8 @@ public class SQLCacheAccount extends SQLCache {
   }
 
   /**
-   * Removes a entry from the cache, causing an update upon next request Note: Does not delete
-   * anything from the database
+   * Removes a entry from the cache, causing an update upon next request Note: Does not
+   * delete anything from the database
    *
    * @param uuid id used for the account to remove from cache
    */
@@ -140,7 +143,9 @@ public class SQLCacheAccount extends SQLCache {
     LOG.debug("Account '" + uuid + " has been invalidated, will update on next request!");
   }
 
-  /** Cleanup the stored cache and look for expired entries */
+  /**
+   * Cleanup the stored cache and look for expired entries
+   */
   public static void cleanupCache() {
     LOG.debug("Account Cache cleanup has begun!");
     // ID Cache
@@ -159,7 +164,9 @@ public class SQLCacheAccount extends SQLCache {
     LOG.debug("Account Cache has been cleaned, " + count + " entries have been removed!");
   }
 
-  /** This should do nothing, its here to prevent an possible reflection issue */
+  /**
+   * This should do nothing, its here to prevent an possible reflection issue
+   */
   public static void cleanupDB() {
   }
 

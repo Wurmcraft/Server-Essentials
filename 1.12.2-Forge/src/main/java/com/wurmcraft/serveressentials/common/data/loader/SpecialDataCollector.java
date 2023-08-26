@@ -30,8 +30,9 @@ public class SpecialDataCollector {
           e.data = GSON.fromJson(langJson, Language.class);
           // Override null entries with error warning
           for (Field field : e.data.getClass().getDeclaredFields()) {
-            if (field.get(e.data) == null)
+            if (field.get(e.data) == null) {
               field.set(e.data, "&cAn Error has occurred loading this language entry");
+            }
           }
         }
       } catch (Exception f) {

@@ -21,6 +21,8 @@ public class RepairCommand {
         player.player.getHeldItemMainhand().setItemDamage(0);
         ChatHelper.send(player.sender, player.lang.COMMAND_REPAIR);
       }
-    } else ChatHelper.send(player.sender, player.lang.COMMAND_REPAIR_NONE);
+    } else {
+      ChatHelper.send(player.sender, player.lang.COMMAND_REPAIR_NONE);
+    }
   }
 }

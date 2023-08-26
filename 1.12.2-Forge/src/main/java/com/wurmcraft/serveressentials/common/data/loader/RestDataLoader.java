@@ -105,7 +105,8 @@ public class RestDataLoader extends FileDataLoader {
   }
 
   /**
-   * Checks if the cache contains the files, if not pull from rest, ignore files (may be outdated)
+   * Checks if the cache contains the files, if not pull from rest, ignore files (may be
+   * outdated)
    *
    * @param key type of data you are looking for
    * @param type cast the data to this type
@@ -113,7 +114,9 @@ public class RestDataLoader extends FileDataLoader {
   @Override
   public <T> NonBlockingHashMap<String, T> getFromKey(DataType key, T type) {
     if (storage.containsKey(key) || key.path == null) {
-      if (key.path == null) SAVE_FOLDER = "Storage";
+      if (key.path == null) {
+        SAVE_FOLDER = "Storage";
+      }
       NonBlockingHashMap<String, T> data = super.getFromKey(key, type);
       SAVE_FOLDER = "Cache";
       return data;
@@ -122,8 +125,9 @@ public class RestDataLoader extends FileDataLoader {
         RequestGenerator.HttpResponse response = RequestGenerator.get(key.path);
         if (isValidResponse(response)) {
           // Object[] data = GSON.fromJson(response.response,  key.instanceType.arrayType());
-          Object[] data = (Object[]) GSON.fromJson(response.response, key.instanceTypeArr);
-          if (data != null)
+          Object[] data = (Object[]) GSON.fromJson(response.response,
+              key.instanceTypeArr);
+          if (data != null) {
             for (Object d : data) {
               String dataKey = getKey(key, d);
               if (dataKey != null && !dataKey.isEmpty()) {
@@ -135,11 +139,15 @@ public class RestDataLoader extends FileDataLoader {
                 LOG.debug("Failed to find key for '" + key + "'");
               }
             }
-        } else handleResponseError(response);
+          }
+        } else {
+          handleResponseError(response);
+        }
       } catch (Exception e) {
         e.printStackTrace();
         LOG.error(
-            "Failed to read from endpoint '" + key.path + "' with type '" + key.pathType + "'");
+            "Failed to read from endpoint '" + key.path + "' with type '" + key.pathType
+                + "'");
       }
       return new NonBlockingHashMap<>();
     }
@@ -155,9 +163,13 @@ public class RestDataLoader extends FileDataLoader {
     try {
       Field field = data.getClass().getDeclaredField(type.key);
       Object instance = field.get(data);
-      if (instance instanceof String) return (String) instance;
-      else if (instance instanceof Long) return Long.toString((long) instance);
-      else if (instance instanceof Integer) return Integer.toString((int) instance);
+      if (instance instanceof String) {
+        return (String) instance;
+      } else if (instance instanceof Long) {
+        return Long.toString((long) instance);
+      } else if (instance instanceof Integer) {
+        return Integer.toString((int) instance);
+      }
     } catch (Exception e) {
       e.printStackTrace();
       LOG.warn("Failed to find key for '" + type.name() + "'");
@@ -173,10 +185,12 @@ public class RestDataLoader extends FileDataLoader {
     // Client Error
     if (response.status >= 400 && response.status <= 499) {
       try {
-        MessageResponse[] errors = GSON.fromJson(response.response, MessageResponse[].class);
+        MessageResponse[] errors = GSON.fromJson(response.response,
+            MessageResponse[].class);
         LOG.debug("Error Status: " + response.status);
-        for (MessageResponse error : errors)
+        for (MessageResponse error : errors) {
           LOG.debug("Error: " + error.title + " (" + error.message + ")");
+        }
       } catch (JsonParseException e) {
         e.printStackTrace();
         LOG.warn(
@@ -198,12 +212,17 @@ public class RestDataLoader extends FileDataLoader {
 
   private void updateOrCreateFileCache(DataType type, String key, Object data) {
     if (type.fileCache && key != null && !key.isEmpty()) {
-      if (type.path == null) SAVE_FOLDER = "Storage";
+      if (type.path == null) {
+        SAVE_FOLDER = "Storage";
+      }
       File file = getFile(type, key);
       if (file.exists()) // Update existing entry
-      super.update(type, key, data);
-      else // New entry
-      super.register(type, key, data);
+      {
+        super.update(type, key, data);
+      } else // New entry
+      {
+        super.register(type, key, data);
+      }
       SAVE_FOLDER = "Cache";
     }
   }
@@ -216,7 +235,9 @@ public class RestDataLoader extends FileDataLoader {
       Object[] data = storage.get(type).get(key);
       if (((long) data[0]) > System.currentTimeMillis()) {
         return storage.get(type).get(key)[1];
-      } else storage.get(type).remove(key);
+      } else {
+        storage.get(type).remove(key);
+      }
     }
     if (type.path == null) {
       SAVE_FOLDER = "Storage";
@@ -242,7 +263,7 @@ public class RestDataLoader extends FileDataLoader {
   }
 
   private String getKey(Object data) {
-    for (DataType type : DataType.values())
+    for (DataType type : DataType.values()) {
       if (type.instanceType.equals(data.getClass())) {
         if (type.key != null) {
           try {
@@ -273,38 +294,47 @@ public class RestDataLoader extends FileDataLoader {
           }
         }
       }
+    }
     return null;
   }
 
   private RequestGenerator.HttpResponse findAndExecutePath(DataType type, String key)
       throws IOException {
     String path = findPath(type, key);
-    if (!type.path.equals(path)) return RequestGenerator.get(path);
-    else {
+    if (!type.path.equals(path)) {
+      return RequestGenerator.get(path);
+    } else {
       String[] keys = key.split(";");
       Map<String, String> query = new HashMap<>();
       String[] queryKeys = type.pathType.split(";");
-      for (int index = 0; index < queryKeys.length; index++)
+      for (int index = 0; index < queryKeys.length; index++) {
         query.put(fieldToQuery.get(queryKeys[index]), keys[index]);
+      }
       return RequestGenerator.get(path, query);
     }
   }
 
   private String findPath(DataType type, String key) {
-    if (type.pathType.contains("CRUD")) return type.path + "/" + key;
+    if (type.pathType.contains("CRUD")) {
+      return type.path + "/" + key;
+    }
     return type.path;
   }
 
   @Override
   public <T> T get(DataType type, String key, T data) {
     Object obj = get(type, key);
-    if (obj != null) return (T) obj;
+    if (obj != null) {
+      return (T) obj;
+    }
     return null;
   }
 
   @Override
   public boolean register(DataType type, String key, Object data) {
-    if (storage.containsKey(type) && storage.get(type).containsKey(key)) return false;
+    if (storage.containsKey(type) && storage.get(type).containsKey(key)) {
+      return false;
+    }
     if (type.path == null) {
       SAVE_FOLDER = "Storage";
       boolean reg = super.register(type, key, data);
@@ -316,9 +346,13 @@ public class RestDataLoader extends FileDataLoader {
       RequestGenerator.HttpResponse response = RequestGenerator.post(type.path, data);
       if (isValidResponse(response)) {
         cache(type, getKey(data), data);
-        if (type.fileCache) updateOrCreateFileCache(type, getKey(data), data);
+        if (type.fileCache) {
+          updateOrCreateFileCache(type, getKey(data), data);
+        }
         return true;
-      } else handleResponseError(response);
+      } else {
+        handleResponseError(response);
+      }
     } catch (IOException e) {
       e.printStackTrace();
       LOG.debug("Failed to post '" + type.path + "' for '" + key + "'");
@@ -329,7 +363,9 @@ public class RestDataLoader extends FileDataLoader {
 
   @Override
   public boolean update(DataType type, String key, Object data) {
-    if (!storage.containsKey(type) || !storage.get(type).containsKey(key)) return false;
+    if (!storage.containsKey(type) || !storage.get(type).containsKey(key)) {
+      return false;
+    }
     if (type.path == null) {
       SAVE_FOLDER = "Storage";
       boolean update = super.update(type, key, data);
@@ -339,11 +375,15 @@ public class RestDataLoader extends FileDataLoader {
     // Existing in cache, updating
     try {
       String path = type.path;
-      if (type.key != null) path = path + "/" + key;
+      if (type.key != null) {
+        path = path + "/" + key;
+      }
       RequestGenerator.HttpResponse response = RequestGenerator.put(path, data);
       if (isValidResponse(response)) {
         cache(type, getKey(data), data);
-        if (type.fileCache) updateOrCreateFileCache(type, getKey(data), data);
+        if (type.fileCache) {
+          updateOrCreateFileCache(type, getKey(data), data);
+        }
         return true;
       } else {
         LOG.warn("Failed to update '" + type.key + "' (" + response.response + ")");
@@ -359,22 +399,30 @@ public class RestDataLoader extends FileDataLoader {
   @Override
   public boolean delete(DataType type, String key, boolean cacheOnly) {
     if (cacheOnly || type.path == null) {
-      if (type.path == null) SAVE_FOLDER = "Storage";
+      if (type.path == null) {
+        SAVE_FOLDER = "Storage";
+      }
       boolean del = super.delete(type, key, cacheOnly);
       SAVE_FOLDER = "Cache";
       return del;
     }
     try {
       String path = type.path;
-      if (type.key != null) path = path + "/" + key;
+      if (type.key != null) {
+        path = path + "/" + key;
+      }
       Object obj = get(type, key);
       RequestGenerator.HttpResponse response = RequestGenerator.delete(path, obj);
       if (isValidResponse(response)) {
-        if (type.path == null) SAVE_FOLDER = "Storage";
+        if (type.path == null) {
+          SAVE_FOLDER = "Storage";
+        }
         boolean del = super.delete(type, key, cacheOnly);
         SAVE_FOLDER = "Cache";
         return del;
-      } else handleResponseError(response);
+      } else {
+        handleResponseError(response);
+      }
     } catch (IOException e) {
       LOG.debug("Failed to delete '" + type.path + "' for '" + key + "'");
     }

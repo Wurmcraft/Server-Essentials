@@ -17,15 +17,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.UUID;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -79,7 +76,8 @@ public class SendToSpawnCommand {
             player.getGameProfile().getId().toString(), new LocalAccount()),
         PlayerUtils.getSpawn(SECore.dataLoader.get(DataType.ACCOUNT,
             player.getGameProfile().getId().toString(), new Account()).rank));
-    ChatHelper.send(sender.sender, sender.lang.COMMAND_SENDTOSPAWN.replaceAll("\\{@PLAYER@}",
-        player.getDisplayNameString()));
+    ChatHelper.send(sender.sender,
+        sender.lang.COMMAND_SENDTOSPAWN.replaceAll("\\{@PLAYER@}",
+            player.getDisplayNameString()));
   }
 }

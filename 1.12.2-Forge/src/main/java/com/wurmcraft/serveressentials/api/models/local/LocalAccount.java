@@ -38,5 +38,6 @@ public class LocalAccount {
     this.commandUsage = commandUsage;
   }
 
-  public LocalAccount() {}
+  public LocalAccount() {
+  }
 }

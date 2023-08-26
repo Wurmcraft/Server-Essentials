@@ -25,7 +25,9 @@ public class PauseChatCommand {
             .getFromKey(DataLoader.DataType.CHANNEL, new Channel())
             .values()
             .toArray(new Channel[0]);
-    for (Channel ch : channels) pauseChannel(player, ch);
+    for (Channel ch : channels) {
+      pauseChannel(player, ch);
+    }
   }
 
   @Command(
@@ -54,15 +56,19 @@ public class PauseChatCommand {
               serverPlayer.getGameProfile().getId().toString(),
               new Account());
       Language lang =
-          SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.lang, new Language());
-      if (ch.enabled)
+          SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.lang,
+              new Language());
+      if (ch.enabled) {
         ChatHelper.send(
             serverPlayer,
-            lang.COMMAND_PAUSECHAT_ANNOUCMENT_ENABLED.replaceAll("\\{@CHANNEL@}", ch.name));
-      else
+            lang.COMMAND_PAUSECHAT_ANNOUCMENT_ENABLED.replaceAll("\\{@CHANNEL@}",
+                ch.name));
+      } else {
         ChatHelper.send(
             serverPlayer,
-            lang.COMMAND_PAUSECHAT_ANNOUCMENT_DISABLED.replaceAll("\\{@CHANNEL@}", ch.name));
+            lang.COMMAND_PAUSECHAT_ANNOUCMENT_DISABLED.replaceAll("\\{@CHANNEL@}",
+                ch.name));
+      }
     }
   }
 }

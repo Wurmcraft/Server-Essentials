@@ -31,7 +31,8 @@ public class DelHomeCommand {
     delHome(
         player,
         PlayerUtils.getHome(
-            player.local, ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName));
+            player.local,
+            ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName));
   }
 
   @Command(
@@ -39,10 +40,16 @@ public class DelHomeCommand {
       usage = {"home"})
   public void delHome(ServerPlayer player, Home home) {
     List<Home> validHomes = new ArrayList<>();
-    for (Home h : player.local.homes) if (!h.name.equalsIgnoreCase(home.name)) validHomes.add(h);
+    for (Home h : player.local.homes) {
+      if (!h.name.equalsIgnoreCase(home.name)) {
+        validHomes.add(h);
+      }
+    }
     player.local.homes = validHomes.toArray(new Home[0]);
-    SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, player.local.uuid, player.local);
-    ChatHelper.send(player.sender, player.lang.COMMAND_DELHOME.replaceAll("\\{@NAME@}", home.name));
+    SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, player.local.uuid,
+        player.local);
+    ChatHelper.send(player.sender,
+        player.lang.COMMAND_DELHOME.replaceAll("\\{@NAME@}", home.name));
   }
 
   @Command(
@@ -50,13 +57,15 @@ public class DelHomeCommand {
       usage = {"player"})
   public void delHomeDefaultOther(ServerPlayer player, EntityPlayer otherPlayer) {
     delHomeDefaultOther(
-        player, otherPlayer, ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName);
+        player, otherPlayer,
+        ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName);
   }
 
   @Command(
       args = {CommandArgument.PLAYER, CommandArgument.STRING},
       usage = {"player", "name"})
-  public void delHomeDefaultOther(ServerPlayer player, EntityPlayer otherPlayer, String name) {
+  public void delHomeDefaultOther(ServerPlayer player, EntityPlayer otherPlayer,
+      String name) {
     delHomeOffline(player, otherPlayer.getDisplayNameString(), name);
   }
 
@@ -72,7 +81,11 @@ public class DelHomeCommand {
                 DataLoader.DataType.LOCAL_ACCOUNT, offlineUUID, new LocalAccount());
         if (local != null) {
           List<Home> validHomes = new ArrayList<>();
-          for (Home home : local.homes) if (!home.name.equalsIgnoreCase(name)) validHomes.add(home);
+          for (Home home : local.homes) {
+            if (!home.name.equalsIgnoreCase(name)) {
+              validHomes.add(home);
+            }
+          }
           local.homes = validHomes.toArray(new Home[0]);
           SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, offlineUUID, local);
           ChatHelper.send(
@@ -83,10 +96,17 @@ public class DelHomeCommand {
                   .replaceAll("\\{@NAME@}", name)
                   .replaceAll(
                       "\\{@PLAYER@}",
-                      Objects.requireNonNull(PlayerUtils.getUsernameForInput(offlineUUID))));
-        } else ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND);
-      } else ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND);
-    } else
-      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
+                      Objects.requireNonNull(
+                          PlayerUtils.getUsernameForInput(offlineUUID))));
+        } else {
+          ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND);
+        }
+      } else {
+        ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND);
+      }
+    } else {
+      ChatHelper.send(player.sender,
+          new TextComponentTranslation("commands.generic.permission"));
+    }
   }
 }

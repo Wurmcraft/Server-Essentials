@@ -19,14 +19,16 @@ public class WeatherCommand {
     if (type.equalsIgnoreCase("sun")
         || type.equalsIgnoreCase("sunny")
         || type.equalsIgnoreCase("su")) {
-      for (WorldServer world : FMLCommonHandler.instance().getMinecraftServerInstance().worlds) {
+      for (WorldServer world : FMLCommonHandler.instance()
+          .getMinecraftServerInstance().worlds) {
         world.getWorldInfo().setRaining(false);
         world.getWorldInfo().setRainTime(0);
         world.getWorldInfo().setThundering(false);
       }
       ChatHelper.send(player.sender, player.lang.COMMAND_WEATHER_SUN);
     } else if (type.equalsIgnoreCase("rain") || type.equalsIgnoreCase("r")) {
-      for (WorldServer world : FMLCommonHandler.instance().getMinecraftServerInstance().worlds) {
+      for (WorldServer world : FMLCommonHandler.instance()
+          .getMinecraftServerInstance().worlds) {
         world.getWorldInfo().setRaining(true);
         world.getWorldInfo().setRainTime(world.rand.nextInt(168000) + 12000);
         world.getWorldInfo().setThundering(false);
@@ -36,7 +38,8 @@ public class WeatherCommand {
         || type.equalsIgnoreCase("st")
         || type.equalsIgnoreCase("lightning")
         || type.equalsIgnoreCase("light")) {
-      for (WorldServer world : FMLCommonHandler.instance().getMinecraftServerInstance().worlds) {
+      for (WorldServer world : FMLCommonHandler.instance()
+          .getMinecraftServerInstance().worlds) {
         world.getWorldInfo().setRaining(true);
         world.getWorldInfo().setRainTime(world.rand.nextInt(168000) + 12000);
         world.getWorldInfo().setThundering(true);

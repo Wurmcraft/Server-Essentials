@@ -1,11 +1,13 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
 package com.wurmcraft.serveressentials.api.models.account;
 
 public class ServerTime {
+
   public String serverID;
   public long totalTime;
   public long lastSeen;
@@ -23,8 +25,12 @@ public class ServerTime {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof ServerTime)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof ServerTime)) {
+      return false;
+    }
     ServerTime that = (ServerTime) o;
     return totalTime == that.totalTime
         && lastSeen == that.lastSeen

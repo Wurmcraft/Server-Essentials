@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -60,7 +61,8 @@ public class Ban {
     this.ban_status = banStatus;
   }
 
-  public Ban() {}
+  public Ban() {
+  }
 
   @Override
   public String toString() {
@@ -69,8 +71,12 @@ public class Ban {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof Ban)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Ban)) {
+      return false;
+    }
     Ban ban = (Ban) o;
     return ban_id == ban.ban_id
         && timestamp == ban.timestamp

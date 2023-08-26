@@ -19,32 +19,33 @@ public class GamemodeCommand {
   public void gamemode(ServerPlayer player, String type) {
     if (type.equalsIgnoreCase("survival")
         || type.toLowerCase().startsWith("s")
-        || type.equalsIgnoreCase("0"))
+        || type.equalsIgnoreCase("0")) {
       FMLCommonHandler.instance()
           .getMinecraftServerInstance()
           .commandManager
           .executeCommand(player.sender, "/survival");
-    else if (type.equalsIgnoreCase("creative")
+    } else if (type.equalsIgnoreCase("creative")
         || type.toLowerCase().startsWith("c")
-        || type.equalsIgnoreCase("1"))
+        || type.equalsIgnoreCase("1")) {
       FMLCommonHandler.instance()
           .getMinecraftServerInstance()
           .commandManager
           .executeCommand(player.sender, "/creative");
-    else if (type.equalsIgnoreCase("adventure")
+    } else if (type.equalsIgnoreCase("adventure")
         || type.toLowerCase().startsWith("a")
-        || type.equalsIgnoreCase("2"))
+        || type.equalsIgnoreCase("2")) {
       FMLCommonHandler.instance()
           .getMinecraftServerInstance()
           .commandManager
           .executeCommand(player.sender, "/adventure");
-    else if (type.equalsIgnoreCase("spectator")
+    } else if (type.equalsIgnoreCase("spectator")
         || type.toLowerCase().startsWith("sp")
-        || type.equalsIgnoreCase("3"))
+        || type.equalsIgnoreCase("3")) {
       FMLCommonHandler.instance()
           .getMinecraftServerInstance()
           .commandManager
           .executeCommand(player.sender, "/spectator");
+    }
   }
 
   @Command(
@@ -53,31 +54,36 @@ public class GamemodeCommand {
   public void gamemodeOther(ServerPlayer player, EntityPlayer otherPlayer, String type) {
     if (type.equalsIgnoreCase("survival")
         || type.toLowerCase().startsWith("s")
-        || type.equalsIgnoreCase("0"))
+        || type.equalsIgnoreCase("0")) {
       FMLCommonHandler.instance()
           .getMinecraftServerInstance()
           .commandManager
-          .executeCommand(player.sender, "/survival " + otherPlayer.getGameProfile().getName());
-    else if (type.equalsIgnoreCase("creative")
+          .executeCommand(player.sender,
+              "/survival " + otherPlayer.getGameProfile().getName());
+    } else if (type.equalsIgnoreCase("creative")
         || type.toLowerCase().startsWith("c")
-        || type.equalsIgnoreCase("1"))
+        || type.equalsIgnoreCase("1")) {
       FMLCommonHandler.instance()
           .getMinecraftServerInstance()
           .commandManager
-          .executeCommand(player.sender, "/creative " + otherPlayer.getGameProfile().getName());
-    else if (type.equalsIgnoreCase("adventure")
+          .executeCommand(player.sender,
+              "/creative " + otherPlayer.getGameProfile().getName());
+    } else if (type.equalsIgnoreCase("adventure")
         || type.toLowerCase().startsWith("a")
-        || type.equalsIgnoreCase("2"))
+        || type.equalsIgnoreCase("2")) {
       FMLCommonHandler.instance()
           .getMinecraftServerInstance()
           .commandManager
-          .executeCommand(player.sender, "/adventure " + otherPlayer.getGameProfile().getName());
-    else if (type.equalsIgnoreCase("spectator")
+          .executeCommand(player.sender,
+              "/adventure " + otherPlayer.getGameProfile().getName());
+    } else if (type.equalsIgnoreCase("spectator")
         || type.toLowerCase().startsWith("sp")
-        || type.equalsIgnoreCase("3"))
+        || type.equalsIgnoreCase("3")) {
       FMLCommonHandler.instance()
           .getMinecraftServerInstance()
           .commandManager
-          .executeCommand(player.sender, "/spectator " + otherPlayer.getGameProfile().getName());
+          .executeCommand(player.sender,
+              "/spectator " + otherPlayer.getGameProfile().getName());
+    }
   }
 }

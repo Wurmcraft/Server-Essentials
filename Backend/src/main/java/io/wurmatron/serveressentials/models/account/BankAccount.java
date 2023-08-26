@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -42,8 +43,12 @@ public class BankAccount implements SQLJson {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof BankAccount)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof BankAccount)) {
+      return false;
+    }
     BankAccount that = (BankAccount) o;
     return Double.compare(that.amount, amount) == 0
         && lastUsed == that.lastUsed
@@ -55,6 +60,7 @@ public class BankAccount implements SQLJson {
 
   @Override
   public int hashCode() {
-    return Objects.hash(currencyName, amount, lastUsed, accountType, accountData, lastCalculated);
+    return Objects.hash(currencyName, amount, lastUsed, accountType, accountData,
+        lastCalculated);
   }
 }

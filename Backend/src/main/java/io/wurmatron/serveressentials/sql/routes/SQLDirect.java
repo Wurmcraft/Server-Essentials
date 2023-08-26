@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -27,7 +28,7 @@ public class SQLDirect extends SQLGenerator {
    */
   public static <T> List<T> queryArray(String sql, T dataType)
       throws SQLException, IllegalAccessException, IllegalArgumentException,
-          InstantiationException {
+      InstantiationException {
     PreparedStatement statement = connection.createPrepared(sql);
     LOG.trace("DIRECT ARR: " + statement);
     return toArray(statement.executeQuery(), dataType);

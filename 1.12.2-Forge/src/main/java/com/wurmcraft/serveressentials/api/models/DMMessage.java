@@ -1,5 +1,6 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License
+ * v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -14,7 +15,8 @@ public class DMMessage {
   public String receiverID;
 
   public DMMessage(
-      String senderUUID, String displayName, String locationID, String message, String receiverID) {
+      String senderUUID, String displayName, String locationID, String message,
+      String receiverID) {
     this.senderUUID = senderUUID;
     this.displayName = displayName;
     this.locationID = locationID;

@@ -28,6 +28,8 @@ public class TPADenyCommand {
           player.player,
           player.lang.COMMAND_TPDENY.replaceAll(
               "\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
-    } else ChatHelper.send(player.sender, player.lang.COMMAND_TPACCEPT_NONE);
+    } else {
+      ChatHelper.send(player.sender, player.lang.COMMAND_TPACCEPT_NONE);
+    }
   }
 }
