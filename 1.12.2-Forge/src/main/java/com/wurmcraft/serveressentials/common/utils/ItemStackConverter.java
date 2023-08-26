@@ -110,8 +110,9 @@ public class ItemStackConverter implements IDataConverter<ItemStack> {
 
   @Override
   public ItemStack getData(String data) {
+    if(data == null || data.isEmpty())
+      return ItemStack.EMPTY;
     if (reverseCache.containsKey(data)) {
-      System.out.println("Cache: " + data + " " + reverseCache.get(data));
       return reverseCache.get(data).copy();
     }
     Item item = (Item) getBasicData(data);

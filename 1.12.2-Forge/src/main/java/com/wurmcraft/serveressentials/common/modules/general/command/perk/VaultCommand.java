@@ -46,12 +46,9 @@ public class VaultCommand {
       usage = {"name"})
   public void vault(ServerPlayer player, String vaultName) {
     if (vaultName.equalsIgnoreCase("list")) {
-      File dir =
-          getVaultLocation(player.player.getGameProfile().getId().toString(), "test")
-              .getParentFile();
       StringBuilder builder = new StringBuilder();
-      for (String f : dir.list()) {
-        builder.append(f.replaceAll(".json", "")).append(", ");
+      for (File f : getVaults(player.player.getGameProfile().getId().toString())) {
+        builder.append(f.getName().replaceAll(".json", "")).append(", ");
       }
       ChatHelper.send(player.sender, builder.toString());
     } else {
@@ -153,6 +150,19 @@ public class VaultCommand {
       return dir.list().length;
     }
     return 0;
+  }
+
+  public File[] getVaults(String uuid) {
+    File dir = new File(
+        ConfigLoader.SAVE_DIR
+            + File.separator
+            + FileDataLoader.SAVE_FOLDER
+            + File.separator
+            + "vaults" + File.separator + uuid);
+    if (dir.exists()) {
+      return dir.listFiles();
+    }
+    return new File[0];
   }
 
   public static void destroyVault(EntityPlayer player, Vault vault) {
