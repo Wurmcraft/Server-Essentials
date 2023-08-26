@@ -90,11 +90,13 @@ public class PlayerUtils {
   }
 
   public static String getUUIDForInput(String input) {
-    String localUUID = validateUUID(input);
-    if (localUUID == null && SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
-      return validateUUIDRemote(input);
+    String uuid = validateUUID(input);
+    if (uuid == null && SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
+      uuid =  validateUUIDRemote(input);
     }
-    return localUUID;
+    if(uuid == null)
+      uuid = validateUUID(input);
+    return uuid;
   }
 
   private static String validateUsername(String uuid) {

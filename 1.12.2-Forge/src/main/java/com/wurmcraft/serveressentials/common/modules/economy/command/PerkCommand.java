@@ -30,9 +30,14 @@ public class PerkCommand {
     ChatHelper.send(player.sender, player.lang.SPACER);
   }
 
-  @Command(args = {CommandArgument.PERK}, usage = {
+  @Command(args = {CommandArgument.STRING}, usage = {
       "perk"}, isSubCommand = true, canConsoleUse = false)
   public void buy(ServerPlayer player, String perk) {
+    if(perk == null) {
+      ChatHelper.send(player.sender,
+          player.lang.COMMAND_PERK_NONE.replaceAll("\\{@NAME@}", "" + perk));
+      return;
+    }
     int currentLevel = PlayerUtils.getPerkLevel(player.global, perk.toLowerCase());
     PerkCost perkCost = perks.get(perk.toLowerCase());
     if (perkCost != null) {

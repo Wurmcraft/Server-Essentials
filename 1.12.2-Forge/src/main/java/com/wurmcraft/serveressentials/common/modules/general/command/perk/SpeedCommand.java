@@ -8,6 +8,8 @@ import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.common.command.CommandUtils;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagFloat;
 
 @ModuleCommand(
     module = "General",
@@ -28,13 +30,31 @@ public class SpeedCommand {
       usage = {"type", "speed"})
   public void selfSpeedType(ServerPlayer player, String type, double speed) {
     if (type.equalsIgnoreCase("walk") || type.equalsIgnoreCase("walking")) {
-      player.player.capabilities.setPlayerWalkSpeed((float) (speed / 10));
+      NBTTagCompound tagCompound = new NBTTagCompound();
+      player.player.capabilities.writeCapabilitiesToNBT(tagCompound);
+      if (type.equalsIgnoreCase("walking")) {
+        type = "walk";
+      }
+      tagCompound.getCompoundTag("abilities")
+          .setTag(type.toLowerCase() + "Speed", new NBTTagFloat((float) speed / 10));
+      player.player.capabilities.readCapabilitiesFromNBT(tagCompound);
+      player.player.sendPlayerAbilities();
       ChatHelper.send(
-          player.sender, player.lang.COMMAND_SPEED_WALK.replaceAll("\\{@SPEED@}", speed + ""));
+          player.sender,
+          player.lang.COMMAND_SPEED_WALK.replaceAll("\\{@SPEED@}", speed + ""));
     } else if (type.equalsIgnoreCase("fly") || type.equalsIgnoreCase("flying")) {
-      player.player.capabilities.setFlySpeed((float) (speed / 10));
+      NBTTagCompound tagCompound = new NBTTagCompound();
+      player.player.capabilities.writeCapabilitiesToNBT(tagCompound);
+      if (type.equalsIgnoreCase("flying")) {
+        type = "fly";
+      }
+      tagCompound.getCompoundTag("abilities")
+          .setTag(type.toLowerCase() + "Speed", new NBTTagFloat((float) speed / 10));
+      player.player.capabilities.readCapabilitiesFromNBT(tagCompound);
+      player.player.sendPlayerAbilities();
       ChatHelper.send(
-          player.sender, player.lang.COMMAND_SPEED_FLY.replaceAll("\\{@SPEED@}", speed + ""));
+          player.sender,
+          player.lang.COMMAND_SPEED_FLY.replaceAll("\\{@SPEED@}", speed + ""));
     }
   }
 
@@ -51,9 +71,18 @@ public class SpeedCommand {
       args = {CommandArgument.PLAYER, CommandArgument.STRING, CommandArgument.DOUBLE},
       usage = {"player", "type", "speed"},
       canConsoleUse = true)
-  public void otherSpeed(ServerPlayer player, EntityPlayer otherPlayer, String type, double speed) {
+  public void otherSpeed(ServerPlayer player, EntityPlayer otherPlayer, String type,
+      double speed) {
     if (type.equalsIgnoreCase("walk") || type.equalsIgnoreCase("walking")) {
-      otherPlayer.capabilities.setPlayerWalkSpeed((float) (speed / 10));
+      NBTTagCompound tagCompound = new NBTTagCompound();
+      otherPlayer.capabilities.writeCapabilitiesToNBT(tagCompound);
+      if (type.equalsIgnoreCase("walking")) {
+        type = "walk";
+      }
+      tagCompound.getCompoundTag("abilities")
+          .setTag(type.toLowerCase() + "Speed", new NBTTagFloat((float) speed / 10));
+      otherPlayer.capabilities.readCapabilitiesFromNBT(tagCompound);
+      otherPlayer.sendPlayerAbilities();
       Language otherLang = CommandUtils.getPlayerLang(otherPlayer);
       ChatHelper.send(
           player.sender,
@@ -63,9 +92,18 @@ public class SpeedCommand {
               .replaceAll("\\{@SPEED@}", speed + "")
               .replaceAll("\\{@NAME@}", otherPlayer.getDisplayNameString()));
       ChatHelper.send(
-          otherPlayer, otherLang.COMMAND_SPEED_WALK.replaceAll("\\{@SPEED@}", speed + ""));
+          otherPlayer,
+          otherLang.COMMAND_SPEED_WALK.replaceAll("\\{@SPEED@}", speed + ""));
     } else if (type.equalsIgnoreCase("fly") || type.equalsIgnoreCase("flying")) {
-      otherPlayer.capabilities.setFlySpeed((float) (speed / 10));
+      NBTTagCompound tagCompound = new NBTTagCompound();
+      otherPlayer.capabilities.writeCapabilitiesToNBT(tagCompound);
+      if (type.equalsIgnoreCase("flying")) {
+        type = "fly";
+      }
+      tagCompound.getCompoundTag("abilities")
+          .setTag(type.toLowerCase() + "Speed", new NBTTagFloat((float) speed / 10));
+      otherPlayer.capabilities.readCapabilitiesFromNBT(tagCompound);
+      otherPlayer.sendPlayerAbilities();
       Language otherLang = CommandUtils.getPlayerLang(otherPlayer);
       ChatHelper.send(
           player.sender,
@@ -75,7 +113,8 @@ public class SpeedCommand {
               .replaceAll("\\{@SPEED@}", speed + "")
               .replaceAll("\\{@NAME@}", otherPlayer.getDisplayNameString()));
       ChatHelper.send(
-          otherPlayer, otherLang.COMMAND_SPEED_WALK.replaceAll("\\{@SPEED@}", speed + ""));
+          otherPlayer,
+          otherLang.COMMAND_SPEED_WALK.replaceAll("\\{@SPEED@}", speed + ""));
     }
   }
 }

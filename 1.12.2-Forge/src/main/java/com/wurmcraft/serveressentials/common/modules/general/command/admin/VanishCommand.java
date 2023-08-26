@@ -5,6 +5,7 @@ import com.wurmcraft.serveressentials.api.command.Command;
 import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Language;
+import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.general.event.VanishEvent;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
@@ -15,25 +16,16 @@ import net.minecraft.entity.player.EntityPlayer;
 public class VanishCommand {
 
   @Command(args = {}, usage = {})
-  public void vanish(ICommandSender sender) {
-    if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
-      EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
-      boolean inVanish = VanishEvent.vanishedPlayers.contains(player);
+  public void vanish(ServerPlayer sender) {
+      boolean inVanish = VanishEvent.vanishedPlayers.contains(sender.player);
       if (inVanish) {
-        VanishEvent.vanishedPlayers.remove(player);
-        VanishEvent.updateVanish(player, true);
-        ChatHelper.send(sender, SECore.dataLoader.get(DataType.LANGUAGE,
-            SECore.dataLoader.get(DataType.ACCOUNT,
-                player.getGameProfile().getId().toString(), new Account()).lang,
-            new Language()).COMMAND_VANISH_UNDO);
+        VanishEvent.vanishedPlayers.remove(sender.player);
+        VanishEvent.updateVanish(sender.player, true);
+        ChatHelper.send(sender.sender, sender.lang.COMMAND_VANISH_UNDO);
       } else {
-        VanishEvent.vanishedPlayers.add(player);
-        VanishEvent.updateVanish(player, false);
-        ChatHelper.send(sender, SECore.dataLoader.get(DataType.LANGUAGE,
-            SECore.dataLoader.get(DataType.ACCOUNT,
-                player.getGameProfile().getId().toString(), new Account()).lang,
-            new Language()).COMMAND_VANISH);
+        VanishEvent.vanishedPlayers.add(sender.player);
+        VanishEvent.updateVanish(sender.player, false);
+        ChatHelper.send(sender.sender, sender.lang.COMMAND_VANISH);
       }
     }
-  }
 }

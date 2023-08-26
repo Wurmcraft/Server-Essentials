@@ -15,6 +15,7 @@ import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.economy.ConfigEconomy;
+import com.wurmcraft.serveressentials.common.modules.economy.command.PerkCommand;
 import com.wurmcraft.serveressentials.common.modules.security.TrustedList;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
@@ -372,6 +373,8 @@ public class SECommand extends CommandBase {
       return getChannel(arg);
     } else if (type == CommandArgument.KIT) {
       return getKit(arg);
+    } else if (type == CommandArgument.PERK) {
+      return getPerk(arg);
     }
     return null;
   }
@@ -385,6 +388,15 @@ public class SECommand extends CommandBase {
     for (Kit kit : kits) {
       if (kit.name.equalsIgnoreCase(arg)) {
         return kit;
+      }
+    }
+    return null;
+  }
+
+  private String getPerk(String arg) {
+    for (String perk : PerkCommand.perks.keySet()) {
+      if (arg.equalsIgnoreCase(perk)) {
+        return arg;
       }
     }
     return null;

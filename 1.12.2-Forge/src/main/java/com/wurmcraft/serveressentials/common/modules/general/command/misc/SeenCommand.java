@@ -24,15 +24,22 @@ public class SeenCommand {
     Account account = PlayerUtils.getLatestAccount(uuid);
     if (uuid != null && !uuid.isEmpty() && account != null) {
       long lastSeen = 0;
-      for (ServerTime time : account.tracked_time)
-        if (time.lastSeen > lastSeen) lastSeen = time.lastSeen;
+      for (ServerTime time : account.tracked_time) {
+        if (time.lastSeen > lastSeen) {
+          lastSeen = time.lastSeen;
+        }
+      }
       ChatHelper.send(
           player.sender,
           player
               .lang
               .COMMAND_SEEN
               .replaceAll("\\{@PLAYER@}", PlayerUtils.getUsernameForInput(uuid))
-              .replaceAll("\\{@TIME@}", CommandUtils.displayTime(lastSeen / 1000)));
-    } else ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
+              .replaceAll("\\{@TIME@}",
+                  CommandUtils.displayTime(lastSeen / 1000).trim()));
+    } else {
+      ChatHelper.send(player.sender,
+          player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
+    }
   }
 }

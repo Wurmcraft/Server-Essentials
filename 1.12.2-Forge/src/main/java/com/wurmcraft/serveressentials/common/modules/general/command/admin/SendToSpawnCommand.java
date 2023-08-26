@@ -79,7 +79,7 @@ public class SendToSpawnCommand {
             player.getGameProfile().getId().toString(), new LocalAccount()),
         PlayerUtils.getSpawn(SECore.dataLoader.get(DataType.ACCOUNT,
             player.getGameProfile().getId().toString(), new Account()).rank));
-    ChatHelper.send(sender.sender, sender.lang.COMMAND_SENDTOSPAWN.replaceAll("%PLAYER%",
+    ChatHelper.send(sender.sender, sender.lang.COMMAND_SENDTOSPAWN.replaceAll("\\{@PLAYER@}",
         player.getDisplayNameString()));
   }
 }
