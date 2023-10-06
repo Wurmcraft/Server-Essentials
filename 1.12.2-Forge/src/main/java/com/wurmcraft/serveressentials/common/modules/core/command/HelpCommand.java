@@ -40,6 +40,8 @@ public class HelpCommand {
     List<HelpLine> playerSpecificHelp = getPlayerCommands(player);
     if (page > playerSpecificHelp.size() / COMMANDS_PER_PAGE) {
       page = playerSpecificHelp.size() / COMMANDS_PER_PAGE;
+      if(page == 0)
+        page = 1;
     }
     String spacer = player.lang.SPACER;
     String center = Integer.toString(page) + " / " + Math.round(Math.ceil(
