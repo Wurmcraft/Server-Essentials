@@ -9,6 +9,7 @@ import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.security.TrustedList;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class RankUtils {
@@ -162,5 +163,11 @@ public class RankUtils {
       ServerEssentials.LOG.warn("Invalid rank '" + rank + "'");
     }
     return rankPermList.toArray(new String[0]);
+  }
+
+  public static List<String> checkForDuplicates(List<String> ranks) {
+    HashMap<String, String> nonDuplicates = new HashMap<>();
+    for (String rank : ranks) nonDuplicates.put(rank, "");
+    return new ArrayList<>(nonDuplicates.keySet());
   }
 }
