@@ -30,12 +30,10 @@ public class ModuleCore {
   }
 
   private boolean hasFileDate() {
-    return new File(
-        SAVE_DIR + File.separator + "Storage" + File.separator + "account").exists();
+    return new File(SAVE_DIR + File.separator + "Storage" + File.separator + "account").exists();
   }
 
-  public void reload() {
-  }
+  public void reload() {}
 
   private static void updateToDatabase() {
     FMLCommonHandler.instance().getMinecraftServerInstance().saveAllWorlds(true);

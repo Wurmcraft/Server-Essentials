@@ -8,8 +8,8 @@ import net.minecraft.util.math.BlockPos;
 public class RegionHelper {
 
   public static RegionPos getRegionPos(BlockPos pos, int dim) {
-    return new RegionPos(((pos.getX() >> 4) / 32), ((pos.getY() >> 4) / 32),
-        ((pos.getZ() >> 4) / 32), dim);
+    return new RegionPos(
+        ((pos.getX() >> 4) / 32), ((pos.getY() >> 4) / 32), ((pos.getZ() >> 4) / 32), dim);
   }
 
   public static String convert(RegionPos pos) {
@@ -20,8 +20,7 @@ public class RegionHelper {
     if (regionID != null && regionID.length() >= 7) {
       try {
         int dim = Integer.parseInt(regionID.substring(0, regionID.indexOf("_")));
-        int x = Integer.parseInt(
-            regionID.substring(regionID.indexOf("_"), regionID.indexOf("-")));
+        int x = Integer.parseInt(regionID.substring(regionID.indexOf("_"), regionID.indexOf("-")));
         int lastPos = regionID.indexOf("-");
         regionID = regionID.substring(lastPos);
         lastPos = regionID.indexOf("-");
@@ -48,8 +47,11 @@ public class RegionHelper {
   }
 
   public static boolean matches(Claim claim, BlockPos pos) {
-    return claim.min.x <= pos.getX() && claim.max.x >= pos.getX()
-        && claim.min.z <= pos.getZ() && claim.max.z >= pos.getZ()
-        && claim.min.y <= pos.getY() && claim.max.y >= pos.getY();
+    return claim.min.x <= pos.getX()
+        && claim.max.x >= pos.getX()
+        && claim.min.z <= pos.getZ()
+        && claim.max.z >= pos.getZ()
+        && claim.min.y <= pos.getY()
+        && claim.max.y >= pos.getY();
   }
 }

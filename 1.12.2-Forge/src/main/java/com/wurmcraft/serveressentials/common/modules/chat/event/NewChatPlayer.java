@@ -19,17 +19,14 @@ public class NewChatPlayer {
     if (e.newAccount) {
       e.local.channel = ((ConfigChat) SECore.moduleConfigs.get("CHAT")).defaultChannel;
       SECore.dataLoader.update(
-          DataLoader.DataType.LOCAL_ACCOUNT, e.player.getGameProfile().getId().toString(),
-          e.local);
+          DataLoader.DataType.LOCAL_ACCOUNT, e.player.getGameProfile().getId().toString(), e.local);
     }
     if (e.local.socialSpy) {
       ChatHelper.socialSpy.add(e.player);
     }
-    if (SECore.dataLoader.getFromKey(DataLoader.DataType.BULLETIN, new Bulletin())
-        != null) {
+    if (SECore.dataLoader.getFromKey(DataLoader.DataType.BULLETIN, new Bulletin()) != null) {
       for (Bulletin bulletin :
-          SECore.dataLoader.getFromKey(DataLoader.DataType.BULLETIN, new Bulletin())
-              .values()) {
+          SECore.dataLoader.getFromKey(DataLoader.DataType.BULLETIN, new Bulletin()).values()) {
         if (bulletin.expiration < System.currentTimeMillis()) {
           SECore.dataLoader.delete(DataLoader.DataType.BULLETIN, bulletin.title, false);
           ServerEssentials.LOG.info(
@@ -43,8 +40,7 @@ public class NewChatPlayer {
         if (!bulletin.viewedBy.contains(e.player.getGameProfile().getId().toString())) {
           ChatHelper.send(e.player, bulletin);
           bulletin.viewedBy.add(e.player.getGameProfile().getId().toString());
-          SECore.dataLoader.update(DataLoader.DataType.BULLETIN, bulletin.title,
-              bulletin);
+          SECore.dataLoader.update(DataLoader.DataType.BULLETIN, bulletin.title, bulletin);
         }
       }
     }

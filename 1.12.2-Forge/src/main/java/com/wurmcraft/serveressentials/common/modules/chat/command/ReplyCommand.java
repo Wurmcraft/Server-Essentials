@@ -27,8 +27,7 @@ public class ReplyCommand {
     if (ChatHelper.lastMessageCache.containsKey(
         player.player.getGameProfile().getId().toString())) {
       String lastMsg =
-          ChatHelper.lastMessageCache.get(
-              player.player.getGameProfile().getId().toString());
+          ChatHelper.lastMessageCache.get(player.player.getGameProfile().getId().toString());
       EntityPlayer otherPlayer = PlayerUtils.getFromUUID(lastMsg);
       if (otherPlayer != null) {
         ChatHelper.send(player.player, otherPlayer, msg);

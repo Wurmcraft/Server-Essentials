@@ -20,10 +20,8 @@ public class ModuleChat {
   public void setup() {
     try {
       // Default Channel
-      String defaultChannelName = ((ConfigChat) SECore.moduleConfigs.get(
-          "CHAT")).defaultChannel;
-      if (SECore.dataLoader.get(DataLoader.DataType.CHANNEL, defaultChannelName)
-          == null) {
+      String defaultChannelName = ((ConfigChat) SECore.moduleConfigs.get("CHAT")).defaultChannel;
+      if (SECore.dataLoader.get(DataLoader.DataType.CHANNEL, defaultChannelName) == null) {
         Channel channel =
             new Channel(
                 defaultChannelName,
@@ -31,9 +29,10 @@ public class ModuleChat {
                 false,
                 new HashMap<>(),
                 true,
-                "", true, new String[0]);
-        if (!SECore.dataLoader.register(DataLoader.DataType.CHANNEL, defaultChannelName,
-            channel)) {
+                "",
+                true,
+                new String[0]);
+        if (!SECore.dataLoader.register(DataLoader.DataType.CHANNEL, defaultChannelName, channel)) {
           LOG.warn("Failed to create default channel '" + defaultChannelName + "'");
         }
       }

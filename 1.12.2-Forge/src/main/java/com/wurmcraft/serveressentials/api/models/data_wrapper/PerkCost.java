@@ -7,8 +7,7 @@ public class PerkCost {
   public String perkNode;
   public int maxAmount;
 
-  public PerkCost(double costMultiplier, double basicCost, String perkNode,
-      int maxAmount) {
+  public PerkCost(double costMultiplier, double basicCost, String perkNode, int maxAmount) {
     this.costMultiplier = costMultiplier;
     this.basicCost = basicCost;
     this.perkNode = perkNode;

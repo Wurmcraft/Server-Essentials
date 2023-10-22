@@ -40,16 +40,15 @@ public class TpPosCommand {
 
   @Command(
       args = {
-          CommandArgument.PLAYER,
-          CommandArgument.INTEGER,
-          CommandArgument.INTEGER,
-          CommandArgument.INTEGER
+        CommandArgument.PLAYER,
+        CommandArgument.INTEGER,
+        CommandArgument.INTEGER,
+        CommandArgument.INTEGER
       },
       usage = {"player", "x", "y", "z", "dim"})
   public void teleportPos(ServerPlayer player, int x, int y, int z, int dim) {
     Location location =
-        new Location(x, y, z, dim, player.player.rotationPitch,
-            player.player.rotationYaw);
+        new Location(x, y, z, dim, player.player.rotationPitch, player.player.rotationYaw);
     if (TeleportUtils.teleportTo(
         (EntityPlayerMP) player.player,
         player.local,
@@ -63,32 +62,29 @@ public class TpPosCommand {
       args = {CommandArgument.PLAYER, CommandArgument.INTEGER, CommandArgument.INTEGER},
       usage = {"player", "x", "z"},
       canConsoleUse = true)
-  public void teleportOtherPos(ServerPlayer player, EntityPlayer otherPlayer, int x,
-      int z) {
-    teleportOtherPos(player, otherPlayer, x, WorldUtils.findTop(otherPlayer.world, x, z),
-        z);
+  public void teleportOtherPos(ServerPlayer player, EntityPlayer otherPlayer, int x, int z) {
+    teleportOtherPos(player, otherPlayer, x, WorldUtils.findTop(otherPlayer.world, x, z), z);
   }
 
   @Command(
       args = {
-          CommandArgument.PLAYER,
-          CommandArgument.INTEGER,
-          CommandArgument.INTEGER,
-          CommandArgument.INTEGER
+        CommandArgument.PLAYER,
+        CommandArgument.INTEGER,
+        CommandArgument.INTEGER,
+        CommandArgument.INTEGER
       },
       usage = {"player", "x", "y", "z"},
       canConsoleUse = true)
-  public void teleportOtherPos(ServerPlayer player, EntityPlayer otherPlayer, int x,
-      int y, int z) {
+  public void teleportOtherPos(ServerPlayer player, EntityPlayer otherPlayer, int x, int y, int z) {
     teleportOtherPos(player, otherPlayer, x, y, z, otherPlayer.dimension);
   }
 
   @Command(
       args = {
-          CommandArgument.PLAYER,
-          CommandArgument.INTEGER,
-          CommandArgument.INTEGER,
-          CommandArgument.INTEGER
+        CommandArgument.PLAYER,
+        CommandArgument.INTEGER,
+        CommandArgument.INTEGER,
+        CommandArgument.INTEGER
       },
       usage = {"player", "x", "y", "z", "dim"},
       canConsoleUse = true)
@@ -113,8 +109,7 @@ public class TpPosCommand {
                 "\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
       }
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 }

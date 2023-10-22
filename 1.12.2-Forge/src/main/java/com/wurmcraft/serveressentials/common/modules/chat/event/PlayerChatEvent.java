@@ -39,31 +39,30 @@ import org.apache.commons.lang3.StringUtils;
 public class PlayerChatEvent {
 
   public static final String[] REPLACE_LIST =
-      new String[]{
-          "%USERNAME%",
-          "%NAME%",
-          "%DIMENSION%",
-          "%RANK_PREFIX%",
-          "%RANK_SUFFIX%",
-          "%CHANNEL_PREFIX%",
-          "%SERVER_ID%"
+      new String[] {
+        "%USERNAME%",
+        "%NAME%",
+        "%DIMENSION%",
+        "%RANK_PREFIX%",
+        "%RANK_SUFFIX%",
+        "%CHANNEL_PREFIX%",
+        "%SERVER_ID%"
       };
 
   public static final String[] PLAYER_REPLACEMENT =
-      new String[]{
-          "{BALANCE}",
-          "{EXP}",
-          "{LEVEL}",
-          "{PLAY_TIME}",
-          "{TIME}",
-          "{REWARDS}",
-          "{POINTS}",
-          "{LANGUAGE}",
-          "{LANG}"
+      new String[] {
+        "{BALANCE}",
+        "{EXP}",
+        "{LEVEL}",
+        "{PLAY_TIME}",
+        "{TIME}",
+        "{REWARDS}",
+        "{POINTS}",
+        "{LANGUAGE}",
+        "{LANG}"
       };
 
-  public static SimpleDateFormat log_format = new SimpleDateFormat(
-      "dd/MM/yy HH:mm:ss zzz");
+  public static SimpleDateFormat log_format = new SimpleDateFormat("dd/MM/yy HH:mm:ss zzz");
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public void onChatEvent(ServerChatEvent e) {
@@ -84,18 +83,15 @@ public class PlayerChatEvent {
             new Account());
     if (isMuted(account)) {
       Language lang =
-          SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.lang,
-              new Language());
+          SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.lang, new Language());
       ChatHelper.send(e.getPlayer(), lang.MUTED);
       e.setCanceled(true);
       return;
     }
-    Channel ch = SECore.dataLoader.get(DataLoader.DataType.CHANNEL, local.channel,
-        new Channel());
+    Channel ch = SECore.dataLoader.get(DataLoader.DataType.CHANNEL, local.channel, new Channel());
     if (!ch.enabled && !RankUtils.hasPermission(account, "chat.pause.bypass")) {
       Language lang =
-          SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.lang,
-              new Language());
+          SECore.dataLoader.get(DataLoader.DataType.LANGUAGE, account.lang, new Language());
       ChatHelper.send(e.getPlayer(), lang.CHANNEL_DISABLED);
       e.setCanceled(true);
       return;
@@ -158,34 +154,31 @@ public class PlayerChatEvent {
     return account.muted;
   }
 
-  public static String format(EntityPlayer player, Channel channel, Account account,
-      String msg) {
+  public static String format(EntityPlayer player, Channel channel, Account account, String msg) {
     String format =
         channel.chatFormat.isEmpty()
             ? ChatHelper.replaceColor(
-            ((ConfigChat) SECore.moduleConfigs.get("CHAT")).defaultChatFormat)
+                ((ConfigChat) SECore.moduleConfigs.get("CHAT")).defaultChatFormat)
             : ChatHelper.replaceColor(channel.chatFormat);
     List<Rank> ranks = getRanks(account);
     format =
         StringUtils.replaceEach(
             format,
             REPLACE_LIST,
-            new String[]{
-                ChatHelper.replaceColor(getRankValue("color", ranks))
-                    + player.getGameProfile().getName(),
-                ChatHelper.replaceColor(getRankValue("color", ranks)) + getName(player,
-                    account),
-                player.dimension + "",
-                ChatHelper.replaceColor(getRankValue("prefix", ranks)),
-                ChatHelper.replaceColor(getRankValue("suffix", ranks)),
-                ChatHelper.replaceColor(channel.prefix),
-                ServerEssentials.config.general.serverID
+            new String[] {
+              ChatHelper.replaceColor(getRankValue("color", ranks))
+                  + player.getGameProfile().getName(),
+              ChatHelper.replaceColor(getRankValue("color", ranks)) + getName(player, account),
+              player.dimension + "",
+              ChatHelper.replaceColor(getRankValue("prefix", ranks)),
+              ChatHelper.replaceColor(getRankValue("suffix", ranks)),
+              ChatHelper.replaceColor(channel.prefix),
+              ServerEssentials.config.general.serverID
             });
     // Channel Specific
     if (channel.chatReplacement != null && channel.chatReplacement.size() > 0) {
       for (String regex : channel.chatReplacement.keySet()) {
-        msg = msg.replaceAll(regex,
-            ChatHelper.replaceColor(channel.chatReplacement.get(regex)));
+        msg = msg.replaceAll(regex, ChatHelper.replaceColor(channel.chatReplacement.get(regex)));
       }
     }
     // Player Replacement
@@ -194,31 +187,39 @@ public class PlayerChatEvent {
           StringUtils.replaceEach(
               msg,
               PLAYER_REPLACEMENT,
-              new String[]{
-                  String.format(
-                      "%.2f", EcoUtils.balance(account,
-                          ((ConfigEconomy) SECore.moduleConfigs.get(
-                              "ECONOMY")).serverCurrency)),
-                  String.format("%.4f", player.experience),
-                  player.experienceLevel + "",
-                  (PlayerUtils.getTotalPlaytime(SECore.dataLoader.get(DataType.ACCOUNT,
-                      player.getGameProfile().getId().toString(), new Account())) / 1440)
-                      + "d", // min -> days
-                  (PlayerUtils.getTotalPlaytime(SECore.dataLoader.get(DataType.ACCOUNT,
-                      player.getGameProfile().getId().toString(), new Account())) / 1440)
-                      + "d", // min -> days
-                  account.reward_points + "",
-                  account.reward_points + "",
-                  account.lang.toUpperCase(),
-                  account.lang.toUpperCase()
+              new String[] {
+                String.format(
+                    "%.2f",
+                    EcoUtils.balance(
+                        account,
+                        ((ConfigEconomy) SECore.moduleConfigs.get("ECONOMY")).serverCurrency)),
+                String.format("%.4f", player.experience),
+                player.experienceLevel + "",
+                (PlayerUtils.getTotalPlaytime(
+                            SECore.dataLoader.get(
+                                DataType.ACCOUNT,
+                                player.getGameProfile().getId().toString(),
+                                new Account()))
+                        / 1440)
+                    + "d", // min -> days
+                (PlayerUtils.getTotalPlaytime(
+                            SECore.dataLoader.get(
+                                DataType.ACCOUNT,
+                                player.getGameProfile().getId().toString(),
+                                new Account()))
+                        / 1440)
+                    + "d", // min -> days
+                account.reward_points + "",
+                account.reward_points + "",
+                account.lang.toUpperCase(),
+                account.lang.toUpperCase()
               });
     }
     // Replace Message placeholder
     format =
         format.replaceAll(
             "%MESSAGE%",
-            RankUtils.hasPermission(account, "chat.color") ? ChatHelper.replaceColor(msg)
-                : msg);
+            RankUtils.hasPermission(account, "chat.color") ? ChatHelper.replaceColor(msg) : msg);
     return format;
   }
 
@@ -267,7 +268,7 @@ public class PlayerChatEvent {
     // Add errored rank is none are found
     if (ranks.size() == 0) {
       Rank erroredRank =
-          new Rank("Error", new String[]{}, new String[]{}, "[Error]", 0, "", 0, "", 0);
+          new Rank("Error", new String[] {}, new String[] {}, "[Error]", 0, "", 0, "", 0);
       ranks.add(erroredRank);
     }
     return ranks;
@@ -280,8 +281,7 @@ public class PlayerChatEvent {
       for (Rank rank : validRanks) {
         invalidRanks.remove(rank.name);
       }
-      if (invalidRanks.size() > 0
-          && validRanks.size() > 0) { // Present removing all user's ranks
+      if (invalidRanks.size() > 0 && validRanks.size() > 0) { // Present removing all user's ranks
         LOG.warn("User '" + uuid + "' has invalid rank, removing to prevent issues");
         List<String> validList = new ArrayList<>();
         for (String rank : latestAccount.rank) {

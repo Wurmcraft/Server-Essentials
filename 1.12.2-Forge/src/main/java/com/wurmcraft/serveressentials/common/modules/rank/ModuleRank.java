@@ -13,8 +13,7 @@ public class ModuleRank {
   public void setup() {
     try {
       if (SECore.dataLoader.getFromKey(DataLoader.DataType.RANK, new Rank()) == null
-          || (SECore.dataLoader.getFromKey(DataLoader.DataType.RANK, new Rank()).size()
-          <= 0)) {
+          || (SECore.dataLoader.getFromKey(DataLoader.DataType.RANK, new Rank()).size() <= 0)) {
         setupDefaultRanks();
       }
     } catch (Exception e) {
@@ -23,8 +22,8 @@ public class ModuleRank {
   }
 
   public void reload() {
-    for (String rank : SECore.dataLoader.getFromKey(DataLoader.DataType.RANK, new Rank())
-        .keySet()) {
+    for (String rank :
+        SECore.dataLoader.getFromKey(DataLoader.DataType.RANK, new Rank()).keySet()) {
       SECore.dataLoader.delete(DataLoader.DataType.RANK, rank, true);
     }
   }
@@ -33,16 +32,16 @@ public class ModuleRank {
     Rank defaultRank =
         new Rank(
             ((ConfigRank) SECore.moduleConfigs.get("RANK")).defaultRank.toLowerCase(),
-            new String[]{
-                "command.help",
-                "command.home",
-                "command.sethome",
-                "command.tpa",
-                "command.tpaccept",
-                "command.tpadeny",
-                "command.spawn"
+            new String[] {
+              "command.help",
+              "command.home",
+              "command.sethome",
+              "command.tpa",
+              "command.tpaccept",
+              "command.tpadeny",
+              "command.spawn"
             },
-            new String[]{},
+            new String[] {},
             "&8[&7Default&8]",
             0,
             "&7",
@@ -52,8 +51,8 @@ public class ModuleRank {
     Rank member =
         new Rank(
             "member",
-            new String[]{"command.warp", "command.enderchest"},
-            new String[]{((ConfigRank) SECore.moduleConfigs.get("RANK")).defaultRank},
+            new String[] {"command.warp", "command.enderchest"},
+            new String[] {((ConfigRank) SECore.moduleConfigs.get("RANK")).defaultRank},
             "&8[&eMember&8]",
             1,
             "&7",
@@ -63,8 +62,8 @@ public class ModuleRank {
     Rank admin =
         new Rank(
             "admin",
-            new String[]{"*"},
-            new String[]{"Member"},
+            new String[] {"*"},
+            new String[] {"Member"},
             "&c[&4Admin&c]",
             2,
             "&7",

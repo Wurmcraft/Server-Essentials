@@ -19,5 +19,4 @@ public interface IDataConverter<T> {
   String toString(T data);
 
   boolean isValid(String data);
-
 }

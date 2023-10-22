@@ -17,16 +17,14 @@ import org.cliffc.high_scale_lib.NonBlockingHashMap;
 public class ConfigLoader {
 
   public static final File SAVE_DIR = new File("Server-Essentials");
-  public static final File GLOBAL_CONFIG = new File(
-      SAVE_DIR + File.separator + "global.json");
+  public static final File GLOBAL_CONFIG = new File(SAVE_DIR + File.separator + "global.json");
 
   public static ConfigGlobal loadGlobalConfig() {
     if (GLOBAL_CONFIG.exists()) {
       try {
         ConfigGlobal config =
             GSON.fromJson(
-                Strings.join(Files.readAllLines(GLOBAL_CONFIG.toPath()), '\n'),
-                ConfigGlobal.class);
+                Strings.join(Files.readAllLines(GLOBAL_CONFIG.toPath()), '\n'), ConfigGlobal.class);
         LOG.info("Storage Type: '" + config.storage.storageType + "'");
         LOG.info("Debug Mode: " + config.general.debug);
         ConfigGlobal defaultConfig = new ConfigGlobal();
@@ -74,8 +72,7 @@ public class ConfigLoader {
       String moduleName =
           configInstance.getClass().getDeclaredAnnotation(ModuleConfig.class).module();
       if (!moduleName.isEmpty()) {
-        instances.put(moduleName.toUpperCase(),
-            loadModuleConfig(moduleName, configInstance));
+        instances.put(moduleName.toUpperCase(), loadModuleConfig(moduleName, configInstance));
       }
     }
     LOG.info(moduleConfigs.size() + " module config(s) have been loaded");
@@ -90,8 +87,7 @@ public class ConfigLoader {
    */
   public static Object loadModuleConfig(String moduleName, Object configInstance) {
     File configFile =
-        new File(SAVE_DIR + File.separator + "Modules" + File.separator + moduleName
-            + ".json");
+        new File(SAVE_DIR + File.separator + "Modules" + File.separator + moduleName + ".json");
     if (configFile.exists()) {
       try {
         List<String> json = Files.readAllLines(configFile.toPath());
@@ -117,8 +113,7 @@ public class ConfigLoader {
       }
       try {
         if (configFile.createNewFile()) {
-          Files.write(configFile.toPath(),
-              Collections.singleton(GSON.toJson(configInstance)));
+          Files.write(configFile.toPath(), Collections.singleton(GSON.toJson(configInstance)));
           LOG.debug(
               "Creating default config file for module '"
                   + moduleName

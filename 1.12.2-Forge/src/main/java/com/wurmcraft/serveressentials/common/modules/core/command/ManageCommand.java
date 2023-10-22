@@ -54,7 +54,6 @@ public class ManageCommand {
     boolean status = SECore.dataLoader.get(type, key) != null;
     ChatHelper.send(
         player.sender,
-        status ? player.lang.COMMAND_MANAGE_STATUS
-            : player.lang.COMMAND_MANAGE_STATUS_NEG);
+        status ? player.lang.COMMAND_MANAGE_STATUS : player.lang.COMMAND_MANAGE_STATUS_NEG);
   }
 }

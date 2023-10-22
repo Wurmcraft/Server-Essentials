@@ -46,8 +46,7 @@ public class SpawnCommand {
             .executeCommand(player.sender, "/setSpawn " + rank);
       }
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 
@@ -57,14 +56,13 @@ public class SpawnCommand {
   public void spawnSpecific(ServerPlayer player, String arg) {
     if (!arg.equalsIgnoreCase("set")) {
       if (RankUtils.hasPermission(player.global, "command.spawn." + arg.toLowerCase())) {
-        Location spawn = PlayerUtils.getSpawn(new String[]{arg});
+        Location spawn = PlayerUtils.getSpawn(new String[] {arg});
         if (spawn != null) {
           TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, spawn);
           ChatHelper.send(player.sender, player.lang.COMMAND_SPAWN);
         }
       } else {
-        ChatHelper.send(player.sender,
-            new TextComponentTranslation("commands.generic.permission"));
+        ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
       }
     } else {
       setSpawn(player, "set", "*");

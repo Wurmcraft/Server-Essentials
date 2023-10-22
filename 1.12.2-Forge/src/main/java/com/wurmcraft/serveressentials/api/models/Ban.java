@@ -55,8 +55,7 @@ public class Ban {
     this.ban_status = banStatus;
   }
 
-  public Ban() {
-  }
+  public Ban() {}
 
   @Override
   public String toString() {

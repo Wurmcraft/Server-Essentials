@@ -6,10 +6,15 @@ import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.common.modules.general.event.VanishEvent;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 
-@ModuleCommand(module = "General", name = "Vanish", defaultAliases = {"V"})
+@ModuleCommand(
+    module = "General",
+    name = "Vanish",
+    defaultAliases = {"V"})
 public class VanishCommand {
 
-  @Command(args = {}, usage = {})
+  @Command(
+      args = {},
+      usage = {})
   public void vanish(ServerPlayer sender) {
     boolean inVanish = VanishEvent.vanishedPlayers.contains(sender.player);
     if (inVanish) {

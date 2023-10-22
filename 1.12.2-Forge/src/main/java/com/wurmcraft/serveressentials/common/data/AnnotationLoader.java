@@ -14,12 +14,9 @@ import org.reflections.Reflections;
 
 public class AnnotationLoader {
 
-  private static final Reflections REFLECTIONS = new Reflections(
-      "com.wurmcraft.serveressentials");
+  private static final Reflections REFLECTIONS = new Reflections("com.wurmcraft.serveressentials");
 
-  /**
-   * Loads modules, makes sure they are valid
-   */
+  /** Loads modules, makes sure they are valid */
   public static List<Object> loadModules() {
     Set<Class<?>> clazzes = REFLECTIONS.getTypesAnnotatedWith(Module.class);
     String[] modules = getModuleNames(clazzes);
@@ -46,9 +43,7 @@ public class AnnotationLoader {
     return loadedModules;
   }
 
-  /**
-   * Load module config instances
-   */
+  /** Load module config instances */
   public static List<Object> loadModuleConfigs() {
     Set<Class<?>> clazzes = REFLECTIONS.getTypesAnnotatedWith(ModuleConfig.class);
     List<Object> moduleConfigs = new ArrayList<>();
@@ -76,8 +71,7 @@ public class AnnotationLoader {
   public static Object getModuleConfigInstance(String name) {
     Set<Class<?>> clazzes = REFLECTIONS.getTypesAnnotatedWith(ModuleConfig.class);
     for (Class<?> clazz : clazzes) {
-      if (clazz.getDeclaredAnnotation(ModuleConfig.class).module()
-          .equalsIgnoreCase(name)) {
+      if (clazz.getDeclaredAnnotation(ModuleConfig.class).module().equalsIgnoreCase(name)) {
         try {
           return clazz.newInstance();
         } catch (Exception e) {

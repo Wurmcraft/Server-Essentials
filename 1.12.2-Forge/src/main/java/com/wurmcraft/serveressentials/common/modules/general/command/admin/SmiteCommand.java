@@ -11,28 +11,49 @@ import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 
-@ModuleCommand(module = "General", name = "Smite", defaultAliases = {"Lightning"})
+@ModuleCommand(
+    module = "General",
+    name = "Smite",
+    defaultAliases = {"Lightning"})
 public class SmiteCommand {
 
-  @Command(args = {}, usage = {})
+  @Command(
+      args = {},
+      usage = {})
   public void smiteSelf(ServerPlayer sender) {
-    sender.player.getEntityWorld().addWeatherEffect(
-        new EntityLightningBolt(sender.player.getEntityWorld(),
-            sender.player.getPosition().getX(),
-            sender.player.getPosition().getY(), sender.player.getPosition().getZ(),
-            false));
+    sender
+        .player
+        .getEntityWorld()
+        .addWeatherEffect(
+            new EntityLightningBolt(
+                sender.player.getEntityWorld(),
+                sender.player.getPosition().getX(),
+                sender.player.getPosition().getY(),
+                sender.player.getPosition().getZ(),
+                false));
     ChatHelper.send(sender.sender, sender.lang.COMMAND_SMITE);
   }
 
-  @Command(args = {CommandArgument.PLAYER}, usage = {"Player"})
+  @Command(
+      args = {CommandArgument.PLAYER},
+      usage = {"Player"})
   public void smitePlayer(ServerPlayer sender, EntityPlayer player) {
-    player.getEntityWorld().addWeatherEffect(
-        new EntityLightningBolt(player.getEntityWorld(), player.getPosition().getX(),
-            player.getPosition().getY(), player.getPosition().getZ(), false));
-    ChatHelper.send(sender.sender,
-        sender.lang.COMMAND_SMITE_OTHER.replaceAll("\\{@PLAYER@}",
-            ChatHelper.getName(player,
-                SECore.dataLoader.get(DataType.ACCOUNT,
-                    player.getGameProfile().getId().toString(), new Account()))));
+    player
+        .getEntityWorld()
+        .addWeatherEffect(
+            new EntityLightningBolt(
+                player.getEntityWorld(),
+                player.getPosition().getX(),
+                player.getPosition().getY(),
+                player.getPosition().getZ(),
+                false));
+    ChatHelper.send(
+        sender.sender,
+        sender.lang.COMMAND_SMITE_OTHER.replaceAll(
+            "\\{@PLAYER@}",
+            ChatHelper.getName(
+                player,
+                SECore.dataLoader.get(
+                    DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account()))));
   }
 }

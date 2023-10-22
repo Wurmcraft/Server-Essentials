@@ -31,8 +31,7 @@ public class SkullCommand {
     stack.setTagCompound(new NBTTagCompound());
     stack.getTagCompound().setTag("SkullOwner", new NBTTagString(name));
     if (player.player.inventory.addItemStackToInventory(stack)) {
-      ChatHelper.send(player.sender,
-          player.lang.COMMAND_SKULL.replaceAll("\\{@PLAYER@}", name));
+      ChatHelper.send(player.sender, player.lang.COMMAND_SKULL.replaceAll("\\{@PLAYER@}", name));
     }
   }
 }

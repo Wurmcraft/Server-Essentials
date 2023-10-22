@@ -25,8 +25,9 @@ public class VanishEvent {
   @SubscribeEvent
   public void onUpdate(WorldTickEvent e) {
     if (update == 0) {
-      PotionEffect effect = new PotionEffect(
-          Potion.getPotionFromResourceLocation("invisibility"), 200, 2, true, false);
+      PotionEffect effect =
+          new PotionEffect(
+              Potion.getPotionFromResourceLocation("invisibility"), 200, 2, true, false);
       for (EntityPlayer player : vanishedPlayers) {
         player.addPotionEffect(effect);
       }
@@ -64,8 +65,7 @@ public class VanishEvent {
           .getTrackingPlayers(player)
           .forEach(
               tp -> {
-                ((EntityPlayerMP) player).connection.sendPacket(
-                    new SPacketSpawnPlayer(tp));
+                ((EntityPlayerMP) player).connection.sendPacket(new SPacketSpawnPlayer(tp));
               });
     } else {
       FMLCommonHandler.instance()
@@ -73,10 +73,15 @@ public class VanishEvent {
           .getWorld(player.dimension)
           .getEntityTracker()
           .untrack(player);
-      for (EntityPlayer tp : FMLCommonHandler.instance().getMinecraftServerInstance()
-          .getWorld(player.dimension).getEntityTracker().getTrackingPlayers(player)) {
-        Account account = SECore.dataLoader.get(DataType.ACCOUNT,
-            tp.getGameProfile().getId().toString(), new Account());
+      for (EntityPlayer tp :
+          FMLCommonHandler.instance()
+              .getMinecraftServerInstance()
+              .getWorld(player.dimension)
+              .getEntityTracker()
+              .getTrackingPlayers(player)) {
+        Account account =
+            SECore.dataLoader.get(
+                DataType.ACCOUNT, tp.getGameProfile().getId().toString(), new Account());
         if (!RankUtils.hasPermission(account, "command.vanish.see")) {
           ((EntityPlayerMP) player).connection.sendPacket(new SPacketSpawnPlayer(tp));
         }

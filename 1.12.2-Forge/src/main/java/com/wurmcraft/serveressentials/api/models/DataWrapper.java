@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -33,8 +32,7 @@ public class DataWrapper {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    return type.equalsIgnoreCase(((DataWrapper) o).type) && data.equals(
-        ((DataWrapper) o).data);
+    return type.equalsIgnoreCase(((DataWrapper) o).type) && data.equals(((DataWrapper) o).data);
   }
 
   @Override

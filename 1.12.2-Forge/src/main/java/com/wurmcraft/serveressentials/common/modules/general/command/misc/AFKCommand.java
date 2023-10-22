@@ -15,7 +15,6 @@ public class AFKCommand {
       args = {},
       usage = {})
   public void afk(ServerPlayer player) {
-    GeneralEvents.afk(
-        player.player, !GeneralEvents.afkPlayers.contains(player.player));
+    GeneralEvents.afk(player.player, !GeneralEvents.afkPlayers.contains(player.player));
   }
 }

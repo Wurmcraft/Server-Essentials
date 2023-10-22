@@ -13,9 +13,17 @@ public class CustomCommandJson {
   public String[] currencyCost;
   public boolean canConsoleRun;
 
-  public CustomCommandJson(String name, String[] aliases, CommandFunc[] functions,
-      String minRank, String permissionNode, boolean secure, String[] rankCooldown,
-      String[] rankDelay, String[] currencyCost, boolean canConsoleRun) {
+  public CustomCommandJson(
+      String name,
+      String[] aliases,
+      CommandFunc[] functions,
+      String minRank,
+      String permissionNode,
+      boolean secure,
+      String[] rankCooldown,
+      String[] rankDelay,
+      String[] currencyCost,
+      boolean canConsoleRun) {
     this.name = name;
     this.aliases = aliases;
     this.functions = functions;
@@ -40,7 +48,8 @@ public class CustomCommandJson {
   }
 
   public enum CommandType {
-    MESSAGE, COMMAND, CONSOLE_COMMAND,
+    MESSAGE,
+    COMMAND,
+    CONSOLE_COMMAND,
   }
-
 }

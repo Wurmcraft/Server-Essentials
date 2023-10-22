@@ -61,8 +61,7 @@ public class FlyCommand {
                 "\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
       }
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 }

@@ -38,8 +38,7 @@ public class HomeCommand {
   public void defaultHome(ServerPlayer player) {
     Home home =
         PlayerUtils.getHome(
-            player.local,
-            ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName);
+            player.local, ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName);
     if (home != null) {
       home(player, home);
     } else {
@@ -56,8 +55,7 @@ public class HomeCommand {
       usage = {"name"})
   public void home(ServerPlayer player, Home home) {
     if (home != null) {
-      if (TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, home,
-          true)) {
+      if (TeleportUtils.teleportTo((EntityPlayerMP) player.player, player.local, home, true)) {
         ChatHelper.send(
             player.sender, player.lang.COMMAND_HOME.replaceAll("\\{@NAME@}", home.name));
       } else {
@@ -131,16 +129,14 @@ public class HomeCommand {
                 if (TeleportUtils.teleportTo(
                     (EntityPlayerMP) player.player, player.local, home, true)) {
                   ChatHelper.send(
-                      player.sender,
-                      player.lang.COMMAND_HOME.replaceAll("%NAME%", home.name));
+                      player.sender, player.lang.COMMAND_HOME.replaceAll("%NAME%", home.name));
                 } else {
                   ChatHelper.send(
                       player.sender,
                       player.lang.TELEPORT_TIMER.replaceAll(
                           "%TIME%",
                           CommandUtils.displayTime(
-                              (System.currentTimeMillis() - player.local.teleportTimer)
-                                  / 1000)));
+                              (System.currentTimeMillis() - player.local.teleportTimer) / 1000)));
                 }
                 return;
               }
@@ -149,17 +145,14 @@ public class HomeCommand {
           }
         } else {
           ChatHelper.send(
-              player.sender,
-              player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
+              player.sender, player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
         }
       } else {
         ChatHelper.send(
-            player.sender,
-            player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
+            player.sender, player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", otherPlayer));
       }
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 
@@ -182,15 +175,11 @@ public class HomeCommand {
                     HoverEvent.Action.SHOW_TEXT,
                     new TextComponentString(
                         lang.HOME_OVER
-                            .replaceAll("\\{@X@}",
-                                Integer.toString((int) Math.round(home.x)))
-                            .replaceAll("\\{@Y@}",
-                                Integer.toString((int) Math.round(home.y)))
-                            .replaceAll("\\{@Z@}",
-                                Integer.toString((int) Math.round(home.z)))
+                            .replaceAll("\\{@X@}", Integer.toString((int) Math.round(home.x)))
+                            .replaceAll("\\{@Y@}", Integer.toString((int) Math.round(home.y)))
+                            .replaceAll("\\{@Z@}", Integer.toString((int) Math.round(home.z)))
                             .replaceAll("\\{@DIM@}", Integer.toString(home.dim)))))
-            .setClickEvent(
-                new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/home " + home.name)));
+            .setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/home " + home.name)));
     return homeInfo;
   }
 }

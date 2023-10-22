@@ -19,7 +19,6 @@ public class KillCommand {
     otherPlayer.setDead();
     ChatHelper.send(
         player.sender,
-        player.lang.COMMAND_KILL.replaceAll("\\{@PLAYER@}",
-            otherPlayer.getDisplayNameString()));
+        player.lang.COMMAND_KILL.replaceAll("\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
   }
 }

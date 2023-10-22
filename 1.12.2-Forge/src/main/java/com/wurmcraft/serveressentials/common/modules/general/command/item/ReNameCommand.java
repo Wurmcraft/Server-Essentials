@@ -21,8 +21,7 @@ public class ReNameCommand {
         .player
         .getHeldItemMainhand()
         .setStackDisplayName(
-            player.player.getHeldItemMainhand().getItem().getRegistryName()
-                .getResourcePath());
+            player.player.getHeldItemMainhand().getItem().getRegistryName().getResourcePath());
     ChatHelper.send(player.sender, player.lang.COMMAND_RENAME_WIPE);
   }
 
@@ -30,10 +29,8 @@ public class ReNameCommand {
       args = {CommandArgument.STRING},
       usage = {"name"})
   public void nickItem(ServerPlayer player, String name) {
-    player.player.getHeldItemMainhand()
-        .setStackDisplayName(ChatHelper.replaceColor(name));
-    ChatHelper.send(player.sender,
-        player.lang.COMMAND_RENAME.replaceAll("\\{@NAME@}", name));
+    player.player.getHeldItemMainhand().setStackDisplayName(ChatHelper.replaceColor(name));
+    ChatHelper.send(player.sender, player.lang.COMMAND_RENAME.replaceAll("\\{@NAME@}", name));
   }
 
   @Command(

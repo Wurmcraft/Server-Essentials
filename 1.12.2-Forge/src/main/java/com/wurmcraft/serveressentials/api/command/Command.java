@@ -9,9 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Command {
 
-  /**
-   * Arguments required for the requested command
-   */
+  /** Arguments required for the requested command */
   CommandArgument[] args();
 
   String[] usage();

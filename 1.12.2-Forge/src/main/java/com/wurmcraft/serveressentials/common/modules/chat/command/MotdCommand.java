@@ -52,8 +52,7 @@ public class MotdCommand {
       }
       ChatHelper.send(player.sender, player.lang.COMMAND_MOTD);
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 }

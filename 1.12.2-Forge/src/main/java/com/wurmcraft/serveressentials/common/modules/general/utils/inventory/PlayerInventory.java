@@ -115,8 +115,7 @@ public class PlayerInventory extends InventoryBasic {
         super.markDirty();
         if (allowUpdate) {
           for (int id = 0; id < owner.getInventoryEnderChest().getSizeInventory(); ++id) {
-            owner.getInventoryEnderChest()
-                .setInventorySlotContents(id, getStackInSlot(id));
+            owner.getInventoryEnderChest().setInventorySlotContents(id, getStackInSlot(id));
           }
         }
       }

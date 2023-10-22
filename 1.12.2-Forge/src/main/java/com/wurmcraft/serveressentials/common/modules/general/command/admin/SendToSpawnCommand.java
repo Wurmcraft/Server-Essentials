@@ -1,6 +1,5 @@
 package com.wurmcraft.serveressentials.common.modules.general.command.admin;
 
-
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.command.Command;
 import com.wurmcraft.serveressentials.api.command.CommandArgument;
@@ -29,25 +28,31 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 @ModuleCommand(module = "General", name = "SendToSpawn")
 public class SendToSpawnCommand {
 
-
-  @Command(args = {CommandArgument.STRING}, usage = "uuid")
+  @Command(
+      args = {CommandArgument.STRING},
+      usage = "uuid")
   public void sendToSpawn(ServerPlayer player, String uuid) {
-    for (EntityPlayerMP p : FMLCommonHandler.instance().getMinecraftServerInstance()
-        .getPlayerList().getPlayers()) {
+    for (EntityPlayerMP p :
+        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
       if (p.getGameProfile().getId().toString().equals(uuid)) {
         sendToSpawn((ServerPlayer) player.sender, p);
         return;
       }
     }
-    File playerFile = new File(
-        FMLCommonHandler.instance().getMinecraftServerInstance().getDataDirectory(),
-        File.separator + FMLCommonHandler.instance().getMinecraftServerInstance()
-            .getFolderName() + File.separator + "playerdata" + File.separator + uuid
-            + ".dat");
+    File playerFile =
+        new File(
+            FMLCommonHandler.instance().getMinecraftServerInstance().getDataDirectory(),
+            File.separator
+                + FMLCommonHandler.instance().getMinecraftServerInstance().getFolderName()
+                + File.separator
+                + "playerdata"
+                + File.separator
+                + uuid
+                + ".dat");
     if (playerFile.exists()) {
       try {
-        NBTTagCompound playerNBT = CompressedStreamTools
-            .readCompressed(new FileInputStream(playerFile));
+        NBTTagCompound playerNBT =
+            CompressedStreamTools.readCompressed(new FileInputStream(playerFile));
         Account account = PlayerUtils.getLatestAccount(uuid);
         NBTTagList spawnPos = new NBTTagList();
         Location spawn = PlayerUtils.getSpawn(account.rank);
@@ -55,29 +60,33 @@ public class SendToSpawnCommand {
         spawnPos.appendTag(new NBTTagDouble(spawn.y));
         spawnPos.appendTag(new NBTTagDouble(spawn.z));
         playerNBT.setTag("Pos", spawnPos);
-        CompressedStreamTools
-            .writeCompressed(playerNBT, new FileOutputStream(playerFile));
-        ChatHelper.send(player.sender,
-            player.lang.COMMAND_SENDTOSPAWN.replaceAll("\\{@PLAYER@}",
-                UsernameCache.getLastKnownUsername(UUID.fromString(uuid))));
+        CompressedStreamTools.writeCompressed(playerNBT, new FileOutputStream(playerFile));
+        ChatHelper.send(
+            player.sender,
+            player.lang.COMMAND_SENDTOSPAWN.replaceAll(
+                "\\{@PLAYER@}", UsernameCache.getLastKnownUsername(UUID.fromString(uuid))));
       } catch (Exception e) {
         e.printStackTrace();
       }
     } else {
-      ChatHelper.send(player.sender,
-          player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", uuid));
+      ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", uuid));
     }
   }
 
-  @Command(args = {CommandArgument.PLAYER}, usage = {"player"})
+  @Command(
+      args = {CommandArgument.PLAYER},
+      usage = {"player"})
   public void sendToSpawn(ServerPlayer sender, EntityPlayer player) {
-    TeleportUtils.teleportTo((EntityPlayerMP) player,
-        SECore.dataLoader.get(DataType.LOCAL_ACCOUNT,
-            player.getGameProfile().getId().toString(), new LocalAccount()),
-        PlayerUtils.getSpawn(SECore.dataLoader.get(DataType.ACCOUNT,
-            player.getGameProfile().getId().toString(), new Account()).rank));
-    ChatHelper.send(sender.sender,
-        sender.lang.COMMAND_SENDTOSPAWN.replaceAll("\\{@PLAYER@}",
-            player.getDisplayNameString()));
+    TeleportUtils.teleportTo(
+        (EntityPlayerMP) player,
+        SECore.dataLoader.get(
+            DataType.LOCAL_ACCOUNT, player.getGameProfile().getId().toString(), new LocalAccount()),
+        PlayerUtils.getSpawn(
+            SECore.dataLoader.get(
+                    DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account())
+                .rank));
+    ChatHelper.send(
+        sender.sender,
+        sender.lang.COMMAND_SENDTOSPAWN.replaceAll("\\{@PLAYER@}", player.getDisplayNameString()));
   }
 }

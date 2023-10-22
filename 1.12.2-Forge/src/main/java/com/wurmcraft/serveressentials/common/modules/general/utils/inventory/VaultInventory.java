@@ -149,13 +149,11 @@ public class VaultInventory extends InventoryBasic {
   public void setInventorySlotContents(int index, ItemStack stack) {
     if (index > 8 && index < (45 * vault.maxPages) + 9) {
       if (vault.items.length > index) { // place into existing vault
-        vault.items[index - 9 + (page * 45)] = ServerEssentials.stackConverter.toString(
-            stack);
+        vault.items[index - 9 + (page * 45)] = ServerEssentials.stackConverter.toString(stack);
         markDirty();
       } else { // Expand Vault to fit new items
         vault.items = Arrays.copyOf(vault.items, 45 * (index / 45));
-        vault.items[index - 9 + +(page * 45)] = ServerEssentials.stackConverter.toString(
-            stack);
+        vault.items[index - 9 + +(page * 45)] = ServerEssentials.stackConverter.toString(stack);
         markDirty();
       }
       super.markDirty();
@@ -188,8 +186,7 @@ public class VaultInventory extends InventoryBasic {
           StandardOpenOption.WRITE,
           StandardOpenOption.TRUNCATE_EXISTING);
     } catch (Exception e) {
-      LOG.warn(
-          "Failed to save vault '" + vault.name + "' for user '" + vault.ownerUUID + "'");
+      LOG.warn("Failed to save vault '" + vault.name + "' for user '" + vault.ownerUUID + "'");
     }
   }
 
@@ -267,8 +264,7 @@ public class VaultInventory extends InventoryBasic {
                 + ".json");
     if (save.exists()) {
       try {
-        return GSON.fromJson(String.join("\n", Files.readAllLines(save.toPath())),
-            Vault.class);
+        return GSON.fromJson(String.join("\n", Files.readAllLines(save.toPath())), Vault.class);
       } catch (Exception e) {
         LOG.warn("Failed to load vault 'default' for '" + ownerUUID + "'");
         e.printStackTrace();

@@ -25,8 +25,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 public class KitCommand {
 
   public static String[] INVALID_KIT_NAMES =
-      new String[]{"create", "c", "delete", "del", "d", "remove", "rem", "r", "list",
-          "l'"};
+      new String[] {"create", "c", "delete", "del", "d", "remove", "rem", "r", "list", "l'"};
 
   @Command(
       args = {CommandArgument.STRING},
@@ -37,16 +36,16 @@ public class KitCommand {
     for (String blacklist : INVALID_KIT_NAMES) {
       if (name.equalsIgnoreCase(blacklist)) {
         ChatHelper.send(
-            player.sender,
-            player.lang.COMMAND_KIT_INVALID.replaceAll("\\{@NAME@}", name));
+            player.sender, player.lang.COMMAND_KIT_INVALID.replaceAll("\\{@NAME@}", name));
         return;
       }
     }
     List<String> items = new ArrayList<>();
     String[] armor = new String[4];
     for (int index = 0; index < 4; index++) {
-      armor[index] = ServerEssentials.stackConverter.toString(
-          player.player.inventory.armorInventory.get(index));
+      armor[index] =
+          ServerEssentials.stackConverter.toString(
+              player.player.inventory.armorInventory.get(index));
     }
     for (ItemStack item : player.player.inventory.mainInventory) {
       items.add(ServerEssentials.stackConverter.toString(item));
@@ -54,8 +53,7 @@ public class KitCommand {
     Kit kit = new Kit(name, items.toArray(new String[0]), armor);
     SECore.dataLoader.register(DataLoader.DataType.KIT, kit.name, kit);
     ChatHelper.send(
-        player.sender,
-        player.lang.COMMAND_KIT_CREATED.replaceAll("\\{@NAME@}", kit.name));
+        player.sender, player.lang.COMMAND_KIT_CREATED.replaceAll("\\{@NAME@}", kit.name));
   }
 
   @Command(
@@ -67,15 +65,13 @@ public class KitCommand {
   public void list(ServerPlayer player) {
     StringBuilder builder = new StringBuilder();
     try {
-      for (Kit kit : SECore.dataLoader.getFromKey(DataLoader.DataType.KIT, new Kit())
-          .values()) {
+      for (Kit kit : SECore.dataLoader.getFromKey(DataLoader.DataType.KIT, new Kit()).values()) {
         builder.append(kit.name).append(", ");
       }
     } catch (Exception e) {
     }
     ChatHelper.send(
-        player.sender,
-        player.lang.COMMAND_KIT_LIST.replaceAll("\\{@NAME@}", builder.toString()));
+        player.sender, player.lang.COMMAND_KIT_LIST.replaceAll("\\{@NAME@}", builder.toString()));
   }
 
   @Command(
@@ -89,8 +85,7 @@ public class KitCommand {
       SECore.dataLoader.delete(DataLoader.DataType.KIT, kit.name, false);
       SECore.dataLoader.delete(DataLoader.DataType.KIT, kit.name, true);
       ChatHelper.send(
-          player.sender,
-          player.lang.COMMAND_KIT_DELETE.replaceAll("\\{@NAME@}", kit.name));
+          player.sender, player.lang.COMMAND_KIT_DELETE.replaceAll("\\{@NAME@}", kit.name));
     }
   }
 
@@ -100,8 +95,7 @@ public class KitCommand {
   public void kit(ServerPlayer player, Kit kit) {
     if (!RankUtils.isGreaterThan(kit.minRank, player.global.rank)) {
       if (RankUtils.hasPermission(player.global, "command.kit." + kit.name)) {
-        if ((player.local.kitUsage != null && player.local.kitUsage.containsKey(
-            kit.name))) {
+        if ((player.local.kitUsage != null && player.local.kitUsage.containsKey(kit.name))) {
           if (player.local.kitUsage.get(kit.name) < System.currentTimeMillis()) {
             giveKit(player.player, kit, player.global, player.local);
           } else {
@@ -117,17 +111,14 @@ public class KitCommand {
           giveKit(player.player, kit, player.global, player.local);
         }
       } else {
-        ChatHelper.send(player.sender,
-            new TextComponentTranslation("commands.generic.permission"));
+        ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
       }
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 
-  public static void giveKit(EntityPlayer player, Kit kit, Account global,
-      LocalAccount account) {
+  public static void giveKit(EntityPlayer player, Kit kit, Account global, LocalAccount account) {
     // Give kit items to player
     List<ItemStack> unsortedItems = new ArrayList<>();
     for (int index = 0; index < kit.items.length; index++) {
@@ -165,8 +156,7 @@ public class KitCommand {
     }
     account.kitUsage.put(
         kit.name,
-        System.currentTimeMillis() + CommandUtils.getTimeFromConfig(global.rank,
-            kit.rankCooldown));
+        System.currentTimeMillis() + CommandUtils.getTimeFromConfig(global.rank, kit.rankCooldown));
     SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, account.uuid, account);
   }
 }

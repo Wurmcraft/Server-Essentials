@@ -49,7 +49,8 @@ public class SECommand extends CommandBase {
   public HashMap<CommandArgument[], Method> arguments;
   public HashMap<String, Method> subCommandArguments;
 
-  public static NonBlockingHashSet<DelayedCommand> delayedCommands = new NonBlockingHashSet<DelayedCommand>();
+  public static NonBlockingHashSet<DelayedCommand> delayedCommands =
+      new NonBlockingHashSet<DelayedCommand>();
 
   public SECommand(CommandConfig config, Class<?> instance)
       throws NullPointerException, InstantiationException, IllegalAccessException {
@@ -58,9 +59,9 @@ public class SECommand extends CommandBase {
     if (config == null || config.name == null || config.name.isEmpty()) {
       throw new NullPointerException("Invalid Command Name, Unable to make command");
     }
-    if (!instance.isAnnotationPresent(ModuleCommand.class) && !instance.getAnnotation(
-        ModuleCommand.class).name().isEmpty() && !instance.getAnnotation(
-        ModuleCommand.class).module().isEmpty()) {
+    if (!instance.isAnnotationPresent(ModuleCommand.class)
+        && !instance.getAnnotation(ModuleCommand.class).name().isEmpty()
+        && !instance.getAnnotation(ModuleCommand.class).module().isEmpty()) {
       throw new NullPointerException("Invalid Command Class, Unable to make command");
     }
     for (Method method : instance.getDeclaredMethods()) {
@@ -120,8 +121,7 @@ public class SECommand extends CommandBase {
 
   public static boolean isValidArguments(CommandArgument[] arguments) {
     for (int index = 0; index < arguments.length; index++) {
-      if (arguments[index] == CommandArgument.STRING_ARR
-          && index != arguments.length - 1) {
+      if (arguments[index] == CommandArgument.STRING_ARR && index != arguments.length - 1) {
         return false;
       }
     }
@@ -146,8 +146,7 @@ public class SECommand extends CommandBase {
       userData =
           new ServerPlayer(
               (EntityPlayer) sender,
-              SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, uuid,
-                  new LocalAccount()),
+              SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, uuid, new LocalAccount()),
               SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid, new Account()));
       if (!config.enabled) {
         ChatHelper.send(sender, userData.lang.DISABLED);
@@ -156,8 +155,7 @@ public class SECommand extends CommandBase {
       // Check Min Rank
       if (!config.minRank.isEmpty()
           && !RankUtils.isGreaterThan(config.minRank, userData.global.rank)) {
-        ChatHelper.send(sender,
-            new TextComponentTranslation("commands.generic.permission"));
+        ChatHelper.send(sender, new TextComponentTranslation("commands.generic.permission"));
         return;
       }
       // Currency Check
@@ -171,11 +169,13 @@ public class SECommand extends CommandBase {
       }
       // Check for trusted user
       if (config.secure && !TrustedList.trustedUsers.contains(uuid)) {
-        ChatHelper.send(sender,
-            new TextComponentTranslation("commands.generic.permission"));
+        ChatHelper.send(sender, new TextComponentTranslation("commands.generic.permission"));
         LOG.debug(
-            "User '" + ((EntityPlayer) sender).getDisplayNameString() + "' tried to run '"
-                + config.name + "' however its a secure command, preventing");
+            "User '"
+                + ((EntityPlayer) sender).getDisplayNameString()
+                + "' tried to run '"
+                + config.name
+                + "' however its a secure command, preventing");
       }
     } else {
       userData = new ServerPlayer(sender);
@@ -184,8 +184,7 @@ public class SECommand extends CommandBase {
         return;
       }
       if (config.secure) {
-        ChatHelper.send(sender,
-            new TextComponentTranslation("commands.generic.permission"));
+        ChatHelper.send(sender, new TextComponentTranslation("commands.generic.permission"));
         return;
       }
       runCommand(userData, sender, args, config);
@@ -198,28 +197,37 @@ public class SECommand extends CommandBase {
     if (rankDelay == 0) {
       if (!(userData.sender instanceof EntityPlayer)
           || !userData.local.commandUsage.containsKey(config.name)
-          || Instant.now().getEpochSecond() > userData.local.commandUsage.get(
-          config.name)) {
+          || Instant.now().getEpochSecond() > userData.local.commandUsage.get(config.name)) {
         runCommand(userData, sender, args, config);
       } else {
-        ChatHelper.send(sender, userData.lang.COMMAND_COOLDOWN.replaceAll("\\{@TIME@}",
-            "" + (userData.local.commandUsage.get(config.name) - Instant.now()
-                .getEpochSecond())));
+        ChatHelper.send(
+            sender,
+            userData.lang.COMMAND_COOLDOWN.replaceAll(
+                "\\{@TIME@}",
+                ""
+                    + (userData.local.commandUsage.get(config.name)
+                        - Instant.now().getEpochSecond())));
       }
     } else {
-      DelayedCommand delayedCommand = new DelayedCommand(userData, sender, args, config,
-          this, sender.getCommandSenderEntity() instanceof EntityPlayer
-          ? userData.player.getPosition() : null,
-          Instant.now().getEpochSecond() + rankDelay);
+      DelayedCommand delayedCommand =
+          new DelayedCommand(
+              userData,
+              sender,
+              args,
+              config,
+              this,
+              sender.getCommandSenderEntity() instanceof EntityPlayer
+                  ? userData.player.getPosition()
+                  : null,
+              Instant.now().getEpochSecond() + rankDelay);
       delayedCommands.add(delayedCommand);
-      ChatHelper.send(sender,
-          userData.lang.COMMAND_DELAY.replaceAll("\\{@TIME@}", "" + rankDelay));
+      ChatHelper.send(sender, userData.lang.COMMAND_DELAY.replaceAll("\\{@TIME@}", "" + rankDelay));
       runCommand(userData, sender, args, config);
     }
   }
 
-  public void runCommand(ServerPlayer userData, ICommandSender sender, String[] args,
-      CommandConfig config) {
+  public void runCommand(
+      ServerPlayer userData, ICommandSender sender, String[] args, CommandConfig config) {
     // Run Command
     if (runMethod(userData, args)) {
       if (!config.currencyCost.isEmpty()) {
@@ -228,11 +236,11 @@ public class SECommand extends CommandBase {
         }
       }
       if (userData.sender instanceof EntityPlayer) {
-        userData.local.commandUsage.put(config.name,
-            Instant.now().getEpochSecond() + CommandUtils.getLowest(userData.global.rank,
-                config.rankCooldown));
-        SECore.dataLoader.update(DataType.LOCAL_ACCOUNT, userData.local.uuid,
-            userData.local);
+        userData.local.commandUsage.put(
+            config.name,
+            Instant.now().getEpochSecond()
+                + CommandUtils.getLowest(userData.global.rank, config.rankCooldown));
+        SECore.dataLoader.update(DataType.LOCAL_ACCOUNT, userData.local.uuid, userData.local);
       }
     } else {
       ChatHelper.send(sender, getUsage(sender));
@@ -296,21 +304,19 @@ public class SECommand extends CommandBase {
       for (String arg : subCommandArguments.keySet()) {
         if (arg.equalsIgnoreCase(args[0])
             && (args.length - 1)
-            == subCommandArguments
-            .get(arg)
-            .getDeclaredAnnotation(Command.class)
-            .args()
-            .length) {
+                == subCommandArguments
+                    .get(arg)
+                    .getDeclaredAnnotation(Command.class)
+                    .args()
+                    .length) {
           Object[] convertedArgs =
               convertArguments(
                   player,
-                  subCommandArguments.get(arg).getDeclaredAnnotation(Command.class)
-                      .args(),
+                  subCommandArguments.get(arg).getDeclaredAnnotation(Command.class).args(),
                   Arrays.copyOfRange(args, 1, args.length));
           if (convertedArgs != null
-              || subCommandArguments.get(arg).getDeclaredAnnotation(Command.class)
-              .args().length
-              == 0) {
+              || subCommandArguments.get(arg).getDeclaredAnnotation(Command.class).args().length
+                  == 0) {
             return subCommandArguments.get(arg);
           }
         }
@@ -320,8 +326,7 @@ public class SECommand extends CommandBase {
     for (CommandArgument[] testArgs : arguments.keySet()) {
       // Size Match or has String Array
       if (testArgs.length == args.length
-          || testArgs.length > 0
-          && testArgs[testArgs.length - 1] == CommandArgument.STRING_ARR) {
+          || testArgs.length > 0 && testArgs[testArgs.length - 1] == CommandArgument.STRING_ARR) {
         Object[] convertedArgs = convertArguments(player, testArgs, args);
         if (convertedArgs != null) {
           return arguments.get(testArgs);
@@ -410,12 +415,12 @@ public class SECommand extends CommandBase {
 
   public EntityPlayer getPlayer(String name) {
     for (EntityPlayer player :
-        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
-            .getPlayers()) {
-      Account account = SECore.dataLoader.get(DataType.ACCOUNT,
-          player.getGameProfile().getId().toString(), new Account());
-      if (player.getDisplayNameString().equalsIgnoreCase(name) || name.equalsIgnoreCase(
-          ChatHelper.getName(player, account))) {
+        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+      Account account =
+          SECore.dataLoader.get(
+              DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account());
+      if (player.getDisplayNameString().equalsIgnoreCase(name)
+          || name.equalsIgnoreCase(ChatHelper.getName(player, account))) {
         return player;
       }
     }
@@ -449,20 +454,16 @@ public class SECommand extends CommandBase {
   public Currency getCurrency(String name) {
     // Attempt to get currency (match)
     for (String currency :
-        SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency())
-            .keySet()) {
+        SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency()).keySet()) {
       if (name.equalsIgnoreCase(currency)) {
-        return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, currency,
-            new Currency());
+        return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, currency, new Currency());
       }
     }
     // Attempt to find based on starting match
     for (String currency :
-        SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency())
-            .keySet()) {
+        SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency()).keySet()) {
       if (currency.startsWith(name)) {
-        return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, currency,
-            new Currency());
+        return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, currency, new Currency());
       }
     }
     return null;
@@ -476,17 +477,14 @@ public class SECommand extends CommandBase {
     }
     // Attempt to get currency (match)
     for (String channel :
-        SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel())
-            .keySet()) {
+        SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel()).keySet()) {
       if (name.equalsIgnoreCase(channel)) {
-        return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, channel,
-            new Channel());
+        return SECore.dataLoader.get(DataLoader.DataType.CURRENCY, channel, new Channel());
       }
     }
     // Attempt to find based on starting match
     for (String channel :
-        SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel())
-            .keySet()) {
+        SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel()).keySet()) {
       if (channel.startsWith(name)) {
         return SECore.dataLoader.get(DataLoader.DataType.CHANNEL, channel, new Channel());
       }
@@ -522,8 +520,9 @@ public class SECommand extends CommandBase {
   public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
     if (sender instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) sender;
-      Account account = SECore.dataLoader.get(DataType.ACCOUNT,
-          player.getGameProfile().getId().toString(), new Account());
+      Account account =
+          SECore.dataLoader.get(
+              DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account());
       return RankUtils.hasPermission(account, config.permissionNode);
     }
     return !config.secure;
@@ -531,8 +530,7 @@ public class SECommand extends CommandBase {
 
   @Override
   public List<String> getTabCompletions(
-      MinecraftServer server, ICommandSender sender, String[] args,
-      @Nullable BlockPos targetPos) {
+      MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
     int currentIndex = 0;
     CommandArgument arg;
     if (!args[0].isEmpty()) {
@@ -551,8 +549,7 @@ public class SECommand extends CommandBase {
         tabComplete.addAll(
             CommandUtils.predict(
                 args[currentIndex],
-                CommandUtils.generatePossibleAutoFill(sender, arg,
-                    command.usage()[currentIndex])));
+                CommandUtils.generatePossibleAutoFill(sender, arg, command.usage()[currentIndex])));
       }
     }
     if (args[0].isEmpty()) {
@@ -561,8 +558,7 @@ public class SECommand extends CommandBase {
       }
     } else if (subCommandArguments.containsKey(args[0].toLowerCase())) {
       Command command =
-          subCommandArguments.get(args[0].toLowerCase())
-              .getDeclaredAnnotation(Command.class);
+          subCommandArguments.get(args[0].toLowerCase()).getDeclaredAnnotation(Command.class);
       if (command.args().length > (currentIndex - 1)) {
         arg = command.args()[currentIndex - 1];
         tabComplete.addAll(

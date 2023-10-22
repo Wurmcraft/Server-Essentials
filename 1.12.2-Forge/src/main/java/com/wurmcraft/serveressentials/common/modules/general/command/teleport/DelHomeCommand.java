@@ -31,8 +31,7 @@ public class DelHomeCommand {
     delHome(
         player,
         PlayerUtils.getHome(
-            player.local,
-            ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName));
+            player.local, ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName));
   }
 
   @Command(
@@ -46,10 +45,8 @@ public class DelHomeCommand {
       }
     }
     player.local.homes = validHomes.toArray(new Home[0]);
-    SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, player.local.uuid,
-        player.local);
-    ChatHelper.send(player.sender,
-        player.lang.COMMAND_DELHOME.replaceAll("\\{@NAME@}", home.name));
+    SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, player.local.uuid, player.local);
+    ChatHelper.send(player.sender, player.lang.COMMAND_DELHOME.replaceAll("\\{@NAME@}", home.name));
   }
 
   @Command(
@@ -57,15 +54,13 @@ public class DelHomeCommand {
       usage = {"player"})
   public void delHomeDefaultOther(ServerPlayer player, EntityPlayer otherPlayer) {
     delHomeDefaultOther(
-        player, otherPlayer,
-        ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName);
+        player, otherPlayer, ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).defaultHomeName);
   }
 
   @Command(
       args = {CommandArgument.PLAYER, CommandArgument.STRING},
       usage = {"player", "name"})
-  public void delHomeDefaultOther(ServerPlayer player, EntityPlayer otherPlayer,
-      String name) {
+  public void delHomeDefaultOther(ServerPlayer player, EntityPlayer otherPlayer, String name) {
     delHomeOffline(player, otherPlayer.getDisplayNameString(), name);
   }
 
@@ -96,8 +91,7 @@ public class DelHomeCommand {
                   .replaceAll("\\{@NAME@}", name)
                   .replaceAll(
                       "\\{@PLAYER@}",
-                      Objects.requireNonNull(
-                          PlayerUtils.getUsernameForInput(offlineUUID))));
+                      Objects.requireNonNull(PlayerUtils.getUsernameForInput(offlineUUID))));
         } else {
           ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND);
         }
@@ -105,8 +99,7 @@ public class DelHomeCommand {
         ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND);
       }
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 }

@@ -29,16 +29,13 @@ public class NickCommand {
   public void nickSelf(ServerPlayer player, String nickname) {
     if (RankUtils.hasPermission(player.global, "command.nick.self")) {
       Account account =
-          SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, player.local.uuid,
-              new Account());
+          SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, player.local.uuid, new Account());
       account.display_name = nickname;
       SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, account.uuid, account);
       ChatHelper.send(
-          player.sender,
-          player.lang.COMMAND_NICK.replaceAll("\\{@NICK@}", account.display_name));
+          player.sender, player.lang.COMMAND_NICK.replaceAll("\\{@NICK@}", account.display_name));
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 
@@ -48,14 +45,12 @@ public class NickCommand {
   public void nickSelfReset(ServerPlayer player) {
     if (RankUtils.hasPermission(player.global, "command.nick.self")) {
       Account account =
-          SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, player.local.uuid,
-              new Account());
+          SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, player.local.uuid, new Account());
       account.display_name = "";
       SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, account.uuid, account);
       ChatHelper.send(player.sender, player.lang.COMMAND_NICK_RESET);
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 
@@ -80,8 +75,7 @@ public class NickCommand {
               .replaceAll("\\{@NICK@}", account.display_name)
               .replaceAll("\\{@PLAYER@}", otherPlayer.getDisplayNameString()));
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 
@@ -103,8 +97,7 @@ public class NickCommand {
           player.lang.COMMAND_NICK_OTHER_RESET.replaceAll(
               "\\{@PLAYER@}}", otherPlayer.getDisplayNameString()));
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 }

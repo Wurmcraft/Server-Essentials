@@ -16,6 +16,5 @@ public class ModuleProtect {
     }
   }
 
-  public void reload() {
-  }
+  public void reload() {}
 }

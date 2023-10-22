@@ -15,8 +15,14 @@ public class DelayedCommand {
   public BlockPos pos;
   public long runAfter;
 
-  public DelayedCommand(ServerPlayer userData, ICommandSender sender, String[] args,
-      CommandConfig config, SECommand seCommand, BlockPos pos, long runAfter) {
+  public DelayedCommand(
+      ServerPlayer userData,
+      ICommandSender sender,
+      String[] args,
+      CommandConfig config,
+      SECommand seCommand,
+      BlockPos pos,
+      long runAfter) {
     this.userData = userData;
     this.sender = sender;
     this.args = args;

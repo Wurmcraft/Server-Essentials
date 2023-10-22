@@ -52,8 +52,7 @@ public class SetSpawnCommand {
       Files.write(
           configFile.toPath(),
           Collections.singleton(GSON.toJson(SECore.moduleConfigs.get("GENERAL"))));
-      ChatHelper.send(player.sender,
-          player.lang.COMMAND_SETSPAWN.replaceAll("\\{@NAME@}", rank));
+      ChatHelper.send(player.sender, player.lang.COMMAND_SETSPAWN.replaceAll("\\{@NAME@}", rank));
     } catch (IOException e) {
       e.printStackTrace();
     }

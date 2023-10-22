@@ -1,6 +1,4 @@
 package com.wurmcraft.serveressentials.common.modules.economy.command;
 
 // TODO Implement
-public class MarketCommand {
-
-}
+public class MarketCommand {}

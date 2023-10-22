@@ -15,27 +15,37 @@ import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.util.Arrays;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
-@ModuleCommand(module = "Economy", name = "Perk", defaultAliases = {"Perks"})
+@ModuleCommand(
+    module = "Economy",
+    name = "Perk",
+    defaultAliases = {"Perks"})
 public class PerkCommand {
 
   public static NonBlockingHashMap<String, PerkCost> perks = new NonBlockingHashMap<>();
 
-  @Command(args = {}, usage = {}, isSubCommand = true, canConsoleUse = true)
+  @Command(
+      args = {},
+      usage = {},
+      isSubCommand = true,
+      canConsoleUse = true)
   public void list(ServerPlayer player) {
     ChatHelper.send(player.sender, player.lang.SPACER);
     for (String name : perks.keySet()) {
-      ChatHelper.send(player.sender,
-          player.lang.COMMAND_PERK_LIST_PERK.replaceAll("\\{@NAME@}", name));
+      ChatHelper.send(
+          player.sender, player.lang.COMMAND_PERK_LIST_PERK.replaceAll("\\{@NAME@}", name));
     }
     ChatHelper.send(player.sender, player.lang.SPACER);
   }
 
-  @Command(args = {CommandArgument.STRING}, usage = {
-      "perk"}, isSubCommand = true, canConsoleUse = false)
+  @Command(
+      args = {CommandArgument.STRING},
+      usage = {"perk"},
+      isSubCommand = true,
+      canConsoleUse = false)
   public void buy(ServerPlayer player, String perk) {
     if (perk == null) {
-      ChatHelper.send(player.sender,
-          player.lang.COMMAND_PERK_NONE.replaceAll("\\{@NAME@}", "" + perk));
+      ChatHelper.send(
+          player.sender, player.lang.COMMAND_PERK_NONE.replaceAll("\\{@NAME@}", "" + perk));
       return;
     }
     int currentLevel = PlayerUtils.getPerkLevel(player.global, perk.toLowerCase());
@@ -46,10 +56,11 @@ public class PerkCommand {
         nextCost = perkCost.basicCost;
       }
       if (EcoUtils.canBuy(
-          ((ConfigEconomy) SECore.moduleConfigs.get("ECONOMY")).serverCurrency, nextCost,
+          ((ConfigEconomy) SECore.moduleConfigs.get("ECONOMY")).serverCurrency,
+          nextCost,
           player.global)) {
-        Account account = PlayerUtils.getLatestAccount(
-            player.player.getGameProfile().getId().toString());
+        Account account =
+            PlayerUtils.getLatestAccount(player.player.getGameProfile().getId().toString());
 
         // Upgrade Existing
         if (currentLevel > 0) {
@@ -57,11 +68,16 @@ public class PerkCommand {
             if (account.perks[index].startsWith(perkCost.perkNode)) {
               account.perks[index] = perkCost.perkNode + "." + (currentLevel + 1);
               SECore.dataLoader.update(DataType.ACCOUNT, account.uuid, account);
-              EcoUtils.buy(account,
+              EcoUtils.buy(
+                  account,
                   ((ConfigEconomy) SECore.moduleConfigs.get("ECONOMY")).serverCurrency,
                   nextCost);
-              ChatHelper.send(player.sender,
-                  player.lang.COMMAND_PERK_BUY.replaceAll("\\{@NAME@}", perkCost.perkNode)
+              ChatHelper.send(
+                  player.sender,
+                  player
+                      .lang
+                      .COMMAND_PERK_BUY
+                      .replaceAll("\\{@NAME@}", perkCost.perkNode)
                       .replaceAll("\\{@AMOUNT@}", String.format("%.1f", nextCost)));
               break;
             }
@@ -72,21 +88,24 @@ public class PerkCommand {
           accountPerks[account.perks.length] = perkCost.perkNode + ".1";
           account.perks = accountPerks;
           SECore.dataLoader.update(DataType.ACCOUNT, account.uuid, account);
-          EcoUtils.buy(account,
+          EcoUtils.buy(
+              account,
               ((ConfigEconomy) SECore.moduleConfigs.get("ECONOMY")).serverCurrency,
               nextCost);
-          ChatHelper.send(player.sender,
-              player.lang.COMMAND_PERK_BUY.replaceAll("\\{@NAME@}", perkCost.perkNode)
+          ChatHelper.send(
+              player.sender,
+              player
+                  .lang
+                  .COMMAND_PERK_BUY
+                  .replaceAll("\\{@NAME@}", perkCost.perkNode)
                   .replaceAll("\\{@AMOUNT@}", String.format("%.1f", nextCost)));
         }
-
 
       } else {
         ChatHelper.send(player.sender, player.lang.NO_MONEY);
       }
     } else {
-      ChatHelper.send(player.sender,
-          player.lang.COMMAND_PERK_NONE.replaceAll("\\{@NAME@}", perk));
+      ChatHelper.send(player.sender, player.lang.COMMAND_PERK_NONE.replaceAll("\\{@NAME@}", perk));
     }
   }
 }

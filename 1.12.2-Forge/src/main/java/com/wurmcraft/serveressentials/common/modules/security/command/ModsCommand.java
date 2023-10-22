@@ -13,10 +13,16 @@ import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
 @ModuleCommand(module = "Security", name = "mods")
 public class ModsCommand {
 
-  @Command(args = {CommandArgument.PLAYER}, usage = {"player"})
+  @Command(
+      args = {CommandArgument.PLAYER},
+      usage = {"player"})
   public void playerMods(ICommandSender sender, EntityPlayer player) {
     EntityPlayerMP serverPlayer = (EntityPlayerMP) player;
-    ChatHelper.send(sender, TextFormatting.AQUA + String.join(", ",
-        NetworkDispatcher.get(serverPlayer.connection.netManager).getModList().values()));
+    ChatHelper.send(
+        sender,
+        TextFormatting.AQUA
+            + String.join(
+                ", ",
+                NetworkDispatcher.get(serverPlayer.connection.netManager).getModList().values()));
   }
 }

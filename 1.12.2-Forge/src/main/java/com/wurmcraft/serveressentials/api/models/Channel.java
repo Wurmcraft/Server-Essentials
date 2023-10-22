@@ -13,12 +13,17 @@ public class Channel {
   public boolean allowLinks;
   public String[] linkBlacklist;
 
-  public Channel() {
-  }
+  public Channel() {}
 
-  public Channel(String name, String prefix, boolean logChat,
-      Map<String, String> chatReplacement, boolean enabled, String chatFormat,
-      boolean allowLinks, String[] linkBlacklist) {
+  public Channel(
+      String name,
+      String prefix,
+      boolean logChat,
+      Map<String, String> chatReplacement,
+      boolean enabled,
+      String chatFormat,
+      boolean allowLinks,
+      String[] linkBlacklist) {
     this.name = name;
     this.prefix = prefix;
     this.logChat = logChat;

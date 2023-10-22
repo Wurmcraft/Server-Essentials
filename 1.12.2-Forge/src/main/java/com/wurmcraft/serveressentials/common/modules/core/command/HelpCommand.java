@@ -15,13 +15,19 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-@ModuleCommand(module = "Core", name = "help", defaultAliases = {"?"})
+@ModuleCommand(
+    module = "Core",
+    name = "help",
+    defaultAliases = {"?"})
 public class HelpCommand {
 
   public static final int COMMANDS_PER_PAGE = 10;
   public static List<HelpLine> commands;
 
-  @Command(args = {}, usage = {}, canConsoleUse = true)
+  @Command(
+      args = {},
+      usage = {},
+      canConsoleUse = true)
   public void helpPage0(ServerPlayer player) {
     help(player, 1);
   }
@@ -40,15 +46,20 @@ public class HelpCommand {
     List<HelpLine> playerSpecificHelp = getPlayerCommands(player);
     if (page > playerSpecificHelp.size() / COMMANDS_PER_PAGE) {
       page = playerSpecificHelp.size() / COMMANDS_PER_PAGE;
-      if(page == 0)
-        page = 1;
+      if (page == 0) page = 1;
     }
     String spacer = player.lang.SPACER;
-    String center = Integer.toString(page) + " / " + Math.round(Math.ceil(
-        (float) playerSpecificHelp.size() / COMMANDS_PER_PAGE));
+    String center =
+        Integer.toString(page)
+            + " / "
+            + Math.round(Math.ceil((float) playerSpecificHelp.size() / COMMANDS_PER_PAGE));
     int splitLocation = (spacer.length() / 2) - ((center.length() / 2) + 1);
-    String header = spacer.substring(0, splitLocation) + " &6(&a" + center + "&6) "
-        + spacer.substring(splitLocation);
+    String header =
+        spacer.substring(0, splitLocation)
+            + " &6(&a"
+            + center
+            + "&6) "
+            + spacer.substring(splitLocation);
     ChatHelper.send(player.sender, header);
     for (int c = 0; c < COMMANDS_PER_PAGE; c++) {
       int f = c * page;
@@ -62,10 +73,13 @@ public class HelpCommand {
 
   private static List<HelpLine> generateHelpLines() {
     List<HelpLine> commands = new ArrayList<>();
-    for (ICommand command : FMLCommonHandler.instance().getMinecraftServerInstance()
-        .getCommandManager().getCommands().values()) {
-      commands.add(
-          getHelpInfo(FMLCommonHandler.instance().getMinecraftServerInstance(), command));
+    for (ICommand command :
+        FMLCommonHandler.instance()
+            .getMinecraftServerInstance()
+            .getCommandManager()
+            .getCommands()
+            .values()) {
+      commands.add(getHelpInfo(FMLCommonHandler.instance().getMinecraftServerInstance(), command));
     }
     return commands;
   }
@@ -108,8 +122,7 @@ public class HelpCommand {
     return false;
   }
 
-  private static boolean userHasPermissionToUseCommand(ServerPlayer player,
-      String command) {
+  private static boolean userHasPermissionToUseCommand(ServerPlayer player, String command) {
     if (player.sender instanceof EntityPlayer) {
       return RankUtils.hasPermission(player.global, command);
     } else {

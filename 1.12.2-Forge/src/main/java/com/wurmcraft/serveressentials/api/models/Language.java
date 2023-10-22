@@ -259,6 +259,10 @@ public class Language {
   public String COMMAND_PERK_LIST_PERK;
   public String COMMAND_PERK_NONE;
   public String COMMAND_PERK_BUY;
+  public String COMMAND_PERM_INVALID;
+  public String COMMAND_PERM_ADDED;
+  public String COMMAND_PERM_REMOVE;
+  public String COMMAND_PERM_SET;
 
   // Protect
   public String PROTECT_BREAK;

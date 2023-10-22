@@ -15,24 +15,28 @@ import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import java.io.File;
 
-@ModuleCommand(module = "Core", name = "Language", defaultAliases = {"Lang", "L"})
+@ModuleCommand(
+    module = "Core",
+    name = "Language",
+    defaultAliases = {"Lang", "L"})
 public class LanguageCommand {
 
-  @Command(args = {CommandArgument.STRING}, usage = "Lang-key", canConsoleUse = true)
+  @Command(
+      args = {CommandArgument.STRING},
+      usage = "Lang-key",
+      canConsoleUse = true)
   public void changeLang(ServerPlayer player, String lang) {
     boolean validLang = false;
     Language possibleLang = null;
     try {
-      possibleLang = SECore.dataLoader.get(DataType.LANGUAGE, lang,
-          new Language());
+      possibleLang = SECore.dataLoader.get(DataType.LANGUAGE, lang, new Language());
       if (possibleLang != null) {
         validLang = true;
       }
     } catch (Exception e) {
     }
     if (!validLang) {
-      ChatHelper.send(player.sender,
-          player.lang.LANGUAGE_INVALID.replaceAll("\\{@LANG@}", lang));
+      ChatHelper.send(player.sender, player.lang.LANGUAGE_INVALID.replaceAll("\\{@LANG@}", lang));
       return;
     }
     if (player.sender == null) { // Console change global default lang
@@ -41,8 +45,7 @@ public class LanguageCommand {
       File configFile =
           new File(SAVE_DIR + File.separator + "Modules" + File.separator + "Core.json");
       ConfigLoader.save(configFile, config);
-      ChatHelper.send(player.sender,
-          player.lang.LANGUAGE_CHANGE.replaceAll("\\{@LANG@}", lang));
+      ChatHelper.send(player.sender, player.lang.LANGUAGE_CHANGE.replaceAll("\\{@LANG@}", lang));
     } else {
       Account account = player.global;
       account.lang = possibleLang.langKey;

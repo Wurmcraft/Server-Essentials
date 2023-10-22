@@ -34,9 +34,9 @@ public class TPAAcceptCommand {
           SECore.dataLoader.get(
               DataLoader.DataType.LANGUAGE,
               SECore.dataLoader.get(
-                  DataLoader.DataType.ACCOUNT,
-                  otherPlayer.getGameProfile().getId().toString(),
-                  new Account())
+                      DataLoader.DataType.ACCOUNT,
+                      otherPlayer.getGameProfile().getId().toString(),
+                      new Account())
                   .lang,
               new Language());
       ChatHelper.send(
@@ -68,9 +68,9 @@ public class TPAAcceptCommand {
           SECore.dataLoader.get(
               DataLoader.DataType.LANGUAGE,
               SECore.dataLoader.get(
-                  DataLoader.DataType.ACCOUNT,
-                  otherPlayer.getGameProfile().getId().toString(),
-                  new Account())
+                      DataLoader.DataType.ACCOUNT,
+                      otherPlayer.getGameProfile().getId().toString(),
+                      new Account())
                   .lang,
               new Language());
       ChatHelper.send(

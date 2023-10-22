@@ -19,34 +19,41 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 @ModuleCommand(module = "Security", name = "Lockdown")
 public class LockdownCommand {
 
-  @Command(args = {}, usage = {}, canConsoleUse = true)
+  @Command(
+      args = {},
+      usage = {},
+      canConsoleUse = true)
   public void lockdown(ServerPlayer player) {
     ConfigSecurity securityLock = (ConfigSecurity) SECore.moduleConfigs.get("SECURITY");
     if (securityLock.lockdownEnabled) {
       securityLock.lockdownEnabled = false;
-      for (EntityPlayer p : FMLClientHandler.instance().getServer().getPlayerList()
-          .getPlayers()) {
-        Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
-            SECore.dataLoader.get(DataType.ACCOUNT, p.getGameProfile().getId().toString(),
-                new Account()).lang, new Language());
+      for (EntityPlayer p : FMLClientHandler.instance().getServer().getPlayerList().getPlayers()) {
+        Language lang =
+            SECore.dataLoader.get(
+                DataType.LANGUAGE,
+                SECore.dataLoader.get(
+                        DataType.ACCOUNT, p.getGameProfile().getId().toString(), new Account())
+                    .lang,
+                new Language());
         ChatHelper.send(p, lang.COMMAND_LOCKDOWN_DISABLED);
       }
       File configFile =
-          new File(
-              SAVE_DIR + File.separator + "Modules" + File.separator + "Security.json");
+          new File(SAVE_DIR + File.separator + "Modules" + File.separator + "Security.json");
       ConfigLoader.save(configFile, securityLock);
     } else {
       securityLock.lockdownEnabled = true;
-      for (EntityPlayer p : FMLClientHandler.instance().getServer().getPlayerList()
-          .getPlayers()) {
-        Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
-            SECore.dataLoader.get(DataType.ACCOUNT, p.getGameProfile().getId().toString(),
-                new Account()).lang, new Language());
+      for (EntityPlayer p : FMLClientHandler.instance().getServer().getPlayerList().getPlayers()) {
+        Language lang =
+            SECore.dataLoader.get(
+                DataType.LANGUAGE,
+                SECore.dataLoader.get(
+                        DataType.ACCOUNT, p.getGameProfile().getId().toString(), new Account())
+                    .lang,
+                new Language());
         ChatHelper.send(p, lang.COMMAND_LOCKDOWN_ENABLED);
       }
       File configFile =
-          new File(
-              SAVE_DIR + File.separator + "Modules" + File.separator + "Security.json");
+          new File(SAVE_DIR + File.separator + "Modules" + File.separator + "Security.json");
       ConfigLoader.save(configFile, securityLock);
     }
   }

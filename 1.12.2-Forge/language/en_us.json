@@ -243,5 +243,9 @@
   "PROTECT_BREAK": "&cYou don't have permission to break this block!",
   "PROTECT_PLACE": "&cYou don't have permission to place a block here!",
   "PROTECT_CLAIM_ENTRY": "&bYou have entered {@NAME@}'s claim",
-  "PROTECT_CLAIM_EXIT": "&bYou have now left {@NAME@}'s claim"
+  "PROTECT_CLAIM_EXIT": "&bYou have now left {@NAME@}'s claim",
+  "COMMAND_PERM_INVALID": "&bYou can only add or remove or set a rank",
+  "COMMAND_PERM_ADDED": "&bRank {@RANK@} has been added",
+  "COMMAND_PERM_REMOVE": "&bRank {@RANK@} has been removed",
+  "COMMAND_PERM_SET": "&bRank has been set to {@RANK@}"
 }

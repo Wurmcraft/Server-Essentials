@@ -16,6 +16,5 @@ public class Bulletin {
     this.viewedBy = viewedBy;
   }
 
-  public Bulletin() {
-  }
+  public Bulletin() {}
 }

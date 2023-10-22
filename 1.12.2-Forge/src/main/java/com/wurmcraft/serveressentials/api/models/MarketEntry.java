@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -54,8 +53,7 @@ public class MarketEntry {
     this.transfer_id = transferID;
   }
 
-  public MarketEntry() {
-  }
+  public MarketEntry() {}
 
   @Override
   public boolean equals(Object o) {

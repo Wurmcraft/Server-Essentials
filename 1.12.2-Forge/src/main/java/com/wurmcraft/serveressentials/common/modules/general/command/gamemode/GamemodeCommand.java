@@ -58,32 +58,28 @@ public class GamemodeCommand {
       FMLCommonHandler.instance()
           .getMinecraftServerInstance()
           .commandManager
-          .executeCommand(player.sender,
-              "/survival " + otherPlayer.getGameProfile().getName());
+          .executeCommand(player.sender, "/survival " + otherPlayer.getGameProfile().getName());
     } else if (type.equalsIgnoreCase("creative")
         || type.toLowerCase().startsWith("c")
         || type.equalsIgnoreCase("1")) {
       FMLCommonHandler.instance()
           .getMinecraftServerInstance()
           .commandManager
-          .executeCommand(player.sender,
-              "/creative " + otherPlayer.getGameProfile().getName());
+          .executeCommand(player.sender, "/creative " + otherPlayer.getGameProfile().getName());
     } else if (type.equalsIgnoreCase("adventure")
         || type.toLowerCase().startsWith("a")
         || type.equalsIgnoreCase("2")) {
       FMLCommonHandler.instance()
           .getMinecraftServerInstance()
           .commandManager
-          .executeCommand(player.sender,
-              "/adventure " + otherPlayer.getGameProfile().getName());
+          .executeCommand(player.sender, "/adventure " + otherPlayer.getGameProfile().getName());
     } else if (type.equalsIgnoreCase("spectator")
         || type.toLowerCase().startsWith("sp")
         || type.equalsIgnoreCase("3")) {
       FMLCommonHandler.instance()
           .getMinecraftServerInstance()
           .commandManager
-          .executeCommand(player.sender,
-              "/spectator " + otherPlayer.getGameProfile().getName());
+          .executeCommand(player.sender, "/spectator " + otherPlayer.getGameProfile().getName());
     }
   }
 }

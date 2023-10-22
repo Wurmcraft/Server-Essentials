@@ -11,10 +11,13 @@ import net.minecraft.util.text.TextFormatting;
 @ModuleCommand(module = "Donate", name = "Donate", defaultAliases = "Support")
 public class DonateCommand {
 
-  @Command(args = {}, usage = {}, canConsoleUse = true)
+  @Command(
+      args = {},
+      usage = {},
+      canConsoleUse = true)
   public void donate(ServerPlayer player) {
-    ChatHelper.send(player.sender,
-        TextFormatting.AQUA + ((ConfigDonation) SECore.moduleConfigs.get(
-            "DONATE")).donateURL);
+    ChatHelper.send(
+        player.sender,
+        TextFormatting.AQUA + ((ConfigDonation) SECore.moduleConfigs.get("DONATE")).donateURL);
   }
 }

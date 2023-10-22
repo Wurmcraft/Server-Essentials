@@ -40,27 +40,28 @@ public class SocketController {
         if (RequestGenerator.token == null || RequestGenerator.token.isEmpty()) {
           if (((RestDataLoader) SECore.dataLoader).login()) {
             ServerEssentials.LOG.info(
-                "Logged into Rest API as '" + ServerEssentials.config.general.serverID
-                    + "'");
+                "Logged into Rest API as '" + ServerEssentials.config.general.serverID + "'");
           } else {
             ServerEssentials.LOG.fatal("Failed to login to Rest API");
           }
         }
         // Setup Web socket
-        ws = factory.createSocket(createURL())
-            .addHeader("cookie", "authentication=" + RequestGenerator.token);
-        ws.addListener(new WebSocketAdapter() {
-          @Override
-          public void onTextMessage(WebSocket websocket, String text) throws Exception {
-            handleTextMessage(ServerEssentials.GSON.fromJson(text, WSWrapper.class));
-          }
-        });
+        ws =
+            factory
+                .createSocket(createURL())
+                .addHeader("cookie", "authentication=" + RequestGenerator.token);
+        ws.addListener(
+            new WebSocketAdapter() {
+              @Override
+              public void onTextMessage(WebSocket websocket, String text) throws Exception {
+                handleTextMessage(ServerEssentials.GSON.fromJson(text, WSWrapper.class));
+              }
+            });
         ws.connect();
       } catch (IOException e) {
         throw new RuntimeException(e);
       } catch (WebSocketException e) {
-        ServerEssentials.LOG.error(
-            "Failed to connect to rest api (" + e.getMessage() + ")");
+        ServerEssentials.LOG.error("Failed to connect to rest api (" + e.getMessage() + ")");
         throw new RuntimeException(e);
       }
     }
@@ -76,15 +77,17 @@ public class SocketController {
   public void handleTextMessage(WSWrapper wrapper) {
     ServerEssentials.LOG.debug("WS Message: " + wrapper.type + " " + wrapper.data);
     if (wrapper.data.type.equals("broadcast")) {
-      ChatMessage broadcast = ServerEssentials.GSON.fromJson(wrapper.data.data,
-          ChatMessage.class);
+      ChatMessage broadcast = ServerEssentials.GSON.fromJson(wrapper.data.data, ChatMessage.class);
       ChatHelper.sendToAll(
-          TextFormatting.RED + "[" + broadcast.senderName + "] " + TextFormatting.GOLD
+          TextFormatting.RED
+              + "["
+              + broadcast.senderName
+              + "] "
+              + TextFormatting.GOLD
               + broadcast.message);
     }
     if (wrapper.data.type.equals("chat")) {
-      ChatMessage msg = ServerEssentials.GSON.fromJson(wrapper.data.data,
-          ChatMessage.class);
+      ChatMessage msg = ServerEssentials.GSON.fromJson(wrapper.data.data, ChatMessage.class);
       Channel ch = SECore.dataLoader.get(DataType.CHANNEL, msg.channel, new Channel());
       if (ch != null) {
         HashMap<EntityPlayer, LocalAccount> players = ChatHelper.getInChannel(ch);
@@ -98,28 +101,38 @@ public class SocketController {
       }
     }
     if (wrapper.data.type.equalsIgnoreCase("Confirmation")) {
-      ConfirmMessage msg = ServerEssentials.GSON.fromJson(wrapper.data.data,
-          ConfirmMessage.class);
+      ConfirmMessage msg = ServerEssentials.GSON.fromJson(wrapper.data.data, ConfirmMessage.class);
       sendConfirmation(msg);
     }
     // TODO Handle Discord
     if (wrapper.data.type.equalsIgnoreCase("shutdown")) {
-      ShutdownMessage shutdown = ServerEssentials.GSON.fromJson(wrapper.data.data,
-          ShutdownMessage.class);
+      ShutdownMessage shutdown =
+          ServerEssentials.GSON.fromJson(wrapper.data.data, ShutdownMessage.class);
       shutdown(shutdown);
     }
   }
 
   private static void sendConfirmation(ConfirmMessage msg) {
-    for (EntityPlayer player : FMLCommonHandler.instance().getMinecraftServerInstance()
-        .getPlayerList().getPlayers()) {
+    for (EntityPlayer player :
+        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
       if (msg.sender.equalsIgnoreCase(player.getGameProfile().getId().toString())) {
-        ChatHelper.send(player, SECore.dataLoader.get(DataType.LANGUAGE,
-            SECore.dataLoader.get(DataType.ACCOUNT,
-                player.getGameProfile().getId().toString(), new Account()).lang,
-            new Language()).DM_CONFIRM.replaceAll("\\{@PLAYER@}",
-            PlayerUtils.getUsernameForInput(msg.receiver) != null
-                ? PlayerUtils.getUsernameForInput(msg.receiver) : msg.receiver));
+        ChatHelper.send(
+            player,
+            SECore.dataLoader
+                .get(
+                    DataType.LANGUAGE,
+                    SECore.dataLoader.get(
+                            DataType.ACCOUNT,
+                            player.getGameProfile().getId().toString(),
+                            new Account())
+                        .lang,
+                    new Language())
+                .DM_CONFIRM
+                .replaceAll(
+                    "\\{@PLAYER@}",
+                    PlayerUtils.getUsernameForInput(msg.receiver) != null
+                        ? PlayerUtils.getUsernameForInput(msg.receiver)
+                        : msg.receiver));
       }
     }
   }

@@ -32,26 +32,23 @@ public class ClaimNotifyEvents {
     if (counter == 0) {
       updatePlayers();
       // Reset for next time
-      counter = ((ConfigProtect) SECore.moduleConfigs.get(
-          "PROTECT")).trackingUpdateTimeTicks;
+      counter = ((ConfigProtect) SECore.moduleConfigs.get("PROTECT")).trackingUpdateTimeTicks;
     } else {
       counter--;
     }
   }
 
   private static void updatePlayers() {
-    for (EntityPlayer player : FMLCommonHandler.instance().getMinecraftServerInstance()
-        .getPlayerList()
-        .getPlayers()) {
+    for (EntityPlayer player :
+        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
       Claim previousClaim = lastClaim.getOrDefault(player.getGameProfile().getId(), null);
-      BlockPos lastPos = locationCache.getOrDefault(player.getGameProfile().getId(),
-          null);
+      BlockPos lastPos = locationCache.getOrDefault(player.getGameProfile().getId(), null);
       // Check if player has moved
-      Claim currentClaim = ProtectionHelper.getClaim(player.getPosition(),
-          player.dimension);
+      Claim currentClaim = ProtectionHelper.getClaim(player.getPosition(), player.dimension);
       if (lastPos != null && !lastPos.equals(player.getPosition())) {
-        if (currentClaim != null && previousClaim != null && !currentClaim.owner.equals(
-            previousClaim.owner)) {
+        if (currentClaim != null
+            && previousClaim != null
+            && !currentClaim.owner.equals(previousClaim.owner)) {
           locationCache.put(player.getGameProfile().getId(), player.getPosition());
           lastClaim.put(player.getGameProfile().getId(), currentClaim);
           notifyClaimChange(player, currentClaim, true);
@@ -72,10 +69,13 @@ public class ClaimNotifyEvents {
   }
 
   private static void notifyClaimChange(EntityPlayer player, Claim claim, boolean entry) {
-    Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
-        SECore.dataLoader.get(DataType.ACCOUNT,
-            player.getGameProfile().getId().toString(), new Account()).lang,
-        new Language());
+    Language lang =
+        SECore.dataLoader.get(
+            DataType.LANGUAGE,
+            SECore.dataLoader.get(
+                    DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account())
+                .lang,
+            new Language());
     String name = "Error";
     if (claim != null) {
       name = UsernameCache.getLastKnownUsername(UUID.fromString(claim.owner));

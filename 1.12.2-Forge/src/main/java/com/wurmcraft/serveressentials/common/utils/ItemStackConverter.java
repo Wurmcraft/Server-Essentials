@@ -22,7 +22,8 @@ public class ItemStackConverter implements IDataConverter<ItemStack> {
 
   // Cache
   public static final NonBlockingHashMap<ItemStack, String> cache = new NonBlockingHashMap<>();
-  public static final NonBlockingHashMap<String, ItemStack> reverseCache = new NonBlockingHashMap<>();
+  public static final NonBlockingHashMap<String, ItemStack> reverseCache =
+      new NonBlockingHashMap<>();
 
   @Override
   public String getName() {
@@ -33,10 +34,9 @@ public class ItemStackConverter implements IDataConverter<ItemStack> {
   public int getMeta(String data) {
     if (data.contains(META)) {
       try {
-        String metaNum = data.substring(data.indexOf(META) + 1,
-            data.contains(NBT) ?
-                data.indexOf(NBT) :
-                data.indexOf(">"));
+        String metaNum =
+            data.substring(
+                data.indexOf(META) + 1, data.contains(NBT) ? data.indexOf(NBT) : data.indexOf(">"));
         return Integer.parseInt(metaNum);
       } catch (NumberFormatException e) {
         e.printStackTrace();
@@ -64,9 +64,12 @@ public class ItemStackConverter implements IDataConverter<ItemStack> {
     String name = "air";
     boolean hasMeta = data.contains(META);
     boolean hasNBT = data.contains(NBT);
-    int spacerCount = StringUtils.countMatches(
-        hasMeta ? data.substring(1, data.indexOf(META) - 1)
-            : (hasNBT ? data.substring(1, data.indexOf(NBT) - 1) : data), SEPARATOR);
+    int spacerCount =
+        StringUtils.countMatches(
+            hasMeta
+                ? data.substring(1, data.indexOf(META) - 1)
+                : (hasNBT ? data.substring(1, data.indexOf(NBT) - 1) : data),
+            SEPARATOR);
     boolean hasModIDOrStackSize = spacerCount > 0;
     if (hasMeta && !hasModIDOrStackSize) {
       name = data.substring(1, data.indexOf(META));
@@ -77,8 +80,7 @@ public class ItemStackConverter implements IDataConverter<ItemStack> {
     }
     if (hasModIDOrStackSize) {
       boolean hasStackSize = data.contains(COUNT + SEPARATOR);
-      int endPos = hasMeta ? data.indexOf(META)
-          : (hasNBT ? data.indexOf(NBT) : data.length() - 1);
+      int endPos = hasMeta ? data.indexOf(META) : (hasNBT ? data.indexOf(NBT) : data.length() - 1);
       String helper = data.substring(data.indexOf(SEPARATOR) + 1, endPos);
       if (hasStackSize && spacerCount == 1) {
         name = helper;
@@ -124,8 +126,7 @@ public class ItemStackConverter implements IDataConverter<ItemStack> {
         NBTTagCompound nbtData = JsonToNBT.getTagFromJson(nbt);
         stack.setTagCompound(nbtData);
       } catch (NBTException e) {
-        ServerEssentials.LOG
-            .warn("Failed to load NBT for '" + data + "', creating without NBT");
+        ServerEssentials.LOG.warn("Failed to load NBT for '" + data + "', creating without NBT");
       }
     }
 
@@ -151,8 +152,9 @@ public class ItemStackConverter implements IDataConverter<ItemStack> {
       builder.append(SEPARATOR);
     }
     ResourceLocation name = data.getItem().getRegistryName();
-    if (name != null && !name.getResourceDomain().isEmpty() && !name.getResourceDomain()
-        .equalsIgnoreCase("minecraft")) {
+    if (name != null
+        && !name.getResourceDomain().isEmpty()
+        && !name.getResourceDomain().equalsIgnoreCase("minecraft")) {
       builder.append(name.getResourceDomain());
       builder.append(SEPARATOR);
     }

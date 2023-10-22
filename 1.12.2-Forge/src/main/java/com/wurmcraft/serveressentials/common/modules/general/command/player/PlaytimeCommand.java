@@ -12,44 +12,59 @@ import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 
-@ModuleCommand(module = "General", name = "Playtime", defaultAliases = {"time",
-    "OnlineTime"})
+@ModuleCommand(
+    module = "General",
+    name = "Playtime",
+    defaultAliases = {"time", "OnlineTime"})
 public class PlaytimeCommand {
 
-  @Command(args = {}, usage = {})
+  @Command(
+      args = {},
+      usage = {})
   public void displayPlaytime(ServerPlayer player) {
     ChatHelper.send(player.sender, player.lang.SPACER);
-    ChatHelper.send(player.sender,
-        player.lang.COMMAND_PLAYTIME_TOTAL.replaceAll("\\{@AMOUNT@}",
-            CommandUtils.displayTime(PlayerUtils.getTotalPlaytime(player.global))));
+    ChatHelper.send(
+        player.sender,
+        player.lang.COMMAND_PLAYTIME_TOTAL.replaceAll(
+            "\\{@AMOUNT@}", CommandUtils.displayTime(PlayerUtils.getTotalPlaytime(player.global))));
     for (ServerTime time : player.global.tracked_time) {
-      ChatHelper.send(player.sender,
-          player.lang.COMMAND_PLAYTIME_SPECIFIC.replaceAll("\\{@AMOUNT@}",
-                  CommandUtils.displayTime(time.totalTime))
+      ChatHelper.send(
+          player.sender,
+          player
+              .lang
+              .COMMAND_PLAYTIME_SPECIFIC
+              .replaceAll("\\{@AMOUNT@}", CommandUtils.displayTime(time.totalTime))
               .replaceAll("\\{@SERVER@}", time.serverID));
     }
     ChatHelper.send(player.sender, player.lang.SPACER);
   }
 
-  @Command(args = {CommandArgument.STRING}, usage = {"Username"})
+  @Command(
+      args = {CommandArgument.STRING},
+      usage = {"Username"})
   public void displayPlaytime(ServerPlayer player, String username) {
     ChatHelper.send(player.sender, player.lang.SPACER);
-    Account account = SECore.dataLoader.get(DataType.ACCOUNT,
-        PlayerUtils.getUUIDForInput(username), new Account());
+    Account account =
+        SECore.dataLoader.get(
+            DataType.ACCOUNT, PlayerUtils.getUUIDForInput(username), new Account());
     if (account != null) {
-      ChatHelper.send(player.sender,
-          player.lang.COMMAND_PLAYTIME_TOTAL.replaceAll("\\{@AMOUNT@}",
-              CommandUtils.displayTime(PlayerUtils.getTotalPlaytime(account))));
+      ChatHelper.send(
+          player.sender,
+          player.lang.COMMAND_PLAYTIME_TOTAL.replaceAll(
+              "\\{@AMOUNT@}", CommandUtils.displayTime(PlayerUtils.getTotalPlaytime(account))));
       for (ServerTime time : account.tracked_time) {
-        ChatHelper.send(player.sender,
-            player.lang.COMMAND_PLAYTIME_SPECIFIC.replaceAll("\\{@AMOUNT@}",
-                    CommandUtils.displayTime(time.totalTime))
+        ChatHelper.send(
+            player.sender,
+            player
+                .lang
+                .COMMAND_PLAYTIME_SPECIFIC
+                .replaceAll("\\{@AMOUNT@}", CommandUtils.displayTime(time.totalTime))
                 .replaceAll("\\{@SERVER@}", time.serverID));
       }
       ChatHelper.send(player.sender, player.lang.SPACER);
     } else {
-      ChatHelper.send(player.sender,
-          player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", username));
+      ChatHelper.send(
+          player.sender, player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", username));
     }
   }
 }

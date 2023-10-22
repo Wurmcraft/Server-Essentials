@@ -11,6 +11,8 @@ public class TrustInfo {
   }
 
   public enum Action {
-    INTERACT, BREAK, PLACE
+    INTERACT,
+    BREAK,
+    PLACE
   }
 }

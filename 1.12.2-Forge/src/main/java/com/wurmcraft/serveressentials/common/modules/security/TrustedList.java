@@ -18,7 +18,8 @@ public class TrustedList {
       }
     } catch (Exception e) {
       ServerEssentials.LOG.warn(
-          "Unable to load trusted users from '" + SecurityEvents.config.trustedList
+          "Unable to load trusted users from '"
+              + SecurityEvents.config.trustedList
               + "' verify the url exists and is in the correct format.");
     }
     if (trustedUsers.size() == 0) {

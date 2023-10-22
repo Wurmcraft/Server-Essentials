@@ -30,8 +30,7 @@ public class BaseCommand {
     if (arg.equalsIgnoreCase("version")) {
       ChatHelper.send(
           player.sender,
-          player.lang.COMMAND_BASE_VERSION.replaceAll("\\{@VERSION@}",
-              ServerEssentials.VERSION));
+          player.lang.COMMAND_BASE_VERSION.replaceAll("\\{@VERSION@}", ServerEssentials.VERSION));
     } else if (arg.equalsIgnoreCase("modules")) {
       ChatHelper.send(
           player.sender,
@@ -44,8 +43,8 @@ public class BaseCommand {
               "\\{@STORAGE@}",
               ServerEssentials.config.storage.storageType.toUpperCase()
                   + (ServerEssentials.config.storage.storageType.equalsIgnoreCase("Rest")
-                  ? "(" + ServerEssentials.config.storage.baseURL + ")"
-                  : "")));
+                      ? "(" + ServerEssentials.config.storage.baseURL + ")"
+                      : "")));
     }
   }
 
@@ -87,8 +86,7 @@ public class BaseCommand {
           moduleInstance
               .getClass()
               .getMethod(
-                  moduleInstance.getClass().getDeclaredAnnotation(Module.class)
-                      .reloadMethod());
+                  moduleInstance.getClass().getDeclaredAnnotation(Module.class).reloadMethod());
       reloadMethod.invoke(moduleInstance);
       ChatHelper.send(
           player.sender,
@@ -100,8 +98,7 @@ public class BaseCommand {
     }
     ChatHelper.send(
         player.sender,
-        player.lang.COMMAND_BASE_RELOAD_FAIL.replaceAll("\\{@MODULE@}",
-            module.toUpperCase()));
+        player.lang.COMMAND_BASE_RELOAD_FAIL.replaceAll("\\{@MODULE@}", module.toUpperCase()));
   }
 
   private static void displayModuleInfo(ServerPlayer player, String name) {

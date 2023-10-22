@@ -12,6 +12,5 @@ public class RegionClaim {
     this.claims = claims;
   }
 
-  public RegionClaim() {
-  }
+  public RegionClaim() {}
 }

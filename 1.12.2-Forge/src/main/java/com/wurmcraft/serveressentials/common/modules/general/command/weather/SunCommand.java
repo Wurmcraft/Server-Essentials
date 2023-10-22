@@ -18,8 +18,7 @@ public class SunCommand {
       canConsoleUse = true)
   public void sun(ServerPlayer player) {
     if (player.player == null) {
-      for (WorldServer world : FMLCommonHandler.instance()
-          .getMinecraftServerInstance().worlds) {
+      for (WorldServer world : FMLCommonHandler.instance().getMinecraftServerInstance().worlds) {
         world.getWorldInfo().setRaining(false);
         world.getWorldInfo().setRainTime(0);
         world.getWorldInfo().setThundering(false);
@@ -38,8 +37,7 @@ public class SunCommand {
       canConsoleUse = true)
   public void sun(ServerPlayer player, int dim) {
     try {
-      World world = FMLCommonHandler.instance().getMinecraftServerInstance()
-          .getWorld(dim);
+      World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dim);
       world.getWorldInfo().setRaining(false);
       world.getWorldInfo().setRainTime(0);
       world.getWorldInfo().setThundering(false);

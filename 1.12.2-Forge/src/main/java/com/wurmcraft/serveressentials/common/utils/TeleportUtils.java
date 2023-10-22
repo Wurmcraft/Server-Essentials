@@ -10,8 +10,7 @@ import net.minecraft.world.WorldServer;
 
 public class TeleportUtils {
 
-  public static boolean teleportTo(EntityPlayerMP player, LocalAccount local,
-      Location location) {
+  public static boolean teleportTo(EntityPlayerMP player, LocalAccount local, Location location) {
     return teleportTo(player, local, location, true);
   }
 
@@ -33,8 +32,7 @@ public class TeleportUtils {
     // Check for dimension change
     if (player.dimension == location.dim) {
       player.connection.setPlayerLocation(
-          location.x, location.y, location.z, (float) location.pitch,
-          (float) location.yaw);
+          location.x, location.y, location.z, (float) location.pitch, (float) location.yaw);
     } else { // Update Player's dimension
       // Remove from existing world
       int oldDim = player.dimension;
@@ -56,8 +54,7 @@ public class TeleportUtils {
       }
       player.mcServer.getPlayerList().preparePlayer(player, serverWorld);
       player.connection.setPlayerLocation(
-          location.x, location.y, location.z, (float) location.pitch,
-          (float) location.yaw);
+          location.x, location.y, location.z, (float) location.pitch, (float) location.yaw);
       player.interactionManager.setWorld(serverWorld);
     }
     SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, local.uuid, local);

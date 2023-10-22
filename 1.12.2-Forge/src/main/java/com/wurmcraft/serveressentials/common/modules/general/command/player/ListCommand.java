@@ -18,32 +18,45 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-@ModuleCommand(module = "General", name = "List", defaultAliases = {"Players", "L"})
+@ModuleCommand(
+    module = "General",
+    name = "List",
+    defaultAliases = {"Players", "L"})
 public class ListCommand {
 
-  @Command(args = {}, usage = {})
+  @Command(
+      args = {},
+      usage = {})
   public void listPlayers(ServerPlayer player) {
     ChatHelper.send(player.sender, player.lang.SPACER);
-    for (EntityPlayer otPlayer : FMLCommonHandler.instance().getMinecraftServerInstance()
-        .getPlayerList()
-        .getPlayers()) {
-      Account account = SECore.dataLoader.get(DataType.ACCOUNT,
-          otPlayer.getGameProfile().getId().toString(), new Account());
-      ChatHelper.send(player.sender, ChatHelper.replaceColor(getRankValue("prefix",
-          PlayerChatEvent.getRanks(account))) + " " + ChatHelper.getName(otPlayer,
-          account) + " (" + otPlayer.getGameProfile().getId().toString() + ")");
+    for (EntityPlayer otPlayer :
+        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+      Account account =
+          SECore.dataLoader.get(
+              DataType.ACCOUNT, otPlayer.getGameProfile().getId().toString(), new Account());
+      ChatHelper.send(
+          player.sender,
+          ChatHelper.replaceColor(getRankValue("prefix", PlayerChatEvent.getRanks(account)))
+              + " "
+              + ChatHelper.getName(otPlayer, account)
+              + " ("
+              + otPlayer.getGameProfile().getId().toString()
+              + ")");
     }
     ChatHelper.send(player.sender, player.lang.SPACER);
   }
 
-  @Command(args = {}, usage = {}, isSubCommand = true, subCommandAliases = {"server",
-      "servers"})
+  @Command(
+      args = {},
+      usage = {},
+      isSubCommand = true,
+      subCommandAliases = {"server", "servers"})
   public void servers(ServerPlayer player) throws IOException {
     ChatHelper.send(player.sender, player.lang.SPACER);
     HttpResponse response = RequestGenerator.get("api/information/status");
     if (response.status == 200) {
-      for (ServerStatus server : ServerEssentials.GSON.fromJson(response.response,
-          ServerStatus[].class)) {
+      for (ServerStatus server :
+          ServerEssentials.GSON.fromJson(response.response, ServerStatus[].class)) {
         ChatHelper.send(player.sender, ChatHelper.centerText(server.serverID));
         StringBuilder builder = new StringBuilder();
         for (String players : server.onlinePlayers) {

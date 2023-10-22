@@ -29,9 +29,8 @@ import net.minecraft.item.ItemStack;
 public class VaultCommand {
 
   public static final String[] INVALID_VAULT_NAMES =
-      new String[]{
-          "list", "create", "make", "c", "delete", "del", "d", "remove", "rem", "r",
-          "mailbox"
+      new String[] {
+        "list", "create", "make", "c", "delete", "del", "d", "remove", "rem", "r", "mailbox"
       };
 
   @Command(
@@ -52,15 +51,12 @@ public class VaultCommand {
       }
       ChatHelper.send(player.sender, builder.toString());
     } else {
-      Vault vault = getVault(player.player.getGameProfile().getId().toString(),
-          vaultName);
+      Vault vault = getVault(player.player.getGameProfile().getId().toString(), vaultName);
       if (vault != null) {
-        player.player.displayGUIChest(
-            new VaultInventory(player.player, player.lang, vault, 0));
+        player.player.displayGUIChest(new VaultInventory(player.player, player.lang, vault, 0));
       } else {
         ChatHelper.send(
-            player.sender,
-            player.lang.COMMAND_VAULT_NONE.replaceAll("\\{@NAME@}", vaultName));
+            player.sender, player.lang.COMMAND_VAULT_NONE.replaceAll("\\{@NAME@}", vaultName));
       }
     }
   }
@@ -80,14 +76,12 @@ public class VaultCommand {
       }
       int maxCount = PlayerUtils.maxVaults(player.global);
       if (maxCount + 1 > vaultCount(player.player.getGameProfile().getId().toString())) {
-        Vault vault = new Vault(player.player.getGameProfile().getId().toString(), name,
-            2);
-        player.player.displayGUIChest(
-            new VaultInventory(player.player, player.lang, vault, 0));
+        Vault vault = new Vault(player.player.getGameProfile().getId().toString(), name, 2);
+        player.player.displayGUIChest(new VaultInventory(player.player, player.lang, vault, 0));
       } else {
-        ChatHelper.send(player.sender,
-            player.lang.COMMAND_VAULT_MAX_VAULTS.replaceAll("\\{@NUM@}",
-                "" + (maxCount - 1)));
+        ChatHelper.send(
+            player.sender,
+            player.lang.COMMAND_VAULT_MAX_VAULTS.replaceAll("\\{@NUM@}", "" + (maxCount - 1)));
       }
     } else if (arg.equalsIgnoreCase("delete")
         || arg.equalsIgnoreCase("del")
@@ -97,13 +91,11 @@ public class VaultCommand {
         || arg.equalsIgnoreCase("r")) {
       Vault vault = getVault(player.player.getGameProfile().getId().toString(), name);
       if (vault != null) {
-        File save = getVaultLocation(player.player.getGameProfile().getId().toString(),
-            name);
+        File save = getVaultLocation(player.player.getGameProfile().getId().toString(), name);
         destroyVault(player.player, vault);
         if (save.delete()) {
           ChatHelper.send(
-              player.sender,
-              player.lang.COMMAND_VAULT_DELETE.replaceAll("\\{@NAME@}", name));
+              player.sender, player.lang.COMMAND_VAULT_DELETE.replaceAll("\\{@NAME@}", name));
         }
       }
     }
@@ -113,8 +105,7 @@ public class VaultCommand {
     File file = getVaultLocation(ownerUUID, name);
     if (file.exists()) {
       try {
-        return GSON.fromJson(String.join("\n", Files.readAllLines(file.toPath())),
-            Vault.class);
+        return GSON.fromJson(String.join("\n", Files.readAllLines(file.toPath())), Vault.class);
       } catch (Exception e) {
         LOG.warn("Failed to load vault '" + name + "' for '" + ownerUUID + "'");
         e.printStackTrace();
@@ -138,14 +129,15 @@ public class VaultCommand {
   }
 
   public static int vaultCount(String uuid) {
-    File dir = new File(
-        ConfigLoader.SAVE_DIR
-            + File.separator
-            + FileDataLoader.SAVE_FOLDER
-            + File.separator
-            + "vaults"
-            + File.separator
-            + uuid);
+    File dir =
+        new File(
+            ConfigLoader.SAVE_DIR
+                + File.separator
+                + FileDataLoader.SAVE_FOLDER
+                + File.separator
+                + "vaults"
+                + File.separator
+                + uuid);
     if (dir.exists()) {
       return dir.list().length;
     }
@@ -153,12 +145,15 @@ public class VaultCommand {
   }
 
   public File[] getVaults(String uuid) {
-    File dir = new File(
-        ConfigLoader.SAVE_DIR
-            + File.separator
-            + FileDataLoader.SAVE_FOLDER
-            + File.separator
-            + "vaults" + File.separator + uuid);
+    File dir =
+        new File(
+            ConfigLoader.SAVE_DIR
+                + File.separator
+                + FileDataLoader.SAVE_FOLDER
+                + File.separator
+                + "vaults"
+                + File.separator
+                + uuid);
     if (dir.exists()) {
       return dir.listFiles();
     }
@@ -174,8 +169,7 @@ public class VaultCommand {
   }
 
   public static void addToMailbox(EntityPlayer player, ItemStack item) {
-    Vault vault = VaultCommand.getVault(player.getGameProfile().getId().toString(),
-        "mailbox");
+    Vault vault = VaultCommand.getVault(player.getGameProfile().getId().toString(), "mailbox");
     if (vault == null) {
       vault = new Vault(player.getGameProfile().getId().toString(), "mailbox", 10);
       vault.canAdd = false;
@@ -186,8 +180,8 @@ public class VaultCommand {
         break;
       }
     }
-    File save = VaultCommand.getVaultLocation(
-        player.getGameProfile().getId().toString(), "mailbox");
+    File save =
+        VaultCommand.getVaultLocation(player.getGameProfile().getId().toString(), "mailbox");
     try {
       if (!save.exists()) {
         if (!save.getParentFile().exists()) {
@@ -198,15 +192,11 @@ public class VaultCommand {
       Files.write(save.toPath(), ServerEssentials.GSON.toJson(vault).getBytes());
     } catch (Exception e) {
       ServerEssentials.LOG.warn(
-          "Failed to write to vault items to '" + player.getDisplayNameString()
+          "Failed to write to vault items to '"
+              + player.getDisplayNameString()
               + "' 'mailbox' spawning items on ground!");
       player.world.spawnEntity(
-          new EntityItem(
-              player.world,
-              player.posX,
-              player.posY,
-              player.posZ,
-              item));
+          new EntityItem(player.world, player.posX, player.posY, player.posZ, item));
     }
   }
 }

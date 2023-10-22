@@ -12,6 +12,6 @@ public class ConfigDiscord {
   }
 
   public ConfigDiscord() {
-    this.verifyCommands = new String[]{"eco add {username} 1000"};
+    this.verifyCommands = new String[] {"eco add {username} 1000"};
   }
 }

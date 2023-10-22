@@ -8,8 +8,7 @@ public class Warp extends Home {
     super();
   }
 
-  public Warp(double x, double y, double z, int dim, double pitch, double yaw,
-      String name) {
+  public Warp(double x, double y, double z, int dim, double pitch, double yaw, String name) {
     super(x, y, z, dim, pitch, yaw, name);
   }
 }

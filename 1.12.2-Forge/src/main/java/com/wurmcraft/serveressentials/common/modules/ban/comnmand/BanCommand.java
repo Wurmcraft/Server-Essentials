@@ -16,7 +16,10 @@ import java.util.HashMap;
 import net.minecraft.entity.player.EntityPlayer;
 
 // TODO Disable user market entries, etc...
-@ModuleCommand(module = "Ban", name = "ban", defaultAliases = {"GlobalBan"})
+@ModuleCommand(
+    module = "Ban",
+    name = "ban",
+    defaultAliases = {"GlobalBan"})
 public class BanCommand {
 
   @Command(
@@ -24,33 +27,47 @@ public class BanCommand {
       usage = {"player uuid or name", "time", "reason"},
       isSubCommand = true,
       subCommandAliases = {"add", "set"},
-      canConsoleUse = true
-  )
+      canConsoleUse = true)
   public void create(ServerPlayer sender, String player, String time, String[] reason) {
     String uuid = PlayerUtils.getUUIDForInput(player);
-    Ban ban = new Ban(-1, uuid, "", "", getName(sender), "In-Game",
-        String.join(" ", reason),
-        "" + Instant.now().getEpochSecond(), "Temp",
-        "{\"time\": " + CommandUtils.convertToTime(time) + "}", true);
+    Ban ban =
+        new Ban(
+            -1,
+            uuid,
+            "",
+            "",
+            getName(sender),
+            "In-Game",
+            String.join(" ", reason),
+            "" + Instant.now().getEpochSecond(),
+            "Temp",
+            "{\"time\": " + CommandUtils.convertToTime(time) + "}",
+            true);
     try {
-      HttpResponse response = RequestGenerator.post("api/ban",
-          ServerEssentials.GSON.toJson(ban));
+      HttpResponse response = RequestGenerator.post("api/ban", ServerEssentials.GSON.toJson(ban));
       if (response.status == 201) {
-        ChatHelper.send(sender.sender,
-            sender.lang.COMMAND_BAN_CREATE.replaceAll("\\{@USER@}", uuid)
-                .replaceAll("\\{@TIME@}",
-                    CommandUtils.displayTime(CommandUtils.convertToTime(time))));
+        ChatHelper.send(
+            sender.sender,
+            sender
+                .lang
+                .COMMAND_BAN_CREATE
+                .replaceAll("\\{@USER@}", uuid)
+                .replaceAll(
+                    "\\{@TIME@}", CommandUtils.displayTime(CommandUtils.convertToTime(time))));
         ServerEssentials.LOG.info(
-            "User '" + uuid + "' has been banned by " + ban.banned_by + " for '"
-                + ban.ban_reason + "'");
+            "User '"
+                + uuid
+                + "' has been banned by "
+                + ban.banned_by
+                + " for '"
+                + ban.ban_reason
+                + "'");
       } else {
-        ServerEssentials.LOG.warn(
-            "Failed to ban user '" + uuid + "' (" + response.status + ")");
+        ServerEssentials.LOG.warn("Failed to ban user '" + uuid + "' (" + response.status + ")");
         ServerEssentials.LOG.warn(response.response);
       }
     } catch (Exception e) {
-      ServerEssentials.LOG.warn(
-          "Failed to ban user '" + uuid + "' (" + e.getMessage() + ")");
+      ServerEssentials.LOG.warn("Failed to ban user '" + uuid + "' (" + e.getMessage() + ")");
     }
   }
 
@@ -67,10 +84,9 @@ public class BanCommand {
       usage = {"player uuid or name", "time", "reason"},
       isSubCommand = true,
       subCommandAliases = {"add", "set"},
-      canConsoleUse = true
-  )
+      canConsoleUse = true)
   public void create(ServerPlayer sender, String player, String[] reason) {
-    create(sender, player, "36160d", reason);  // 99 years ban
+    create(sender, player, "36160d", reason); // 99 years ban
   }
 
   @Command(
@@ -78,8 +94,7 @@ public class BanCommand {
       usage = {"player uuid or name"},
       isSubCommand = true,
       subCommandAliases = {"del", "remove", "rem", "d", "r", "destroy"},
-      canConsoleUse = true
-  )
+      canConsoleUse = true)
   public void delete(ServerPlayer sender, String player) {
     String uuid = PlayerUtils.getUUIDForInput(player);
     try {
@@ -91,27 +106,22 @@ public class BanCommand {
         for (Ban ban : bans) {
           if (ban.ban_status) {
             ban.ban_status = false;
-            RequestGenerator.put("api/ban/" + ban.ban_id,
-                ServerEssentials.GSON.toJson(ban));
+            RequestGenerator.put("api/ban/" + ban.ban_id, ServerEssentials.GSON.toJson(ban));
           }
         }
       }
-      ChatHelper.send(sender.sender,
-          sender.lang.COMMAND_BAN_DELETE.replaceAll("\\{@USER@}", uuid));
+      ChatHelper.send(sender.sender, sender.lang.COMMAND_BAN_DELETE.replaceAll("\\{@USER@}", uuid));
     } catch (Exception e) {
-      ServerEssentials.LOG.warn(
-          "Failed to ban user '" + uuid + "' (" + e.getMessage() + ")");
+      ServerEssentials.LOG.warn("Failed to ban user '" + uuid + "' (" + e.getMessage() + ")");
     }
   }
-
 
   @Command(
       args = {CommandArgument.STRING},
       usage = {"player uuid or name"},
       isSubCommand = true,
       subCommandAliases = {"check", "c", "look", "lk", "l"},
-      canConsoleUse = true
-  )
+      canConsoleUse = true)
   public void lookup(ServerPlayer sender, String player) {
     String uuid = PlayerUtils.getUUIDForInput(player);
     try {
@@ -122,22 +132,23 @@ public class BanCommand {
         Ban[] bans = ServerEssentials.GSON.fromJson(response.response, Ban[].class);
         for (Ban ban : bans) {
           ChatHelper.send(sender.sender, sender.lang.SPACER);
-          ChatHelper.send(sender.sender,
+          ChatHelper.send(
+              sender.sender,
               sender.lang.COMMAND_BAN_LOOKUP_ID.replaceAll("\\{@ID@}", "" + ban.ban_id));
-          ChatHelper.send(sender.sender,
-              sender.lang.COMMAND_BAN_LOOKUP_REASON.replaceAll("\\{@REASON@}",
-                  "" + ban.ban_reason));
-          ChatHelper.send(sender.sender,
-              sender.lang.COMMAND_BAN_LOOKUP_TIME.replaceAll("\\{@TIME@}",
-                  CommandUtils.displayTime(Long.parseLong(ban.timestamp))));
+          ChatHelper.send(
+              sender.sender,
+              sender.lang.COMMAND_BAN_LOOKUP_REASON.replaceAll(
+                  "\\{@REASON@}", "" + ban.ban_reason));
+          ChatHelper.send(
+              sender.sender,
+              sender.lang.COMMAND_BAN_LOOKUP_TIME.replaceAll(
+                  "\\{@TIME@}", CommandUtils.displayTime(Long.parseLong(ban.timestamp))));
         }
         ChatHelper.send(sender.sender, sender.lang.SPACER);
       }
-      ChatHelper.send(sender.sender,
-          sender.lang.COMMAND_BAN_DELETE.replaceAll("\\{@USER@}", uuid));
+      ChatHelper.send(sender.sender, sender.lang.COMMAND_BAN_DELETE.replaceAll("\\{@USER@}", uuid));
     } catch (Exception e) {
-      ServerEssentials.LOG.warn(
-          "Failed to ban user '" + uuid + "' (" + e.getMessage() + ")");
+      ServerEssentials.LOG.warn("Failed to ban user '" + uuid + "' (" + e.getMessage() + ")");
     }
   }
 }

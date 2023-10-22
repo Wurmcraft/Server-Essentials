@@ -36,10 +36,15 @@ public class ProtectionEvents {
     if (claim != null) {
       if (!ProtectionHelper.isAllowed(claim, e.getPlayer(), Action.BREAK)) {
         e.setCanceled(true);
-        Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
-            SECore.dataLoader.get(DataType.ACCOUNT,
-                e.getPlayer().getGameProfile().getId().toString(), new Account()).lang,
-            new Language());
+        Language lang =
+            SECore.dataLoader.get(
+                DataType.LANGUAGE,
+                SECore.dataLoader.get(
+                        DataType.ACCOUNT,
+                        e.getPlayer().getGameProfile().getId().toString(),
+                        new Account())
+                    .lang,
+                new Language());
         ChatHelper.send(e.getPlayer(), lang.PROTECT_BREAK);
       }
     }
@@ -53,10 +58,15 @@ public class ProtectionEvents {
       if (claim != null) {
         if (!ProtectionHelper.isAllowed(claim, player, Action.PLACE)) {
           e.setCanceled(true);
-          Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
-              SECore.dataLoader.get(DataType.ACCOUNT,
-                  player.getGameProfile().getId().toString(), new Account()).lang,
-              new Language());
+          Language lang =
+              SECore.dataLoader.get(
+                  DataType.LANGUAGE,
+                  SECore.dataLoader.get(
+                          DataType.ACCOUNT,
+                          player.getGameProfile().getId().toString(),
+                          new Account())
+                      .lang,
+                  new Language());
           ChatHelper.send(player, lang.PROTECT_PLACE);
         }
       }
@@ -71,10 +81,15 @@ public class ProtectionEvents {
       if (claim != null) {
         if (!ProtectionHelper.isAllowed(claim, player, Action.PLACE)) {
           e.setCanceled(true);
-          Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
-              SECore.dataLoader.get(DataType.ACCOUNT,
-                  player.getGameProfile().getId().toString(), new Account()).lang,
-              new Language());
+          Language lang =
+              SECore.dataLoader.get(
+                  DataType.LANGUAGE,
+                  SECore.dataLoader.get(
+                          DataType.ACCOUNT,
+                          player.getGameProfile().getId().toString(),
+                          new Account())
+                      .lang,
+                  new Language());
           ChatHelper.send(player, lang.PROTECT_PLACE);
         }
       }
@@ -89,10 +104,15 @@ public class ProtectionEvents {
       if (claim != null) {
         if (!ProtectionHelper.isAllowed(claim, player, Action.INTERACT)) {
           e.setCanceled(true);
-          Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
-              SECore.dataLoader.get(DataType.ACCOUNT,
-                  player.getGameProfile().getId().toString(), new Account()).lang,
-              new Language());
+          Language lang =
+              SECore.dataLoader.get(
+                  DataType.LANGUAGE,
+                  SECore.dataLoader.get(
+                          DataType.ACCOUNT,
+                          player.getGameProfile().getId().toString(),
+                          new Account())
+                      .lang,
+                  new Language());
           ChatHelper.send(player, lang.PROTECT_PLACE);
         }
       }
@@ -107,10 +127,15 @@ public class ProtectionEvents {
       if (claim != null) {
         if (!ProtectionHelper.isAllowed(claim, player, Action.INTERACT)) {
           e.setCanceled(true);
-          Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
-              SECore.dataLoader.get(DataType.ACCOUNT,
-                  player.getGameProfile().getId().toString(), new Account()).lang,
-              new Language());
+          Language lang =
+              SECore.dataLoader.get(
+                  DataType.LANGUAGE,
+                  SECore.dataLoader.get(
+                          DataType.ACCOUNT,
+                          player.getGameProfile().getId().toString(),
+                          new Account())
+                      .lang,
+                  new Language());
           ChatHelper.send(player, lang.PROTECT_PLACE);
         }
       }
@@ -125,10 +150,15 @@ public class ProtectionEvents {
       if (claim != null) {
         if (!ProtectionHelper.isAllowed(claim, player, Action.INTERACT)) {
           e.setCanceled(true);
-          Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
-              SECore.dataLoader.get(DataType.ACCOUNT,
-                  player.getGameProfile().getId().toString(), new Account()).lang,
-              new Language());
+          Language lang =
+              SECore.dataLoader.get(
+                  DataType.LANGUAGE,
+                  SECore.dataLoader.get(
+                          DataType.ACCOUNT,
+                          player.getGameProfile().getId().toString(),
+                          new Account())
+                      .lang,
+                  new Language());
           ChatHelper.send(player, lang.PROTECT_PLACE);
         }
       }
@@ -147,12 +177,11 @@ public class ProtectionEvents {
     }
   }
 
-  private static int maxCheck = ((ConfigProtect) SECore.moduleConfigs.get(
-      "PROTECT")).defenseRange;
-  private static int minDistance = ((ConfigProtect) SECore.moduleConfigs.get(
-      "PROTECT")).minClaimSize;
-  private static boolean preventNearbyExplosions = ((ConfigProtect) SECore.moduleConfigs.get(
-      "PROTECT")).preventNearbyExplosions;
+  private static int maxCheck = ((ConfigProtect) SECore.moduleConfigs.get("PROTECT")).defenseRange;
+  private static int minDistance =
+      ((ConfigProtect) SECore.moduleConfigs.get("PROTECT")).minClaimSize;
+  private static boolean preventNearbyExplosions =
+      ((ConfigProtect) SECore.moduleConfigs.get("PROTECT")).preventNearbyExplosions;
 
   private boolean isInteractionAllowedArea(BlockPos pos, EntityPlayer player) {
     for (int x = -maxCheck; x < maxCheck; x = x + minDistance) {
@@ -176,10 +205,15 @@ public class ProtectionEvents {
       if (claim != null) {
         if (!ProtectionHelper.isAllowed(claim, player, Action.INTERACT)) {
           e.setCanceled(true);
-          Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
-              SECore.dataLoader.get(DataType.ACCOUNT,
-                  player.getGameProfile().getId().toString(), new Account()).lang,
-              new Language());
+          Language lang =
+              SECore.dataLoader.get(
+                  DataType.LANGUAGE,
+                  SECore.dataLoader.get(
+                          DataType.ACCOUNT,
+                          player.getGameProfile().getId().toString(),
+                          new Account())
+                      .lang,
+                  new Language());
           ChatHelper.send(player, lang.PROTECT_PLACE);
         }
       }
@@ -192,34 +226,43 @@ public class ProtectionEvents {
       EntityPlayer player = (EntityPlayer) e.getExplosion().getExplosivePlacedBy();
       if (!allowedToExplode(e.getExplosion().getAffectedBlockPositions(), player)) {
         e.setCanceled(true);
-        ServerEssentials.LOG.info("Explosion has been canceled at " + e.getExplosion()
-            .getAffectedBlockPositions().get(0).toString() + " by " + e.getExplosion()
-            .getExplosivePlacedBy().getDisplayName().getFormattedText());
-        Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
-            SECore.dataLoader.get(DataType.ACCOUNT,
-                player.getGameProfile().getId().toString(), new Account()).lang,
-            new Language());
+        ServerEssentials.LOG.info(
+            "Explosion has been canceled at "
+                + e.getExplosion().getAffectedBlockPositions().get(0).toString()
+                + " by "
+                + e.getExplosion().getExplosivePlacedBy().getDisplayName().getFormattedText());
+        Language lang =
+            SECore.dataLoader.get(
+                DataType.LANGUAGE,
+                SECore.dataLoader.get(
+                        DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account())
+                    .lang,
+                new Language());
         ChatHelper.send(player, lang.PROTECT_PLACE);
       }
     } else {
-      int dim = e.getExplosion().getExplosivePlacedBy() != null ? e.getExplosion()
-          .getExplosivePlacedBy().dimension : e.getWorld().provider.getDimension();
+      int dim =
+          e.getExplosion().getExplosivePlacedBy() != null
+              ? e.getExplosion().getExplosivePlacedBy().dimension
+              : e.getWorld().provider.getDimension();
       if (dim == Integer.MIN_VALUE) {
         ServerEssentials.LOG.warn(
             "Unable to determine explosion source, \"I won't interfere\" ("
-                + e.getExplosion().getExplosivePlacedBy() + ")");
+                + e.getExplosion().getExplosivePlacedBy()
+                + ")");
       } else if (hasClaim(e.getExplosion().getAffectedBlockPositions(), dim)) {
         if (preventNearbyExplosions) {
           e.setCanceled(true);
         } else {
           String fieldName =
               (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")
-                  ? "affectedBlockPositions" : "field_149155_e";
+                  ? "affectedBlockPositions"
+                  : "field_149155_e";
           try {
             Field field = e.getExplosion().getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
-            field.set(e.getExplosion(),
-                safeSpots(e.getExplosion().getAffectedBlockPositions(), dim));
+            field.set(
+                e.getExplosion(), safeSpots(e.getExplosion().getAffectedBlockPositions(), dim));
           } catch (Exception f) {
             f.printStackTrace();
             ServerEssentials.LOG.info(
@@ -231,8 +274,7 @@ public class ProtectionEvents {
     }
   }
 
-  public static boolean allowedToExplode(List<BlockPos> explosionList,
-      EntityPlayer player) {
+  public static boolean allowedToExplode(List<BlockPos> explosionList, EntityPlayer player) {
     for (BlockPos pos : explosionList) {
       Claim claim = ProtectionHelper.getClaim(pos, player.dimension);
       if (!ProtectionHelper.isAllowed(claim, player, Action.BREAK)) {

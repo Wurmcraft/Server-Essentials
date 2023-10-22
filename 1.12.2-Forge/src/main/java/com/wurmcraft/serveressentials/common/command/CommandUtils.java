@@ -42,8 +42,7 @@ public class CommandUtils {
 
   public static CommandConfig loadConfig(ModuleCommand moduleCommand) {
     String name = moduleCommand.name().toLowerCase();
-    File command = new File(
-        COMMAND_SAVE_DIR + File.separator + name.toLowerCase() + ".json");
+    File command = new File(COMMAND_SAVE_DIR + File.separator + name.toLowerCase() + ".json");
     if (!COMMAND_SAVE_DIR.exists()) {
       if (!COMMAND_SAVE_DIR.mkdirs()) {
         LOG.warn("Failed to create directory for command configs");
@@ -58,8 +57,7 @@ public class CommandUtils {
       } catch (IOException e) {
         e.printStackTrace();
         LOG.warn(
-            "Failed to load command config for '" + name + "' ("
-                + command.getAbsolutePath() + ")");
+            "Failed to load command config for '" + name + "' (" + command.getAbsolutePath() + ")");
       }
     } else {
       // Compute Cooldown Defaults
@@ -133,8 +131,7 @@ public class CommandUtils {
       } catch (IOException e) {
         e.printStackTrace();
         LOG.warn(
-            "Failed to save command config for '" + name + "' ("
-                + command.getAbsolutePath() + ")");
+            "Failed to save command config for '" + name + "' (" + command.getAbsolutePath() + ")");
       }
     }
     return null;
@@ -167,22 +164,26 @@ public class CommandUtils {
       autofill.add(0.0 + "");
     } else if (arg == CommandArgument.PLAYER) {
       for (EntityPlayer player :
-          FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
-              .getPlayers()) {
-        Account account = SECore.dataLoader.get(DataType.ACCOUNT,
-            player.getGameProfile().getId().toString(), new Account());
+          FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+        Account account =
+            SECore.dataLoader.get(
+                DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account());
         autofill.add(ChatHelper.getName(player, account));
       }
     } else if (arg == CommandArgument.RANK) {
-      for (Rank rank : SECore.dataLoader.getFromKey(DataLoader.DataType.RANK, new Rank())
-          .values()) {
+      for (Rank rank :
+          SECore.dataLoader.getFromKey(DataLoader.DataType.RANK, new Rank()).values()) {
         autofill.add(rank.name);
       }
     } else if (arg == CommandArgument.HOME) {
       if (sender instanceof EntityPlayer) {
         EntityPlayer player = (EntityPlayer) sender;
-        for (Home home : SECore.dataLoader.get(DataType.LOCAL_ACCOUNT,
-            player.getGameProfile().getId().toString(), new LocalAccount()).homes) {
+        for (Home home :
+            SECore.dataLoader.get(
+                    DataType.LOCAL_ACCOUNT,
+                    player.getGameProfile().getId().toString(),
+                    new LocalAccount())
+                .homes) {
           autofill.add(home.name);
         }
       }
@@ -190,24 +191,22 @@ public class CommandUtils {
       autofill.addAll(SECore.modules.keySet());
     } else if (arg == CommandArgument.CURRENCY) {
       for (Currency currency :
-          SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency())
-              .values()) {
+          SECore.dataLoader.getFromKey(DataLoader.DataType.CURRENCY, new Currency()).values()) {
         autofill.add(currency.display_name);
       }
     } else if (arg == CommandArgument.WARP) {
       if (sender instanceof EntityPlayer) {
         EntityPlayer player = (EntityPlayer) sender;
-        Account account = SECore.dataLoader.get(DataType.ACCOUNT,
-            player.getGameProfile().getId().toString(), new Account());
-        for (Warp warp : SECore.dataLoader.getFromKey(DataType.WARP, new Warp())
-            .values()) {
+        Account account =
+            SECore.dataLoader.get(
+                DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account());
+        for (Warp warp : SECore.dataLoader.getFromKey(DataType.WARP, new Warp()).values()) {
           if (RankUtils.hasPermission(account, "command.warp." + warp.name)) {
             autofill.add(warp.name);
           }
         }
       } else {
-        for (Warp warp : SECore.dataLoader.getFromKey(DataType.WARP, new Warp())
-            .values()) {
+        for (Warp warp : SECore.dataLoader.getFromKey(DataType.WARP, new Warp()).values()) {
           autofill.add(warp.name);
         }
       }
@@ -217,13 +216,11 @@ public class CommandUtils {
       }
     } else if (arg == CommandArgument.CHANNEL) {
       for (Channel ch :
-          SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel())
-              .values()) {
+          SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel()).values()) {
         autofill.add(ch.name);
       }
     } else if (arg == CommandArgument.KIT) {
-      for (Kit kit : SECore.dataLoader.getFromKey(DataLoader.DataType.KIT, new Kit())
-          .values()) {
+      for (Kit kit : SECore.dataLoader.getFromKey(DataLoader.DataType.KIT, new Kit()).values()) {
         autofill.add(kit.name);
       }
     }
@@ -346,9 +343,9 @@ public class CommandUtils {
     return SECore.dataLoader.get(
         DataLoader.DataType.LANGUAGE,
         SECore.dataLoader.get(
-            DataLoader.DataType.ACCOUNT,
-            otherPlayer.getGameProfile().getId().toString(),
-            new Account())
+                DataLoader.DataType.ACCOUNT,
+                otherPlayer.getGameProfile().getId().toString(),
+                new Account())
             .lang,
         new Language());
   }
@@ -402,8 +399,7 @@ public class CommandUtils {
     }
     long lowest = Long.MAX_VALUE;
     for (String rank : ranks) {
-      if (timings.containsKey(rank.toLowerCase())
-          && timings.get(rank.toLowerCase()) < lowest) {
+      if (timings.containsKey(rank.toLowerCase()) && timings.get(rank.toLowerCase()) < lowest) {
         lowest = timings.get(rank.toLowerCase());
       }
     }

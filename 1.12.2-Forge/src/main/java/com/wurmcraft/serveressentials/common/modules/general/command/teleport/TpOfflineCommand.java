@@ -26,16 +26,14 @@ public class TpOfflineCommand {
   public void tpOffline(ServerPlayer player, String user) {
     String uuid = PlayerUtils.getUUIDForInput(user);
     LocalAccount local =
-        SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, uuid,
-            new LocalAccount());
+        SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, uuid, new LocalAccount());
     if (local != null) {
       if (TeleportUtils.teleportTo(
           (EntityPlayerMP) player.player, player.local, local.lastLocation)) {
         ChatHelper.send(
             player.sender,
             player.lang.COMMAND_TPOFFLINE.replaceAll(
-                "\\{@PLAYER@}",
-                UsernameCache.getLastKnownUsername(UUID.fromString(uuid))));
+                "\\{@PLAYER@}", UsernameCache.getLastKnownUsername(UUID.fromString(uuid))));
       }
     } else {
       ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND);

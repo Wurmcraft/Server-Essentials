@@ -28,9 +28,7 @@ import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
 
 public class SecurityEvents {
 
-  public static ConfigSecurity config = ((ConfigSecurity) SECore.moduleConfigs.get(
-      "SECURITY"));
-
+  public static ConfigSecurity config = ((ConfigSecurity) SECore.moduleConfigs.get("SECURITY"));
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public void onBlockBreak(BlockEvent.BreakEvent e) {
@@ -104,63 +102,76 @@ public class SecurityEvents {
 
   @SubscribeEvent(priority = EventPriority.LOWEST)
   public void onJoinEvent(PlayerLoggedInEvent e) {
-    if (config.autoOP && TrustedList.trustedUsers
-        .contains(e.player.getGameProfile().getId().toString())) {
+    if (config.autoOP
+        && TrustedList.trustedUsers.contains(e.player.getGameProfile().getId().toString())) {
       if (!isOp(e.player)) {
         FMLCommonHandler.instance()
             .getMinecraftServerInstance()
             .getCommandManager()
             .executeCommand(
                 FMLCommonHandler.instance().getMinecraftServerInstance(),
-                "op " + UsernameCache
-                    .getLastKnownUsername(e.player.getGameProfile().getId()));
+                "op " + UsernameCache.getLastKnownUsername(e.player.getGameProfile().getId()));
       }
     }
     if (config.checkAlt) {
       HashMap<SocketAddress, UUID> cache = new HashMap<>();
       for (EntityPlayerMP player :
-          FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
-              .getPlayers()) {
+          FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
         if (cache.containsKey(player.connection.netManager.getRemoteAddress())) {
           for (EntityPlayerMP p :
-              FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
+              FMLCommonHandler.instance()
+                  .getMinecraftServerInstance()
+                  .getPlayerList()
                   .getPlayers()) {
-            if (RankUtils.hasPermission(SECore.dataLoader.get(DataType.ACCOUNT,
-                    p.getGameProfile().getId().toString(), new Account()),
+            if (RankUtils.hasPermission(
+                SECore.dataLoader.get(
+                    DataType.ACCOUNT, p.getGameProfile().getId().toString(), new Account()),
                 "security.alt.notify")) {
-              Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
-                  SECore.dataLoader.get(DataType.ACCOUNT,
-                      p.getGameProfile().getId().toString(), new Account()).lang,
-                  new Language());
-              ChatHelper.send(p, lang.SECURITY_ALT
-                  .replaceAll("%PLAYER%", player.getDisplayNameString())
-                  .replaceAll("%PLAYER2%",
-                      player.connection.netManager.getRemoteAddress().toString()));
+              Language lang =
+                  SECore.dataLoader.get(
+                      DataType.LANGUAGE,
+                      SECore.dataLoader.get(
+                              DataType.ACCOUNT,
+                              p.getGameProfile().getId().toString(),
+                              new Account())
+                          .lang,
+                      new Language());
+              ChatHelper.send(
+                  p,
+                  lang.SECURITY_ALT
+                      .replaceAll("%PLAYER%", player.getDisplayNameString())
+                      .replaceAll(
+                          "%PLAYER2%", player.connection.netManager.getRemoteAddress().toString()));
             }
           }
         } else {
-          cache.put(player.connection.netManager.getRemoteAddress(),
-              player.getGameProfile().getId());
+          cache.put(
+              player.connection.netManager.getRemoteAddress(), player.getGameProfile().getId());
         }
       }
     }
-    if (config.modBlacklist != null
-        && config.modBlacklist.length > 0) {
-      for (String playerMods : NetworkDispatcher
-          .get(((EntityPlayerMP) e.player).connection.netManager).getModList().keySet()) {
+    if (config.modBlacklist != null && config.modBlacklist.length > 0) {
+      for (String playerMods :
+          NetworkDispatcher.get(((EntityPlayerMP) e.player).connection.netManager)
+              .getModList()
+              .keySet()) {
         for (String blacklist : config.modBlacklist) {
           if (playerMods.equalsIgnoreCase(blacklist)) {
             EntityPlayerMP player = (EntityPlayerMP) e.player;
-            Language lang = SECore.dataLoader.get(DataType.LANGUAGE,
-                SECore.dataLoader.get(DataType.ACCOUNT,
-                    player.getGameProfile().getId().toString(), new Account()).lang,
-                new Language());
-            player.connection.disconnect(new TextComponentString(
-                lang.SECURITY_BLACKLIST
-                    .replaceAll("%MOD%", blacklist.toUpperCase())));
-            ServerEssentials.LOG
-                .warn(player.getName() + "tried to connect with the mod '" + blacklist
-                    + "'");
+            Language lang =
+                SECore.dataLoader.get(
+                    DataType.LANGUAGE,
+                    SECore.dataLoader.get(
+                            DataType.ACCOUNT,
+                            player.getGameProfile().getId().toString(),
+                            new Account())
+                        .lang,
+                    new Language());
+            player.connection.disconnect(
+                new TextComponentString(
+                    lang.SECURITY_BLACKLIST.replaceAll("%MOD%", blacklist.toUpperCase())));
+            ServerEssentials.LOG.warn(
+                player.getName() + "tried to connect with the mod '" + blacklist + "'");
           }
         }
       }
@@ -169,11 +180,10 @@ public class SecurityEvents {
 
   private static boolean isOp(EntityPlayer player) {
     return FMLCommonHandler.instance()
-        .getMinecraftServerInstance()
-        .getPlayerList()
-        .getOppedPlayers()
-        .getPermissionLevel(player.getGameProfile())
+            .getMinecraftServerInstance()
+            .getPlayerList()
+            .getOppedPlayers()
+            .getPermissionLevel(player.getGameProfile())
         > 0;
   }
-
 }

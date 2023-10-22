@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -45,8 +44,9 @@ public class WSWrapper {
       return false;
     }
     WSWrapper wsWrapper = (WSWrapper) o;
-    return status == wsWrapper.status && type == wsWrapper.type && Objects.equals(
-        data, wsWrapper.data);
+    return status == wsWrapper.status
+        && type == wsWrapper.type
+        && Objects.equals(data, wsWrapper.data);
   }
 
   @Override

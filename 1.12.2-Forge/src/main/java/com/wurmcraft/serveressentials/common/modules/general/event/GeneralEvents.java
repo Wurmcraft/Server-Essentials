@@ -44,8 +44,7 @@ public class GeneralEvents {
   public static List<EntityPlayer> afkPlayers = new ArrayList<>();
   public static NonBlockingHashMap<EntityPlayer, LastPos> lastLocation = new NonBlockingHashMap<>();
   public static long afkTime =
-      CommandUtils.convertToTime(
-          ((ConfigGeneral) (SECore.moduleConfigs.get("GENERAL"))).afkTimer)
+      CommandUtils.convertToTime(((ConfigGeneral) (SECore.moduleConfigs.get("GENERAL"))).afkTimer)
           / ((ConfigGeneral) (SECore.moduleConfigs.get("GENERAL"))).afkCheckTimer;
 
   private static List<EntityPlayer> deadPlayers = new ArrayList<>();
@@ -79,8 +78,7 @@ public class GeneralEvents {
     long lastSyncTime = loginTime.get(player);
     long time = (System.currentTimeMillis() - lastSyncTime) / 1000;
     time = time / 60;
-    Account account = PlayerUtils.getLatestAccount(
-        player.getGameProfile().getId().toString());
+    Account account = PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString());
     if (account != null) {
       account = addTime(account, time);
       SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, account.uuid, account);
@@ -93,8 +91,7 @@ public class GeneralEvents {
       for (int index = 0; index < account.tracked_time.length; index++) {
         if (account.tracked_time[index].serverID.equalsIgnoreCase(
             ServerEssentials.config.general.serverID)) {
-          account.tracked_time[index].totalTime =
-              account.tracked_time[index].totalTime + time;
+          account.tracked_time[index].totalTime = account.tracked_time[index].totalTime + time;
           account.tracked_time[index].lastSeen = Instant.now().getEpochSecond();
           return account;
         }
@@ -102,13 +99,11 @@ public class GeneralEvents {
     }
     ServerTime stat =
         new ServerTime(
-            ServerEssentials.config.general.serverID, time,
-            Instant.now().getEpochSecond());
+            ServerEssentials.config.general.serverID, time, Instant.now().getEpochSecond());
     if (account.tracked_time == null) {
       account.tracked_time = new ServerTime[0];
     }
-    account.tracked_time = Arrays.copyOf(account.tracked_time,
-        account.tracked_time.length + 1);
+    account.tracked_time = Arrays.copyOf(account.tracked_time, account.tracked_time.length + 1);
     account.tracked_time[account.tracked_time.length - 1] = stat;
     return account;
   }
@@ -116,7 +111,7 @@ public class GeneralEvents {
   @SubscribeEvent
   public void onPlayerMove(TickEvent.PlayerTickEvent e) {
     if (e.player.world.getWorldTime()
-        % (((ConfigGeneral) (SECore.moduleConfigs.get("GENERAL"))).afkCheckTimer * 20L)
+            % (((ConfigGeneral) (SECore.moduleConfigs.get("GENERAL"))).afkCheckTimer * 20L)
         == 0) {
       if (lastLocation.containsKey(e.player)) {
         Location loc = lastLocation.get(e.player).location;
@@ -161,8 +156,7 @@ public class GeneralEvents {
     if (frozenPlayers.size() > 0 && frozenPlayers.keySet().contains(e.player)) {
       BlockPos lockedPos = frozenPlayers.get(e.player);
       if (e.player.getPosition() != lockedPos) {
-        e.player
-            .setPositionAndUpdate(lockedPos.getX(), lockedPos.getY(), lockedPos.getZ());
+        e.player.setPositionAndUpdate(lockedPos.getX(), lockedPos.getY(), lockedPos.getZ());
       }
     }
   }
@@ -214,15 +208,14 @@ public class GeneralEvents {
             commandLang.ANNOUNCEMENT_AFK_ENABLED.replaceAll(
                 "\\{@NAME@}", player.getDisplayNameString()));
         for (EntityPlayer randPlayer :
-            FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
-                .getPlayers()) {
+            FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
           Language lang =
               SECore.dataLoader.get(
                   DataLoader.DataType.LANGUAGE,
                   SECore.dataLoader.get(
-                      DataLoader.DataType.ACCOUNT,
-                      player.getGameProfile().getId().toString(),
-                      new Account())
+                          DataLoader.DataType.ACCOUNT,
+                          player.getGameProfile().getId().toString(),
+                          new Account())
                       .lang,
                   new Language());
           ChatHelper.send(
@@ -237,21 +230,19 @@ public class GeneralEvents {
           commandLang.ANNOUNCEMENT_AFK_DISABLED.replaceAll(
               "\\{@NAME@}", player.getDisplayNameString()));
       for (EntityPlayer randPlayer :
-          FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
-              .getPlayers()) {
+          FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
         Language lang =
             SECore.dataLoader.get(
                 DataLoader.DataType.LANGUAGE,
                 SECore.dataLoader.get(
-                    DataLoader.DataType.ACCOUNT,
-                    player.getGameProfile().getId().toString(),
-                    new Account())
+                        DataLoader.DataType.ACCOUNT,
+                        player.getGameProfile().getId().toString(),
+                        new Account())
                     .lang,
                 new Language());
         ChatHelper.send(
             randPlayer,
-            lang.ANNOUNCEMENT_AFK_DISABLED.replaceAll("\\{@NAME@}",
-                player.getDisplayNameString()));
+            lang.ANNOUNCEMENT_AFK_DISABLED.replaceAll("\\{@NAME@}", player.getDisplayNameString()));
       }
     }
   }
@@ -260,13 +251,23 @@ public class GeneralEvents {
   public void onLivingDeath(LivingDeathEvent e) {
     if (e.getEntityLiving() instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) e.getEntityLiving();
-      Account account = SECore.dataLoader.get(DataType.ACCOUNT,
-          player.getGameProfile().getId().toString(), new Account());
+      Account account =
+          SECore.dataLoader.get(
+              DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account());
       if (RankUtils.hasPermission(account, "general.back.death")) {
-        LocalAccount playerData = SECore.dataLoader.get(DataType.LOCAL_ACCOUNT,
-            player.getGameProfile().getId().toString(), new LocalAccount());
-        playerData.lastLocation = new Location(player.posX, player.posY,
-            player.posZ, player.dimension, player.cameraPitch, player.cameraYaw);
+        LocalAccount playerData =
+            SECore.dataLoader.get(
+                DataType.LOCAL_ACCOUNT,
+                player.getGameProfile().getId().toString(),
+                new LocalAccount());
+        playerData.lastLocation =
+            new Location(
+                player.posX,
+                player.posY,
+                player.posZ,
+                player.dimension,
+                player.cameraPitch,
+                player.cameraYaw);
         SECore.dataLoader.register(DataType.LOCAL_ACCOUNT, playerData.uuid, playerData);
       }
       if (e.getEntityLiving() instanceof EntityPlayer) {
@@ -300,5 +301,4 @@ public class GeneralEvents {
   public static boolean isFrozen(EntityPlayer player) {
     return frozenPlayers.keySet().contains(player);
   }
-
 }

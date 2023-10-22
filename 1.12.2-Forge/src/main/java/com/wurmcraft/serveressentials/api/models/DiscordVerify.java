@@ -8,8 +8,8 @@ public class DiscordVerify {
   public String discordID;
   public String discordUsername;
 
-  public DiscordVerify(String token, String uuid, String username, String discordID,
-      String discordUsername) {
+  public DiscordVerify(
+      String token, String uuid, String username, String discordID, String discordUsername) {
     this.token = token;
     this.uuid = uuid;
     this.username = username;

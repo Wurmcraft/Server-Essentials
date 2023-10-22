@@ -12,8 +12,13 @@ public class Claim {
   public ClaimType type;
   public Map<String, String> claimInfo;
 
-  public Claim(String owner, TrustInfo[] trust, Position min, Position max,
-      Map<ClaimSettings, String> settings, ClaimType type,
+  public Claim(
+      String owner,
+      TrustInfo[] trust,
+      Position min,
+      Position max,
+      Map<ClaimSettings, String> settings,
+      ClaimType type,
       Map<String, String> claimInfo) {
     this.owner = owner;
     this.trust = trust;
@@ -29,7 +34,9 @@ public class Claim {
   }
 
   public enum ClaimType {
-    BASIC, RENT, ADVANCED, SUB
+    BASIC,
+    RENT,
+    ADVANCED,
+    SUB
   }
-
 }

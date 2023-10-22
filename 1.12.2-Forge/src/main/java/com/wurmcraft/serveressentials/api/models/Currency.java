@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -29,8 +28,7 @@ public class Currency {
     this.tax = tax;
   }
 
-  public Currency() {
-  }
+  public Currency() {}
 
   @Override
   public String toString() {

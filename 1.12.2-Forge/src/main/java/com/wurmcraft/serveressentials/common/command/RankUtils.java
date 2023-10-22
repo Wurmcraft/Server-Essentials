@@ -125,13 +125,15 @@ public class RankUtils {
 
       // Check for matches
       // Exact
-      if (core.equalsIgnoreCase(pCore) && base.equalsIgnoreCase(pBase)
+      if (core.equalsIgnoreCase(pCore)
+          && base.equalsIgnoreCase(pBase)
           && sub.equalsIgnoreCase(pSub)) {
         return true;
       }
       // Wildcard match
-      if (core.equalsIgnoreCase(pCore) && base.equalsIgnoreCase(pBase) && (
-          sub.isEmpty() && pSub.isEmpty() || pSub.equalsIgnoreCase("*"))) {
+      if (core.equalsIgnoreCase(pCore)
+          && base.equalsIgnoreCase(pBase)
+          && (sub.isEmpty() && pSub.isEmpty() || pSub.equalsIgnoreCase("*"))) {
         return true;
       }
     }
@@ -149,10 +151,15 @@ public class RankUtils {
       }
       return rankPermList.toArray(new String[0]);
     }
-    Rank r = SECore.dataLoader.get(DataType.RANK, rank, new Rank());
-    Collections.addAll(rankPermList, r.permissions);
-    for (String rk : r.inheritance) {
-      Collections.addAll(rankPermList, permList(rk));
+    rank = rank.toLowerCase();
+    if (SECore.dataLoader.get(DataType.RANK, rank) != null) {
+      Rank r = SECore.dataLoader.get(DataType.RANK, rank, new Rank());
+      Collections.addAll(rankPermList, r.permissions);
+      for (String rk : r.inheritance) {
+        Collections.addAll(rankPermList, permList(rk));
+      }
+    } else {
+      ServerEssentials.LOG.warn("Invalid rank '" + rank + "'");
     }
     return rankPermList.toArray(new String[0]);
   }

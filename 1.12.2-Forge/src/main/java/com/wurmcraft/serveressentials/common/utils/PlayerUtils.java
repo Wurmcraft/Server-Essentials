@@ -28,8 +28,7 @@ public class PlayerUtils {
 
   public static boolean isUserOnline(String uuid) {
     for (EntityPlayerMP player :
-        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
-            .getPlayers()) {
+        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
       if (player.getGameProfile().getId().toString().equals(uuid)) {
         return true;
       }
@@ -62,8 +61,7 @@ public class PlayerUtils {
     // UUID Check
     try {
       UUID uuid = UUID.fromString(input);
-      RequestGenerator.HttpResponse response = RequestGenerator.get(
-          "api/lookup/username/" + uuid);
+      RequestGenerator.HttpResponse response = RequestGenerator.get("api/lookup/username/" + uuid);
       if (response.status == 200) {
         Account account = GSON.fromJson(response.response, Account.class);
         String username = account.username;
@@ -75,8 +73,7 @@ public class PlayerUtils {
     }
     // Username Check
     try {
-      RequestGenerator.HttpResponse response = RequestGenerator.get(
-          "api/lookup/uuid/" + input);
+      RequestGenerator.HttpResponse response = RequestGenerator.get("api/lookup/uuid/" + input);
       if (response.status == 200) {
         Account account = GSON.fromJson(response.response, Account.class);
         String uuid = account.uuid;
@@ -110,8 +107,7 @@ public class PlayerUtils {
 
   private static String validateUsernameRemote(String uuid) {
     try {
-      RequestGenerator.HttpResponse response = RequestGenerator.get(
-          "api/lookup/username/" + uuid);
+      RequestGenerator.HttpResponse response = RequestGenerator.get("api/lookup/username/" + uuid);
       if (response.status == 200) {
         Account account = GSON.fromJson(response.response, Account.class);
         return account.username;
@@ -219,8 +215,7 @@ public class PlayerUtils {
     if (SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
       try {
         RequestGenerator.HttpResponse response =
-            RequestGenerator.get(DataLoader.DataType.ACCOUNT.path + "/" + uuid,
-                new HashMap<>());
+            RequestGenerator.get(DataLoader.DataType.ACCOUNT.path + "/" + uuid, new HashMap<>());
         return GSON.fromJson(response.response, Account.class);
       } catch (Exception e) {
         LOG.warn("Failed to get updated account for '" + uuid + "'");
@@ -243,8 +238,7 @@ public class PlayerUtils {
 
   public static long getTotalPlaytime(Account account) {
     long playtime = 0;
-    if (account != null && account.tracked_time != null
-        && account.tracked_time.length > 0) {
+    if (account != null && account.tracked_time != null && account.tracked_time.length > 0) {
       for (ServerTime time : account.tracked_time) {
         playtime += time.totalTime;
       }

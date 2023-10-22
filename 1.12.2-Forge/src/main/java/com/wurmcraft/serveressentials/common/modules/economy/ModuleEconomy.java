@@ -18,17 +18,16 @@ public class ModuleEconomy {
     loadPerks();
   }
 
-  public void reload() {
-  }
+  public void reload() {}
 
   public static void loadPerks() {
-    File perkDir = new File(
-        SAVE_DIR + File.separator + "Storage" + File.separator + "perks");
+    File perkDir = new File(SAVE_DIR + File.separator + "Storage" + File.separator + "perks");
     if (perkDir.exists()) {
       for (File file : perkDir.listFiles()) {
         try {
-          PerkCost loadedPerk = ServerEssentials.GSON.fromJson(
-              Strings.join(Files.readAllLines(perkDir.toPath()), "\n"), PerkCost.class);
+          PerkCost loadedPerk =
+              ServerEssentials.GSON.fromJson(
+                  Strings.join(Files.readAllLines(perkDir.toPath()), "\n"), PerkCost.class);
           PerkCommand.perks.put(loadedPerk.perkNode.toLowerCase(), loadedPerk);
         } catch (Exception e) {
           ServerEssentials.LOG.warn(
@@ -41,8 +40,7 @@ public class ModuleEconomy {
   }
 
   public static void createDefaultPerks() {
-    File perkDir = new File(
-        SAVE_DIR + File.separator + "Storage" + File.separator + "perks");
+    File perkDir = new File(SAVE_DIR + File.separator + "Storage" + File.separator + "perks");
     PerkCost home = new PerkCost(1.25, 1000, "home", 5);
     PerkCost vault = new PerkCost(2, 2500, "vault", 5);
     savePerk(new File(perkDir + File.separator + "home.json"), home);
@@ -54,8 +52,8 @@ public class ModuleEconomy {
       save.getParentFile().mkdirs();
     }
     try {
-      Files.write(save.toPath(), ServerEssentials.GSON.toJson(perk).getBytes(),
-          StandardOpenOption.WRITE);
+      Files.write(
+          save.toPath(), ServerEssentials.GSON.toJson(perk).getBytes(), StandardOpenOption.WRITE);
     } catch (Exception e) {
       ServerEssentials.LOG.warn(
           "Failed to save new perk '" + perk.perkNode + "' (" + e.getMessage() + ")");

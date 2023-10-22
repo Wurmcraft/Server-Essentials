@@ -15,9 +15,7 @@ public class DayCommand {
       args = {},
       usage = {})
   public void setDay(ServerPlayer player) {
-    FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld()
-        .setWorldTime(time);
-    ChatHelper.send(player.sender,
-        player.lang.COMMAND_TIME.replaceAll("\\{@TIME@}", "" + time));
+    FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld().setWorldTime(time);
+    ChatHelper.send(player.sender, player.lang.COMMAND_TIME.replaceAll("\\{@TIME@}", "" + time));
   }
 }

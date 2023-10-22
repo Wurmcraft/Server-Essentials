@@ -105,8 +105,7 @@ public class RestDataLoader extends FileDataLoader {
   }
 
   /**
-   * Checks if the cache contains the files, if not pull from rest, ignore files (may be
-   * outdated)
+   * Checks if the cache contains the files, if not pull from rest, ignore files (may be outdated)
    *
    * @param key type of data you are looking for
    * @param type cast the data to this type
@@ -125,8 +124,7 @@ public class RestDataLoader extends FileDataLoader {
         RequestGenerator.HttpResponse response = RequestGenerator.get(key.path);
         if (isValidResponse(response)) {
           // Object[] data = GSON.fromJson(response.response,  key.instanceType.arrayType());
-          Object[] data = (Object[]) GSON.fromJson(response.response,
-              key.instanceTypeArr);
+          Object[] data = (Object[]) GSON.fromJson(response.response, key.instanceTypeArr);
           if (data != null) {
             for (Object d : data) {
               String dataKey = getKey(key, d);
@@ -146,8 +144,7 @@ public class RestDataLoader extends FileDataLoader {
       } catch (Exception e) {
         e.printStackTrace();
         LOG.error(
-            "Failed to read from endpoint '" + key.path + "' with type '" + key.pathType
-                + "'");
+            "Failed to read from endpoint '" + key.path + "' with type '" + key.pathType + "'");
       }
       return new NonBlockingHashMap<>();
     }
@@ -185,8 +182,7 @@ public class RestDataLoader extends FileDataLoader {
     // Client Error
     if (response.status >= 400 && response.status <= 499) {
       try {
-        MessageResponse[] errors = GSON.fromJson(response.response,
-            MessageResponse[].class);
+        MessageResponse[] errors = GSON.fromJson(response.response, MessageResponse[].class);
         LOG.debug("Error Status: " + response.status);
         for (MessageResponse error : errors) {
           LOG.debug("Error: " + error.title + " (" + error.message + ")");

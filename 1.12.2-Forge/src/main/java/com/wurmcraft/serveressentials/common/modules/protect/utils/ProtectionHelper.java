@@ -21,8 +21,8 @@ public class ProtectionHelper {
   public static Claim getClaim(BlockPos pos, int dim) {
     RegionPos region = RegionHelper.getRegionPos(pos, dim);
     try {
-      RegionClaim regionData = SECore.dataLoader.get(DataType.CLAIM,
-          RegionHelper.convert(region), new RegionClaim());
+      RegionClaim regionData =
+          SECore.dataLoader.get(DataType.CLAIM, RegionHelper.convert(region), new RegionClaim());
       return RegionHelper.findClaim(pos, regionData);
     } catch (NoSuchElementException e) {
     } // Claim does not exist

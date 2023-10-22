@@ -48,8 +48,7 @@ public class GodCommand {
         ChatHelper.send(player.sender, player.lang.COMMAND_GOD_ON_OTHER);
       }
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 }

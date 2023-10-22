@@ -42,8 +42,7 @@ public class MuteCommand {
         account.mute_time = Instant.now().getEpochSecond() + muteTime;
         boolean updated =
             SECore.dataLoader.update(
-                DataLoader.DataType.ACCOUNT, muted.getGameProfile().getId().toString(),
-                account);
+                DataLoader.DataType.ACCOUNT, muted.getGameProfile().getId().toString(), account);
         if (updated) {
           ChatHelper.send(
               player.sender,
@@ -68,8 +67,7 @@ public class MuteCommand {
         account.mute_time = 0L;
         boolean updated =
             SECore.dataLoader.update(
-                DataLoader.DataType.ACCOUNT, muted.getGameProfile().getId().toString(),
-                account);
+                DataLoader.DataType.ACCOUNT, muted.getGameProfile().getId().toString(), account);
         if (updated) {
           ChatHelper.send(
               player.sender,
@@ -114,14 +112,13 @@ public class MuteCommand {
         muteRemote(player, uuid, inputs);
       } else { // Username?
         try {
-          RequestGenerator.HttpResponse response = RequestGenerator.get(
-              "api/lookup/uuid/" + uuid);
+          RequestGenerator.HttpResponse response = RequestGenerator.get("api/lookup/uuid/" + uuid);
           if (response.status == 200) {
             Account account = GSON.fromJson(response.response, Account.class);
             muteRemote(player, account.uuid, inputs);
           } else {
-            ChatHelper.send(player.sender,
-                player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", uuid));
+            ChatHelper.send(
+                player.sender, player.lang.PLAYER_NOT_FOUND.replaceAll("\\{@PLAYER@}", uuid));
           }
         } catch (Exception e) {
           LOG.warn("Failed to get response from API, (" + e.getMessage() + ")");
@@ -133,13 +130,11 @@ public class MuteCommand {
   }
 
   private static void muteRemote(ServerPlayer player, String uuid, String[] inputs) {
-    Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid,
-        new Account());
+    Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid, new Account());
     account.muted = !account.muted;
     long muteTime = convertToTime(inputs);
     account.mute_time = Instant.now().getEpochSecond() + muteTime;
-    boolean updated = SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, uuid,
-        account);
+    boolean updated = SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, uuid, account);
     if (account.muted) {
       if (updated) {
         ChatHelper.send(

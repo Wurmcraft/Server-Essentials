@@ -15,19 +15,19 @@ public class DelayedCommandTicker {
   public void onServerTick(WorldTickEvent e) {
     if (e.world.getWorldTime() % 20 == 0) {
       for (DelayedCommand delayed : SECommand.delayedCommands) {
-        if (delayed.pos != null) {  // Player
+        if (delayed.pos != null) { // Player
           if (delayed.pos.equals(delayed.userData.player.getPosition())) {
             if (delayed.runAfter > Instant.now().getEpochSecond()) {
-              delayed.seCommand.runCommand(delayed.userData, delayed.sender, delayed.args,
-                  delayed.config);
+              delayed.seCommand.runCommand(
+                  delayed.userData, delayed.sender, delayed.args, delayed.config);
               toBeDeleted.add(delayed);
             }
           } else {
             ChatHelper.send(delayed.sender, delayed.userData.lang.COMMAND_DELAY_MOVE);
           }
-        } else {  // Console
-          delayed.seCommand.runCommand(delayed.userData, delayed.sender, delayed.args,
-              delayed.config);
+        } else { // Console
+          delayed.seCommand.runCommand(
+              delayed.userData, delayed.sender, delayed.args, delayed.config);
           toBeDeleted.add(delayed);
         }
       }
@@ -35,5 +35,4 @@ public class DelayedCommandTicker {
       toBeDeleted.forEach(command -> SECommand.delayedCommands.remove(command));
     }
   }
-
 }

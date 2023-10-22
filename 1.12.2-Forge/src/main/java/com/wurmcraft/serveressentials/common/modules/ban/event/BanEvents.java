@@ -22,31 +22,43 @@ public class BanEvents {
     HashMap<String, String> queryParams = new HashMap<>();
     queryParams.put("uuid", uuid);
     try {
-      RequestGenerator.HttpResponse response = RequestGenerator.get("api/ban/",
-          queryParams);
+      RequestGenerator.HttpResponse response = RequestGenerator.get("api/ban/", queryParams);
       if (response.status == 200) {
         Ban[] userBans = ServerEssentials.GSON.fromJson(response.response, Ban[].class);
         for (Ban userBan : userBans) {
           if (userBan.ban_status) {
-            ServerEssentials.LOG.warn("User with ban has joined, (" + uuid + ", '"
-                + e.player.getDisplayNameString() + "', Kicking");
+            ServerEssentials.LOG.warn(
+                "User with ban has joined, ("
+                    + uuid
+                    + ", '"
+                    + e.player.getDisplayNameString()
+                    + "', Kicking");
             Language userLang = CommandUtils.getPlayerLang(e.player);
             try {
-              ((EntityPlayerMP) e.player).connection.disconnect(
-                  new TextComponentString(
-                      ChatHelper.replaceColor(userLang.BANNED.replaceAll("\\{@REASON@}",
-                          userBan.ban_reason)).replaceAll("\\{@TIME@}",
-                          CommandUtils.displayTime(0)))); // TODO Implement Temp ban
+              ((EntityPlayerMP) e.player)
+                  .connection.disconnect(
+                      new TextComponentString(
+                          ChatHelper.replaceColor(
+                                  userLang.BANNED.replaceAll("\\{@REASON@}", userBan.ban_reason))
+                              .replaceAll(
+                                  "\\{@TIME@}",
+                                  CommandUtils.displayTime(0)))); // TODO Implement Temp ban
             } catch (Exception f) {
               f.printStackTrace();
-              ((EntityPlayerMP) e.player).connection.disconnect(
-                  new TextComponentString(
-                      "You are banned! (Unable to retrieve language '" + e.account.lang
-                          + "')")); // TODO Implement Temp ban
+              ((EntityPlayerMP) e.player)
+                  .connection.disconnect(
+                      new TextComponentString(
+                          "You are banned! (Unable to retrieve language '"
+                              + e.account.lang
+                              + "')")); // TODO Implement Temp ban
             }
           } else {
-            ServerEssentials.LOG.warn("User with expired ban has joined, (" + uuid + ", '"
-                + e.player.getDisplayNameString() + "'");
+            ServerEssentials.LOG.warn(
+                "User with expired ban has joined, ("
+                    + uuid
+                    + ", '"
+                    + e.player.getDisplayNameString()
+                    + "'");
             ServerEssentials.LOG.warn("Reason: " + userBan.ban_reason);
             ServerEssentials.LOG.warn("Type: " + userBan.ban_type);
           }

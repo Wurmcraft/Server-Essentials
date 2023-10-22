@@ -1,6 +1,5 @@
 package com.wurmcraft.serveressentials.common.modules.general.command.misc;
 
-
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.command.Command;
 import com.wurmcraft.serveressentials.api.command.CommandArgument;
@@ -21,7 +20,9 @@ public class RulesCommand {
 
   public static List<String> rules = new ArrayList<>();
 
-  @Command(args = {}, usage = {})
+  @Command(
+      args = {},
+      usage = {})
   public void displayRules(ServerPlayer sender) {
     if (rules.size() == 0) {
       loadRules();
@@ -31,19 +32,23 @@ public class RulesCommand {
     }
   }
 
-  @Command(args = {CommandArgument.INTEGER}, usage = {
-      "line"}, isSubCommand = true, subCommandAliases = {"Del", "D", "Remove", "Rem",
-      "R"})
+  @Command(
+      args = {CommandArgument.INTEGER},
+      usage = {"line"},
+      isSubCommand = true,
+      subCommandAliases = {"Del", "D", "Remove", "Rem", "R"})
   public void Delete(ServerPlayer player, int line) {
     String removedLine = rules.remove(line);
-    ChatHelper.send(player.sender,
-        player.lang.COMMAND_RULES_DELETED.replaceAll("\\{@LINE@}", removedLine));
+    ChatHelper.send(
+        player.sender, player.lang.COMMAND_RULES_DELETED.replaceAll("\\{@LINE@}", removedLine));
     saveRules();
   }
 
-  @Command(args = {CommandArgument.STRING_ARR}, usage = {
-      "rule"}, isSubCommand = true, subCommandAliases = {"Create", "Crea", "Cre", "C",
-      "A", "Ad"})
+  @Command(
+      args = {CommandArgument.STRING_ARR},
+      usage = {"rule"},
+      isSubCommand = true,
+      subCommandAliases = {"Create", "Crea", "Cre", "C", "A", "Ad"})
   public void Add(ServerPlayer player, String... rule) {
     rules.add(Strings.join(rule, " "));
     ChatHelper.send(player.sender, player.lang.COMMAND_RULES_CREATED);
@@ -51,9 +56,8 @@ public class RulesCommand {
   }
 
   private static void loadRules() {
-    File rulesFile = new File(
-        ConfigLoader.SAVE_DIR + File.separator + "Modules" + File.separator
-            + "rules.txt");
+    File rulesFile =
+        new File(ConfigLoader.SAVE_DIR + File.separator + "Modules" + File.separator + "rules.txt");
     if (rulesFile.exists()) {
       try {
         rules = Files.readAllLines(rulesFile.toPath());
@@ -73,12 +77,11 @@ public class RulesCommand {
   }
 
   private static void saveRules() {
-    File rulesFile = new File(
-        ConfigLoader.SAVE_DIR + File.separator + "Modules" + File.separator
-            + "rules.txt");
+    File rulesFile =
+        new File(ConfigLoader.SAVE_DIR + File.separator + "Modules" + File.separator + "rules.txt");
     try {
-      Files.write(rulesFile.toPath(), Strings.join(rules, "\n").getBytes(),
-          StandardOpenOption.WRITE);
+      Files.write(
+          rulesFile.toPath(), Strings.join(rules, "\n").getBytes(), StandardOpenOption.WRITE);
     } catch (Exception e) {
       ServerEssentials.LOG.error("Failed to create rules.txt");
       ServerEssentials.LOG.error(e.getMessage());

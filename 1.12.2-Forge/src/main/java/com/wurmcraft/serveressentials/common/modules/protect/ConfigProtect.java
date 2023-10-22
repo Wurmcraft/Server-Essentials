@@ -12,8 +12,13 @@ public class ConfigProtect {
   public boolean claimNotify;
   public int trackingUpdateTimeTicks;
 
-  public ConfigProtect(String defaultType, int defenseRange, int minClaimSize,
-      boolean preventNearbyExplosions, boolean claimNotify, int trackingUpdateTimeTicks) {
+  public ConfigProtect(
+      String defaultType,
+      int defenseRange,
+      int minClaimSize,
+      boolean preventNearbyExplosions,
+      boolean claimNotify,
+      int trackingUpdateTimeTicks) {
     this.defaultType = defaultType;
     this.defenseRange = defenseRange;
     this.minClaimSize = minClaimSize;

@@ -51,8 +51,7 @@ public class ChannelCommand {
               player.lang.COMMAND_CHANNEL_CHANGED.replaceAll("\\{@CHANNEL@}", ch.name));
         }
       } else {
-        ChatHelper.send(player.sender,
-            new TextComponentTranslation("commands.generic.permission"));
+        ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
       }
     }
   }
@@ -65,20 +64,18 @@ public class ChannelCommand {
       canConsoleUse = true)
   public void create(ServerPlayer player, String name) {
     if (RankUtils.hasPermission(player.global, "command.channel.create")) {
-      Channel ch = new Channel(name, "[" + name + "]", false, new HashMap<>(), true, "",
-          true, new String[0]);
+      Channel ch =
+          new Channel(
+              name, "[" + name + "]", false, new HashMap<>(), true, "", true, new String[0]);
       if (SECore.dataLoader.register(DataLoader.DataType.CHANNEL, ch.name, ch)) {
         ChatHelper.send(
-            player.sender,
-            player.lang.COMMAND_CHANNEL_CREATED.replaceAll("\\{@NAME@}", name));
+            player.sender, player.lang.COMMAND_CHANNEL_CREATED.replaceAll("\\{@NAME@}", name));
       } else {
         ChatHelper.send(
-            player.sender,
-            player.lang.COMMAND_CHANNEL_EXISTS.replaceAll("\\{@NAME@}", name));
+            player.sender, player.lang.COMMAND_CHANNEL_EXISTS.replaceAll("\\{@NAME@}", name));
       }
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 
@@ -91,24 +88,20 @@ public class ChannelCommand {
   public void delete(ServerPlayer player, Channel ch) {
     if (RankUtils.hasPermission(player.global, "command.channel.delete")) {
       // Prevent deletion of default channel
-      String defaultChannel = ((ConfigChat) SECore.moduleConfigs.get(
-          "CHAT")).defaultChannel;
+      String defaultChannel = ((ConfigChat) SECore.moduleConfigs.get("CHAT")).defaultChannel;
       if (ch.name.equalsIgnoreCase(defaultChannel)) {
         ChatHelper.send(
-            player.sender,
-            player.lang.COMMAND_CHANNEL_DEFAULT.replaceAll("\\{@NAME@}", ch.name));
+            player.sender, player.lang.COMMAND_CHANNEL_DEFAULT.replaceAll("\\{@NAME@}", ch.name));
         return;
       }
       if (SECore.dataLoader.delete(DataLoader.DataType.CHANNEL, ch.name, false)) {
         ChatHelper.send(
-            player.sender,
-            player.lang.COMMAND_CHANNEL_DELETED.replaceAll("\\{@NAME@}", ch.name));
+            player.sender, player.lang.COMMAND_CHANNEL_DELETED.replaceAll("\\{@NAME@}", ch.name));
       } else {
         LOG.warn("Failed to delete Channel '" + ch.name + "'");
       }
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 
@@ -122,8 +115,7 @@ public class ChannelCommand {
     if (RankUtils.hasPermission(player.global, "channel." + ch.name)) {
       ChatHelper.send(player.sender, player.lang.SPACER);
       ChatHelper.send(
-          player.sender,
-          player.lang.COMMAND_CHANNEL_INFO_NAME.replaceAll("\\{@NAME@}", ch.name));
+          player.sender, player.lang.COMMAND_CHANNEL_INFO_NAME.replaceAll("\\{@NAME@}", ch.name));
       ChatHelper.send(
           player.sender,
           player.lang.COMMAND_CHANNEL_INFO_PREFIX.replaceAll("\\{@PREFIX@}", ch.prefix));
@@ -132,19 +124,16 @@ public class ChannelCommand {
           player.lang.COMMAND_CHANNEL_INFO_LOGGING.substring(
               player.lang.COMMAND_CHANNEL_INFO_LOGGING.indexOf("{"),
               player.lang.COMMAND_CHANNEL_INFO_LOGGING.indexOf("}") + 1);
-      String rep = replacement.substring(1, replacement.length() - 1).split(",")[
-          ch.logChat
-              ? 1 : 0];
+      String rep =
+          replacement.substring(1, replacement.length() - 1).split(",")[ch.logChat ? 1 : 0];
       loggingFormat = loggingFormat.replace(replacement, rep);
       ChatHelper.send(player.sender, loggingFormat);
       ChatHelper.send(
           player.sender,
-          player.lang.COMMAND_CHANNEL_INFO_FORMAT.replaceAll("\\{@FORMAT@}",
-              ch.chatFormat));
+          player.lang.COMMAND_CHANNEL_INFO_FORMAT.replaceAll("\\{@FORMAT@}", ch.chatFormat));
       ChatHelper.send(player.sender, player.lang.SPACER);
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 
@@ -161,8 +150,7 @@ public class ChannelCommand {
         if (SECore.dataLoader.update(DataLoader.DataType.CHANNEL, ch.name, ch)) {
           ChatHelper.send(
               player.sender,
-              player.lang.COMMAND_CHANNEL_MODIFY_PREFIX.replaceAll("\\{@PREFIX@}",
-                  ch.prefix));
+              player.lang.COMMAND_CHANNEL_MODIFY_PREFIX.replaceAll("\\{@PREFIX@}", ch.prefix));
         }
       } else if (arg.equalsIgnoreCase("logChat") || arg.equalsIgnoreCase("log")) {
         Boolean logChat = CommandUtils.convertBoolean(value);
@@ -171,8 +159,7 @@ public class ChannelCommand {
           if (SECore.dataLoader.update(DataLoader.DataType.CHANNEL, ch.name, ch)) {
             ChatHelper.send(
                 player.sender,
-                player.lang.COMMAND_CHANNEL_MODIFY_LOG.replaceAll("\\{@VALUE@}",
-                    "" + logChat));
+                player.lang.COMMAND_CHANNEL_MODIFY_LOG.replaceAll("\\{@VALUE@}", "" + logChat));
           }
         } else {
           ChatHelper.send(player.sender, player.lang.INVALID_BOOLEAN);
@@ -184,16 +171,14 @@ public class ChannelCommand {
           if (SECore.dataLoader.update(DataLoader.DataType.CHANNEL, ch.name, ch)) {
             ChatHelper.send(
                 player.sender,
-                player.lang.COMMAND_CHANNEL_MODIFY_ENABLED.replaceAll("\\{@VALUE@}",
-                    "" + enabled));
+                player.lang.COMMAND_CHANNEL_MODIFY_ENABLED.replaceAll("\\{@VALUE@}", "" + enabled));
           }
         } else {
           ChatHelper.send(player.sender, player.lang.INVALID_BOOLEAN);
         }
       }
     } else {
-      ChatHelper.send(player.sender,
-          new TextComponentTranslation("commands.generic.permission"));
+      ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));
     }
   }
 
@@ -205,8 +190,7 @@ public class ChannelCommand {
       canConsoleUse = true)
   public void list(ServerPlayer player) {
     StringBuilder channels = new StringBuilder();
-    for (Channel ch : SECore.dataLoader.getFromKey(DataType.CHANNEL, new Channel())
-        .values()) {
+    for (Channel ch : SECore.dataLoader.getFromKey(DataType.CHANNEL, new Channel()).values()) {
       if (RankUtils.hasPermission(player.global, "channel." + ch.name)) {
         channels.append(ch.name).append(", ");
       }

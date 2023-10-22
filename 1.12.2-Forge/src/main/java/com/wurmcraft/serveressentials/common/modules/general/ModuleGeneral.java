@@ -50,8 +50,7 @@ public class ModuleGeneral {
     }
   }
 
-  public void reload() {
-  }
+  public void reload() {}
 
   public static void sendStatusUpdate(boolean useWebSocket, String status) {
     boolean socket = ServerEssentials.config.performance.useWebsocket;
@@ -77,7 +76,7 @@ public class ModuleGeneral {
   }
 
   public static ServerStatus generateStatus(String status) {
-    String[][] playersData = new String[][]{new String[]{}, new String[]{}};
+    String[][] playersData = new String[][] {new String[] {}, new String[] {}};
     if (status.equalsIgnoreCase("Online")) {
       playersData = getPlayerInfo();
       if (SECore.modules.contains("SECURITY")
@@ -96,19 +95,19 @@ public class ModuleGeneral {
   }
 
   private static long computeDelay() {
-    return (long) (getSum(
-        FMLCommonHandler.instance()
-            .getMinecraftServerInstance()
-            .worldTickTimes
-            .get(
+    return (long)
+        (getSum(
                 FMLCommonHandler.instance()
                     .getMinecraftServerInstance()
-                    .getWorld(0)
-                    .provider
-                    .getDimension()))
-        * 1.0E-006D);
+                    .worldTickTimes
+                    .get(
+                        FMLCommonHandler.instance()
+                            .getMinecraftServerInstance()
+                            .getWorld(0)
+                            .provider
+                            .getDimension()))
+            * 1.0E-006D);
   }
-
 
   private static double getSum(long[] times) {
     long timesum = 0L;
@@ -126,8 +125,7 @@ public class ModuleGeneral {
     List<String> playerInfo = new ArrayList<>();
     if (FMLCommonHandler.instance().getMinecraftServerInstance() != null) {
       for (EntityPlayer player :
-          FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
-              .getPlayers()) {
+          FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
         if (VanishEvent.vanishedPlayers.contains(player)) {
           continue;
         }
@@ -140,12 +138,10 @@ public class ModuleGeneral {
         playerInfo.add(
             player.getDisplayNameString()
                 + ";"
-                + PlayerChatEvent.getRankValue("prefix",
-                PlayerChatEvent.getRanks(account))
+                + PlayerChatEvent.getRankValue("prefix", PlayerChatEvent.getRanks(account))
                 + ";");
       }
     }
-    return new String[][]{onlinePlayers.toArray(new String[0]),
-        playerInfo.toArray(new String[0])};
+    return new String[][] {onlinePlayers.toArray(new String[0]), playerInfo.toArray(new String[0])};
   }
 }

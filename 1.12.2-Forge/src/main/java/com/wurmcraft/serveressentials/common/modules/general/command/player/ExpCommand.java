@@ -20,8 +20,7 @@ public class ExpCommand {
       usage = {"amount"})
   public void selfExp(ServerPlayer player, int lvl) {
     player.player.addExperienceLevel(lvl);
-    ChatHelper.send(player.sender,
-        player.lang.COMMAND_EXP.replaceAll("\\{@LVL@}", "" + lvl));
+    ChatHelper.send(player.sender, player.lang.COMMAND_EXP.replaceAll("\\{@LVL@}", "" + lvl));
   }
 
   @Command(

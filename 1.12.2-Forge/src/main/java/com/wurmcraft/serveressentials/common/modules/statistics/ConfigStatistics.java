@@ -55,8 +55,7 @@ public class ConfigStatistics {
     public boolean groundItems;
 
     public World(
-        boolean blockBroken, boolean blocksPlaced, boolean entityKills,
-        boolean groundItems) {
+        boolean blockBroken, boolean blocksPlaced, boolean entityKills, boolean groundItems) {
       this.blockBroken = blockBroken;
       this.blocksPlaced = blocksPlaced;
       this.entityKills = entityKills;

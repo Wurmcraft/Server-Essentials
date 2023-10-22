@@ -39,11 +39,9 @@ public class DMCommand {
       EntityPlayer otherEntity = PlayerUtils.getFromUUID(uuid);
       if (otherEntity != null) { // Local Message
         ChatHelper.send(player.player, otherEntity, msg);
-      } else if (SECore.dataLoader.getClass()
-          .equals(RestDataLoader.class)) { // Remote Message
+      } else if (SECore.dataLoader.getClass().equals(RestDataLoader.class)) { // Remote Message
         try {
-          ChatHelper.lastMessageCache.put(uuid,
-              player.player.getGameProfile().getId().toString());
+          ChatHelper.lastMessageCache.put(uuid, player.player.getGameProfile().getId().toString());
           ServerEssentials.socketController.send(
               new WSWrapper(
                   201,

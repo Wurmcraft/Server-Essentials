@@ -59,7 +59,7 @@ public class PlayerDataTrackerEvent {
               new Account(
                   e.player.getGameProfile().getId().toString(),
                   e.player.getDisplayNameString(),
-                  new String[]{DEFAULT_RANK},
+                  new String[] {DEFAULT_RANK},
                   new String[0],
                   new String[0],
                   DEFAULT_LANG,
@@ -67,10 +67,9 @@ public class PlayerDataTrackerEvent {
                   0,
                   "",
                   "",
-                  new ServerTime[]{
-                      new ServerTime(
-                          ServerEssentials.config.general.serverID, 0,
-                          Instant.now().getEpochSecond())
+                  new ServerTime[] {
+                    new ServerTime(
+                        ServerEssentials.config.general.serverID, 0, Instant.now().getEpochSecond())
                   },
                   new BankAccount[0],
                   0,
@@ -106,8 +105,7 @@ public class PlayerDataTrackerEvent {
       }
       // Cancel Cache cleanup if the user has logged back in (relog)
       if (playerCacheTimeout.containsKey(e.player.getGameProfile().getId().toString())) {
-        if (playerCacheTimeout.get(e.player.getGameProfile().getId().toString())
-            .cancel(false)) {
+        if (playerCacheTimeout.get(e.player.getGameProfile().getId().toString()).cancel(false)) {
           LOG.debug(
               "Canceling Cache cleanup for user '"
                   + e.player.getDisplayNameString()
@@ -153,8 +151,7 @@ public class PlayerDataTrackerEvent {
               + "') \""
               + player.getDisplayNameString()
               + "\"");
-      MinecraftForge.EVENT_BUS.post(
-          new PlayerLoadEvent(player, userAccount, localAccount, true));
+      MinecraftForge.EVENT_BUS.post(new PlayerLoadEvent(player, userAccount, localAccount, true));
     } else if (local) {
       LOG.info(
           "Loading user '"
@@ -168,8 +165,7 @@ public class PlayerDataTrackerEvent {
               + "') \""
               + player.getDisplayNameString()
               + "\"");
-      MinecraftForge.EVENT_BUS.post(
-          new PlayerLoadEvent(player, userAccount, localAccount, false));
+      MinecraftForge.EVENT_BUS.post(new PlayerLoadEvent(player, userAccount, localAccount, false));
     } else if (user) {
       LOG.info(
           "Loading user '"
@@ -183,8 +179,7 @@ public class PlayerDataTrackerEvent {
               + "') \""
               + player.getDisplayNameString()
               + "\"");
-      MinecraftForge.EVENT_BUS.post(
-          new PlayerLoadEvent(player, userAccount, localAccount, false));
+      MinecraftForge.EVENT_BUS.post(new PlayerLoadEvent(player, userAccount, localAccount, false));
     } else {
       LOG.warn("Failed to create new user");
     }
@@ -203,15 +198,12 @@ public class PlayerDataTrackerEvent {
     Runnable scheduledTask =
         () -> {
           String uuid = e.player.getGameProfile().getId().toString();
-          Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid,
-              new Account());
+          Account account = SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, uuid, new Account());
           LocalAccount local =
-              SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, uuid,
-                  new LocalAccount());
+              SECore.dataLoader.get(DataLoader.DataType.LOCAL_ACCOUNT, uuid, new LocalAccount());
           if (!PlayerUtils.isUserOnline(uuid)
               && SECore.dataLoader.delete(DataLoader.DataType.ACCOUNT, uuid, true)
-              && SECore.dataLoader.delete(DataLoader.DataType.LOCAL_ACCOUNT, uuid,
-              true)) {
+              && SECore.dataLoader.delete(DataLoader.DataType.LOCAL_ACCOUNT, uuid, true)) {
             MinecraftForge.EVENT_BUS.post(new PlayerUnloadEvent(account, local));
             LOG.info(
                 "Unloading user '"

@@ -43,7 +43,7 @@ public class ConfigEconomy {
     }
 
     public Taxes() {
-      this.rankTaxes = new String[]{"*;.1"};
+      this.rankTaxes = new String[] {"*;.1"};
       this.commandTaxMultiplayer = 1;
       this.payTaxMultiplayer = .5;
       this.bankTaxMultiplayer = 2;

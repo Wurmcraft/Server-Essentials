@@ -85,9 +85,7 @@ public class ServerEssentials {
     }
   }
 
-  /**
-   * Using reflection to call the setup method on each module's instance
-   */
+  /** Using reflection to call the setup method on each module's instance */
   private void setupModules() {
     for (String module : SECore.modules.keySet()) {
       Object instance = SECore.modules.get(module);
@@ -182,8 +180,7 @@ public class ServerEssentials {
     }
     String moduleNames = builder.toString();
     if (!moduleNames.isEmpty()) {
-      moduleNames = moduleNames.substring(0,
-          moduleNames.length() - 1); // Remove trailing ,
+      moduleNames = moduleNames.substring(0, moduleNames.length() - 1); // Remove trailing ,
     }
     LOG.info("Modules: [" + moduleNames + "]");
     return loadedModules;

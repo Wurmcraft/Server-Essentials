@@ -12,20 +12,23 @@ import net.minecraftforge.common.ForgeChunkManager.Ticket;
 @ModuleCommand(module = "General", name = "ChunkLoading")
 public class ChunkLoadingCommand {
 
-  @Command(args = {}, usage = {})
+  @Command(
+      args = {},
+      usage = {})
   public void all(ServerPlayer player) {
-    ImmutableCollection<Ticket> tickets = ForgeChunkManager.getPersistentChunksFor(
-        player.player.getEntityWorld()).values();
+    ImmutableCollection<Ticket> tickets =
+        ForgeChunkManager.getPersistentChunksFor(player.player.getEntityWorld()).values();
     ChatHelper.send(player.sender, player.lang.SPACER);
     for (Ticket ticket : tickets) {
       ChatHelper.send(
           player.sender,
           TextFormatting.AQUA
               + "["
-              + ticket.getChunkList().asList().get(0).getXStart() + ", " + ticket
-              .getChunkList().asList().get(0).getZStart() + "]");
+              + ticket.getChunkList().asList().get(0).getXStart()
+              + ", "
+              + ticket.getChunkList().asList().get(0).getZStart()
+              + "]");
     }
     ChatHelper.send(player.sender, player.lang.SPACER);
   }
-
 }

@@ -12,12 +12,10 @@ public class ModuleStatistics {
     if (SECore.dataLoader instanceof RestDataLoader) {
 
     } else {
-      ServerEssentials.LOG.warn(
-          "Module 'Statistics' does not work in 'File' Storage mode!");
+      ServerEssentials.LOG.warn("Module 'Statistics' does not work in 'File' Storage mode!");
       SECore.modules.remove("STATISTICS");
     }
   }
 
-  public void reload() {
-  }
+  public void reload() {}
 }

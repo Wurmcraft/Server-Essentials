@@ -6,12 +6,7 @@ import com.wurmcraft.serveressentials.api.loading.Module;
 @Module(name = "FTBUtils")
 public class ModuleFTBUtils {
 
-  public void setup() {
+  public void setup() {}
 
-  }
-
-  public void reload() {
-
-  }
-
+  public void reload() {}
 }

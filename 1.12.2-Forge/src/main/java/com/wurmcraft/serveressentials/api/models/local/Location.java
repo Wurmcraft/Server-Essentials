@@ -18,7 +18,5 @@ public class Location {
     this.yaw = yaw;
   }
 
-  public Location() {
-
-  }
+  public Location() {}
 }

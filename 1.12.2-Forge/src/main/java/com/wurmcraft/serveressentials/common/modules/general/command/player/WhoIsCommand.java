@@ -35,7 +35,6 @@ public class WhoIsCommand {
             "\\{@NAME@}", otherPlayer.getDisplayNameString()));
     ChatHelper.send(
         player.sender,
-        player.lang.COMMAND_WHOIS_DISPLAYNAME.replaceAll("\\{@NICK@}",
-            account.display_name));
+        player.lang.COMMAND_WHOIS_DISPLAYNAME.replaceAll("\\{@NICK@}", account.display_name));
   }
 }

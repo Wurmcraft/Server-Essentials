@@ -14,12 +14,10 @@ public class ModuleTransfer {
     if (SECore.dataLoader instanceof RestDataLoader) {
 
     } else {
-      ServerEssentials.LOG.warn(
-          "Module 'Transfer' does not work in 'File' Storage mode!");
+      ServerEssentials.LOG.warn("Module 'Transfer' does not work in 'File' Storage mode!");
       SECore.modules.remove("TRANSFER");
     }
   }
 
-  public void reload() {
-  }
+  public void reload() {}
 }

@@ -20,40 +20,49 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 @ModuleCommand(module = "Discord", name = "Verify")
 public class VerifyCommand {
 
-  @Command(args = {CommandArgument.STRING}, usage = {"code"}, canConsoleUse = false)
+  @Command(
+      args = {CommandArgument.STRING},
+      usage = {"code"},
+      canConsoleUse = false)
   public static void verify(ServerPlayer player, String code) {
-    DiscordVerify verify = new DiscordVerify(code,
-        player.player.getGameProfile().getId().toString(), player.player.getName(), null,
-        null);
+    DiscordVerify verify =
+        new DiscordVerify(
+            code,
+            player.player.getGameProfile().getId().toString(),
+            player.player.getName(),
+            null,
+            null);
     try {
       HttpResponse response = RequestGenerator.post("api/discord", verify);
       if (response.status == 200) {
-        DiscordVerify verifyedData = ServerEssentials.GSON.fromJson(response.response,
-            DiscordVerify.class);
+        DiscordVerify verifyedData =
+            ServerEssentials.GSON.fromJson(response.response, DiscordVerify.class);
         if (!verifyedData.discordID.isEmpty()) {
           player.global.discord_id = verifyedData.discordID;
-          SECore.dataLoader.update(DataType.ACCOUNT,
-              player.player.getGameProfile().getId().toString(), player.global);
-          ServerEssentials.socketController.send(new WSWrapper(200, Type.MESSAGE,
-              new DataWrapper("DiscordVerify",
-                  ServerEssentials.GSON.toJson(verifyedData))));
+          SECore.dataLoader.update(
+              DataType.ACCOUNT, player.player.getGameProfile().getId().toString(), player.global);
+          ServerEssentials.socketController.send(
+              new WSWrapper(
+                  200,
+                  Type.MESSAGE,
+                  new DataWrapper("DiscordVerify", ServerEssentials.GSON.toJson(verifyedData))));
           // Run Config Commands
-          for (String command : ((ConfigDiscord) SECore.moduleConfigs.get(
-              "DISCORD")).verifyCommands) {
-            FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager()
-                .executeCommand(FMLCommonHandler.instance().getMinecraftServerInstance(),
-                    command.replaceAll("\\{USERNAME}",
-                        player.player.getGameProfile().getName()));
+          for (String command :
+              ((ConfigDiscord) SECore.moduleConfigs.get("DISCORD")).verifyCommands) {
+            FMLCommonHandler.instance()
+                .getMinecraftServerInstance()
+                .getCommandManager()
+                .executeCommand(
+                    FMLCommonHandler.instance().getMinecraftServerInstance(),
+                    command.replaceAll("\\{USERNAME}", player.player.getGameProfile().getName()));
           }
           ChatHelper.send(player.player, player.lang.COMMAND_VERIFY);
           return;
         }
       }
     } catch (Exception e) {
-      ServerEssentials.LOG.warn(
-          "Failed to send post request to API (" + e.getMessage() + ")");
+      ServerEssentials.LOG.warn("Failed to send post request to API (" + e.getMessage() + ")");
     }
     ChatHelper.send(player.player, player.lang.COMMAND_VERIFY_FAILED);
   }
-
 }

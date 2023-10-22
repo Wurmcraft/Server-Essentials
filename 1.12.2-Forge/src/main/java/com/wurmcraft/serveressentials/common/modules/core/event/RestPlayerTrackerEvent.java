@@ -37,8 +37,7 @@ public class RestPlayerTrackerEvent {
                     e.player.getGameProfile().getId().toString(),
                     true)) {
                   SECore.dataLoader.get(
-                      DataLoader.DataType.ACCOUNT,
-                      e.player.getGameProfile().getId().toString());
+                      DataLoader.DataType.ACCOUNT, e.player.getGameProfile().getId().toString());
                 }
               },
               ServerEssentials.config.performance.playerSyncInterval,
@@ -49,8 +48,7 @@ public class RestPlayerTrackerEvent {
 
   @SubscribeEvent
   public void onPlayerUnload(PlayerUnloadEvent e) {
-    if (!ServerEssentials.config.performance.useWebsocket && userSync.containsKey(
-        e.account.uuid)) {
+    if (!ServerEssentials.config.performance.useWebsocket && userSync.containsKey(e.account.uuid)) {
       if (userSync.get(e.account.uuid).cancel(true)) {
         LOG.debug(
             "Removing Sync for User '"

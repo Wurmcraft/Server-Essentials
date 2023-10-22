@@ -20,11 +20,10 @@ import java.util.stream.Collectors;
 
 public class RequestGenerator {
 
-  public static final String USER_AGENT = "Mozilla/5.0";
+  public static final String USER_AGENT = "ServerEssentials";
 
   // Connection Specific
-  public static final String BASE_URL = parseConfigURL(
-      ServerEssentials.config.storage.baseURL);
+  public static final String BASE_URL = parseConfigURL(ServerEssentials.config.storage.baseURL);
   public static String token = "";
 
   // Regex
@@ -38,9 +37,8 @@ public class RequestGenerator {
   }
 
   /**
-   * Check and adds leading and trailing parts of a url if they are missing This does not
-   * check if the url is valid or not, it simple makes sure it has the leading and
-   * trailing of a url
+   * Check and adds leading and trailing parts of a url if they are missing This does not check if
+   * the url is valid or not, it simple makes sure it has the leading and trailing of a url
    *
    * @param url string to be tested / converted into a url
    */
@@ -78,8 +76,7 @@ public class RequestGenerator {
    * @return collected data from the connection placed into a wrapper
    * @throws IOException error with the url connection
    */
-  private static HttpResponse http(String type, String url, Object data)
-      throws IOException {
+  private static HttpResponse http(String type, String url, Object data) throws IOException {
     // Setup Http Connection
     URL sendURL = new URL(BASE_URL + url);
     URLConnection connection = sendURL.openConnection();
@@ -117,8 +114,7 @@ public class RequestGenerator {
    * @return response instance (status, headers, response)
    * @throws IOException error with the url connection
    */
-  public static HttpResponse get(String path, Map<String, String> queryParams)
-      throws IOException {
+  public static HttpResponse get(String path, Map<String, String> queryParams) throws IOException {
     StringBuilder builder = new StringBuilder();
     if (queryParams != null && queryParams.size() > 0) {
       for (String key : queryParams.keySet()) {

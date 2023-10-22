@@ -44,8 +44,7 @@ public class ChatHelper {
     send(sender, new TextComponentString(replaceColor(message)));
   }
 
-  public static void sendTranslated(ICommandSender sender, String key,
-      TextFormatting color) {
+  public static void sendTranslated(ICommandSender sender, String key, TextFormatting color) {
     TextComponentTranslation translation = new TextComponentTranslation(key);
     translation.getStyle().setColor(color);
     send(sender, translation);
@@ -61,23 +60,21 @@ public class ChatHelper {
 
   public static void sendToAll(String msg) {
     for (EntityPlayer player :
-        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
-            .getPlayers()) {
+        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
       sendTo(player, msg);
     }
     LOG.info("[Broadcast]: " + msg);
   }
 
-  public static void sendFrom(EntityPlayerMP sender, Channel ch,
-      TextComponentString message) {
+  public static void sendFrom(EntityPlayerMP sender, Channel ch, TextComponentString message) {
     HashMap<EntityPlayer, LocalAccount> playersInChannel = getInChannel(ch);
     for (EntityPlayer player : playersInChannel.keySet()) {
       LocalAccount local = playersInChannel.get(player);
       boolean ignored = isIgnored(local, sender.getGameProfile().getId().toString());
       if (!ignored
           || RankUtils.hasPermission(
-          SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, local.uuid, new Account()),
-          "chat.ignore.bypass")) {
+              SECore.dataLoader.get(DataLoader.DataType.ACCOUNT, local.uuid, new Account()),
+              "chat.ignore.bypass")) {
         send(player, message);
       }
     }
@@ -122,15 +119,15 @@ public class ChatHelper {
     }
     String msgColor =
         SECore.dataLoader.get(
-            DataLoader.DataType.LANGUAGE,
-            ((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang,
-            new Language())
+                DataLoader.DataType.LANGUAGE,
+                ((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang,
+                new Language())
             .MESSAGE_COLOR;
     String format =
         replaceColor(
             msgColor
                 + ((ConfigChat) SECore.moduleConfigs.get("CHAT"))
-                .messageFormat.replaceAll("%MSG%", msg));
+                    .messageFormat.replaceAll("%MSG%", msg));
     String dir = format.substring(format.indexOf("{") + 1, format.indexOf("}"));
     String[] split = dir.split(",");
     format =
@@ -144,11 +141,11 @@ public class ChatHelper {
             .replaceAll(
                 "%NAME%",
                 getName(
-                    sender,
-                    SECore.dataLoader.get(
-                        DataLoader.DataType.ACCOUNT,
-                        sender.getGameProfile().getId().toString(),
-                        new Account()))
+                        sender,
+                        SECore.dataLoader.get(
+                            DataLoader.DataType.ACCOUNT,
+                            sender.getGameProfile().getId().toString(),
+                            new Account()))
                     .trim())
             .replaceAll("%USERNAME%", sender.getDisplayNameString()));
     String sentMessage =
@@ -157,36 +154,35 @@ public class ChatHelper {
             .replaceAll(
                 "%NAME%",
                 getName(
-                    receiver,
-                    SECore.dataLoader.get(
-                        DataLoader.DataType.ACCOUNT,
-                        receiver.getGameProfile().getId().toString(),
-                        new Account()))
+                        receiver,
+                        SECore.dataLoader.get(
+                            DataLoader.DataType.ACCOUNT,
+                            receiver.getGameProfile().getId().toString(),
+                            new Account()))
                     .trim())
             .replaceAll("%USERNAME%", receiver.getDisplayNameString());
     send(sender, sentMessage);
     lastMessageCache.put(
-        receiver.getGameProfile().getId().toString(),
-        sender.getGameProfile().getId().toString());
+        receiver.getGameProfile().getId().toString(), sender.getGameProfile().getId().toString());
     if (socialSpy.size() > 0) {
       for (EntityPlayer spy : ChatHelper.socialSpy) {
         if (spy.getGameProfile()
-            .getId()
-            .toString()
-            .equals(sender.getGameProfile().getId().toString())
+                .getId()
+                .toString()
+                .equals(sender.getGameProfile().getId().toString())
             || spy.getGameProfile()
-            .getId()
-            .toString()
-            .equals(receiver.getGameProfile().getId().toString())) {
+                .getId()
+                .toString()
+                .equals(receiver.getGameProfile().getId().toString())) {
           continue;
         }
         Language lang =
             SECore.dataLoader.get(
                 DataLoader.DataType.LANGUAGE,
                 SECore.dataLoader.get(
-                    DataLoader.DataType.ACCOUNT,
-                    spy.getGameProfile().getId().toString(),
-                    new Account())
+                        DataLoader.DataType.ACCOUNT,
+                        spy.getGameProfile().getId().toString(),
+                        new Account())
                     .lang,
                 new Language());
         send(
@@ -219,8 +215,7 @@ public class ChatHelper {
   public static HashMap<EntityPlayer, LocalAccount> getInChannel(Channel ch) {
     HashMap<EntityPlayer, LocalAccount> players = new HashMap<>();
     for (EntityPlayer player :
-        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList()
-            .getPlayers()) {
+        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
       LocalAccount local =
           SECore.dataLoader.get(
               DataLoader.DataType.LOCAL_ACCOUNT,
@@ -249,9 +244,9 @@ public class ChatHelper {
         SECore.dataLoader.get(
             DataLoader.DataType.LANGUAGE,
             SECore.dataLoader.get(
-                DataLoader.DataType.ACCOUNT,
-                player.getGameProfile().getId().toString(),
-                new Account())
+                    DataLoader.DataType.ACCOUNT,
+                    player.getGameProfile().getId().toString(),
+                    new Account())
                 .lang,
             new Language());
     send(player, lang.SPACER);

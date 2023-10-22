@@ -24,8 +24,7 @@ public class RTPCommand {
       usage = {})
   public void rtp(ServerPlayer player) {
     int radius = ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).rtpRadius;
-    String[] blacklist = ((ConfigGeneral) SECore.moduleConfigs.get(
-        "GENERAL")).rtpBiomeBlacklist;
+    String[] blacklist = ((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).rtpBiomeBlacklist;
     Location spawn = PlayerUtils.getSpawn(player.global.rank);
     World world = player.player.world;
     if (spawn == null) {

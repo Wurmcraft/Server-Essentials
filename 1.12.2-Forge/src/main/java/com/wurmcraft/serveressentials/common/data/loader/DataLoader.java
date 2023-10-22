@@ -27,17 +27,13 @@ public class DataLoader implements IDataLoader {
 
   public enum DataType {
     ACTION(
-        "api/action", "relatedID;host;action;timestamp", null, Action.class,
-        Action[].class, false),
-    AUTORANK("api/autorank", "CRUD/PATCH", "rank", AutoRank.class, AutoRank[].class,
-        true),
+        "api/action", "relatedID;host;action;timestamp", null, Action.class, Action[].class, false),
+    AUTORANK("api/autorank", "CRUD/PATCH", "rank", AutoRank.class, AutoRank[].class, true),
     BAN("api/ban", "CRUD", "banID", Ban.class, Ban[].class, true),
-    CURRENCY("api/currency", "CRUD", "display_name", Currency.class, Currency[].class,
-        true),
+    CURRENCY("api/currency", "CRUD", "display_name", Currency.class, Currency[].class, true),
     DONATOR("api/donator", "CRUD", "uuid", Donator.class, Donator[].class, true),
     LOG_ENTRY(
-        "api/logging", "serverID;action;x;y;z;dim", null, LogEntry.class,
-        LogEntry[].class, false),
+        "api/logging", "serverID;action;x;y;z;dim", null, LogEntry.class, LogEntry[].class, false),
     MARKET("api/market", "CRUD", null, MarketEntry.class, MarketEntry[].class, false),
     RANK("api/rank", "CRUD/PATCH", "name", Rank.class, Rank[].class, true),
     TRANSFER(
@@ -63,8 +59,7 @@ public class DataLoader implements IDataLoader {
     boolean fileCache;
     String key;
 
-    DataType(String path, String pathType, String key, Class<?> instanceType,
-        boolean fileCache) {
+    DataType(String path, String pathType, String key, Class<?> instanceType, boolean fileCache) {
       this.path = path;
       this.pathType = pathType;
       this.key = key;
@@ -93,8 +88,8 @@ public class DataLoader implements IDataLoader {
       new NonBlockingHashMap<>();
 
   /**
-   * Finds the data within the cache and returns if possible, null if key does not exist,
-   * empty if the storage is empty or has expired
+   * Finds the data within the cache and returns if possible, null if key does not exist, empty if
+   * the storage is empty or has expired
    *
    * @param key type of data you are looking for
    * @param type cast the data to this type
@@ -143,8 +138,8 @@ public class DataLoader implements IDataLoader {
   }
 
   /**
-   * Finds, caches and returns the requested data instance based on its key, casts the
-   * output based on the provided instance
+   * Finds, caches and returns the requested data instance based on its key, casts the output based
+   * on the provided instance
    *
    * @param type type / category of this entry
    * @param key key / ID of the entry
@@ -178,7 +173,7 @@ public class DataLoader implements IDataLoader {
   public boolean register(DataType type, String key, Object data) {
     if (storage.containsKey(type)) {
       if (!storage.get(type).containsKey(key)) {
-        storage.get(type).put(key, new Object[]{System.currentTimeMillis(), data});
+        storage.get(type).put(key, new Object[] {System.currentTimeMillis(), data});
         LOG.trace("Entry on '" + type + "' has been cached with key '" + key + "'");
         return true;
       } else {
@@ -192,11 +187,9 @@ public class DataLoader implements IDataLoader {
       }
     } else {
       NonBlockingHashMap<String, Object[]> newDataStorage = new NonBlockingHashMap<>();
-      newDataStorage.put(key,
-          new Object[]{System.currentTimeMillis() + getTimeout(type), data});
+      newDataStorage.put(key, new Object[] {System.currentTimeMillis() + getTimeout(type), data});
       storage.put(type, newDataStorage);
-      LOG.debug(
-          "Creating new cached storage for '" + type.name() + "' with key '" + key + "'");
+      LOG.debug("Creating new cached storage for '" + type.name() + "' with key '" + key + "'");
       return true;
     }
   }
@@ -214,14 +207,12 @@ public class DataLoader implements IDataLoader {
       if (storage.get(type).containsKey(key)) {
         storage
             .get(type)
-            .put(key, new Object[]{System.currentTimeMillis() + +getTimeout(type), data});
-        LOG.trace(
-            "Entry on '" + type + "' has been cached (update) with key ' " + key + "'");
+            .put(key, new Object[] {System.currentTimeMillis() + +getTimeout(type), data});
+        LOG.trace("Entry on '" + type + "' has been cached (update) with key ' " + key + "'");
         return true;
       } else {
         LOG.warn(
-            "Tried to update a entry that does not exist on '" + type + "' with key '"
-                + key + "'");
+            "Tried to update a entry that does not exist on '" + type + "' with key '" + key + "'");
         return false;
       }
     }
@@ -263,7 +254,6 @@ public class DataLoader implements IDataLoader {
    * @param type of data stored
    */
   protected long getTimeout(DataType type) {
-    return (long) ServerEssentials.config.performance.dataloaderInterval * 60
-        * 1000; // 5m
+    return (long) ServerEssentials.config.performance.dataloaderInterval * 60 * 1000; // 5m
   }
 }
