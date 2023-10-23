@@ -167,7 +167,21 @@ public class RankUtils {
 
   public static List<String> checkForDuplicates(List<String> ranks) {
     HashMap<String, String> nonDuplicates = new HashMap<>();
-    for (String rank : ranks) nonDuplicates.put(rank, "");
+    for (String rank : ranks) {
+      nonDuplicates.put(rank, "");
+    }
     return new ArrayList<>(nonDuplicates.keySet());
+  }
+
+  public static Rank getRank(String name) {
+    try {
+      Object rank = SECore.dataLoader.get(DataType.RANK, name.toLowerCase());
+      if (rank != null) {
+        return (Rank) rank;
+      }
+    } catch (Exception e) {
+    }
+    ;
+    return null;
   }
 }

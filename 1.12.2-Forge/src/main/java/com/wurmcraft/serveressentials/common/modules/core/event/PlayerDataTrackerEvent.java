@@ -11,6 +11,7 @@ import com.wurmcraft.serveressentials.api.models.account.BankAccount;
 import com.wurmcraft.serveressentials.api.models.account.ServerTime;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
+import com.wurmcraft.serveressentials.common.modules.chat.event.PlayerChatEvent;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.time.Instant;
 import java.util.UUID;
@@ -102,6 +103,7 @@ public class PlayerDataTrackerEvent {
                 + ") [Existing]");
         MinecraftForge.EVENT_BUS.post(
             new PlayerLoadEvent(e.player, userAccount, localAccount, false));
+        PlayerChatEvent.correctInvalidRanks(userAccount);
       }
       // Cancel Cache cleanup if the user has logged back in (relog)
       if (playerCacheTimeout.containsKey(e.player.getGameProfile().getId().toString())) {

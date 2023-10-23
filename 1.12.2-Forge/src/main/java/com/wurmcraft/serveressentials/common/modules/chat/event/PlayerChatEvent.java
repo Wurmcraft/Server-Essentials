@@ -17,6 +17,7 @@ import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.chat.ConfigChat;
 import com.wurmcraft.serveressentials.common.modules.economy.ConfigEconomy;
+import com.wurmcraft.serveressentials.common.modules.rank.ConfigRank;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.io.File;
@@ -26,7 +27,6 @@ import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
@@ -264,7 +264,7 @@ public class PlayerChatEvent {
         foundInvalid = true;
       }
     }
-    correctInvalidRanks(account.uuid, ranks);
+    correctInvalidRanks(account);
     // Add errored rank is none are found
     if (ranks.size() == 0) {
       Rank erroredRank =
@@ -274,24 +274,27 @@ public class PlayerChatEvent {
     return ranks;
   }
 
-  private static void correctInvalidRanks(String uuid, List<Rank> validRanks) {
-    Account latestAccount = PlayerUtils.getLatestAccount(uuid);
-    if (latestAccount != null) {
-      List<String> invalidRanks = new ArrayList<>(Arrays.asList(latestAccount.rank));
-      for (Rank rank : validRanks) {
-        invalidRanks.remove(rank.name);
-      }
-      if (invalidRanks.size() > 0 && validRanks.size() > 0) { // Present removing all user's ranks
-        LOG.warn("User '" + uuid + "' has invalid rank, removing to prevent issues");
-        List<String> validList = new ArrayList<>();
-        for (String rank : latestAccount.rank) {
-          if (!invalidRanks.contains(rank)) {
-            validList.add(rank);
-          }
+  public static void correctInvalidRanks(Account account) {
+    List<Rank> validUserRanks = new ArrayList<>();
+    if (account != null) {
+      for (String rank : account.rank) {
+        Rank r = RankUtils.getRank(rank);
+        if (r != null) {
+          validUserRanks.add(r);
         }
-        latestAccount.rank = validRanks.toArray(new String[0]);
-        SECore.dataLoader.update(DataType.ACCOUNT, latestAccount.uuid, latestAccount);
       }
+      String[] ranks = new String[validUserRanks.size()];
+      for (int index = 0; index < validUserRanks.size(); index++) {
+        ranks[index] = validUserRanks.get(index).name.toLowerCase();
+      }
+      if (validUserRanks.size() < account.rank.length) {
+        LOG.warn("User '" + account.uuid + "' has an invalid rank!, This is being corrected");
+      }
+      if (ranks.length == 0) {
+        ranks = new String[] {((ConfigRank) SECore.moduleConfigs.get("RANK")).defaultRank};
+        LOG.warn("User has no valid ranks, adding default rank!");
+      }
+      account.rank = ranks;
     }
   }
 }
