@@ -1,7 +1,10 @@
 package com.wurmcraft.serveressentials.common.modules.general.utils.inventory;
 
 import com.wurmcraft.serveressentials.api.models.Language;
+import com.wurmcraft.serveressentials.api.models.MarketEntry;
+import com.wurmcraft.serveressentials.common.modules.economy.MarketHelper;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
+import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -18,6 +21,7 @@ public class ShopInventory extends InventoryBasic {
   public boolean global;
 
   ItemStack[] menu;
+  List<MarketEntry> entries;
 
   public ShopInventory(EntityPlayer player, Language lang, int page) {
     super("", true, 54);
@@ -27,6 +31,7 @@ public class ShopInventory extends InventoryBasic {
     this.filter = "*";
     this.global = false;
     menu = buildMenu();
+    entries = MarketHelper.getEntries(global, filter);
   }
 
   public ShopInventory(EntityPlayer player, Language lang, int page, String filter) {
@@ -37,6 +42,7 @@ public class ShopInventory extends InventoryBasic {
     this.filter = filter;
     this.global = false;
     menu = buildMenu();
+    entries = MarketHelper.getEntries(global, filter);
   }
 
   public ShopInventory(EntityPlayer player, Language lang, int page, boolean global) {
@@ -47,6 +53,7 @@ public class ShopInventory extends InventoryBasic {
     this.filter = "*";
     this.global = global;
     menu = buildMenu();
+    entries = MarketHelper.getEntries(global, filter);
   }
 
   public ShopInventory(EntityPlayer player, Language lang, int page, boolean global,
@@ -58,6 +65,7 @@ public class ShopInventory extends InventoryBasic {
     this.filter = filter;
     this.global = global;
     menu = buildMenu();
+    entries = MarketHelper.getEntries(global, filter);
   }
 
   private void handleAction(int index) {
@@ -90,6 +98,11 @@ public class ShopInventory extends InventoryBasic {
   public ItemStack getStackInSlot(int index) {
     if (index >= 0 && index < 9) {
       return menu[index];
+    }
+    // TODO Multi Page Support
+    index = index - 9;
+    if (index < entries.size()) {
+      return MarketHelper.getShopDisplayItem(entries.get(index), global);
     }
     return ItemStack.EMPTY;
   }
