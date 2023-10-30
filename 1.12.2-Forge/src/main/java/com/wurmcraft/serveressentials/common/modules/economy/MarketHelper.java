@@ -2,9 +2,13 @@ package com.wurmcraft.serveressentials.common.modules.economy;
 
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.models.MarketEntry;
-import com.wurmcraft.serveressentials.api.models.transfer.ItemWrapper;
-import java.time.Instant;
+import com.wurmcraft.serveressentials.common.data.ConfigLoader;
+import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.item.ItemStack;
@@ -13,17 +17,26 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.UsernameCache;
+import org.apache.commons.io.FileUtils;
 
 public class MarketHelper {
 
-  // TODO Temp
+  public static List<MarketEntry> entries = null;
+
   public static List<MarketEntry> getEntries(boolean global, String filter) {
-    List<MarketEntry> entries = new ArrayList<>();
-    entries.add(
-        new MarketEntry("This", "aad", new ItemWrapper(12, "<cooked_porkchop>", 0, ""),
-            "Default", 500,
-            Instant.now().toEpochMilli(), "Buy", "{}", ""));
-    return entries;
+    if (entries == null) {
+      entries = loadLocalEntries();
+    }
+    if (filter.equalsIgnoreCase("*")) {
+      if (global) {
+        return new ArrayList<>();
+      } else {
+        return entries;
+      }
+    } else {
+      // TODO Apply Filter
+      return new ArrayList<>();
+    }
   }
 
   public static ItemStack getStackForMarketEntry(MarketEntry entry) {
@@ -64,5 +77,28 @@ public class MarketHelper {
     NBTTagList lore = displayTag.getTagList("Lore", 9);
     lore.appendTag(new NBTTagString(msg));  // FIX Append not appending, damn mc
     return stack;
+  }
+
+  public static List<MarketEntry> loadLocalEntries() {
+    File marketFile = new File(ConfigLoader.SAVE_DIR + File.separator + "market.json");
+    if (marketFile.exists()) {
+      try {
+        String file = FileUtils.readFileToString(marketFile, Charset.defaultCharset());
+        MarketEntry[] entries = ServerEssentials.GSON.fromJson(file, MarketEntry[].class);
+        return new ArrayList<>(Arrays.asList(entries));
+      } catch (Exception e) {
+        ServerEssentials.LOG.error("Failed to read market.json!");
+        e.printStackTrace();
+      }
+    } else {
+      try {
+        Files.write(marketFile.toPath(), "".getBytes(), StandardOpenOption.WRITE,
+            StandardOpenOption.CREATE_NEW);
+      } catch (Exception e) {
+        ServerEssentials.LOG.error("Failed to create market.json!");
+        e.printStackTrace();
+      }
+    }
+    return new ArrayList<>();
   }
 }
