@@ -263,6 +263,8 @@ public class Language {
   public String COMMAND_PERM_ADDED;
   public String COMMAND_PERM_REMOVE;
   public String COMMAND_PERM_SET;
+  public String COMMAND_MARKETLIST_INVALID_ITEM;
+  public String COMMAND_MARKETLIST_LISTED;
 
   // Protect
   public String PROTECT_BREAK;

@@ -51,4 +51,5 @@ public class MarketCommand {
     player.player.displayGUIChest(
         new ShopInventory(player.player, player.lang, page, global, item));
   }
+
 }

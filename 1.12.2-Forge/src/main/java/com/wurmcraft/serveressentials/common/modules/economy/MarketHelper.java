@@ -101,4 +101,29 @@ public class MarketHelper {
     }
     return new ArrayList<>();
   }
+
+  public static void saveLocal() {
+    File marketFile = new File(ConfigLoader.SAVE_DIR + File.separator + "market.json");
+    try {
+      Files.write(marketFile.toPath(), ServerEssentials.GSON.toJson(entries).getBytes(),
+          StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.READ);
+    } catch (Exception e) {
+      ServerEssentials.LOG.warn("Failed to save market.json!");
+      e.printStackTrace();
+    }
+  }
+
+  public static List<MarketEntry> getPlayerListings(String sellerUUID, boolean global) {
+    if (global) {
+      return new ArrayList<>(); // TOOD Implement
+    } else {
+      List<MarketEntry> listings = new ArrayList<>();
+      for (MarketEntry entry : entries) {
+        if (entry.seller_uuid.equals(sellerUUID)) {
+          listings.add(entry);
+        }
+      }
+      return listings;
+    }
+  }
 }

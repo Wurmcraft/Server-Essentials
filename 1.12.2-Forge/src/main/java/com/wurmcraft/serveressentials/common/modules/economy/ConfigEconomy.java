@@ -7,15 +7,22 @@ public class ConfigEconomy {
 
   public String serverCurrency;
   public Taxes taxes;
+  public int maxListingsPerCommand;
+  public String[] itemBlacklist;
 
-  public ConfigEconomy(String serverCurrency, Taxes taxes) {
+  public ConfigEconomy(String serverCurrency, Taxes taxes, int maxListingsPerCommand,
+      String[] itemBlacklist) {
     this.serverCurrency = serverCurrency;
     this.taxes = taxes;
+    this.maxListingsPerCommand = maxListingsPerCommand;
+    this.itemBlacklist = itemBlacklist;
   }
 
   public ConfigEconomy() {
     this.serverCurrency = "default";
     this.taxes = new Taxes();
+    this.maxListingsPerCommand = 6;
+    this.itemBlacklist = new String[]{"<bedrock>"};
   }
 
   public static class Taxes {
@@ -43,7 +50,7 @@ public class ConfigEconomy {
     }
 
     public Taxes() {
-      this.rankTaxes = new String[] {"*;.1"};
+      this.rankTaxes = new String[]{"*;.1"};
       this.commandTaxMultiplayer = 1;
       this.payTaxMultiplayer = .5;
       this.bankTaxMultiplayer = 2;
