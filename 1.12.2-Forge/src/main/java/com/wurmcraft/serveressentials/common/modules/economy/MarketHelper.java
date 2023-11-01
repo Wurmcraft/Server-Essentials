@@ -40,7 +40,7 @@ public class MarketHelper {
   }
 
   public static ItemStack getStackForMarketEntry(MarketEntry entry) {
-    ItemStack stack = ServerEssentials.stackConverter.getData(entry.item.item);
+    ItemStack stack = ServerEssentials.stackConverter.getData("<" + entry.item.item + ">");
     stack.setCount(entry.item.count);
     stack.setItemDamage(entry.item.meta);
     if (entry.item.nbt != null && !entry.item.nbt.isEmpty()) {
@@ -106,7 +106,7 @@ public class MarketHelper {
     File marketFile = new File(ConfigLoader.SAVE_DIR + File.separator + "market.json");
     try {
       Files.write(marketFile.toPath(), ServerEssentials.GSON.toJson(entries).getBytes(),
-          StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.READ);
+          StandardOpenOption.WRITE, StandardOpenOption.CREATE);
     } catch (Exception e) {
       ServerEssentials.LOG.warn("Failed to save market.json!");
       e.printStackTrace();
@@ -125,5 +125,9 @@ public class MarketHelper {
       }
       return listings;
     }
+  }
+
+  public static int countListings(String uuid, boolean global) {
+    return getPlayerListings(uuid,global).size();
   }
 }

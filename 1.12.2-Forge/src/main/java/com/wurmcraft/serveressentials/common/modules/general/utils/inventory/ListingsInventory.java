@@ -28,6 +28,9 @@ public class ListingsInventory extends InventoryBasic {
 
   @Override
   public ItemStack getStackInSlot(int index) {
+    if (playerListings.size() > index) {
+      return MarketHelper.getShopDisplayItem(playerListings.get(index),false); // TODO Global Listings
+    }
     return ItemStack.EMPTY;
   }
 

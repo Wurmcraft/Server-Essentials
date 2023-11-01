@@ -21,7 +21,7 @@ public class ItemWrapper {
   public ItemWrapper(String item) {
     if (stackConverter.isValid(item)) {
       DataWrapper itemWrapper = stackConverter.getName(item);
-      this.item = itemWrapper.modid + itemWrapper.name;
+      this.item = itemWrapper.modid + ":" +  itemWrapper.name;
       this.count = stackConverter.getDataSize(item);
       this.meta = stackConverter.getMeta(item);
       this.nbt = stackConverter.getExtraData(item);

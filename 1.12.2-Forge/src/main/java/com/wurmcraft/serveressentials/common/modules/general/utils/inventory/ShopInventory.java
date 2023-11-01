@@ -1,9 +1,13 @@
 package com.wurmcraft.serveressentials.common.modules.general.utils.inventory;
 
+import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.MarketEntry;
+import com.wurmcraft.serveressentials.common.command.EcoUtils;
+import com.wurmcraft.serveressentials.common.modules.economy.ConfigEconomy;
 import com.wurmcraft.serveressentials.common.modules.economy.MarketHelper;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
+import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -100,9 +104,8 @@ public class ShopInventory extends InventoryBasic {
       return menu[index];
     }
     // TODO Multi Page Support
-    index = index - 9;
-    if (index < entries.size()) {
-      return MarketHelper.getShopDisplayItem(entries.get(index), global);
+    if ((index - 9) < entries.size()) {
+      return MarketHelper.getShopDisplayItem(entries.get(index - 9), global);
     }
     return ItemStack.EMPTY;
   }
@@ -121,7 +124,8 @@ public class ShopInventory extends InventoryBasic {
     }
     items[2] = EMPTY;
     ItemStack balance = new ItemStack(Items.DIAMOND, 1, 0);
-    balance.setStackDisplayName("Balance: %BAL%"); // TODO Lang
+    balance.setStackDisplayName("Balance: %BAL%".replace("%BAL%", String.format("%.2f",
+        EcoUtils.balance(PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString()),((ConfigEconomy) SECore.moduleConfigs.get("ECONOMY")).serverCurrency)))); // TODO Lang
     items[3] = balance;
     ItemStack pageNum = new ItemStack(Items.PAPER, 1, 0);
     pageNum.setStackDisplayName("Page: " + page); // TODO Lang

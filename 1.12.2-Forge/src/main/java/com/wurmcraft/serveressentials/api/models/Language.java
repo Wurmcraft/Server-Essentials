@@ -265,6 +265,7 @@ public class Language {
   public String COMMAND_PERM_SET;
   public String COMMAND_MARKETLIST_INVALID_ITEM;
   public String COMMAND_MARKETLIST_LISTED;
+  public String COMMAND_MARKETLIST_MAXED;
 
   // Protect
   public String PROTECT_BREAK;
