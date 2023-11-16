@@ -60,8 +60,8 @@ public class ShopInventory extends InventoryBasic {
     entries = MarketHelper.getEntries(global, filter);
   }
 
-  public ShopInventory(EntityPlayer player, Language lang, int page, boolean global,
-      String filter) {
+  public ShopInventory(
+      EntityPlayer player, Language lang, int page, boolean global, String filter) {
     super("", true, 54);
     this.player = player;
     this.lang = lang;
@@ -124,8 +124,16 @@ public class ShopInventory extends InventoryBasic {
     }
     items[2] = EMPTY;
     ItemStack balance = new ItemStack(Items.DIAMOND, 1, 0);
-    balance.setStackDisplayName("Balance: %BAL%".replace("%BAL%", String.format("%.2f",
-        EcoUtils.balance(PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString()),((ConfigEconomy) SECore.moduleConfigs.get("ECONOMY")).serverCurrency)))); // TODO Lang
+    balance.setStackDisplayName(
+        "Balance: %BAL%"
+            .replace(
+                "%BAL%",
+                String.format(
+                    "%.2f",
+                    EcoUtils.balance(
+                        PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString()),
+                        ((ConfigEconomy) SECore.moduleConfigs.get("ECONOMY"))
+                            .serverCurrency)))); // TODO Lang
     items[3] = balance;
     ItemStack pageNum = new ItemStack(Items.PAPER, 1, 0);
     pageNum.setStackDisplayName("Page: " + page); // TODO Lang

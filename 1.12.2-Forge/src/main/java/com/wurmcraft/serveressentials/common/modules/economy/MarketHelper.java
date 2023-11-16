@@ -58,8 +58,9 @@ public class MarketHelper {
     ItemStack item = getStackForMarketEntry(entry);
     addTooltip(item, "Cost: " + entry.currency_amount);
     try {
-      addTooltip(item, "Seller: " + UsernameCache.getLastKnownUsername(
-          UUID.fromString(entry.seller_uuid)));
+      addTooltip(
+          item,
+          "Seller: " + UsernameCache.getLastKnownUsername(UUID.fromString(entry.seller_uuid)));
     } catch (Exception e) {
       item = addTooltip(item, "Seller: <Error>");
     }
@@ -75,7 +76,7 @@ public class MarketHelper {
       displayTag.setTag("Lore", new NBTTagList());
     }
     NBTTagList lore = displayTag.getTagList("Lore", 9);
-    lore.appendTag(new NBTTagString(msg));  // FIX Append not appending, damn mc
+    lore.appendTag(new NBTTagString(msg)); // FIX Append not appending, damn mc
     return stack;
   }
 
@@ -92,7 +93,10 @@ public class MarketHelper {
       }
     } else {
       try {
-        Files.write(marketFile.toPath(), "".getBytes(), StandardOpenOption.WRITE,
+        Files.write(
+            marketFile.toPath(),
+            "".getBytes(),
+            StandardOpenOption.WRITE,
             StandardOpenOption.CREATE_NEW);
       } catch (Exception e) {
         ServerEssentials.LOG.error("Failed to create market.json!");
@@ -105,8 +109,11 @@ public class MarketHelper {
   public static void saveLocal() {
     File marketFile = new File(ConfigLoader.SAVE_DIR + File.separator + "market.json");
     try {
-      Files.write(marketFile.toPath(), ServerEssentials.GSON.toJson(entries).getBytes(),
-          StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+      Files.write(
+          marketFile.toPath(),
+          ServerEssentials.GSON.toJson(entries).getBytes(),
+          StandardOpenOption.WRITE,
+          StandardOpenOption.CREATE);
     } catch (Exception e) {
       ServerEssentials.LOG.warn("Failed to save market.json!");
       e.printStackTrace();
@@ -128,6 +135,6 @@ public class MarketHelper {
   }
 
   public static int countListings(String uuid, boolean global) {
-    return getPlayerListings(uuid,global).size();
+    return getPlayerListings(uuid, global).size();
   }
 }

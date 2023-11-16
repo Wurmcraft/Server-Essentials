@@ -13,7 +13,14 @@ public class ConfigChat {
   public String[] motd;
   public boolean displayUUIDOnHover;
 
-  public ConfigChat(String defaultChannel, String defaultChatFormat, String nickFormat, String messageFormat, String defaultMuteDuration, String[] motd, boolean displayUUIDOnHover) {
+  public ConfigChat(
+      String defaultChannel,
+      String defaultChatFormat,
+      String nickFormat,
+      String messageFormat,
+      String defaultMuteDuration,
+      String[] motd,
+      boolean displayUUIDOnHover) {
     this.defaultChannel = defaultChannel;
     this.defaultChatFormat = defaultChatFormat;
     this.nickFormat = nickFormat;
@@ -22,6 +29,7 @@ public class ConfigChat {
     this.motd = motd;
     this.displayUUIDOnHover = displayUUIDOnHover;
   }
+
   public ConfigChat() {
     this.defaultChannel = "local";
     this.defaultChatFormat = "%CHANNEL_PREFIX% %RANK_PREFIX% %NAME% %RANK_SUFFIX%: %MESSAGE%";

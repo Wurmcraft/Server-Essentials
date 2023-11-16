@@ -28,17 +28,14 @@ public class ModuleCore {
     }
     MinecraftForge.EVENT_BUS.register(new PlayerDataTrackerEvent());
     MinecraftForge.EVENT_BUS.register(new DelayedCommandTicker());
-    ModuleCore.reloadLanguageFile(
-        ((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang);
+    ModuleCore.reloadLanguageFile(((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang);
   }
 
   private boolean hasFileDate() {
-    return new File(
-        SAVE_DIR + File.separator + "Storage" + File.separator + "account").exists();
+    return new File(SAVE_DIR + File.separator + "Storage" + File.separator + "account").exists();
   }
 
-  public void reload() {
-  }
+  public void reload() {}
 
   private static void updateToDatabase() {
     FMLCommonHandler.instance().getMinecraftServerInstance().saveAllWorlds(true);

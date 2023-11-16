@@ -29,8 +29,12 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -98,6 +102,19 @@ public class PlayerChatEvent {
     }
     TextComponentString message =
         new TextComponentString(format(e.getPlayer(), ch, account, e.getMessage()));
+    if (((ConfigChat) SECore.moduleConfigs.get("CHAT")).displayUUIDOnHover) {
+      UUID uuid = e.getPlayer().getGameProfile().getId();
+      TextComponentString hoverText =
+          new TextComponentString(
+              TextFormatting.GOLD
+                  + UsernameCache.getLastKnownUsername(uuid)
+                  + TextFormatting.AQUA
+                  + " ("
+                  + uuid.toString()
+                  + ")");
+      message.setStyle(
+          message.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverText)));
+    }
     e.setComponent(message);
     ChatHelper.sendFrom(e.getPlayer(), ch, message);
     if (ch.logChat) {

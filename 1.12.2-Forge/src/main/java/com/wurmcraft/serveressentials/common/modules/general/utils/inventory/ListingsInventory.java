@@ -15,8 +15,8 @@ public class ListingsInventory extends InventoryBasic {
   public ListingsInventory(EntityPlayer player) {
     super("Listings", true, 56);
     this.player = player;
-    playerListings = MarketHelper.getPlayerListings(
-        player.getGameProfile().getId().toString(), false);
+    playerListings =
+        MarketHelper.getPlayerListings(player.getGameProfile().getId().toString(), false);
   }
 
   public ListingsInventory(EntityPlayer player, List<MarketEntry> listings) {
@@ -25,11 +25,11 @@ public class ListingsInventory extends InventoryBasic {
     playerListings = listings;
   }
 
-
   @Override
   public ItemStack getStackInSlot(int index) {
     if (playerListings.size() > index) {
-      return MarketHelper.getShopDisplayItem(playerListings.get(index),false); // TODO Global Listings
+      return MarketHelper.getShopDisplayItem(
+          playerListings.get(index), false); // TODO Global Listings
     }
     return ItemStack.EMPTY;
   }
