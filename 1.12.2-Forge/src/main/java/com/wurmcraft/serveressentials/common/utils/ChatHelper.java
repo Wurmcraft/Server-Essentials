@@ -234,7 +234,7 @@ public class ChatHelper {
     } else {
       return ((ConfigChat) SECore.moduleConfigs.get("CHAT"))
           .nickFormat
-          .replaceAll("%NICK%", account.display_name)
+          .replaceAll("%NICK%", RankUtils.hasPermission(account, "chat.color") ? replaceColor(account.display_name) : account.display_name)
           .replaceAll("%USERNAME%", player.getDisplayNameString());
     }
   }

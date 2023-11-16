@@ -149,7 +149,8 @@ public class ShopInventory extends InventoryBasic {
 
   @Override
   public ItemStack removeStackFromSlot(int index) {
-    return decrStackSize(index, getStackInSlot(index).getCount());
+    handleAction(index);
+    return ItemStack.EMPTY;
   }
 
   @Override
