@@ -8,6 +8,7 @@ import com.wurmcraft.serveressentials.common.modules.general.event.InventoryTrac
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryBasic;
+import net.minecraftforge.common.UsernameCache;
 
 public class PlayerInventory extends InventoryBasic {
 
@@ -18,7 +19,10 @@ public class PlayerInventory extends InventoryBasic {
   private boolean canModify;
 
   public PlayerInventory(EntityPlayerMP owner, EntityPlayerMP viewer) {
-    super(owner.getName() + "'s inventory", false, owner.inventory.mainInventory.size());
+    super(
+        UsernameCache.getLastKnownUsername(owner.getGameProfile().getId()) + "'s inventory",
+        false,
+        owner.inventory.mainInventory.size());
     this.owner = owner;
     this.viewer = viewer;
     canModify =
@@ -31,7 +35,10 @@ public class PlayerInventory extends InventoryBasic {
   }
 
   public PlayerInventory(EntityPlayerMP owner, EntityPlayerMP viewer, boolean echest) {
-    super(owner.getName() + "'s inventory", false, owner.inventory.mainInventory.size());
+    super(
+        UsernameCache.getLastKnownUsername(owner.getGameProfile().getId()) + "'s inventory",
+        false,
+        owner.inventory.mainInventory.size());
     this.owner = owner;
     this.viewer = viewer;
     this.echest = echest;

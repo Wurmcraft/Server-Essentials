@@ -19,16 +19,13 @@ import com.wurmcraft.serveressentials.api.models.local.Home;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
+import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
 import com.wurmcraft.serveressentials.common.modules.economy.command.PerkCommand;
 import com.wurmcraft.serveressentials.common.modules.security.TrustedList;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import java.lang.reflect.Method;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import javax.annotation.Nullable;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -36,6 +33,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.logging.log4j.util.Strings;
 import org.cliffc.high_scale_lib.NonBlockingHashSet;
@@ -414,6 +412,16 @@ public class SECommand extends CommandBase {
   }
 
   public EntityPlayer getPlayer(String name) {
+    if (((ConfigCore) SECore.moduleConfigs.get("CORE")).iUseAModThatMessesWithNamesPleaseFix) {
+      if (UsernameCache.getMap().containsValue(name) && name != null) {
+        for (EntityPlayer player :
+            FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+          String realUsername = UsernameCache.getLastKnownUsername(player.getGameProfile().getId());
+          if (realUsername != null && realUsername.equalsIgnoreCase(name)) return player;
+        }
+      }
+      return null;
+    }
     for (EntityPlayer player :
         FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
       Account account =

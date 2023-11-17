@@ -28,6 +28,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
@@ -232,14 +233,26 @@ public class ChatHelper {
     if (account.display_name == null || account.display_name.isEmpty()) {
       return player.getDisplayNameString();
     } else {
-      return ((ConfigChat) SECore.moduleConfigs.get("CHAT"))
-          .nickFormat
-          .replaceAll(
-              "%NICK%",
-              RankUtils.hasPermission(account, "chat.color")
-                  ? replaceColor(account.display_name)
-                  : account.display_name)
-          .replaceAll("%USERNAME%", player.getDisplayNameString());
+      if (((ConfigCore) SECore.moduleConfigs.get("CORE")).iUseAModThatMessesWithNamesPleaseFix) {
+        return ((ConfigChat) SECore.moduleConfigs.get("CHAT"))
+            .nickFormat
+            .replaceAll(
+                "%NICK%",
+                RankUtils.hasPermission(account, "chat.color")
+                    ? replaceColor(account.display_name)
+                    : account.display_name)
+            .replaceAll(
+                "%USERNAME%", UsernameCache.getLastKnownUsername(player.getGameProfile().getId()));
+      } else {
+        return ((ConfigChat) SECore.moduleConfigs.get("CHAT"))
+            .nickFormat
+            .replaceAll(
+                "%NICK%",
+                RankUtils.hasPermission(account, "chat.color")
+                    ? replaceColor(account.display_name)
+                    : account.display_name)
+            .replaceAll("%USERNAME%", player.getDisplayNameString());
+      }
     }
   }
 
