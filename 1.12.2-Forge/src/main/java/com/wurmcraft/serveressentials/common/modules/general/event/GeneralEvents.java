@@ -29,6 +29,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -66,23 +67,35 @@ public class GeneralEvents {
     playtimeSync.put(e.player.getGameProfile().getId().toString(), future);
   }
 
-  @SubscribeEvent
+  @SubscribeEvent(priority = EventPriority.HIGH)
   public void logoutEvent(PlayerEvent.PlayerLoggedOutEvent e) {
-    updatePlayer(e.player);
-    loginTime.remove(e.player);
-    playtimeSync.get(e.player.getGameProfile().getId().toString()).cancel(true);
-    playtimeSync.remove(e.player.getGameProfile().getId().toString());
+    if (e.player != null) {
+      updatePlayer(e.player);
+      loginTime.remove(e.player);
+      playtimeSync.get(e.player.getGameProfile().getId().toString()).cancel(true);
+      playtimeSync.remove(e.player.getGameProfile().getId().toString());
+    } else {
+      ServerEssentials.LOG.error(
+          "Something happened, A Player was unloaded before SE got access to it! GeneralEvents#logoutEvent");
+    }
   }
 
   public void updatePlayer(EntityPlayer player) {
-    long lastSyncTime = loginTime.get(player);
-    long time = (System.currentTimeMillis() - lastSyncTime) / 1000;
-    time = time / 60;
-    Account account = PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString());
-    if (account != null) {
-      account = addTime(account, time);
-      SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, account.uuid, account);
-      loginTime.put(player, System.currentTimeMillis());
+    if (loginTime != null && loginTime.contains(player)) {
+      long lastSyncTime = loginTime.get(player);
+      long time = (System.currentTimeMillis() - lastSyncTime) / 1000;
+      time = time / 60;
+      Account account = PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString());
+      if (account != null) {
+        account = addTime(account, time);
+        SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, account.uuid, account);
+        loginTime.put(player, System.currentTimeMillis());
+      }
+    } else {
+      ServerEssentials.LOG.warn(
+          "Unable to save player playtime! loginTime does not contain the player or the player is null! '"
+              + (player != null)
+              + "'");
     }
   }
 
