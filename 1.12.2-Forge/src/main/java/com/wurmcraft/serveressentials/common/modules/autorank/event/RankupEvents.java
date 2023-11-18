@@ -2,10 +2,7 @@ package com.wurmcraft.serveressentials.common.modules.autorank.event;
 
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
-import com.wurmcraft.serveressentials.api.models.Account;
-import com.wurmcraft.serveressentials.api.models.AutoRank;
-import com.wurmcraft.serveressentials.api.models.Language;
-import com.wurmcraft.serveressentials.api.models.Rank;
+import com.wurmcraft.serveressentials.api.models.*;
 import com.wurmcraft.serveressentials.common.command.EcoUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
@@ -74,8 +71,28 @@ public class RankupEvents {
       return false;
     }
     // Check special cases
-    // TODO Add Special Functions / cases
+    if (rank.special_events != null && !rank.special_events.isEmpty()) {
+      RankupCondition[] conditions =
+          ServerEssentials.GSON.fromJson(rank.special_events, RankupCondition[].class);
+      if (conditions != null && conditions.length > 0) {
+        for (RankupCondition condition : conditions) {
+          if (!checkRankupCondition(PlayerUtils.getFromUUID(account.uuid), account, condition))
+            return false;
+        }
+      }
+    }
     return true;
+  }
+
+  private static boolean checkRankupCondition(
+      EntityPlayer player, Account account, RankupCondition condition) {
+    if (condition.type.equalsIgnoreCase("Tag")) {
+      if (player.getTags().contains(condition.value)) return true;
+    }
+    // TODO More Conditions
+    if (condition.type.equalsIgnoreCase("ScoreBoard")) {}
+
+    return false;
   }
 
   public static void rankup(EntityPlayer player, AutoRank autoRank) {
