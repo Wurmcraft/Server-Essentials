@@ -250,5 +250,8 @@
   "COMMAND_PERM_SET": "&bRank has been set to {@RANK@}",
   "COMMAND_MARKETLIST_INVALID_ITEM": "&cInvalid Item '{@ITEM@}'",
   "COMMAND_MARKETLIST_LISTED": "&b{@ITEM@} has been listed at {@PRICE@} per {@COUNT@}",
-  "COMMAND_MARKETLIST_MAXED": "&cYou have hit your max listings {@COUNT@}"
+  "COMMAND_MARKETLIST_MAXED": "&cYou have hit your max listings {@COUNT@}",
+  "COMMAND_TAG_ADD": "&bTag {@TAG@} added to {@PLAYER@}",
+  "COMMAND_TAG_REM": "&bTag {@TAG} removed from {@PLAYER@}",
+  "COMMAND_TAG_LIST": "&b{@LIST@}"
 }
