@@ -45,7 +45,7 @@ public class LanguageCommand {
       File configFile =
           new File(SAVE_DIR + File.separator + "Modules" + File.separator + "Core.json");
       ConfigLoader.save(configFile, config);
-      ChatHelper.send(player.sender, player.lang.LANGUAGE_CHANGE.replaceAll("\\{@LANG@}", lang));
+      ChatHelper.send(player.sender, possibleLang.LANGUAGE_CHANGE.replaceAll("\\{@LANG@}", lang));
     } else {
       Account account = player.global;
       account.lang = possibleLang.langKey;
