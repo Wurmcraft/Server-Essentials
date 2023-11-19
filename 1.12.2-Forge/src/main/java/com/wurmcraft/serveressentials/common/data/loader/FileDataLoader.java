@@ -85,7 +85,7 @@ public class FileDataLoader extends DataLoader {
    */
   protected void cache(DataType type, String key, Object data) {
     if (storage.containsKey(type)) {
-      storage.get(type).put(key, new Object[] {System.currentTimeMillis(), data});
+      storage.get(type).put(key, new Object[] {System.currentTimeMillis() + getTimeout(type), data});
     } else {
       NonBlockingHashMap<String, Object[]> newCache = new NonBlockingHashMap<>();
       newCache.put(key, new Object[] {System.currentTimeMillis() + getTimeout(type), data});

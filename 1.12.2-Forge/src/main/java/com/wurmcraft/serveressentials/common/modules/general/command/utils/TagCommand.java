@@ -23,7 +23,7 @@ public class TagCommand {
         ChatHelper.send(sender.sender, sender.lang.COMMAND_TAG_REM.replaceAll("\\{@TAG@}", tag).replaceAll("\\{@PLAYER@}", player.getName()));
     }
 
-    @Command(args = {CommandArgument.PLAYER, CommandArgument.STRING}, usage = {"player", "tag"}, isSubCommand = true, canConsoleUse = true, subCommandAliases = {"l"})
+    @Command(args = {CommandArgument.PLAYER}, usage = {"player"}, isSubCommand = true, canConsoleUse = true, subCommandAliases = {"l"})
     public void list(ServerPlayer sender, EntityPlayer player) {
         ChatHelper.send(sender.sender, sender.lang.COMMAND_TAG_LIST.replaceAll("\\{@LIST@}", Strings.join(player.getTags(), ",")));
     }

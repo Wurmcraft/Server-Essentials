@@ -252,6 +252,6 @@
   "COMMAND_MARKETLIST_LISTED": "&b{@ITEM@} has been listed at {@PRICE@} per {@COUNT@}",
   "COMMAND_MARKETLIST_MAXED": "&cYou have hit your max listings {@COUNT@}",
   "COMMAND_TAG_ADD": "&bTag {@TAG@}  a-a-added t-to  {@PLAYER@}",
-  "COMMAND_TAG_REM": "&bTag {@TAG} wemuvd fwom {@PLAYER@}",
+  "COMMAND_TAG_REM": "&bTag {@TAG@} wemuvd fwom {@PLAYER@}",
   "COMMAND_TAG_LIST": "&b{@LIST@}"
 }
