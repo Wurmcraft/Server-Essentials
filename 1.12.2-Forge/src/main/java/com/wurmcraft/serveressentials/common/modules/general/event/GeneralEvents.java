@@ -17,10 +17,7 @@ import com.wurmcraft.serveressentials.common.modules.general.ConfigGeneral;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,7 +35,7 @@ import org.cliffc.high_scale_lib.NonBlockingHashMap;
 public class GeneralEvents {
 
   // Time Tracking
-  public static NonBlockingHashMap<EntityPlayer, Long> loginTime = new NonBlockingHashMap<>();
+  public static NonBlockingHashMap<UUID, Long> loginTime = new NonBlockingHashMap<>();
   public static NonBlockingHashMap<String, ScheduledFuture<?>> playtimeSync =
       new NonBlockingHashMap<>();
   // AFK Tracking
@@ -51,9 +48,9 @@ public class GeneralEvents {
   private static List<EntityPlayer> deadPlayers = new ArrayList<>();
   private static HashMap<EntityPlayer, BlockPos> frozenPlayers = new HashMap<>();
 
-  @SubscribeEvent
+  @SubscribeEvent(priority = EventPriority.HIGH)
   public void playerLoginEvent(PlayerEvent.PlayerLoggedInEvent e) {
-    loginTime.put(e.player, System.currentTimeMillis());
+    loginTime.put(e.player.getGameProfile().getId(), System.currentTimeMillis());
     ScheduledFuture<?> future =
         ServerEssentials.scheduledService.scheduleAtFixedRate(
             () -> {
@@ -71,7 +68,7 @@ public class GeneralEvents {
   public void logoutEvent(PlayerEvent.PlayerLoggedOutEvent e) {
     if (e.player != null) {
       updatePlayer(e.player);
-      loginTime.remove(e.player);
+      loginTime.remove(e.player.getGameProfile().getId());
       if (playtimeSync.contains(e.player.getGameProfile().getId().toString())) {
         playtimeSync.get(e.player.getGameProfile().getId().toString()).cancel(true);
         playtimeSync.remove(e.player.getGameProfile().getId().toString());
@@ -83,20 +80,20 @@ public class GeneralEvents {
   }
 
   public void updatePlayer(EntityPlayer player) {
-    if (loginTime != null && loginTime.contains(player)) {
-      long lastSyncTime = loginTime.get(player);
+    if (loginTime != null && loginTime.contains(player.getGameProfile().getId())) {
+      long lastSyncTime = loginTime.get(player.getGameProfile().getId());
       long time = (System.currentTimeMillis() - lastSyncTime) / 1000;
       time = time / 60;
       Account account = PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString());
       if (account != null) {
         account = addTime(account, time);
         SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, account.uuid, account);
-        loginTime.put(player, System.currentTimeMillis());
+        loginTime.put(player.getGameProfile().getId(), System.currentTimeMillis());
       }
     } else {
       ServerEssentials.LOG.warn(
           "Unable to save player playtime! loginTime does not contain the player or the player is null! '"
-              + (player != null)
+              + (player == null)
               + "'");
     }
   }
