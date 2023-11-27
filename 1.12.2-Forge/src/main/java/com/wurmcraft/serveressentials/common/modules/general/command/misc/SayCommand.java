@@ -12,20 +12,20 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 @ModuleCommand(module = "General", name = "Say")
 public class SayCommand {
 
-  @Command(
-      args = {CommandArgument.STRING_ARR},
-      usage = {"MSG"})
-  public void sayCommand(ServerPlayer sender, String[] msg) {
-    for (EntityPlayerMP p :
-        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
-      ChatHelper.send(p, "&6[Server] &b" + Strings.join(msg, " "));
+    @Command(
+            args = {CommandArgument.STRING_ARR},
+            usage = {"MSG"}, canConsoleUse = true)
+    public void sayCommand(ServerPlayer sender, String[] msg) {
+        for (EntityPlayerMP p :
+                FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+            ChatHelper.send(p, "&6[Server] &b" + Strings.join(msg, " "));
+        }
     }
-  }
 
-  @Command(
-      args = {CommandArgument.STRING},
-      usage = {"MSG"})
-  public void sayCommand(ServerPlayer sender, String msg) {
-    sayCommand(sender, new String[] {msg});
-  }
+    @Command(
+            args = {CommandArgument.STRING},
+            usage = {"MSG"}, canConsoleUse = true)
+    public void sayCommand(ServerPlayer sender, String msg) {
+        sayCommand(sender, new String[]{msg});
+    }
 }

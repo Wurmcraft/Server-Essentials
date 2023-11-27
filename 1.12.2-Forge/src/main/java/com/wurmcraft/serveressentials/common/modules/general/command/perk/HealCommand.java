@@ -24,7 +24,7 @@ public class HealCommand {
 
   @Command(
       args = {CommandArgument.PLAYER},
-      usage = {"player"})
+      usage = {"player"}, canConsoleUse = true)
   public void healOther(ServerPlayer player, EntityPlayer otherPlayer) {
     if (RankUtils.hasPermission(player.global, "command.heal.other")) {
       otherPlayer.setHealth(Integer.MAX_VALUE);

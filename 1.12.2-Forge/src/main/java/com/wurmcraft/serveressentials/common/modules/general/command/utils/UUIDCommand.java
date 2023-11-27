@@ -22,7 +22,7 @@ public class UUIDCommand {
 
   @Command(
       args = {CommandArgument.STRING},
-      usage = {"name"})
+      usage = {"name"}, canConsoleUse = true)
   public void lookupUUID(ServerPlayer player, String username) {
     boolean basic = UsernameCache.getMap().containsValue(username);
     if (basic) {

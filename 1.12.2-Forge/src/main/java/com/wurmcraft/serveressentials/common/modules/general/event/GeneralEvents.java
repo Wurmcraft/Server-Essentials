@@ -91,10 +91,11 @@ public class GeneralEvents {
         loginTime.put(player.getGameProfile().getId(), System.currentTimeMillis());
       }
     } else {
-      ServerEssentials.LOG.warn(
-          "Unable to save player playtime! loginTime does not contain the player or the player is null! '"
-              + (player == null)
-              + "'");
+      //      ServerEssentials.LOG.warn(
+      //          "Unable to save player playtime! loginTime does not contain the player or the
+      // player is null! '"
+      //              + (player == null)
+      //              + "'");
     }
   }
 

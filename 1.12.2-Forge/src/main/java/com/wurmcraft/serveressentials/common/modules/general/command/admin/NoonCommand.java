@@ -13,7 +13,7 @@ public class NoonCommand {
 
   @Command(
       args = {},
-      usage = {})
+      usage = {},canConsoleUse = true)
   public void setDay(ServerPlayer player) {
     FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld().setWorldTime(time);
     ChatHelper.send(player.sender, player.lang.COMMAND_TIME.replaceAll("\\{@TIME@}", "" + time));

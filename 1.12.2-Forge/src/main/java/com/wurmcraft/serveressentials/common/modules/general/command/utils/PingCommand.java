@@ -13,7 +13,7 @@ public class PingCommand {
 
   @Command(
       args = {},
-      usage = {})
+      usage = {}, canConsoleUse = true)
   public void ping(ServerPlayer player) {
     ChatHelper.send(player.sender, player.lang.COMMAND_PING);
   }

@@ -41,7 +41,7 @@ public class PlaytimeCommand {
 
   @Command(
       args = {CommandArgument.STRING},
-      usage = {"Username"})
+      usage = {"Username"}, canConsoleUse = true)
   public void displayPlaytime(ServerPlayer player, String username) {
     ChatHelper.send(player.sender, player.lang.SPACER);
     Account account =

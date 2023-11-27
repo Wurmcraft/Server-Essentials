@@ -36,7 +36,7 @@ public class SmiteCommand {
 
   @Command(
       args = {CommandArgument.PLAYER},
-      usage = {"Player"})
+      usage = {"Player"},canConsoleUse = true)
   public void smitePlayer(ServerPlayer sender, EntityPlayer player) {
     player
         .getEntityWorld()

@@ -58,7 +58,6 @@ public class WarpCommand {
       args = {CommandArgument.STRING},
       usage = {"name"},
       isSubCommand = true,
-      canConsoleUse = true,
       subCommandAliases = {"c"})
   public void create(ServerPlayer player, String name) {
     FMLCommonHandler.instance()
