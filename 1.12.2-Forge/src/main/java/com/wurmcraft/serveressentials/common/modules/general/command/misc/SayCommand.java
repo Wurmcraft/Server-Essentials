@@ -17,10 +17,7 @@ public class SayCommand {
       usage = {"MSG"},
       canConsoleUse = true)
   public void sayCommand(ServerPlayer sender, String[] msg) {
-    for (EntityPlayerMP p :
-        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
-      ChatHelper.send(p, "&6[Server] &b" + Strings.join(msg, " "));
-    }
+    ChatHelper.sendToAll("&6[Server] &b" + Strings.join(msg, " "));
   }
 
   @Command(

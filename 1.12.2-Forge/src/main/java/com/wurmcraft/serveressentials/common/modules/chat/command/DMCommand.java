@@ -20,8 +20,22 @@ import net.minecraft.entity.player.EntityPlayer;
 @ModuleCommand(
     module = "Chat",
     name = "DM",
-    defaultAliases = {"Msg", "M", "Pm"})
+    defaultAliases = {"Msg", "M", "Pm", "tell"})
 public class DMCommand {
+
+  @Command(
+          args = {CommandArgument.PLAYER, CommandArgument.STRING_ARR},
+          usage = {"player", "msg"})
+  public void msg(ServerPlayer player, EntityPlayer otherPlayer, String[] msg) {
+    msg(player, otherPlayer.getGameProfile().getId().toString(), String.join(" ", msg));
+  }
+
+  @Command(
+          args = {CommandArgument.PLAYER, CommandArgument.STRING},
+          usage = {"player", "msg"})
+  public void msg(ServerPlayer player, EntityPlayer otherPlayer, String msg) {
+    msg(player, otherPlayer.getGameProfile().getId().toString(), String.join(" ", msg));
+  }
 
   @Command(
       args = {CommandArgument.STRING, CommandArgument.STRING_ARR},
