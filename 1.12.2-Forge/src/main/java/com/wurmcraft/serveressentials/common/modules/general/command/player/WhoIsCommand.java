@@ -18,7 +18,8 @@ public class WhoIsCommand {
 
   @Command(
       args = {CommandArgument.PLAYER},
-      usage = {"player"}, canConsoleUse = true)
+      usage = {"player"},
+      canConsoleUse = true)
   public void whois(ServerPlayer player, EntityPlayer otherPlayer) {
     Account account =
         SECore.dataLoader.get(

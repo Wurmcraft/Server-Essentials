@@ -31,7 +31,8 @@ public class GodCommand {
 
   @Command(
       args = {CommandArgument.PLAYER},
-      usage = {"player"}, canConsoleUse = true)
+      usage = {"player"},
+      canConsoleUse = true)
   public void godOther(ServerPlayer player, EntityPlayer otherPlayer) {
     if (RankUtils.hasPermission(player.global, "command.god.other")) {
       if (otherPlayer.capabilities.disableDamage) {

@@ -18,7 +18,8 @@ public class SeenCommand {
 
   @Command(
       args = {CommandArgument.STRING},
-      usage = {"player"}, canConsoleUse = true)
+      usage = {"player"},
+      canConsoleUse = true)
   public void lookupLastSeen(ServerPlayer player, String otherPlayer) {
     String uuid = PlayerUtils.getUUIDForInput(otherPlayer);
     Account account = PlayerUtils.getLatestAccount(uuid);

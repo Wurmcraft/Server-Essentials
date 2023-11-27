@@ -34,7 +34,8 @@ public class SudoCommand {
 
   @Command(
       args = {CommandArgument.PLAYER, CommandArgument.STRING_ARR},
-      usage = {"player", "command"},canConsoleUse = true)
+      usage = {"player", "command"},
+      canConsoleUse = true)
   public void sudo(ServerPlayer player, EntityPlayer otherPlayer, String[] command) {
     sudo(player, otherPlayer, Strings.join(command, " "));
   }
