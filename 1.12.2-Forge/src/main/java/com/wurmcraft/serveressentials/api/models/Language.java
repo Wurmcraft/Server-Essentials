@@ -270,6 +270,13 @@ public class Language {
   public String COMMAND_TAG_REM;
   public String COMMAND_TAG_LIST;
 
+  public String COMMAND_ECO_SET;
+  public String COMMAND_ECO_SET_OTHER;
+  public String COMMAND_ECO_ADD;
+  public String COMMAND_ECO_ADD_OTHER;
+  public String COMMAND_ECO_CONSUME;
+  public String COMMAND_ECO_CONSUME_OTHER;
+
   // Protect
   public String PROTECT_BREAK;
   public String PROTECT_PLACE;

@@ -65,4 +65,14 @@ public class EcoUtils {
     }
     return amount;
   }
+
+  public static void set(Account account, String currency, double amount) {
+    for (BankAccount bank : account.wallet) {
+      if (bank.currencyName.equals(currency)) {
+        bank.amount = amount;
+        SECore.dataLoader.update(DataType.ACCOUNT, account.uuid, account);
+        return;
+      }
+    }
+  }
 }

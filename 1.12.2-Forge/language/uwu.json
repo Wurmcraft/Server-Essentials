@@ -253,5 +253,11 @@
   "COMMAND_MARKETLIST_MAXED": "&cYou have hit your max listings {@COUNT@}",
   "COMMAND_TAG_ADD": "&bTag {@TAG@}  a-a-added t-to  {@PLAYER@}",
   "COMMAND_TAG_REM": "&bTag {@TAG@} wemuvd fwom {@PLAYER@}",
-  "COMMAND_TAG_LIST": "&b{@LIST@}"
+  "COMMAND_TAG_LIST": "&b{@LIST@}",
+  "COMMAND_ECO_SET": "&bY-Y-Youw bawance has been set t-to {@AMOUNT@} for {@CURRENCY@}",
+  "COMMAND_ECO_SET_OTHER": "&b{@PLAYER@}'s  bawance has been set t-to {@AMOUNT@} for {@CURRENCY@}",
+  "COMMAND_ECO_ADD": "&bYour bawance  has been given {@AMOUNT@} for {@CURRENCY@}",
+  "COMMAND_ECO_ADD_OTHER": "&b{@PLAYER@}'s bawance has been given {@AMOUNT@} for {@CURRENCY@}",
+  "COMMAND_ECO_CONSUME": "&bYour bawance  has wost {@AMOUNT@} for {@CURRENCY@}",
+  "COMMAND_ECO_CONSUME_OTHER": "&b{@PLAYER@}'s bawance  has wost {@AMOUNT@} for {@CURRENCY@}"
 }

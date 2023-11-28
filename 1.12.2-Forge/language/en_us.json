@@ -253,5 +253,11 @@
   "COMMAND_MARKETLIST_MAXED": "&cYou have hit your max listings {@COUNT@}",
   "COMMAND_TAG_ADD": "&bTag {@TAG@} added to {@PLAYER@}",
   "COMMAND_TAG_REM": "&bTag {@TAG@} removed from {@PLAYER@}",
-  "COMMAND_TAG_LIST": "&b{@LIST@}"
+  "COMMAND_TAG_LIST": "&b{@LIST@}",
+  "COMMAND_ECO_SET": "&bYour balance has been set to {@AMOUNT@} for {@CURRENCY@}",
+  "COMMAND_ECO_SET_OTHER": "&b{@PLAYER@}'s balance has been set to {@AMOUNT@} for {@CURRENCY@}",
+  "COMMAND_ECO_ADD": "&bYour balance has been given {@AMOUNT@} for {@CURRENCY@}",
+  "COMMAND_ECO_ADD_OTHER": "&b{@PLAYER@}'s balance has been given {@AMOUNT@} for {@CURRENCY@}",
+  "COMMAND_ECO_CONSUME": "&bYour balance has lost {@AMOUNT@} for {@CURRENCY@}",
+  "COMMAND_ECO_CONSUME_OTHER": "&b{@PLAYER@}'s balance has lost {@AMOUNT@} for {@CURRENCY@}"
 }
