@@ -21,6 +21,7 @@ import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -28,6 +29,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
@@ -186,14 +188,28 @@ public class ChatHelper {
                         new Account())
                     .lang,
                 new Language());
-        send(
-            spy,
-            lang.SOCIAL_SPY_TAG
-                + " "
-                + msgColor
-                + sender.getDisplayNameString()
-                + " "
-                + sentMessage);
+        TextComponentString text =
+            new TextComponentString(
+                replaceColor(
+                    lang.SOCIAL_SPY_TAG
+                        + " "
+                        + msgColor
+                        + sender.getDisplayNameString()
+                        + " "
+                        + sentMessage));
+        if (((ConfigChat) SECore.moduleConfigs.get("CHAT")).displayUUIDOnHover) {
+          UUID uuid = sender.getGameProfile().getId();
+          TextComponentString hoverText =
+              new TextComponentString(
+                  TextFormatting.GOLD
+                      + UsernameCache.getLastKnownUsername(uuid)
+                      + TextFormatting.AQUA
+                      + " ("
+                      + uuid.toString()
+                      + ")");
+          text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverText));
+        }
+        send(spy, text);
       }
     }
     LOG.info(
