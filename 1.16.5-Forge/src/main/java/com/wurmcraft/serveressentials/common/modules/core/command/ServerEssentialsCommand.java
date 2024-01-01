@@ -13,11 +13,9 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.command.impl.SayCommand;
 import net.minecraft.util.text.StringTextComponent;
 
-public class SECommand {
+public class ServerEssentialsCommand {
 
   protected static class CommandArgument implements ArgumentType<String> {
 
@@ -54,14 +52,15 @@ public class SECommand {
     LiteralCommandNode<CommandSource> literalcommandnode = commandDispatcher.register(
         Commands.literal("serveressentials").requires((p_198816_0_) -> {
           return p_198816_0_.hasPermission(2);
-        }).then(Commands.argument("arg", CommandArgument.arg()).executes((sender) -> {
-          sender.getSource().sendSuccess(
-              new StringTextComponent("Arg: " + CommandArgument.get(sender, "arg")),
-              true);
-          return 1;
-        })));
+        }).then(Commands.argument("arg", CommandArgument.arg()).executes(ServerEssentialsCommand::commandExec)));
     commandDispatcher.register(Commands.literal("se").requires((p_200556_0_) -> {
       return p_200556_0_.hasPermission(2);
     }).redirect(literalcommandnode));
+  }
+
+  private static int commandExec(CommandContext<CommandSource> commandSourceCommandContext) {
+    String arg = CommandArgument.get(commandSourceCommandContext, "arg");
+    commandSourceCommandContext.getSource().sendSuccess(new StringTextComponent("Arg: " + arg),true);
+    return 0;
   }
 }
