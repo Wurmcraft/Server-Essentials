@@ -151,10 +151,11 @@ public class SECommand extends CommandBase {
         return;
       }
       // Check Min Rank
-      if (!config.minRank.isEmpty()
-          && !RankUtils.isGreaterThan(config.minRank, userData.global.rank)) {
-        ChatHelper.send(sender, new TextComponentTranslation("commands.generic.permission"));
-        return;
+      if (!config.minRank.isEmpty() && !RankUtils.hasRank(config.minRank, userData.global.rank)) {
+        if (!RankUtils.isGreaterThan(config.minRank, userData.global.rank)) {
+          ChatHelper.send(sender, new TextComponentTranslation("commands.generic.permission"));
+          return;
+        }
       }
       // Currency Check
       if (!config.currencyCost.isEmpty()) {

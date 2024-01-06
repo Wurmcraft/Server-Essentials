@@ -184,4 +184,11 @@ public class RankUtils {
     ;
     return null;
   }
+
+  public static boolean hasRank(String minRank, String[] rank) {
+    for (String r : rank) {
+      if (minRank.equalsIgnoreCase(r)) return true;
+    }
+    return false;
+  }
 }
