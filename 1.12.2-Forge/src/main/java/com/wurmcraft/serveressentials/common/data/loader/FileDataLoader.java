@@ -71,6 +71,7 @@ public class FileDataLoader extends DataLoader {
     try {
       return GSON.fromJson(json, type);
     } catch (JsonParseException e) {
+      e.printStackTrace();
       LOG.debug("Failed to parse '" + file.getAbsolutePath() + "'");
     }
     return null;

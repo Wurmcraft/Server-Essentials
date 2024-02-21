@@ -36,7 +36,7 @@ public class WarpCommand {
     try {
       Warp[] warps =
           SECore.dataLoader
-              .getFromKey(DataLoader.DataType.WARP, new Warp[0])
+              .getFromKey(DataLoader.DataType.WARP, new Warp())
               .values()
               .toArray(new Warp[0]);
       StringBuilder builder = new StringBuilder();
