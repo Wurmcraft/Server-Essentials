@@ -8,21 +8,25 @@ Requirements: `Core`
 
 ### Commands
 
-| Name        | Permission Node            | Description                                                                 | Default Aliases                         | Recommended Security  |
-| ----------- | ---------------------------|-----------------------------------------------------------------------------|-----------------------------------------|-----------------------|
-| Channel     | command.channel            | Change your current selected channel                                        | `ch`, `chan`                            |  Low                  |
-| Mute        | command.mute               | Mute or unmute a specific used, timed or untimed                            |                                         |  Medium               |
-| Broadcast   | command.broadcast          | Send a message to everyone on the given server                              | `bc`                                    |  Medium               |
-| Ignore      | command.ignore             | Adds a user to the ignored list preventing messages from the given user     | `i`                                     |  Low                  |
-| Nick        | command.nick.self          | Change your own nickname                                                    | `nickname`                              |  Low                  |
-| Nick        | command.nick.other         | Change someone else's nickname                                              | `nickname`                              |  Medium               |
-| PauseChat   | command.pausechat          | Prevents all users in a given channel from typing in chat                   | `pc`                                    |  Medium               |
-| Dm          | command.dm                 | Send a message to another user                                              | `msg`, `m` `pm`                         |  Low                  |
-| Reply       | command.reply              | Reply to a message send to you from another user without mentioning them    | `r`                                     |  Low                  |
-| SocialSpy   | command.socialspy          | Enables the viewing of DM's from others on the network                      | `ss`                                    |  Medium               |
-| Bulletin    | command.bulletin           | Send a message to everyone that joins the server within a timeframe         | `offlineannouncement`                   |  Medium               |
-| Motd        | command.motd               | Display a preset message when the command is run                            |                                         |  Low                  |
-| Motd        | command.motd.set           | Set the motd                                                                |                                         |  Medium               |
+| Name      | Permission Node        | Description                                                              | Default Aliases                         | Recommended Security  |
+|-----------|------------------------|--------------------------------------------------------------------------|-----------------------------------------|-----------------------|
+| Channel   | command.channel        | Change your current selected channel                                     | `ch`, `chan`                            |  Low                  |
+| Channel   | channel.{NAME}         | Allows access to a specific channel                                      | `ch`, `chan`                            |  Low                  |
+| Channel   | command.channel.create | Allows Creating of a new channel.                                        | `ch`, `chan`                            |  Medium               |
+| Channel   | command.channel.delete | Allows Deleting a channel.                                               | `ch`, `chan`                            |  Medium               |
+| Channel   | command.channel.modify | Allows modifying an existing channel.                                    | `ch`, `chan`                            |  Medium               |
+| Mute      | command.mute           | Mute or unmute a specific used, timed or untimed                         |                                         |  Medium               |
+| Broadcast | command.broadcast      | Send a message to everyone on the given server                           | `bc`                                    |  Medium               |
+| Ignore    | command.ignore         | Adds a user to the ignored list preventing messages from the given user  | `i`                                     |  Low                  |
+| Nick      | command.nick.self      | Change your own nickname                                                 | `nickname`                              |  Low                  |
+| Nick      | command.nick.other     | Change someone else's nickname                                           | `nickname`                              |  Medium               |
+| PauseChat | command.pausechat      | Prevents all users in a given channel from typing in chat                | `pc`                                    |  Medium               |
+| Dm        | command.dm             | Send a message to another user                                           | `msg`, `m` `pm`                         |  Low                  |
+| Reply     | command.reply          | Reply to a message send to you from another user without mentioning them | `r`                                     |  Low                  |
+| SocialSpy | command.socialspy      | Enables the viewing of DM's from others on the network                   | `ss`                                    |  Medium               |
+| Bulletin  | command.bulletin       | Send a message to everyone that joins the server within a timeframe      | `offlineannouncement`                   |  Medium               |
+| Motd      | command.motd           | Display a preset message when the command is run                         |                                         |  Low                  |
+| Motd      | command.motd.set       | Set the motd                                                             |                                         |  Medium               |
 
 ### Non-Command Permission
 
@@ -37,14 +41,15 @@ Requirements: `Core`
 
 File: `Modules/Chat.json`
 
-| Name              | Description                                                                                                                                                                             |
-|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `defaultChannel`  | Channel to set new users to upon login.                                                                                                                                                 |
-| `chatFormat`      | Formatting for how to display chat, See [#formatting](/modules/chat#formatting) for a full list of possible formatting codes                                                            |
-| `nickFormat`      | Formatting for how to display a nickname, See [#formatting](/modules/chat#formatting) for a full list of possible formatting codes                                                      |
-| `messageFormat`   | Controls how the private messages via /dm /msg and /r are displayed, values within the {} are seperated via , and swaped depending on the side the message is being displayed from      |
-| `motd`            | The server's motd for displaying upon joining or running /motd                                                                                                                          |
-
+| Name                   | Description                                                                                                                                                                        |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `defaultChannel`       | Channel to set new users to upon login.                                                                                                                                            |
+| `defaultChatFormat`    | Formatting for how to display chat, See [#formatting](/modules/chat#formatting) for a full list of possible formatting codes                                                       |
+| `nickFormat`           | Formatting for how to display a nickname, See [#formatting](/modules/chat#formatting) for a full list of possible formatting codes                                                 |
+| `messageFormat`        | Controls how the private messages via /dm /msg and /r are displayed, values within the {} are seperated via , and swaped depending on the side the message is being displayed from |
+| `motd`                 | The server's motd for displaying upon joining or running /motd                                                                                                                     |
+| `defaultMuteDuration`  | Default amount of time a user will be muted for, when none is specified                                                                                                            |
+| `displayUUIDOnHover`   | Default amount of time a user will be muted for, when none is specified                                                                                                            |
 
 ### Formatting
 

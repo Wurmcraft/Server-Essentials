@@ -23,6 +23,6 @@ Requirements: `Rest mode only`
 
 File: `Modules/Ban.json`
 
-| Name            | Description                                                                                                                                                             |
-|-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `defaultLang`   | Default language for players and console, See [Github](https://github.com/Wurmcraft/Server-Essentials/tree/dev/1.12.2-Forge/language) for a list of supported languages |
+| Name             | Description                                                        |
+|------------------|--------------------------------------------------------------------|
+| `followRestBans` | If all the servers will use the same ban list, using the rest link |
