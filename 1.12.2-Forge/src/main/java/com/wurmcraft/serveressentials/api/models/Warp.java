@@ -1,6 +1,5 @@
 package com.wurmcraft.serveressentials.api.models;
 
-import com.wurmcraft.serveressentials.api.models.local.Home;
 import com.wurmcraft.serveressentials.api.models.local.Location;
 
 public class Warp extends Location {
@@ -12,6 +11,5 @@ public class Warp extends Location {
     this.name = name;
   }
 
-  public Warp() {
-  }
+  public Warp() {}
 }

@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 @ModuleCommand(
     module = "General",
     name = "Whois",
-    defaultAliases = {"Who", ""})
+    defaultAliases = {"Who"})
 public class WhoIsCommand {
 
   @Command(

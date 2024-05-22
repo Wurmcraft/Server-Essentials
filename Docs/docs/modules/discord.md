@@ -6,7 +6,7 @@ Example: `Delete player file`, `Send to spawn`, `Kill`
 
 Name: `Discord`
 
-Requirements: `Core`, `Must be on using` ['Rest'](/guides/rest) `as storage type along with configured bot for full functionallity`
+Requirements: `Core`, `Must be on using` ['Rest'](../guides/rest) `as storage type along with configured bot for full functionallity`
 
 ### Commands
 

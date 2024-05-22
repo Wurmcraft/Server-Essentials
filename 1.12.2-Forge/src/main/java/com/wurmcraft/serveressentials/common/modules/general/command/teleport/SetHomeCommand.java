@@ -24,7 +24,7 @@ import net.minecraft.util.text.event.HoverEvent;
 @ModuleCommand(
     module = "General",
     name = "SetHome",
-    defaultAliases = {})
+    defaultAliases = {"SHome", "SH"})
 public class SetHomeCommand {
 
   @Command(
@@ -108,7 +108,7 @@ public class SetHomeCommand {
       args = {CommandArgument.STRING, CommandArgument.STRING},
       usage = {"player", "name"})
   public void setHomeOffline(ServerPlayer player, String offlineUser, String name) {
-    if (RankUtils.hasPermission(player.global, "command.home.other")) {
+    if (RankUtils.hasPermission(player.global, "command.sethome.other")) {
       String offlineUUID = PlayerUtils.getUUIDForInput(offlineUser);
       if (offlineUUID != null) {
         int maxHomes =
