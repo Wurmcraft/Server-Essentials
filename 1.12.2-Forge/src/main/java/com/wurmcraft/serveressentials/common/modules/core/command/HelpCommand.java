@@ -13,6 +13,7 @@ import java.util.List;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 @ModuleCommand(
@@ -53,7 +54,7 @@ public class HelpCommand {
         Integer.toString(page)
             + " / "
             + Math.round(Math.ceil((float) playerSpecificHelp.size() / COMMANDS_PER_PAGE));
-    int splitLocation = (spacer.length() / 2) - ((center.length() / 2) + 1);
+    int splitLocation = (spacer.length() / 2) - ((center.length() / 2));
     String header =
         spacer.substring(0, splitLocation)
             + " &6(&a"
@@ -66,7 +67,7 @@ public class HelpCommand {
       if (f >= playerSpecificHelp.size()) {
         break;
       }
-      ChatHelper.send(player.sender, playerSpecificHelp.get(f).commandName);
+      ChatHelper.sendTranslated(player.sender, playerSpecificHelp.get(f).commandName, TextFormatting.AQUA);
     }
     ChatHelper.send(player.sender, player.lang.SPACER);
   }
@@ -85,8 +86,12 @@ public class HelpCommand {
   }
 
   private static HelpLine getHelpInfo(ICommandSender sender, ICommand command) {
-    String usageName = "&b" + command.getUsage(sender).replaceAll("\n", ",  &b");
-    return new HelpLine(usageName, "", getPermNode(command));
+    if(command instanceof SECommand || command instanceof CustomCommand) {
+      String usageName = command.getUsage(sender);
+      return new HelpLine(usageName, "", getPermNode(command));
+    } else {
+      return new HelpLine(command.getUsage(sender),"","command." + command.getName());
+    }
   }
 
   public static String getPermNode(ICommand command) {

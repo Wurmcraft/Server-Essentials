@@ -47,6 +47,10 @@ public class ChatHelper {
     send(sender, new TextComponentString(replaceColor(message)));
   }
 
+  public static void sendTranslated(ICommandSender sender, String message) {
+    send(sender, new TextComponentTranslation(replaceColor(message)));
+  }
+
   public static void sendTranslated(ICommandSender sender, String key, TextFormatting color) {
     TextComponentTranslation translation = new TextComponentTranslation(key);
     translation.getStyle().setColor(color);
