@@ -35,7 +35,7 @@ import org.cliffc.high_scale_lib.NonBlockingHashMap;
 public class GeneralEvents {
 
   // Time Tracking
-  public static NonBlockingHashMap<UUID, Long> loginTime = new NonBlockingHashMap<>();
+  public static NonBlockingHashMap<String, Long> loginTime = new NonBlockingHashMap<>();
   public static NonBlockingHashMap<String, ScheduledFuture<?>> playtimeSync =
       new NonBlockingHashMap<>();
   // AFK Tracking
@@ -50,7 +50,7 @@ public class GeneralEvents {
 
   @SubscribeEvent(priority = EventPriority.HIGH)
   public void playerLoginEvent(PlayerEvent.PlayerLoggedInEvent e) {
-    loginTime.put(e.player.getGameProfile().getId(), System.currentTimeMillis());
+    loginTime.put(e.player.getGameProfile().getId().toString(), System.currentTimeMillis());
     ScheduledFuture<?> future =
         ServerEssentials.scheduledService.scheduleAtFixedRate(
             () -> {
@@ -68,7 +68,7 @@ public class GeneralEvents {
   public void logoutEvent(PlayerEvent.PlayerLoggedOutEvent e) {
     if (e.player != null) {
       updatePlayer(e.player);
-      loginTime.remove(e.player.getGameProfile().getId());
+      loginTime.remove(e.player.getGameProfile().getId().toString());
       if (playtimeSync.contains(e.player.getGameProfile().getId().toString())) {
         playtimeSync.get(e.player.getGameProfile().getId().toString()).cancel(true);
         playtimeSync.remove(e.player.getGameProfile().getId().toString());
@@ -80,15 +80,22 @@ public class GeneralEvents {
   }
 
   public void updatePlayer(EntityPlayer player) {
-    if (loginTime != null && loginTime.contains(player.getGameProfile().getId())) {
-      long lastSyncTime = loginTime.get(player.getGameProfile().getId());
+    boolean found = loginTime.contains(player.getGameProfile().getId().toString());
+    // Seems to suck at searching for some reason
+    for (String text : loginTime.keySet())
+      if (text.equalsIgnoreCase(player.getGameProfile().getId().toString())) {
+        found = true;
+        break;
+      }
+    if (loginTime != null && found) {
+      long lastSyncTime = loginTime.get(player.getGameProfile().getId().toString());
       long time = (System.currentTimeMillis() - lastSyncTime) / 1000;
       time = time / 60;
       Account account = PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString());
       if (account != null) {
         account = addTime(account, time);
         SECore.dataLoader.update(DataLoader.DataType.ACCOUNT, account.uuid, account);
-        loginTime.put(player.getGameProfile().getId(), System.currentTimeMillis());
+        loginTime.put(player.getGameProfile().getId().toString(), System.currentTimeMillis());
       }
     } else {
       //      ServerEssentials.LOG.warn(

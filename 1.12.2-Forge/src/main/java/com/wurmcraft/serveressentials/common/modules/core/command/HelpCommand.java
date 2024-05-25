@@ -67,7 +67,8 @@ public class HelpCommand {
       if (f >= playerSpecificHelp.size()) {
         break;
       }
-      ChatHelper.sendTranslated(player.sender, playerSpecificHelp.get(f).commandName, TextFormatting.AQUA);
+      ChatHelper.sendTranslated(
+          player.sender, playerSpecificHelp.get(f).commandName, TextFormatting.AQUA);
     }
     ChatHelper.send(player.sender, player.lang.SPACER);
   }
@@ -86,11 +87,11 @@ public class HelpCommand {
   }
 
   private static HelpLine getHelpInfo(ICommandSender sender, ICommand command) {
-    if(command instanceof SECommand || command instanceof CustomCommand) {
+    if (command instanceof SECommand || command instanceof CustomCommand) {
       String usageName = command.getUsage(sender);
       return new HelpLine(usageName, "", getPermNode(command));
     } else {
-      return new HelpLine(command.getUsage(sender),"","command." + command.getName());
+      return new HelpLine(command.getUsage(sender), "", "command." + command.getName());
     }
   }
 
