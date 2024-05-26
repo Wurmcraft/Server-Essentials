@@ -69,9 +69,11 @@ public class GeneralEvents {
     if (e.player != null) {
       updatePlayer(e.player);
       loginTime.remove(e.player.getGameProfile().getId().toString());
-      if (playtimeSync.contains(e.player.getGameProfile().getId().toString())) {
-        playtimeSync.get(e.player.getGameProfile().getId().toString()).cancel(true);
-        playtimeSync.remove(e.player.getGameProfile().getId().toString());
+      for(String uuid : playtimeSync.keySet()) {
+        if(uuid.equalsIgnoreCase(e.player.getGameProfile().getId().toString())) {
+          playtimeSync.get(e.player.getGameProfile().getId().toString()).cancel(true);
+          playtimeSync.remove(e.player.getGameProfile().getId().toString());
+        }
       }
     } else {
       ServerEssentials.LOG.error(
