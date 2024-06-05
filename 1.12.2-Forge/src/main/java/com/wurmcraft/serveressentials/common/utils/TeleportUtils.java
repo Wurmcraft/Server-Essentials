@@ -33,31 +33,36 @@ public class TeleportUtils {
     if (player.dimension == location.dim) {
       player.connection.setPlayerLocation(
           location.x, location.y, location.z, (float) location.pitch, (float) location.yaw);
-    } else { // Update Player's dimension
-      // Remove from existing world
-      int oldDim = player.dimension;
-      player.dimension = location.dim;
-      WorldServer serverWorld = player.mcServer.getWorld(location.dim);
-      player.connection.sendPacket(
-          new SPacketRespawn(
-              location.dim,
-              serverWorld.getDifficulty(),
-              serverWorld.getWorldInfo().getTerrainType(),
-              player.interactionManager.getGameType()));
-      player.mcServer.getWorld(oldDim).removeEntityDangerously(player);
-      player.isDead = false;
-      // Spawn into other dimension
-      if (player.isEntityAlive()) {
-        serverWorld.spawnEntity(player);
-        serverWorld.updateEntityWithOptionalForce(player, false);
-        player.setWorld(serverWorld);
-      }
-      player.mcServer.getPlayerList().preparePlayer(player, serverWorld);
-      player.connection.setPlayerLocation(
-          location.x, location.y, location.z, (float) location.pitch, (float) location.yaw);
-      player.interactionManager.setWorld(serverWorld);
+    } else {
+      updateDimension(player, location);
     }
     SECore.dataLoader.update(DataLoader.DataType.LOCAL_ACCOUNT, local.uuid, local);
     return true;
+  }
+
+  public static void updateDimension(EntityPlayerMP player, Location location) {
+    // Update Player's dimension
+    // Remove from existing world
+    int oldDim = player.dimension;
+    player.dimension = location.dim;
+    WorldServer serverWorld = player.mcServer.getWorld(location.dim);
+    player.connection.sendPacket(
+        new SPacketRespawn(
+            location.dim,
+            serverWorld.getDifficulty(),
+            serverWorld.getWorldInfo().getTerrainType(),
+            player.interactionManager.getGameType()));
+    player.mcServer.getWorld(oldDim).removeEntityDangerously(player);
+    player.isDead = false;
+    // Spawn into other dimension
+    if (player.isEntityAlive()) {
+      serverWorld.spawnEntity(player);
+      serverWorld.updateEntityWithOptionalForce(player, false);
+      player.setWorld(serverWorld);
+    }
+    player.mcServer.getPlayerList().preparePlayer(player, serverWorld);
+    player.connection.setPlayerLocation(
+        location.x, location.y, location.z, (float) location.pitch, (float) location.yaw);
+    player.interactionManager.setWorld(serverWorld);
   }
 }

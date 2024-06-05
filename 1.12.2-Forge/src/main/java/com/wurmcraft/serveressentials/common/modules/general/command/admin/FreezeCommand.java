@@ -7,6 +7,7 @@ import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.ServerPlayer;
+import com.wurmcraft.serveressentials.api.models.local.Location;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.general.event.GeneralEvents;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
@@ -48,7 +49,7 @@ public class FreezeCommand {
                   new Language())
               .COMMAND_FREEZE_UNDO);
     } else {
-      GeneralEvents.addFrozen(player, new BlockPos(player.posX, player.posY, player.posZ));
+      GeneralEvents.addFrozen(player, new Location(player.posX, player.posY, player.posZ, player.dimension, player.rotationPitch, player.rotationYaw));
       ChatHelper.send(
           sender.sender,
           sender.lang.COMMAND_FREEZE_OTHER.replaceAll(
