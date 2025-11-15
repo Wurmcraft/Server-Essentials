@@ -35,15 +35,11 @@ public class BotCommands {
       String discordName = member.getDisplayName();
       String verifyCode = EncryptionUtils.generateRandomString(8);
       LOG.info(
-          "Generating Verify code '"
-              + verifyCode
-              + "' for user '"
-              + username
-              + "' via '"
-              + discordName
-              + "' ("
-              + discordID
-              + ")");
+          "Generating Verify code '{}' for user '{}' via '{}' ({})",
+          verifyCode,
+          username,
+          discordName,
+          discordID);
       verifyCodes.put(
           username.toUpperCase(),
           new String[] {discordID, discordName, verifyCode, Instant.now().getEpochSecond() + ""});
@@ -51,7 +47,7 @@ public class BotCommands {
           () -> {
             if (verifyCode.contains(username.toUpperCase())) {
               verifyCodes.remove(username.toUpperCase());
-              LOG.debug("User '" + username.toUpperCase() + "' verification code has expired!");
+              LOG.debug("User '{}' verification code has expired!", username.toUpperCase());
             }
           },
           ServerEssentialsRest.config.server.requestTimeout,

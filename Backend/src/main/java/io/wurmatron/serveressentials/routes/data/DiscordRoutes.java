@@ -92,11 +92,10 @@ public class DiscordRoutes {
                                   BotCommands.verifyCodes.get(verify.username.toUpperCase())[0],
                                   BotCommands.verifyCodes.get(verify.username.toUpperCase())[1])));
                   BotCommands.verifyCodes.remove(verify.username.toUpperCase());
-                  return;
                 } else {
                   ctx.status(202);
-                  return;
                 }
+                return;
               }
             }
             ctx.status(404);

@@ -80,8 +80,7 @@ public class DiscordBot {
                     guildID, Snowflake.of(ServerEssentialsRest.config.discord.verifiedRankID));
         verifiedRank = role.getId();
       } catch (Exception e) {
-        LOG.warn(
-            "Unable to find role '" + ServerEssentialsRest.config.discord.verifiedRankID + "'");
+        LOG.warn("Unable to find role '{}'", ServerEssentialsRest.config.discord.verifiedRankID);
       }
     } catch (Exception e) {
       LOG.warn("Bot is not connected to any servers!, Shutting Down.");
@@ -97,9 +96,7 @@ public class DiscordBot {
         .subscribe(
             event -> {
               User self = event.getSelf();
-              LOG.info(
-                  String.format(
-                      "Bot Logged in as %s#%s", self.getUsername(), self.getDiscriminator()));
+              LOG.info("Bot Logged in as {} ({})", self.getUsername(), self.getUserData().id());
             });
     client
         .getEventDispatcher()
@@ -126,11 +123,9 @@ public class DiscordBot {
           serverChannelMap.put(channelData[0], channelData[1]);
         } else {
           LOG.warn(
-              "Invalid Channel map '"
-                  + serverID
-                  + "' must be in the format channelName:discordChannelID not '"
-                  + String.join(":", channelData)
-                  + "'");
+              "Invalid Channel map '{}' must be in the format channelName:discordChannelID not '{}'",
+              serverID,
+              String.join(":", channelData));
         }
       }
       channelMap.put(serverID, serverChannelMap);

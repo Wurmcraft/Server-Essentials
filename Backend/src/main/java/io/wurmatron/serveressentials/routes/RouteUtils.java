@@ -38,7 +38,7 @@ public class RouteUtils {
    *
    * @param instance instance to remove everything from
    * @param safe field to keep in the account instance
-   * @return instance with all but one field has been removed / null'd
+   * @return instance with all but one field has been removed / null
    * @throws IllegalAccessException This should never happen, unless Account has been modified
    */
   public static <T extends Object> T wipeAllExceptField(T instance, Field safe)

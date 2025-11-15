@@ -491,7 +491,7 @@ public class TransferRoutes {
     if (entry.server_id == null || entry.server_id.trim().isEmpty()) {
       errors.add(new MessageResponse("Invalid ServerID", "ServerID must be non-null"));
     }
-    if (errors.size() == 0) {
+    if (errors.isEmpty()) {
       return true;
     }
     ctx.status(400).result(GSON.toJson(errors.toArray(new MessageResponse[0])));

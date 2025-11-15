@@ -552,7 +552,7 @@ public class AutoRankRoutes {
           new MessageResponse(
               "Bad Request", "Invalid Currency Amount, Must be equal or greater than 0"));
     }
-    if (errors.size() == 0) {
+    if (errors.isEmpty()) {
       return true;
     } else {
       context.status(400).result(GSON.toJson(errors.toArray(new MessageResponse[0])));
@@ -581,7 +581,7 @@ public class AutoRankRoutes {
   }
 
   /**
-   * Converts the endpoint PathParm into he internal data name, used for reflection
+   * Converts the endpoint PathParm into the internal data name, used for reflection
    *
    * @param data PathParam provided by the user via the endpoint
    */

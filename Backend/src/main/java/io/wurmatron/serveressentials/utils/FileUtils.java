@@ -7,6 +7,7 @@ package io.wurmatron.serveressentials.utils;
 
 import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
 
+import io.wurmatron.serveressentials.ServerEssentialsRest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -63,14 +64,17 @@ public class FileUtils {
    */
   public static boolean write(File file, String data) {
     if (!file.getParentFile().exists()) {
-      file.getParentFile().mkdirs();
+      if (file.getParentFile().mkdirs()) {
+        ServerEssentialsRest.LOG.trace("Creating file {}", file.getAbsoluteFile());
+      }
     }
     try {
       Files.write(
           file.toPath(), data.getBytes(), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
       return true;
     } catch (IOException e) {
-      e.printStackTrace();
+      ServerEssentialsRest.LOG.warn(
+          "Failed to write '{}' ({})", file.getAbsoluteFile(), e.getMessage());
     }
     return false;
   }

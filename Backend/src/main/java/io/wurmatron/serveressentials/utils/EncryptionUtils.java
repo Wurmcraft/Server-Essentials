@@ -5,6 +5,7 @@
  */
 package io.wurmatron.serveressentials.utils;
 
+import io.wurmatron.serveressentials.ServerEssentialsRest;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
@@ -29,7 +30,7 @@ public class EncryptionUtils {
       byte[] hashed = md.digest(text.getBytes());
       return new String(hashed);
     } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
+      ServerEssentialsRest.LOG.warn("System does not support {} ({})", ALGO, e.getMessage());
     }
     return "";
   }
@@ -52,7 +53,7 @@ public class EncryptionUtils {
     "T", "U", "V", "W", "X", "Y", "Z", "2", "3", "4", "5", "6", "7", "8", "9"
   };
 
-  private static Random RAND = new Random();
+  private static final Random RAND = new Random();
 
   public static String generateRandomString(int length) {
     StringBuilder builder = new StringBuilder();

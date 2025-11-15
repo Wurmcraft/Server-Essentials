@@ -138,6 +138,7 @@ public class EndpointSecurity {
    * @param app instance of the routes handler
    */
   public static void addSecurityManaging(Javalin app) {
+    // TODO Do we need this?
     //        app.config.accessManager((handler, ctx, permittedRoles) -> {
     //            Route.RestRoles authRoles = getRole(ctx);
     //            if (permittedRoles.contains(authRoles))
@@ -390,11 +391,7 @@ public class EndpointSecurity {
         }
       }
       return false;
-    } else if (role.equals(Route.RestRoles.SERVER) || role.equals(Route.RestRoles.DEV)) {
-      return true;
-    } else {
-      return false;
-    }
+    } else return role.equals(Route.RestRoles.SERVER) || role.equals(Route.RestRoles.DEV);
   }
 
   /**

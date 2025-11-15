@@ -15,8 +15,8 @@ import java.util.Set;
 public class HttpUtils {
 
   /**
-   * Used to fix a known bug in the JDK
-   * https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch
+   * Used to fix a known bug in the JDK <a
+   * href="https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch">...</a>
    * Created by okutane
    *
    * @param methods methods to add support for

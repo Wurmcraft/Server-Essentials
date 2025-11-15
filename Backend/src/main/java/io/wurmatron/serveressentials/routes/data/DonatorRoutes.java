@@ -300,7 +300,7 @@ public class DonatorRoutes {
     } catch (Exception e) {
       errors.add(new MessageResponse("Invalid UUID", "UUID must be a valid non-empty UUID"));
     }
-    if (errors.size() == 0) {
+    if (errors.isEmpty()) {
       return true;
     }
     ctx.status(400).result(GSON.toJson(errors.toArray(new MessageResponse[0])));

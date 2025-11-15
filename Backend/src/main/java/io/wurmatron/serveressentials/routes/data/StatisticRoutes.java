@@ -311,7 +311,7 @@ public class StatisticRoutes {
         errors.add(new MessageResponse("Invalid UUID", "UUID must be a valid UUID"));
       }
     }
-    if (errors.size() == 0) {
+    if (errors.isEmpty()) {
       return true;
     }
     ctx.status(400).result(GSON.toJson(errors.toArray(new MessageResponse[0])));
@@ -326,7 +326,7 @@ public class StatisticRoutes {
    */
   private static String createSQLForStatWithFilters(Context ctx) {
     StringBuilder sqlBuilder = new StringBuilder();
-    sqlBuilder.append("SELECT * FROM " + SQLStatistics.STATISTICS_TABLE + " WHERE ");
+    sqlBuilder.append("SELECT * FROM ").append(SQLStatistics.STATISTICS_TABLE).append(" WHERE ");
     // Verify, Check and Apply UUID Filter
     String uuid = ctx.queryParam("uuid");
     if (uuid != null && !uuid.trim().isEmpty()) {

@@ -28,6 +28,7 @@ public class CommandParser {
 
   public static final Scanner scanner = new Scanner(System.in);
 
+  @SuppressWarnings("InfiniteRecursion") // stop command to quit
   public static void handleCommand() {
     System.out.print("CLI > ");
     String line = scanner.nextLine();
@@ -78,7 +79,7 @@ public class CommandParser {
     System.out.println("Token '" + token + "'");
     System.out.println("Key: '" + key + "'");
     System.out.println(
-        "Make sure the server is connecting via the correct ip along with having the correct name, unless it wont connect");
+        "Make sure the server is connecting via the same ip along with having the same ID, or else it will be rejected connection.");
     System.out.println();
   }
 
@@ -109,7 +110,9 @@ public class CommandParser {
       ServerEssentialsRest.javalin.stop();
       try {
         ServerEssentialsRest.LOG.info("Shutting down background tasks");
-        ServerEssentialsRest.executors.awaitTermination(5, TimeUnit.SECONDS);
+        if (ServerEssentialsRest.executors.awaitTermination(5, TimeUnit.SECONDS)) {
+          ServerEssentialsRest.LOG.debug("Executors service has shutdown!");
+        }
       } catch (Exception e) {
         ServerEssentialsRest.LOG.error(e.getMessage());
       }
@@ -139,7 +142,7 @@ public class CommandParser {
                       "broadcast",
                       GSON.toJson(new ChatMessage("API", "Broadcast", "Broadcast", message, ""))))),
           null);
-      ServerEssentialsRest.LOG.info("Broadcast: " + message);
+      ServerEssentialsRest.LOG.info("Broadcast: {}", message);
     } else {
       System.out.println("broadcast <message>");
     }

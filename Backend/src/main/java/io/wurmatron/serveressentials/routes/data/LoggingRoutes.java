@@ -189,6 +189,10 @@ public class LoggingRoutes {
             description =
                 "Forbidden, Your provided auth token does not have permission to do this"),
         @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Item does not exist to update."),
+        @OpenApiResponse(
             status = "422",
             content = {@OpenApiContent(from = MessageResponse.class)},
             description = "Unable to process, due to invalid format / json"),
@@ -211,14 +215,18 @@ public class LoggingRoutes {
             List<LogEntry> entrys =
                 SQLLogging.get(
                     updatedLogEntry.server_id, updatedLogEntry.action_type, updatedLogEntry.uuid);
-            for (LogEntry e : entrys) {
-              if (e.x.equals(updatedLogEntry.x)
-                  && e.y.equals(updatedLogEntry.y)
-                  && e.z.equals(updatedLogEntry.z)
-                  && e.dim.equals(updatedLogEntry.dim)) {
-                ctx.status(200).result(GSON.toJson(e));
-                return;
+            if (entrys != null) {
+              for (LogEntry e : entrys) {
+                if (e.x.equals(updatedLogEntry.x)
+                    && e.y.equals(updatedLogEntry.y)
+                    && e.z.equals(updatedLogEntry.z)
+                    && e.dim.equals(updatedLogEntry.dim)) {
+                  ctx.status(200).result(GSON.toJson(e));
+                  return;
+                }
               }
+            } else {
+              ctx.status(404);
             }
           }
         } catch (JsonParseException e) {
@@ -283,20 +291,21 @@ public class LoggingRoutes {
                     logEntryToDelete.server_id,
                     logEntryToDelete.action_type,
                     logEntryToDelete.uuid);
-            for (LogEntry e : entrys) {
-              if (e.timestamp.equals(logEntryToDelete.timestamp)
-                  && e.action_type.equals(logEntryToDelete.action_type)
-                  && e.server_id.equals(logEntryToDelete.server_id)) {
-                SQLLogging.delete(
-                    logEntryToDelete.server_id,
-                    logEntryToDelete.action_type,
-                    logEntryToDelete.uuid,
-                    logEntryToDelete.timestamp);
-                ctx.status(200).result(GSON.toJson(e));
-                return;
+            if (entrys != null) {
+              for (LogEntry e : entrys) {
+                if (e.timestamp.equals(logEntryToDelete.timestamp)
+                    && e.action_type.equals(logEntryToDelete.action_type)
+                    && e.server_id.equals(logEntryToDelete.server_id)) {
+                  SQLLogging.delete(
+                      logEntryToDelete.server_id,
+                      logEntryToDelete.action_type,
+                      logEntryToDelete.uuid,
+                      logEntryToDelete.timestamp);
+                  ctx.status(200).result(GSON.toJson(e));
+                  return;
+                }
               }
-            }
-            ctx.status(404).result(response("Not Found", "Log Entry not found"));
+            } else ctx.status(404).result(response("Not Found", "Log Entry not found"));
           }
         } catch (JsonParseException e) {
           ctx.status(422).result(response("Invalid JSON", "Failed to parse body into Log Entry"));
@@ -331,7 +340,7 @@ public class LoggingRoutes {
     } catch (Exception e) {
       errors.add(new MessageResponse("Invalid UUID", "uuid must be a valid uuid"));
     }
-    if (errors.size() == 0) {
+    if (errors.isEmpty()) {
       return true;
     }
     ctx.status(400).result(GSON.toJson(errors.toArray(new MessageResponse[0])));
@@ -346,7 +355,7 @@ public class LoggingRoutes {
    */
   private static String createSQLForLogEntryWithFilters(Context ctx) {
     StringBuilder sqlBuilder = new StringBuilder();
-    sqlBuilder.append("SELECT * FROM " + SQLLogging.LOGGING_TABLE + " WHERE ");
+    sqlBuilder.append("SELECT * FROM ").append(SQLLogging.LOGGING_TABLE).append(" WHERE ");
     // Verify, Check and Apply ServerID Filter
     String serverID = ctx.queryParam("server-id");
     if (serverID != null && !serverID.trim().isEmpty()) {

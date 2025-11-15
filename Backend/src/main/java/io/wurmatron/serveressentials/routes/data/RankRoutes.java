@@ -159,7 +159,7 @@ public class RankRoutes {
   public static Handler overrideRank =
       ctx -> {
         String name = ctx.pathParam("name");
-        if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
+        if (!name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
           try {
             // Check for valid json
             Rank rank = GSON.fromJson(ctx.body(), Rank.class);
@@ -254,7 +254,7 @@ public class RankRoutes {
   public static Handler patchRank =
       ctx -> {
         String name = ctx.pathParam("name");
-        if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
+        if (!name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
           Rank rank = SQLCacheRank.get(name);
           if (rank != null) {
             String fieldName = convertPathToField(ctx.pathParam("data"));
@@ -332,7 +332,7 @@ public class RankRoutes {
   public static Handler getRank =
       ctx -> {
         String name = ctx.pathParam("name");
-        if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
+        if (!name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
           Rank rank = SQLCacheRank.get(name);
           if (rank != null) {
             ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, rank)));
@@ -395,7 +395,7 @@ public class RankRoutes {
   public static Handler getRankInfo =
       ctx -> {
         String name = ctx.pathParam("name");
-        if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
+        if (!name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
           String pathParam = ctx.pathParam("data");
           String field = convertPathToField(pathParam);
           if (field != null) {
@@ -527,7 +527,7 @@ public class RankRoutes {
   public static Handler deleteRank =
       ctx -> {
         String name = ctx.pathParam("name");
-        if (name != null && !name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
+        if (!name.trim().isEmpty() && name.matches("[A-Za-z0-9]+")) {
           Rank rank = SQLCacheRank.get(name);
           if (rank != null) {
             boolean deleted = SQLCacheRank.delete(rank.name);
@@ -571,7 +571,7 @@ public class RankRoutes {
     if (!rank.suffix.trim().isEmpty() && !rank.suffix.matches("[A-Za-z0-9&_()*\\[\\]]+")) {
       errors.add(new MessageResponse("Bad Request", "Suffix must be alpha-numeric / &_() or *"));
     }
-    if (errors.size() > 0) {
+    if (!errors.isEmpty()) {
       ctx.status(400).result(GSON.toJson(errors));
       return false;
     }
@@ -582,7 +582,7 @@ public class RankRoutes {
    * Removes the data, the given rank does not have access to
    *
    * @param ctx context of the message
-   * @param rank
+   * @param rank instance of rank
    * @return instance with certain values removed / null'd
    */
   private static Rank filterBasedOnPerms(Context ctx, Rank rank) {
@@ -660,8 +660,7 @@ public class RankRoutes {
    * @return sql statement for rank lookup
    */
   private static String createSQLForRanksWithFilters(Context ctx) {
-    StringBuilder sqlBuilder = new StringBuilder();
-    sqlBuilder.append("SELECT * FROM " + SQLCacheRank.RANKS_TABLE);
+    String sqlBuilder = "SELECT * FROM " + SQLCacheRank.RANKS_TABLE;
     StringBuilder whereBuilder = new StringBuilder();
     whereBuilder.append(" WHERE ");
     String name = ctx.queryParam("name");
@@ -706,7 +705,7 @@ public class RankRoutes {
         && colorPriority.errors().isEmpty()) {
       whereBuilder.append("color_priority='").append(colorPriority.get()).append("' AND");
     }
-    String sql = sqlBuilder.toString();
+    String sql = sqlBuilder;
     String whereSQL = whereBuilder.toString();
     if (whereSQL.endsWith("AND")) {
       whereSQL = whereSQL.substring(0, whereSQL.length() - 3);

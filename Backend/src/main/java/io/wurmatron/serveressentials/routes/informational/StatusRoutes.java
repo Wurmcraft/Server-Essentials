@@ -117,7 +117,7 @@ public class StatusRoutes {
   @Route(path = "api/information/status", method = "GET")
   public static Handler getStatus =
       ctx -> {
-        if (lastServerStatus.size() > 0) {
+        if (!lastServerStatus.isEmpty()) {
           ServerStatus[] statusList =
               filterBasedOnPerms(ctx, lastServerStatus.values().toArray(new ServerStatus[0]));
           ctx.status(200).result(GSON.toJson(statusList));

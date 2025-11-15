@@ -48,6 +48,7 @@ public class WebSocketComRoute {
                 if (EndpointSecurity.authTokens.containsKey(token)) {
                   AuthUser serverPerms = EndpointSecurity.authTokens.get(token);
                   if (serverPerms.type.equalsIgnoreCase("SERVER")) {
+                    // TODO Reimplement duplicate check
                     //              if (activeConnections.containsValue(serverPerms.name)) {
                     ////                  for (WsContext wsContext : activeConnections.keySet()) {
                     ////                      if
@@ -68,7 +69,7 @@ public class WebSocketComRoute {
                                 WSWrapper.Type.UPDATE,
                                 new DataWrapper(
                                     AuthUser.class.getTypeName(), GSON.toJson(serverPerms)))));
-                    LOG.info(activeConnections.get(ctx) + " has connected to the Web Socket");
+                    LOG.info("{} has connected to the Web Socket", activeConnections.get(ctx));
                   } else {
                     ctx.send(
                         GSON.toJson(
@@ -110,7 +111,7 @@ public class WebSocketComRoute {
         ws.onClose(
             ctx -> {
               if (activeConnections.containsKey(ctx)) {
-                LOG.info(activeConnections.get(ctx) + " has disconnected from the Web Socket");
+                LOG.info("{} has disconnected from the Web Socket", activeConnections.get(ctx));
                 activeConnections.remove(ctx);
               }
             });
@@ -143,14 +144,14 @@ public class WebSocketComRoute {
                       + message.senderName
                       + " > "
                       + message.message)
-                  .replaceAll("\u00A7", "&"));
+                  .replaceAll("§", "&"));
           sendToAllOthers(GSON.toJson(dataWrapper), ctx);
           // Send on discord bridge
           if (!ServerEssentialsRest.config.discord.token.isEmpty()) {
             DiscordBot.sendMessage(message);
           }
         } catch (Exception e) {
-          LOG.warn("Failed to parse message from '" + activeConnections.get(ctx) + "'");
+          logError(ctx);
           e.printStackTrace();
         }
       } else if (dataWrapper.data.type.equalsIgnoreCase("Status")) {
@@ -159,7 +160,7 @@ public class WebSocketComRoute {
           StatusRoutes.lastServerStatus.put(status.serverID, status);
           sendToAllOthers(GSON.toJson(dataWrapper), ctx);
         } catch (Exception e) {
-          LOG.warn("Failed to parse message from '" + activeConnections.get(ctx) + "'");
+          logError(ctx);
           e.printStackTrace();
         }
       } else if (dataWrapper.data.type.equalsIgnoreCase("DM")) {
@@ -172,7 +173,7 @@ public class WebSocketComRoute {
                     200, Type.UPDATE, new DataWrapper("Confirmation", GSON.toJson(confirm))));
           }
         } catch (Exception e) {
-          LOG.warn("Failed to parse message from '" + activeConnections.get(ctx) + "'");
+          logError(ctx);
           e.printStackTrace();
         }
       } else if (dataWrapper.data.type.equalsIgnoreCase("DiscordVerify")) {
@@ -180,19 +181,20 @@ public class WebSocketComRoute {
           DiscordVerify verify = GSON.fromJson(dataWrapper.data.data, DiscordVerify.class);
           DiscordBot.verifyUser(verify);
           LOG.info(
-              "User '"
-                  + verify.username
-                  + "'  ("
-                  + verify.uuid
-                  + ") ("
-                  + verify.discordUsername
-                  + ") has been verified!");
+              "User '{}'  ({}) ({}) has been verified!",
+              verify.username,
+              verify.uuid,
+              verify.discordUsername);
         } catch (Exception e) {
-          LOG.warn("Failed to parse message from '" + activeConnections.get(ctx) + "'");
+          logError(ctx);
           e.printStackTrace();
         }
       }
     }
+  }
+
+  private static void logError(WsContext ctx) {
+    LOG.warn("Failed to parse message from '{}'", activeConnections.get(ctx));
   }
 
   public static void sendToAllOthers(String data, WsContext ctx) {

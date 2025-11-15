@@ -248,7 +248,7 @@ public class CurrencyRoutes {
         String name = ctx.pathParam("name");
         Currency currency = SQLCacheCurrency.get(name);
         if (!name.equals(currencyUpdate.display_name)) {
-          ctx.status(400).result(response("Name Mismatch", "Path and Body Name's dont match!"));
+          ctx.status(400).result(response("Name Mismatch", "Path and Body Name's don't match!"));
           return;
         }
         if (currency != null) {
@@ -346,7 +346,7 @@ public class CurrencyRoutes {
     if (currency.tax < 0) {
       errors.add(new MessageResponse("Invalid Tax", "Tax must not be negative"));
     }
-    if (errors.size() == 0) {
+    if (errors.isEmpty()) {
       return true;
     }
     ctx.status(400).result(GSON.toJson(errors.toArray(new MessageResponse[0])));
@@ -383,7 +383,7 @@ public class CurrencyRoutes {
    */
   private static String createSQLForCurrencyWithFilters(Context ctx) {
     StringBuilder sqlBuilder = new StringBuilder();
-    sqlBuilder.append("SELECT * FROM " + SQLCacheCurrency.CURRENCY_TABLE + " WHERE ");
+    sqlBuilder.append("SELECT * FROM ").append(SQLCacheCurrency.CURRENCY_TABLE).append(" WHERE ");
     // Verify, Check and Apply DisplayName Filter
     String displayName = ctx.queryParam("display-name");
     if (displayName != null && !displayName.trim().isEmpty()) {

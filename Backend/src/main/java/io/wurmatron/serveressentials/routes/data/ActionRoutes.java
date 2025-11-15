@@ -155,12 +155,12 @@ public class ActionRoutes {
       ctx -> {
         String min = ctx.queryParam("min-timestamp");
         String max = ctx.queryParam("max-timestamp");
-        if (min != null && !isNumber(min)) {
+        if (min != null && isNotNumber(min)) {
           ctx.status(400)
               .result(response("Bad Request", "min-timestamp must be a valid timestamp"));
           return;
         }
-        if (max != null && !isNumber(max)) {
+        if (max != null && isNotNumber(max)) {
           ctx.status(400)
               .result(response("Bad Request", "max-timestamp must be a valid timestamp"));
           return;
@@ -331,10 +331,10 @@ public class ActionRoutes {
     if (action.action.trim().isEmpty()) {
       errors.add(new MessageResponse("Invalid Entry", "Invalid / Empty Action"));
     }
-    if (action.timestamp.length() <= 0) {
+    if (action.timestamp.isEmpty()) {
       errors.add(new MessageResponse("Invalid Entry", "Timestamp must be greater than 0"));
     }
-    if (errors.size() > 0) {
+    if (!errors.isEmpty()) {
       context.status(400).result(GSON.toJson(errors));
       return false;
     }
@@ -350,27 +350,27 @@ public class ActionRoutes {
    */
   private static String createSQLForActionsWithFilters(Context ctx) {
     StringBuilder builder = new StringBuilder();
-    builder.append("SELECT * FROM " + SQLActions.ACTIONS_TABLE + " WHERE ");
+    builder.append("SELECT * FROM ").append(SQLActions.ACTIONS_TABLE).append(" WHERE ");
     String relatedID = ctx.queryParam("related-id");
     if (relatedID != null && !relatedID.trim().isEmpty()) {
-      builder.append(RELATED_ID + " LIKE '" + relatedID + "%' AND ");
+      builder.append(RELATED_ID + " LIKE '").append(relatedID).append("%' AND ");
     }
     String host = ctx.queryParam("host");
     if (host != null && !host.trim().isEmpty()) {
-      builder.append(HOST + " LIKE '" + host + "%' AND ");
+      builder.append(HOST + " LIKE '").append(host).append("%' AND ");
     }
     String action = ctx.queryParam("action");
     if (action != null && !action.trim().isEmpty()) {
-      builder.append(ACTION + " LIKE '" + action + "%' AND ");
+      builder.append(ACTION + " LIKE '").append(action).append("%' AND ");
     }
     String min = ctx.queryParam("min-timestamp");
     String max = ctx.queryParam("max-timestamp");
     if (min != null && max != null && !min.trim().isEmpty() && !max.trim().isEmpty()) {
-      builder.append(TIMESTAMP + " BETWEEN " + min + " AND " + max);
+      builder.append(TIMESTAMP + " BETWEEN ").append(min).append(" AND ").append(max);
     } else if (min != null && !min.trim().isEmpty()) {
-      builder.append(TIMESTAMP + " <= " + min);
+      builder.append(TIMESTAMP + " <= ").append(min);
     } else if (max != null && !max.trim().isEmpty()) {
-      builder.append(TIMESTAMP + " >= " + max);
+      builder.append(TIMESTAMP + " >= ").append(max);
     }
     String sql = builder.toString();
     int shift = 4;
@@ -385,19 +385,19 @@ public class ActionRoutes {
   /**
    * Checks if the provided string is a positive number
    *
-   * @param num string of a possible number
+   * @param text string of a possible number
    * @return if the string is a valid number, equal or greater than 0
    */
-  public static boolean isNumber(String num) {
-    if (num != null && !num.trim().isEmpty()) {
+  public static boolean isNotNumber(String text) {
+    if (text != null && !text.trim().isEmpty()) {
       try {
-        long no = Long.parseLong(num);
+        long no = Long.parseLong(text);
         if (no >= 0) {
-          return true;
+          return false;
         }
-      } catch (NumberFormatException e) {
+      } catch (NumberFormatException ignored) {
       }
     }
-    return false;
+    return true;
   }
 }

@@ -642,49 +642,61 @@ public class AccountRoutes {
   }
 
   /**
-   * Converts the endpoint PathParm into he internal data name, used for reflection
+   * Converts the endpoint PathParm into the internal data name, used for reflection
    *
    * @param data PathParam provided by the user via the endpoint
    */
   public static String convertPathToField(String data) {
-    if (data.equalsIgnoreCase("uuid")) {
-      return "uuid";
-    } else if (data.equalsIgnoreCase("username")) {
-      return "username";
-    } else if (data.equalsIgnoreCase("rank") || data.equalsIgnoreCase("ranks")) {
-      return "rank";
-    } else if (data.equalsIgnoreCase("perm") || data.equalsIgnoreCase("perms")) {
-      return "perms";
-    } else if (data.equalsIgnoreCase("perk") || data.equalsIgnoreCase("perks")) {
-      return "perks";
-    } else if (data.equalsIgnoreCase("lang") || data.equalsIgnoreCase("language")) {
-      return "lang";
-    } else if (data.equalsIgnoreCase("mute") || data.equalsIgnoreCase("muted")) {
-      return "muted";
-    } else if (data.equalsIgnoreCase("mute-time") || data.equalsIgnoreCase("mutetime")) {
-      return "mute_time";
-    } else if (data.equalsIgnoreCase("display-name") || data.equalsIgnoreCase("displayname")) {
-      return "display_name";
-    } else if (data.equalsIgnoreCase("discord-id")
-        || data.equalsIgnoreCase("discordid")
-        || data.equalsIgnoreCase("discord")) {
-      return "discord_id";
-    } else if (data.equalsIgnoreCase("play-time")
-        || data.equalsIgnoreCase("playtime")
-        || data.equalsIgnoreCase("time")) {
-      return "tracked_time";
-    } else if (data.equalsIgnoreCase("currency") || data.equalsIgnoreCase("wallet")) {
-      return "wallet";
-    } else if (data.equalsIgnoreCase("reward-points") || data.equalsIgnoreCase("rewardpoints")) {
-      return "reward_points";
-    } else if (data.equalsIgnoreCase("password-hash") || data.equalsIgnoreCase("passwordhash")) {
-      return "password_hash";
-    } else if (data.equalsIgnoreCase("password-salt") || data.equalsIgnoreCase("passwordsalt")) {
-      return "password_salt";
-    } else if (data.equalsIgnoreCase("system-perms") || data.equalsIgnoreCase("systemperms")) {
-      return "system_perms";
+    data = data.toLowerCase();
+    switch (data) {
+      case "uuid":
+        return "uuid";
+      case "username":
+        return "username";
+      case "rank":
+      case "ranks":
+        return "rank";
+      case "perm":
+      case "perms":
+        return "perms";
+      case "perk":
+      case "perks":
+        return "perks";
+      case "lang":
+      case "language":
+        return "lang";
+      case "mute":
+      case "muted":
+        return "muted";
+      case "mute-time":
+      case "mutetime":
+        return "mute_time";
+      case "display-name":
+      case "displayname":
+        return "display_name";
+      case "discord-id":
+      case "discordid":
+      case "discord":
+        return "discord_id";
+      case "play-time":
+      case "playtime":
+      case "time":
+        return "tracked_time";
+      case "currency":
+      case "wallet":
+        return "wallet";
+      case "reward-points":
+      case "rewardpoints":
+        return "reward_points";
+      case "password-hash":
+      case "passwordhash":
+        return "password_hash";
+      case "system-perms":
+      case "systemperms":
+        return "system_perms";
+      default:
+        return null;
     }
-    return null;
   }
 
   /**
@@ -692,7 +704,7 @@ public class AccountRoutes {
    *
    * @param context message context for the request
    * @param account account instance to be checked
-   * @return if a account is valid or not
+   * @return if an account is valid or not
    */
   public static boolean isValidAccount(Context context, Account account) {
     List<MessageResponse> errors = new ArrayList<>();
@@ -713,6 +725,7 @@ public class AccountRoutes {
     if (account.rank == null || account.rank.length == 0) {
       errors.add(new MessageResponse("Bad Request", "Missing Rank(s)"));
     }
+    // TODO Check if this is needed or not
     // Check for valid ranks
     //        if (account.rank != null)
     //            for (String rank : account.rank)
@@ -727,7 +740,7 @@ public class AccountRoutes {
     //                }
 
     // Validate Perms
-    if (account.perms != null && account.perms.length > 0) {
+    if (account.perms != null) {
       for (String perm : account.perms) {
         if (!perm.isEmpty() && !perm.contains(".") && !perm.equalsIgnoreCase("*")) {
           errors.add(new MessageResponse("Bad Request", perm + " is not a perm!"));
@@ -736,7 +749,7 @@ public class AccountRoutes {
     }
 
     // Validate Perks
-    if (account.perks != null && account.perks.length > 0) {
+    if (account.perks != null) {
       for (String perk : account.perks) {
         if (!perk.isEmpty() && !perk.contains(".")) {
           errors.add(new MessageResponse("Bad Request", perk + " is not a perk!"));
@@ -750,7 +763,7 @@ public class AccountRoutes {
     //        }
     // TODO Check for valid language
 
-    if (errors.size() > 0) {
+    if (!errors.isEmpty()) {
       context.status(400).result(GSON.toJson(errors.toArray(new MessageResponse[0])));
       return false;
     }

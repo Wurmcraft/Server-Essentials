@@ -269,6 +269,8 @@ public class MarketRoutes {
                 return;
               }
             }
+          } else {
+            ctx.status(404);
           }
         } catch (JsonParseException e) {
           ctx.status(422).result(response("Invalid JSON", "Failed to parse body into MarketEntry"));
@@ -278,15 +280,15 @@ public class MarketRoutes {
   public static boolean isValidMarketEntry(Context ctx, MarketEntry entry) {
     List<MessageResponse> errors = new ArrayList<>();
     // Verify ServerID
-    if (entry.server_id == null && entry.server_id.trim().isEmpty()) {
+    if (entry.server_id == null || entry.server_id.trim().isEmpty()) {
       errors.add(new MessageResponse("Invalid ServerID", "ServerID must be non-null"));
     }
     // Verify CurrencyName
-    if (entry.currency_name == null && entry.currency_name.trim().isEmpty()) {
+    if (entry.currency_name == null || entry.currency_name.trim().isEmpty()) {
       errors.add(new MessageResponse("Invalid Currency", "Currency-Name must be non-null"));
     }
     // Verify MarketType
-    if (entry.market_type == null && entry.market_type.trim().isEmpty()) {
+    if (entry.market_type == null || entry.market_type.trim().isEmpty()) {
       errors.add(new MessageResponse("Invalid Market Type", "Market Type must be non-null"));
     }
     // Check Currency Amount
@@ -307,10 +309,10 @@ public class MarketRoutes {
     if (entry.item == null || entry.item.item == null || entry.item.item.trim().isEmpty()) {
       errors.add(new MessageResponse("Invalid Item", "Item must be non-null"));
     }
-    if (entry.item == null && entry.item.count > 0) {
+    if (entry.item == null || entry.item.count > 0) {
       errors.add(new MessageResponse("Invalid Item", "Item Count must be greater than 0"));
     }
-    if (errors.size() == 0) {
+    if (errors.isEmpty()) {
       return true;
     }
     ctx.status(400).result(GSON.toJson(errors.toArray(new MessageResponse[0])));

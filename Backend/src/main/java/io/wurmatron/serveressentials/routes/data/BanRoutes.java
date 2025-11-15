@@ -149,7 +149,7 @@ public class BanRoutes {
    */
   private static String createSQLForUsersWithFilters(Context ctx) {
     StringBuilder sqlBuilder = new StringBuilder();
-    sqlBuilder.append("SELECT * FROM " + SQLCacheBan.BAN_TABLE + " WHERE ");
+    sqlBuilder.append("SELECT * FROM ").append(SQLCacheBan.BAN_TABLE).append(" WHERE ");
     // Verify, Check and Apply UUID Filter
     String uuid = ctx.queryParam("uuid");
     if (uuid != null && !uuid.trim().isEmpty()) {
@@ -396,7 +396,7 @@ public class BanRoutes {
     if (!ban.ban_status) {
       errors.add(new MessageResponse("Invalid Ban State", "A new ban must be active"));
     }
-    if (errors.size() == 0) {
+    if (errors.isEmpty()) {
       return true;
     }
     context.status(400).result(GSON.toJson(errors.toArray(new MessageResponse[0])));

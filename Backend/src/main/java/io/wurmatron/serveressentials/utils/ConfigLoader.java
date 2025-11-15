@@ -32,7 +32,7 @@ public class ConfigLoader {
       Toml toml = Toml.parse(configFile);
       config = readConfigFromTOML(toml);
       if (config != null) {
-        LOG.info("Loaded Config file '" + configFile.getAbsolutePath() + "'");
+        LOG.info("Loaded Config file '{}'", configFile.getAbsolutePath());
         return config;
       } else {
         if (configFile.delete()) {
@@ -40,7 +40,7 @@ public class ConfigLoader {
           LOG.info("Attempting to recreate");
           setupAndHandleConfig();
         } else {
-          LOG.error("Failed to delete " + configFile.getAbsolutePath() + "'!");
+          LOG.error("Failed to delete {}'!", configFile.getAbsolutePath());
           throw new IOException("Failed to delete " + configFile.getAbsolutePath() + "'!");
         }
       }
@@ -48,7 +48,7 @@ public class ConfigLoader {
     } else { // New Config
       // Make sure config dir exists
       if (!SAVE_DIR.exists() && !SAVE_DIR.mkdirs()) {
-        LOG.error("Failed to create dir '" + SAVE_DIR.getAbsolutePath() + "'");
+        LOG.error("Failed to create dir '{}'", SAVE_DIR.getAbsolutePath());
         throw new IOException("Failed to create dir '" + SAVE_DIR.getAbsolutePath() + "'");
       }
       // Create and save new instance
@@ -59,7 +59,7 @@ public class ConfigLoader {
           toml.getBytes(StandardCharsets.UTF_8),
           StandardOpenOption.CREATE_NEW,
           StandardOpenOption.WRITE);
-      LOG.info("Default config created at '" + configFile.getAbsolutePath() + "'");
+      LOG.info("Default config created at '{}'", configFile.getAbsolutePath());
       return config;
     }
     return null;

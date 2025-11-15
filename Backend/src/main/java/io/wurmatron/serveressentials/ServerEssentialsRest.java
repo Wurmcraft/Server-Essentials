@@ -48,7 +48,7 @@ public class ServerEssentialsRest {
     try {
       dbConnection = SQLGenerator.create();
     } catch (Exception e) {
-      LOG.warn("Failed to connect to SQL Server! (" + e.getLocalizedMessage() + ")");
+      LOG.warn("Failed to connect to SQL Server! ({})", e.getLocalizedMessage());
       LOG.info("Please check your SQL server settings!");
       LOG.info(e.getLocalizedMessage());
       System.exit(-2);
@@ -84,23 +84,14 @@ public class ServerEssentialsRest {
                                     .title("Server-Essentials Swagger"))));
                 //                    .roles(new HashSet<>(Arrays.asList(RestRoles.DEV)))));
                 LOG.info(
-                    "Connect to swagger http://"
-                        + config.server.host
-                        + ":"
-                        + config.server.port
-                        + "/swagger");
+                    "Connect to swagger http://{}:{}/swagger",
+                    config.server.host,
+                    config.server.port);
               }
               cfg.requestLogger(
                   (ctx, ms) -> {
                     LOG.debug(
-                        ctx.ip()
-                            + " "
-                            + ctx.method()
-                            + " "
-                            + ctx.path()
-                            + " ("
-                            + Math.round(ms)
-                            + "ms)");
+                        "{} {} {} ({}ms)", ctx.ip(), ctx.method(), ctx.path(), Math.round(ms));
                   });
             });
     EndpointSecurity.addSecurityManaging(javalin);
@@ -115,15 +106,13 @@ public class ServerEssentialsRest {
 
   public static void displaySystemInfo() {
     LOG.debug("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-    LOG.debug("OS: " + System.getProperty("os.name") + "-" + System.getProperty("os.arch"));
-    LOG.debug("CPU: " + Runtime.getRuntime().availableProcessors() + " cores");
-    LOG.debug("Java: " + System.getProperty("java.runtime.version"));
+    LOG.debug("OS: {}-{}", System.getProperty("os.name"), System.getProperty("os.arch"));
+    LOG.debug("CPU: {} cores", Runtime.getRuntime().availableProcessors());
+    LOG.debug("Java: {}", System.getProperty("java.runtime.version"));
     LOG.debug(
-        "Memory: "
-            + (Runtime.getRuntime().totalMemory() / 1000000)
-            + "MB | MAX: "
-            + (Runtime.getRuntime().maxMemory() / 1000000)
-            + "MB");
+        "Memory: {}MB | MAX: {}MB",
+        Runtime.getRuntime().totalMemory() / 1000000,
+        Runtime.getRuntime().maxMemory() / 1000000);
     LOG.debug("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
   }
 }

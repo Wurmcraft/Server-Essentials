@@ -112,11 +112,9 @@ public class RouteLoader {
             register(javalin, field);
           } catch (InstantiationException | IllegalAccessException e) {
             LOG.error(
-                "Failed to register '"
-                    + field.getName()
-                    + "' ("
-                    + field.getAnnotation(Route.class).path()
-                    + ")");
+                "Failed to register '{}' ({})",
+                field.getName(),
+                field.getAnnotation(Route.class).path());
             LOG.debug(e.getMessage());
           }
         });
@@ -145,51 +143,54 @@ public class RouteLoader {
     if (!route.method().equalsIgnoreCase("WS")) {
       handler = (Handler) field.get(field.getClass());
     }
+    // TODO Do we still need this perm check?
     //    for (Role role : roles) {
     //      if (role.equals(Route.RestRoles.USER)) {
     //        javalin.before(route.path(), userPermCheck);
     //      }
     //    }
-    switch (route.method().toUpperCase()) {
-      case "GET":
-        {
-          javalin.get(route.path(), handler);
-          break;
-        }
-      case "POST":
-        {
-          javalin.post(route.path(), handler);
-          break;
-        }
-      case "PUT":
-        {
-          javalin.put(route.path(), handler);
-          break;
-        }
-      case "DELETE":
-        {
-          javalin.delete(route.path(), handler);
-          break;
-        }
-      case "PATCH":
-        {
-          javalin.patch(route.path(), handler);
-          break;
-        }
-      case "BEFORE":
-        {
-          javalin.before(route.path(), handler);
-          break;
-        }
-      case "WS":
-        {
-          javalin.ws(route.path(), (Consumer<WsConfig>) field.get(field.getClass()));
-          //                    roles);
-        }
-      case "WS/BEFORE":
-        {
-          javalin.wsBefore(route.path(), (Consumer<WsConfig>) field.get(field.getClass()));
-        }
+    if (handler != null) {
+      switch (route.method().toUpperCase()) {
+        case "GET":
+          {
+            javalin.get(route.path(), handler);
+            break;
+          }
+        case "POST":
+          {
+            javalin.post(route.path(), handler);
+            break;
+          }
+        case "PUT":
+          {
+            javalin.put(route.path(), handler);
+            break;
+          }
+        case "DELETE":
+          {
+            javalin.delete(route.path(), handler);
+            break;
+          }
+        case "PATCH":
+          {
+            javalin.patch(route.path(), handler);
+            break;
+          }
+        case "BEFORE":
+          {
+            javalin.before(route.path(), handler);
+            break;
+          }
+        case "WS":
+          {
+            javalin.ws(route.path(), (Consumer<WsConfig>) field.get(field.getClass()));
+            //                    roles);
+          }
+        case "WS/BEFORE":
+          {
+            javalin.wsBefore(route.path(), (Consumer<WsConfig>) field.get(field.getClass()));
+          }
+      }
     }
   }
 }

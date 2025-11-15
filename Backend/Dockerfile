@@ -4,7 +4,7 @@ ENV POSTGRES_PASSWORD=drowssap
 ENV POSTGRES_DB=server-essentials
 
 VOLUME . /Server-Essentials
-ADD ./ Server-Essentials/
+COPY ./ Server-Essentials/
 RUN apt-get update -y && apt install default-jdk -y
 WORKDIR /Server-Essentials
 RUN ./gradlew build
