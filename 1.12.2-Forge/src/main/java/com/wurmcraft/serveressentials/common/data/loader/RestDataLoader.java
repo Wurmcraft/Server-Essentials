@@ -187,16 +187,22 @@ public class RestDataLoader extends FileDataLoader {
         for (MessageResponse error : errors) {
           LOG.debug("Error: " + error.title + " (" + error.message + ")");
         }
-      } catch (JsonParseException e) {
-        e.printStackTrace();
+      } catch (Exception e) {
+        // Check for non-array (rarer api response)
+        try {
+            MessageResponse error = GSON.fromJson(response.response, MessageResponse.class);
+            LOG.debug("Error (" + response.status + ") : "  + error.title + " (" + error.message + ")");
+        } catch (Exception f) {
+        f.printStackTrace();
         LOG.warn(
             "Failed to parse an error from an endpoint  '"
                 + response.status
                 + "' ("
-                + e.getMessage()
+                + f.getMessage()
                 + ")");
         LOG.warn("Response: " + response.response);
       }
+        }
     }
     // Server Error
     if (response.status >= 500 && response.status <= 599) {

@@ -27,8 +27,11 @@ public class RankupEvents {
   public void onWorldTick(TickEvent.PlayerTickEvent e) {
     if (e.side.equals(Side.SERVER)) {
       if (lastCheck.containsKey(e.player.getGameProfile().getId().toString())) {
-        if (System.currentTimeMillis() >= lastCheck.get(e.player.getGameProfile().getId().toString())) {
-          Account account = SECore.dataLoader.get(DataType.ACCOUNT, e.player.getGameProfile().getId().toString(), new Account());
+        if (System.currentTimeMillis()
+            >= lastCheck.get(e.player.getGameProfile().getId().toString())) {
+          Account account =
+              SECore.dataLoader.get(
+                  DataType.ACCOUNT, e.player.getGameProfile().getId().toString(), new Account());
           checkAndHandleUpdate(e.player, account);
           lastCheck.put(account.uuid, System.currentTimeMillis() + 5000);
         }
