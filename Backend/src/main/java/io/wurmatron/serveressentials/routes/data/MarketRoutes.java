@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -29,43 +28,43 @@ public class MarketRoutes {
       description = "Create a new market entry with the provided information",
       tags = {"Market"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = MarketEntry.class)},
-          required = true,
-          description = "Market Entry information used to create the new entry"),
-      responses = {
-          @OpenApiResponse(
-              status = "201",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = MarketEntry.class)},
-              description = "Market Entry has been created successfully"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Market Entry information used to create the new entry"),
+      responses = {
+        @OpenApiResponse(
+            status = "201",
+            content = {@OpenApiContent(from = MarketEntry.class)},
+            description = "Market Entry has been created successfully"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/market",
@@ -80,8 +79,7 @@ public class MarketRoutes {
             ctx.status(201).result(GSON.toJson(entry));
           }
         } catch (JsonParseException e) {
-          ctx.status(422)
-              .result(response("Invalid JSON", "Failed to parse body into MarketEntry"));
+          ctx.status(422).result(response("Invalid JSON", "Failed to parse body into MarketEntry"));
         }
       };
 
@@ -90,48 +88,48 @@ public class MarketRoutes {
       description = "Get a array / list of market entries that are based on your query parameters",
       tags = {"Market"},
       queryParams = {
-          @OpenApiParam(
-              name = "server-id",
-              description = "ID of the server that the market entry was created on"),
-          @OpenApiParam(
-              name = "uuid",
-              description = "UUID of the seller that created the market entry"),
-          @OpenApiParam(
-              name = "market-type",
-              description = "Type of market the entry was created within"),
-          @OpenApiParam(
-              name = "transfer-id",
-              description =
-                  "ID of the transfer system the market entry was created within, empty is considered global"),
-          @OpenApiParam(name = "item", description = "Item that this market entry is dealing with"),
+        @OpenApiParam(
+            name = "server-id",
+            description = "ID of the server that the market entry was created on"),
+        @OpenApiParam(
+            name = "uuid",
+            description = "UUID of the seller that created the market entry"),
+        @OpenApiParam(
+            name = "market-type",
+            description = "Type of market the entry was created within"),
+        @OpenApiParam(
+            name = "transfer-id",
+            description =
+                "ID of the transfer system the market entry was created within, empty is considered global"),
+        @OpenApiParam(name = "item", description = "Item that this market entry is dealing with"),
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = MarketEntry[].class)},
-              description = "Requested Market Entries are returned"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = MarketEntry[].class)},
+            description = "Requested Market Entries are returned"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/market", method = "GET")
   public static Handler get =
@@ -147,41 +145,41 @@ public class MarketRoutes {
       description = "Override / Update an existing market entry",
       tags = {"Market"},
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = MarketEntry.class)},
-          required = true,
-          description = "Market Entry information used to update the existing entry"),
-      responses = {
-          @OpenApiResponse(
-              status = "200",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = MarketEntry.class)},
-              description = "Market Entry has been updated"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to find existing market entry, does not exist"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Market Entry information used to update the existing entry"),
+      responses = {
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = MarketEntry.class)},
+            description = "Market Entry has been updated"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to find existing market entry, does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/market",
@@ -194,9 +192,8 @@ public class MarketRoutes {
           if (isValidMarketEntry(ctx, updateEntry)) {
             SQLCacheMarket.update(
                 updateEntry,
-                new String[]{
-                    "item", "currency_name", "currency_amount", "market_data",
-                    "transfer_id"
+                new String[] {
+                  "item", "currency_name", "currency_amount", "market_data", "transfer_id"
                 });
             List<MarketEntry> entries =
                 SQLCacheMarket.get(updateEntry.server_id, updateEntry.seller_uuid);
@@ -208,8 +205,7 @@ public class MarketRoutes {
             }
           }
         } catch (JsonParseException e) {
-          ctx.status(422)
-              .result(response("Invalid JSON", "Failed to parse body into MarketEntry"));
+          ctx.status(422).result(response("Invalid JSON", "Failed to parse body into MarketEntry"));
         }
       };
 
@@ -218,41 +214,41 @@ public class MarketRoutes {
       description = "Delete an existing market entry",
       tags = {"Market"},
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = MarketEntry.class)},
-          required = true,
-          description = "Market Entry that you want to delete"),
-      responses = {
-          @OpenApiResponse(
-              status = "200",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = MarketEntry.class)},
-              description = "Market Entry has been deleted"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to find existing market entry, does not exist"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Market Entry that you want to delete"),
+      responses = {
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = MarketEntry.class)},
+            description = "Market Entry has been deleted"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to find existing market entry, does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/market",
@@ -268,16 +264,14 @@ public class MarketRoutes {
             for (MarketEntry entry : entries) {
               if (entry.timestamp.equals(entryToDelete.timestamp)) {
                 SQLCacheMarket.delete(
-                    entryToDelete.server_id, entryToDelete.seller_uuid,
-                    entryToDelete.timestamp);
+                    entryToDelete.server_id, entryToDelete.seller_uuid, entryToDelete.timestamp);
                 ctx.status(200).result(GSON.toJson(entry));
                 return;
               }
             }
           }
         } catch (JsonParseException e) {
-          ctx.status(422)
-              .result(response("Invalid JSON", "Failed to parse body into MarketEntry"));
+          ctx.status(422).result(response("Invalid JSON", "Failed to parse body into MarketEntry"));
         }
       };
 
@@ -289,19 +283,16 @@ public class MarketRoutes {
     }
     // Verify CurrencyName
     if (entry.currency_name == null && entry.currency_name.trim().isEmpty()) {
-      errors.add(
-          new MessageResponse("Invalid Currency", "Currency-Name must be non-null"));
+      errors.add(new MessageResponse("Invalid Currency", "Currency-Name must be non-null"));
     }
     // Verify MarketType
     if (entry.market_type == null && entry.market_type.trim().isEmpty()) {
-      errors.add(
-          new MessageResponse("Invalid Market Type", "Market Type must be non-null"));
+      errors.add(new MessageResponse("Invalid Market Type", "Market Type must be non-null"));
     }
     // Check Currency Amount
     if (entry.currency_amount < 0) {
       errors.add(
-          new MessageResponse("Invalid Currency Amount",
-              "Amount must be greater or equal to 0"));
+          new MessageResponse("Invalid Currency Amount", "Amount must be greater or equal to 0"));
     }
     if (entry.seller_uuid == null || entry.seller_uuid.trim().isEmpty()) {
       errors.add(new MessageResponse("Invalid UUID", "UUID must be a valid UUID"));
@@ -313,13 +304,11 @@ public class MarketRoutes {
     } catch (Exception e) {
       errors.add(new MessageResponse("Invalid UUID", "UUID must be a valid UUID"));
     }
-    if (entry.item == null || entry.item.item == null || entry.item.item.trim()
-        .isEmpty()) {
+    if (entry.item == null || entry.item.item == null || entry.item.item.trim().isEmpty()) {
       errors.add(new MessageResponse("Invalid Item", "Item must be non-null"));
     }
     if (entry.item == null && entry.item.count > 0) {
-      errors.add(
-          new MessageResponse("Invalid Item", "Item Count must be greater than 0"));
+      errors.add(new MessageResponse("Invalid Item", "Item Count must be greater than 0"));
     }
     if (errors.size() == 0) {
       return true;

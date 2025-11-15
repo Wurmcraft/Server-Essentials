@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -34,44 +33,44 @@ public class AccountRoutes {
           "Creates a new user account with the provided information, no system perms or password will be set, even if provided",
       tags = {"User"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = Account.class)},
-          required = true,
-          description =
-              "Account information used to create the requested account, systemPerms, password info will not be set even if provided"),
-      responses = {
-          @OpenApiResponse(
-              status = "201",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = Account.class)},
-              description = "Account has been created successfully,"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
+              required = true,
               description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+                  "Account information used to create the requested account, systemPerms, password info will not be set even if provided"),
+      responses = {
+        @OpenApiResponse(
+            status = "201",
+            content = {@OpenApiContent(from = Account.class)},
+            description = "Account has been created successfully,"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/user",
@@ -93,21 +92,18 @@ public class AccountRoutes {
               if (newAccount == null) {
                 ctx.status(500)
                     .result(
-                        response("Account Failed to Create",
-                            "Account has failed to be created!"));
+                        response("Account Failed to Create", "Account has failed to be created!"));
                 return;
               }
               ctx.status(201).result(GSON.toJson(newAccount));
             } else {
               ctx.status(409)
-                  .result(
-                      response("Account Exists", "Account with the same uuid exists!"));
+                  .result(response("Account Exists", "Account with the same uuid exists!"));
             }
           }
         } catch (JsonParseException e) {
           ctx.status(422)
-              .result(
-                  response("Invalid JSON", "Failed to parse the body into an Account"));
+              .result(response("Invalid JSON", "Failed to parse the body into an Account"));
         }
       };
 
@@ -116,50 +112,50 @@ public class AccountRoutes {
       description = "Override a user's account with the provided information",
       tags = {"User"},
       pathParams = {
-          @OpenApiParam(name = "uuid", description = "UUID of the a given account", required = true)
+        @OpenApiParam(name = "uuid", description = "UUID of the a given account", required = true)
       },
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = Account.class)},
-          required = true,
-          description = "Account information used to update the requested account"),
-      responses = {
-          @OpenApiResponse(
-              status = "200",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = Account.class)},
-              description = "Account has been updated successfully"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "User does not exist"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Account information used to update the requested account"),
+      responses = {
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Account.class)},
+            description = "Account has been updated successfully"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "User does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/user/{uuid}",
@@ -179,8 +175,7 @@ public class AccountRoutes {
                   ctx.status(200).result(GSON.toJson(SQLCacheAccount.get(account.uuid)));
                 } else {
                   ctx.status(500)
-                      .result(response("Account Failed to Update",
-                          "Account Update has failed!"));
+                      .result(response("Account Failed to Update", "Account Update has failed!"));
                 }
               }
             } else {
@@ -196,8 +191,7 @@ public class AccountRoutes {
             }
           } catch (JsonParseException e) {
             ctx.status(422)
-                .result(
-                    response("Invalid JSON", "Failed to parse the body into an Account"));
+                .result(response("Invalid JSON", "Failed to parse the body into an Account"));
           }
         }
       };
@@ -207,54 +201,54 @@ public class AccountRoutes {
       description = "Override a user's account with the provided information",
       tags = {"User"},
       pathParams = {
-          @OpenApiParam(name = "uuid", description = "UUID of the a given account", required = true),
-          @OpenApiParam(
-              name = "data",
-              description = "Information to be patched / updated",
-              required = true),
+        @OpenApiParam(name = "uuid", description = "UUID of the a given account", required = true),
+        @OpenApiParam(
+            name = "data",
+            description = "Information to be patched / updated",
+            required = true),
       },
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = Account.class)},
-          required = true,
-          description = "Account information used to update the requested account"),
-      responses = {
-          @OpenApiResponse(
-              status = "200",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = Account.class)},
-              description = "Account has been updated successfully,"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "User does not exist"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Account information used to update the requested account"),
+      responses = {
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Account.class)},
+            description = "Account has been updated successfully,"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "User does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/user/{uuid}/{data}",
@@ -270,8 +264,7 @@ public class AccountRoutes {
             ctx.status(400)
                 .result(
                     response(
-                        "Bad Request",
-                        data + " is not valid entry for the requested Account"));
+                        "Bad Request", data + " is not valid entry for the requested Account"));
             return;
           }
           // Validate the input data
@@ -283,7 +276,7 @@ public class AccountRoutes {
               Field field = account.getClass().getDeclaredField(fieldName);
               field.set(account, field.get(patchInfo));
               if (isValidAccount(ctx, account)) {
-                SQLCacheAccount.update(account, new String[]{fieldName});
+                SQLCacheAccount.update(account, new String[] {fieldName});
                 ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, account)));
               } else {
                 ctx.status(500)
@@ -296,13 +289,11 @@ public class AccountRoutes {
               ctx.status(404)
                   .result(
                       response(
-                          "Account Not Found",
-                          "Account with uuid " + uuid + " does not exist!"));
+                          "Account Not Found", "Account with uuid " + uuid + " does not exist!"));
             }
           } catch (JsonParseException e) {
             ctx.status(422)
-                .result(
-                    response("Invalid JSON", "Failed to parse the body into an Account"));
+                .result(response("Invalid JSON", "Failed to parse the body into an Account"));
           }
         }
       };
@@ -312,41 +303,41 @@ public class AccountRoutes {
       description = "Gets a users information via UUID",
       tags = {"User"},
       pathParams = {
-          @OpenApiParam(name = "uuid", description = "UUID of the a given account", required = true)
+        @OpenApiParam(name = "uuid", description = "UUID of the a given account", required = true)
       },
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = Account.class)},
-              description = "User Account is returned"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "User does not exist"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Account.class)},
+            description = "User Account is returned"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "User does not exist"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/user/{uuid}", method = "GET")
   public static Handler getAccount =
@@ -360,8 +351,7 @@ public class AccountRoutes {
             ctx.status(404)
                 .result(
                     response(
-                        "Account Not Found",
-                        "Account with uuid " + uuid + " does not exist!"));
+                        "Account Not Found", "Account with uuid " + uuid + " does not exist!"));
           }
         }
       };
@@ -406,45 +396,45 @@ public class AccountRoutes {
       description = "Get a specific entry for the given account via UUID",
       tags = {"User"},
       pathParams = {
-          @OpenApiParam(name = "uuid", description = "UUID of the a given account", required = true),
-          @OpenApiParam(
-              name = "data",
-              description = "Information to be patched / updated",
-              required = true),
+        @OpenApiParam(name = "uuid", description = "UUID of the a given account", required = true),
+        @OpenApiParam(
+            name = "data",
+            description = "Information to be patched / updated",
+            required = true),
       },
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = Account.class)},
-              description = "Requested Account information is returned"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "User does not exist"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Account.class)},
+            description = "Requested Account information is returned"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "User does not exist"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/user/{uuid}/{data}", method = "GET")
   public static Handler getAccountInformation =
@@ -458,8 +448,7 @@ public class AccountRoutes {
             ctx.status(400)
                 .result(
                     response(
-                        "Bad Request",
-                        data + " is not valid entry for the requested Account"));
+                        "Bad Request", data + " is not valid entry for the requested Account"));
             return;
           }
           Account account = filterBasedOnPerms(ctx, SQLCacheAccount.get(uuid));
@@ -471,8 +460,7 @@ public class AccountRoutes {
             ctx.status(404)
                 .result(
                     response(
-                        "Account Not Found",
-                        "Account with uuid " + uuid + " does not exist!"));
+                        "Account Not Found", "Account with uuid " + uuid + " does not exist!"));
           }
         }
       };
@@ -483,79 +471,79 @@ public class AccountRoutes {
           "Get a list of all accounts, query filtering is enabled, Max amount per request is set on auth token permissions",
       tags = {"User"},
       queryParams = {
-          @OpenApiParam(name = "uuid", description = "Filter based on UUID, full or partial"),
-          @OpenApiParam(name = "username", description = "Filter based on username, full or partial"),
-          @OpenApiParam(name = "rank", description = "Filter based on rank, has the given rank"),
-          @OpenApiParam(
-              name = "language",
-              description = "Filter based on language of the given account"),
-          @OpenApiParam(
-              name = "muted",
-              description = "Filter based on if the account is muted",
-              type = Boolean.class),
-          @OpenApiParam(
-              name = "discordID",
-              description = "Filter based on discordID, full or partial"),
-          @OpenApiParam(
-              name = "playtimeMin",
-              description = "Filter based on playtime, minimum time",
-              type = Integer.class),
-          @OpenApiParam(
-              name = "playtimeMax",
-              description = "Filter based on playtime, maximum time",
-              type = Integer.class),
-          @OpenApiParam(name = "serverID", description = "Filter based on serverID"),
-          @OpenApiParam(
-              name = "balanceMin",
-              description = "Filter based on balance, minimum amount",
-              type = Double.class),
-          @OpenApiParam(
-              name = "balanceMax",
-              description = "Filter based on balance, maximum amount",
-              type = Double.class),
-          @OpenApiParam(name = "currency", description = "Filter based on type of currency"),
-          @OpenApiParam(
-              name = "rewardPointsMin",
-              description = "Filter based on the amount of rewardPoints, minimum amount",
-              type = Integer.class),
-          @OpenApiParam(
-              name = "rewardPointsMax",
-              description = "Filter based on the amount of rewardPoints, maximum amount",
-              type = Integer.class),
-          @OpenApiParam(
-              name = "limit",
-              description = "Maximum amount of accounts to return",
-              type = Integer.class),
+        @OpenApiParam(name = "uuid", description = "Filter based on UUID, full or partial"),
+        @OpenApiParam(name = "username", description = "Filter based on username, full or partial"),
+        @OpenApiParam(name = "rank", description = "Filter based on rank, has the given rank"),
+        @OpenApiParam(
+            name = "language",
+            description = "Filter based on language of the given account"),
+        @OpenApiParam(
+            name = "muted",
+            description = "Filter based on if the account is muted",
+            type = Boolean.class),
+        @OpenApiParam(
+            name = "discordID",
+            description = "Filter based on discordID, full or partial"),
+        @OpenApiParam(
+            name = "playtimeMin",
+            description = "Filter based on playtime, minimum time",
+            type = Integer.class),
+        @OpenApiParam(
+            name = "playtimeMax",
+            description = "Filter based on playtime, maximum time",
+            type = Integer.class),
+        @OpenApiParam(name = "serverID", description = "Filter based on serverID"),
+        @OpenApiParam(
+            name = "balanceMin",
+            description = "Filter based on balance, minimum amount",
+            type = Double.class),
+        @OpenApiParam(
+            name = "balanceMax",
+            description = "Filter based on balance, maximum amount",
+            type = Double.class),
+        @OpenApiParam(name = "currency", description = "Filter based on type of currency"),
+        @OpenApiParam(
+            name = "rewardPointsMin",
+            description = "Filter based on the amount of rewardPoints, minimum amount",
+            type = Integer.class),
+        @OpenApiParam(
+            name = "rewardPointsMax",
+            description = "Filter based on the amount of rewardPoints, maximum amount",
+            type = Integer.class),
+        @OpenApiParam(
+            name = "limit",
+            description = "Maximum amount of accounts to return",
+            type = Integer.class),
       },
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = Account[].class)},
-              description = "Account has been returned successfully,"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Account[].class)},
+            description = "Account has been returned successfully,"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/user", method = "GET")
   public static Handler getAccounts =
@@ -571,41 +559,41 @@ public class AccountRoutes {
       description = "Delete a user's account via UUID",
       tags = {"User"},
       pathParams = {
-          @OpenApiParam(name = "uuid", description = "UUID of the a given account", required = true)
+        @OpenApiParam(name = "uuid", description = "UUID of the a given account", required = true)
       },
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = Account.class)},
-              description = "Deleted User Account is returned"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "User does not exist"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Account.class)},
+            description = "Deleted User Account is returned"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "User does not exist"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/user/{uuid}/",
@@ -623,8 +611,7 @@ public class AccountRoutes {
             }
           } else {
             ctx.status(404)
-                .result(
-                    response("No Account", "No Account exists with the provided UUID"));
+                .result(response("No Account", "No Account exists with the provided UUID"));
           }
         }
       };
@@ -676,8 +663,7 @@ public class AccountRoutes {
       return "muted";
     } else if (data.equalsIgnoreCase("mute-time") || data.equalsIgnoreCase("mutetime")) {
       return "mute_time";
-    } else if (data.equalsIgnoreCase("display-name") || data.equalsIgnoreCase(
-        "displayname")) {
+    } else if (data.equalsIgnoreCase("display-name") || data.equalsIgnoreCase("displayname")) {
       return "display_name";
     } else if (data.equalsIgnoreCase("discord-id")
         || data.equalsIgnoreCase("discordid")
@@ -689,17 +675,13 @@ public class AccountRoutes {
       return "tracked_time";
     } else if (data.equalsIgnoreCase("currency") || data.equalsIgnoreCase("wallet")) {
       return "wallet";
-    } else if (data.equalsIgnoreCase("reward-points") || data.equalsIgnoreCase(
-        "rewardpoints")) {
+    } else if (data.equalsIgnoreCase("reward-points") || data.equalsIgnoreCase("rewardpoints")) {
       return "reward_points";
-    } else if (data.equalsIgnoreCase("password-hash") || data.equalsIgnoreCase(
-        "passwordhash")) {
+    } else if (data.equalsIgnoreCase("password-hash") || data.equalsIgnoreCase("passwordhash")) {
       return "password_hash";
-    } else if (data.equalsIgnoreCase("password-salt") || data.equalsIgnoreCase(
-        "passwordsalt")) {
+    } else if (data.equalsIgnoreCase("password-salt") || data.equalsIgnoreCase("passwordsalt")) {
       return "password_salt";
-    } else if (data.equalsIgnoreCase("system-perms") || data.equalsIgnoreCase(
-        "systemperms")) {
+    } else if (data.equalsIgnoreCase("system-perms") || data.equalsIgnoreCase("systemperms")) {
       return "system_perms";
     }
     return null;

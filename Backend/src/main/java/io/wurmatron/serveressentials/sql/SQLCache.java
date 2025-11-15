@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -53,15 +52,20 @@ public class SQLCache extends SQLGenerator {
    * @return if a cache entry has expired and needs updating
    */
   protected static <T extends Cache> boolean needsUpdate(T cacheData) {
-    return cacheData.lastSync() + (config.server.cacheTime * 1000L)
-        < System.currentTimeMillis();
+    return cacheData.lastSync() + (config.server.cacheTime * 1000L) < System.currentTimeMillis();
   }
 
   public static void setupScheduledTasks() {
-    ServerEssentialsRest.executors.scheduleAtFixedRate(SQLCache::cleanupDB,
-        config.server.cleanupInterval, config.server.cleanupInterval, TimeUnit.SECONDS);
-    ServerEssentialsRest.executors.scheduleAtFixedRate(SQLCache::cleanupCache,
-        config.server.cacheTime * 4L, config.server.cacheTime * 4L, TimeUnit.SECONDS);
+    ServerEssentialsRest.executors.scheduleAtFixedRate(
+        SQLCache::cleanupDB,
+        config.server.cleanupInterval,
+        config.server.cleanupInterval,
+        TimeUnit.SECONDS);
+    ServerEssentialsRest.executors.scheduleAtFixedRate(
+        SQLCache::cleanupCache,
+        config.server.cacheTime * 4L,
+        config.server.cacheTime * 4L,
+        TimeUnit.SECONDS);
   }
 
   public static void cleanupDB() {

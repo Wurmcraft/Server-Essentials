@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -17,8 +16,14 @@ public class ServerConfig {
   public int cacheTime;
   public int cleanupInterval;
 
-  public ServerConfig(int port, String host, String corosOrigins, long requestTimeout,
-      boolean forceLowercase, boolean swaggerEnabled, int cacheTime,
+  public ServerConfig(
+      int port,
+      String host,
+      String corosOrigins,
+      long requestTimeout,
+      boolean forceLowercase,
+      boolean swaggerEnabled,
+      int cacheTime,
       int cleanupInterval) {
     this.port = port;
     this.host = host;

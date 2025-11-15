@@ -1,3 +1,8 @@
+/**
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ *
+ * <p>Copyright (c) 2025 Wurmcraft
+ */
 package io.wurmatron.serveressentials.routes.data;
 
 import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
@@ -12,11 +17,9 @@ import io.javalin.plugin.openapi.annotations.OpenApiRequestBody;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
 import io.wurmatron.serveressentials.discord.BotCommands;
 import io.wurmatron.serveressentials.models.DiscordVerify;
-import io.wurmatron.serveressentials.models.Donator;
 import io.wurmatron.serveressentials.models.MessageResponse;
 import io.wurmatron.serveressentials.routes.Route;
 import io.wurmatron.serveressentials.routes.Route.RestRoles;
-import io.wurmatron.serveressentials.sql.routes.SQLCacheDonator;
 
 public class DiscordRoutes {
 
@@ -25,52 +28,49 @@ public class DiscordRoutes {
       description = "Verify a token is valid",
       tags = {"Discord"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = DiscordVerify.class)},
-          required = true,
-          description = "Details about the user's verification"),
-      responses = {
-          @OpenApiResponse(
-              status = "200",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = DiscordVerify.class)},
-              description = "Full token data is returned and verified"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "Missing Username or Auth token"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              description = "Data is invalid"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Details about the user's verification"),
+      responses = {
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = DiscordVerify.class)},
+            description = "Full token data is returned and verified"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "Missing Username or Auth token"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(status = "404", description = "Data is invalid"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/discord",
       method = "POST",
-      roles = {RestRoles.SERVER, RestRoles.DEV}
-  )
+      roles = {RestRoles.SERVER, RestRoles.DEV})
   public static Handler verifyCode =
       ctx -> {
         try {
@@ -78,14 +78,19 @@ public class DiscordRoutes {
           if (verify.uuid != null && verify.username != null && verify.token != null) {
             for (String username : BotCommands.verifyCodes.keySet()) {
               if (username.equalsIgnoreCase(verify.username)) { // TODO timeout
-                boolean isValidCode = BotCommands.verifyCodes.get(
-                    verify.username.toUpperCase())[2].equalsIgnoreCase(verify.token);
+                boolean isValidCode =
+                    BotCommands.verifyCodes.get(verify.username.toUpperCase())[2].equalsIgnoreCase(
+                        verify.token);
                 if (isValidCode) {
-                  ctx.status(200).result(GSON.toJson(
-                      new DiscordVerify(verify.token, verify.uuid, verify.username,
-                          BotCommands.verifyCodes.get(verify.username.toUpperCase())[0],
-                          BotCommands.verifyCodes.get(
-                              verify.username.toUpperCase())[1])));
+                  ctx.status(200)
+                      .result(
+                          GSON.toJson(
+                              new DiscordVerify(
+                                  verify.token,
+                                  verify.uuid,
+                                  verify.username,
+                                  BotCommands.verifyCodes.get(verify.username.toUpperCase())[0],
+                                  BotCommands.verifyCodes.get(verify.username.toUpperCase())[1])));
                   BotCommands.verifyCodes.remove(verify.username.toUpperCase());
                   return;
                 } else {
@@ -96,13 +101,11 @@ public class DiscordRoutes {
             }
             ctx.status(404);
           } else {
-            ctx.status(400).result(
-                response("Missing Data", "uuid, username and token are required"));
+            ctx.status(400)
+                .result(response("Missing Data", "uuid, username and token are required"));
           }
         } catch (JsonParseException e) {
-          ctx.status(422)
-              .result(response("Invalid JSON", "Cannot parse body into DiscordVerify"));
+          ctx.status(422).result(response("Invalid JSON", "Cannot parse body into DiscordVerify"));
         }
       };
-
 }

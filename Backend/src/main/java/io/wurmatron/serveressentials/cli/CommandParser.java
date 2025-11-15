@@ -1,3 +1,8 @@
+/**
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
+ *
+ * <p>Copyright (c) 2025 Wurmcraft
+ */
 package io.wurmatron.serveressentials.cli;
 
 import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
@@ -66,8 +71,10 @@ public class CommandParser {
     String token = EncryptionUtils.generateRandomString(32);
     String key = EncryptionUtils.generateRandomString(24);
     EndpointSecurity.addServer(serverName, serverIP, token, key);
-    System.out.println("- Server '" + serverName
-        + "' can connect using the following (Please save in a safe place)");
+    System.out.println(
+        "- Server '"
+            + serverName
+            + "' can connect using the following (Please save in a safe place)");
     System.out.println("Token '" + token + "'");
     System.out.println("Key: '" + key + "'");
     System.out.println(
@@ -80,18 +87,16 @@ public class CommandParser {
       if (args[1].equalsIgnoreCase("players")) {
         boolean found = false;
         for (ServerStatus status : StatusRoutes.lastServerStatus.values()) {
-          System.out.println(
-              "- " + status.serverID + " (" + status.onlinePlayers.length + ")");
+          System.out.println("- " + status.serverID + " (" + status.onlinePlayers.length + ")");
           System.out.println("Players: " + Strings.join(status.onlinePlayers, ", "));
           found = true;
         }
         if (!found) {
           System.out.println("No players found");
         }
-      } else if (args[1].equalsIgnoreCase("servers") || args[1].equalsIgnoreCase(
-          "server")) {
-        System.out.println("Active Servers: " + Strings.join(
-            WebSocketComRoute.activeConnections.values(), ", "));
+      } else if (args[1].equalsIgnoreCase("servers") || args[1].equalsIgnoreCase("server")) {
+        System.out.println(
+            "Active Servers: " + Strings.join(WebSocketComRoute.activeConnections.values(), ", "));
       }
     } else {
       ServerEssentialsRest.LOG.info("list <players, servers>");
@@ -108,10 +113,15 @@ public class CommandParser {
       } catch (Exception e) {
         ServerEssentialsRest.LOG.error(e.getMessage());
       }
-      WebSocketComRoute.sendToAllOthers(GSON.toJson(new WSWrapper(200, Type.MESSAGE,
-              new DataWrapper("shutdown",
-                  GSON.toJson(
-                      new ShutdownMessage("API", "Command", "Shutdown via stop command"))))),
+      WebSocketComRoute.sendToAllOthers(
+          GSON.toJson(
+              new WSWrapper(
+                  200,
+                  Type.MESSAGE,
+                  new DataWrapper(
+                      "shutdown",
+                      GSON.toJson(
+                          new ShutdownMessage("API", "Command", "Shutdown via stop command"))))),
           null);
       System.exit(1);
     }
@@ -120,10 +130,14 @@ public class CommandParser {
   private static void broadcast(String[] args) {
     if (args.length > 1) {
       String message = Strings.join(Arrays.copyOfRange(args, 1, args.length), " ");
-      WebSocketComRoute.sendToAllOthers(GSON.toJson(new WSWrapper(200, Type.MESSAGE,
-              new DataWrapper("broadcast",
-                  GSON.toJson(
-                      new ChatMessage("API", "Broadcast", "Broadcast", message, ""))))),
+      WebSocketComRoute.sendToAllOthers(
+          GSON.toJson(
+              new WSWrapper(
+                  200,
+                  Type.MESSAGE,
+                  new DataWrapper(
+                      "broadcast",
+                      GSON.toJson(new ChatMessage("API", "Broadcast", "Broadcast", message, ""))))),
           null);
       ServerEssentialsRest.LOG.info("Broadcast: " + message);
     } else {
@@ -134,11 +148,14 @@ public class CommandParser {
   private static void help() {
     displayHelp("stop", "Safely shutdown the management software");
     displayHelp("help", "Gives list of commands and uses");
-    displayHelp("add server",
+    displayHelp(
+        "add server",
         "Helps add another server to the api, generating authentication for said server");
-    displayHelp("list <players, servers>",
+    displayHelp(
+        "list <players, servers>",
         "Helps add another server to the api, generating authentication for said server");
-    displayHelp("broadcast <message>",
+    displayHelp(
+        "broadcast <message>",
         "Send a message on the global channel to all servers, to all players");
   }
 

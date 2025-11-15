@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -31,7 +30,7 @@ public @interface Route {
 
   /** Minimum Role required to access any part of this resource */
   RestRoles[] roles() default {
-      RestRoles.ANONYMOUS, RestRoles.USER, RestRoles.SERVER, RestRoles.DEV
+    RestRoles.ANONYMOUS, RestRoles.USER, RestRoles.SERVER, RestRoles.DEV
   };
 
   /**

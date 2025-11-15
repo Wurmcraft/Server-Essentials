@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -16,8 +15,7 @@ public class AuthUser {
   public long expiration;
 
   public AuthUser(
-      String type, String name, String[] perms, String token, String key,
-      long expiration) {
+      String type, String name, String[] perms, String token, String key, long expiration) {
     this.type = type;
     this.name = name;
     this.perms = perms;

@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -104,13 +103,11 @@ public class SQLCacheRank extends SQLCache {
   public static Rank create(Rank rank) {
     try {
       rank.name = rank.name.toLowerCase();
-      insert(RANKS_TABLE, Arrays.copyOfRange(RANKS_COLUMNS, 1, RANKS_COLUMNS.length),
-          rank, false);
+      insert(RANKS_TABLE, Arrays.copyOfRange(RANKS_COLUMNS, 1, RANKS_COLUMNS.length), rank, false);
       rankCache.put(rank.name, new CacheRank(rank));
       return rank;
     } catch (Exception e) {
-      LOG.debug(
-          "Failed to add rank with name '" + rank.name + "'(" + e.getMessage() + ")");
+      LOG.debug("Failed to add rank with name '" + rank.name + "'(" + e.getMessage() + ")");
       LOG.debug("Rank: " + GSON.toJson(rank));
     }
     return null;
@@ -136,8 +133,7 @@ public class SQLCacheRank extends SQLCache {
       }
       return true;
     } catch (Exception e) {
-      LOG.debug(
-          "Failed to update rank with id '" + rank.name + "'(" + e.getMessage() + ")");
+      LOG.debug("Failed to update rank with id '" + rank.name + "'(" + e.getMessage() + ")");
       LOG.debug("Rank: " + GSON.toJson(rank));
     }
     return false;
@@ -165,8 +161,7 @@ public class SQLCacheRank extends SQLCache {
   /** @param name Name of the rank to remove from the cache */
   public static void invalidate(String name) {
     rankCache.remove(name);
-    LOG.debug(
-        "Rank '" + name + " has been invalidated, will be updated on next request!");
+    LOG.debug("Rank '" + name + " has been invalidated, will be updated on next request!");
   }
 
   /** Cleanup the stored cache and look for expired entries */
@@ -189,8 +184,7 @@ public class SQLCacheRank extends SQLCache {
   }
 
   /** Removes the expired entries from the database */
-  public static void cleanupDB() {
-  }
+  public static void cleanupDB() {}
 
   /**
    * List all the table columns besides the key, in this case 'rankID'

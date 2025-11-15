@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -56,25 +55,25 @@ public class SQLLogging extends SQLGenerator {
       update(
           LOGGING_TABLE,
           columnsToUpdate,
-          new String[]{"action_type", "x", "y", "z", "dim", "timestamp", "uuid"},
-          new String[]{
-              entry.action_type,
-              "" + entry.x,
-              "" + entry.y,
-              "" + entry.z,
-              "" + entry.dim,
-              "" + entry.timestamp,
-              entry.uuid
+          new String[] {"action_type", "x", "y", "z", "dim", "timestamp", "uuid"},
+          new String[] {
+            entry.action_type,
+            "" + entry.x,
+            "" + entry.y,
+            "" + entry.z,
+            "" + entry.dim,
+            "" + entry.timestamp,
+            entry.uuid
           },
           entry,
-          new Class[]{
-              String.class,
-              Integer.class,
-              Integer.class,
-              Integer.class,
-              Integer.class,
-              String.class,
-              String.class
+          new Class[] {
+            String.class,
+            Integer.class,
+            Integer.class,
+            Integer.class,
+            Integer.class,
+            String.class,
+            String.class
           });
       return true;
     } catch (Exception e) {
@@ -112,15 +111,13 @@ public class SQLLogging extends SQLGenerator {
       return getArray(
           "*",
           LOGGING_TABLE,
-          new String[]{"server_id", "x", "y", "z", "dim"},
-          new String[]{serverID, "" + x, "" + y, "" + z, "" + dim},
+          new String[] {"server_id", "x", "y", "z", "dim"},
+          new String[] {serverID, "" + x, "" + y, "" + z, "" + dim},
           new LogEntry(),
-          new Class[]{String.class, Integer.class, Integer.class, Integer.class,
-              Integer.class});
+          new Class[] {String.class, Integer.class, Integer.class, Integer.class, Integer.class});
     } catch (Exception e) {
       LOG.debug(
-          "Failed to get log entry for '" + serverID + " '" + x + ", " + y + ", " + z
-              + ", " + dim);
+          "Failed to get log entry for '" + serverID + " '" + x + ", " + y + ", " + z + ", " + dim);
     }
     return null;
   }
@@ -138,8 +135,8 @@ public class SQLLogging extends SQLGenerator {
       return getArray(
           "*",
           LOGGING_TABLE,
-          new String[]{"server_id", "action_type", "uuid"},
-          new String[]{serverID, actionType, uuid},
+          new String[] {"server_id", "action_type", "uuid"},
+          new String[] {serverID, actionType, uuid},
           new LogEntry());
     } catch (Exception e) {
       LOG.debug(
@@ -165,13 +162,12 @@ public class SQLLogging extends SQLGenerator {
    * @param timestamp unix timestamp when this log-entry was created
    * @return if the delete was successfully without any errors
    */
-  public static boolean delete(String serverID, String actionType, String uuid,
-      long timestamp) {
+  public static boolean delete(String serverID, String actionType, String uuid, long timestamp) {
     try {
       delete(
           LOGGING_TABLE,
-          new String[]{"server_id", "action_type", "uuid", "timestamp"},
-          new String[]{serverID, actionType, uuid, "" + timestamp});
+          new String[] {"server_id", "action_type", "uuid", "timestamp"},
+          new String[] {serverID, actionType, uuid, "" + timestamp});
       return true;
     } catch (Exception e) {
       LOG.debug(

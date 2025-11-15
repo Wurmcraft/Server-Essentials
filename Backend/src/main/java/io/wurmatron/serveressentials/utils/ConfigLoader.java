@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -18,9 +17,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 import me.grison.jtoml.impl.Toml;
 
-/**
- * Handles everything to do with config's (loading, saving, errors)
- */
+/** Handles everything to do with config's (loading, saving, errors) */
 public class ConfigLoader {
 
   /**
@@ -44,8 +41,7 @@ public class ConfigLoader {
           setupAndHandleConfig();
         } else {
           LOG.error("Failed to delete " + configFile.getAbsolutePath() + "'!");
-          throw new IOException(
-              "Failed to delete " + configFile.getAbsolutePath() + "'!");
+          throw new IOException("Failed to delete " + configFile.getAbsolutePath() + "'!");
         }
       }
       LOG.error("Unable to access / load config file ('config.json')");
@@ -53,8 +49,7 @@ public class ConfigLoader {
       // Make sure config dir exists
       if (!SAVE_DIR.exists() && !SAVE_DIR.mkdirs()) {
         LOG.error("Failed to create dir '" + SAVE_DIR.getAbsolutePath() + "'");
-        throw new IOException(
-            "Failed to create dir '" + SAVE_DIR.getAbsolutePath() + "'");
+        throw new IOException("Failed to create dir '" + SAVE_DIR.getAbsolutePath() + "'");
       }
       // Create and save new instance
       config = askForConfiguration(new Config());
@@ -81,8 +76,7 @@ public class ConfigLoader {
     boolean set = false;
     while (!set) {
       try {
-        config.server.port = Integer.parseInt(
-            askQuestion("Port to run the API on", "8080"));
+        config.server.port = Integer.parseInt(askQuestion("Port to run the API on", "8080"));
         set = true;
       } catch (NumberFormatException e) {
         System.out.println("Invalid Port, Must be a number!");
@@ -91,35 +85,38 @@ public class ConfigLoader {
     // Configure database part of config
     System.out.println();
     System.out.println("- Database Setup");
-    config.database.connector = askQuestion("What type of database 'postgresql', 'mysql'",
-        "mysql");
-    config.database.host = askQuestion(
-        "IP / domain to connect to the {NAME} database".replaceAll("\\{NAME}",
-            config.database.connector.equals("mysql") ? "mysql" : "postgres"),
-        "localhost");
+    config.database.connector = askQuestion("What type of database 'postgresql', 'mysql'", "mysql");
+    config.database.host =
+        askQuestion(
+            "IP / domain to connect to the {NAME} database"
+                .replaceAll(
+                    "\\{NAME}", config.database.connector.equals("mysql") ? "mysql" : "postgres"),
+            "localhost");
     set = false;
     while (!set) {
       try {
-        config.database.port = Integer.parseInt(
-            askQuestion("Port to connect to the database",
-                config.database.host.equals("mysql") ? "3306" : "5432"));
+        config.database.port =
+            Integer.parseInt(
+                askQuestion(
+                    "Port to connect to the database",
+                    config.database.host.equals("mysql") ? "3306" : "5432"));
         set = true;
       } catch (NumberFormatException e) {
         System.out.println("Invalid Port, Must be a number!");
       }
     }
-    config.database.database = askQuestion("Name of the database to use",
-        "server-essentials");
-    config.database.username = askQuestion("Username to connect to the database",
-        "serveressentials");
-    config.database.password = askQuestion(
-        "Password for {USER} on the database".replaceAll("\\{USER}",
-            config.database.username), "");
+    config.database.database = askQuestion("Name of the database to use", "server-essentials");
+    config.database.username =
+        askQuestion("Username to connect to the database", "serveressentials");
+    config.database.password =
+        askQuestion(
+            "Password for {USER} on the database".replaceAll("\\{USER}", config.database.username),
+            "");
     System.out.println();
     System.out.println("- Discord Bot Setup");
     config.discord.token = askQuestion("Token used by the bot to connect to discord", "");
-    config.discord.verifiedRankID = askQuestion(
-        "ID of the rank to give to users upon verification", "");
+    config.discord.verifiedRankID =
+        askQuestion("ID of the rank to give to users upon verification", "");
     return config;
   }
 
@@ -151,9 +148,10 @@ public class ConfigLoader {
               toml.getString("config.database.database"),
               toml.getString("config.database.sqlParams"),
               toml.getString("config.database.connector"));
-      GeneralConfig generalConfig = new GeneralConfig(
-          toml.getBoolean("config.general.testing"),
-          Math.toIntExact(toml.getLong("config.general.threads")));
+      GeneralConfig generalConfig =
+          new GeneralConfig(
+              toml.getBoolean("config.general.testing"),
+              Math.toIntExact(toml.getLong("config.general.threads")));
       ServerConfig sererConfig =
           new ServerConfig(
               Math.toIntExact(toml.getLong("config.server.port")),

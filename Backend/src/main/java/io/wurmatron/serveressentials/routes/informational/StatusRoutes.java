@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -33,36 +32,36 @@ public class StatusRoutes {
       description = "Update other server / services about server status / players / errors etc..",
       tags = {"Informational"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = ServerStatus.class)},
-          required = true,
-          description = "Information about the current server"),
+          @OpenApiRequestBody(
+              content = {@OpenApiContent(from = ServerStatus.class)},
+              required = true,
+              description = "Information about the current server"),
       responses = {
-          @OpenApiResponse(status = "200", description = "Server Status has been updated"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(status = "200", description = "Server Status has been updated"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/information/status",
@@ -83,8 +82,7 @@ public class StatusRoutes {
             ctx.status(422).result(response("Invalid Json", "Invalid Json Status!"));
           }
         } catch (JsonParseException e) {
-          ctx.status(422)
-              .result(response("Bad Json", "Unable to parse json for Update Status!"));
+          ctx.status(422).result(response("Bad Json", "Unable to parse json for Update Status!"));
         }
       };
 
@@ -93,36 +91,35 @@ public class StatusRoutes {
       description = "Get the status information from the other servers in the network",
       tags = {"Informational"},
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              description = "Server Status's for all the servers",
-              content = {@OpenApiContent(from = ServerStatus[].class)}),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            description = "Server Status's for all the servers",
+            content = {@OpenApiContent(from = ServerStatus[].class)}),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/information/status", method = "GET")
   public static Handler getStatus =
       ctx -> {
         if (lastServerStatus.size() > 0) {
           ServerStatus[] statusList =
-              filterBasedOnPerms(ctx,
-                  lastServerStatus.values().toArray(new ServerStatus[0]));
+              filterBasedOnPerms(ctx, lastServerStatus.values().toArray(new ServerStatus[0]));
           ctx.status(200).result(GSON.toJson(statusList));
         } else {
           ctx.status(200).result("[]");

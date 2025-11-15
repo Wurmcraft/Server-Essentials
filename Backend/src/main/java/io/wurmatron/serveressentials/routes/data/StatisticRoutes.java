@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -32,42 +31,42 @@ public class StatisticRoutes {
       description = "Creates a new statistical entry into the database",
       tags = {"Statistics"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       responses = {
-          @OpenApiResponse(
-              status = "201",
-              content = {@OpenApiContent(from = TrackedStat.class)},
-              description = "Statistic Entry has been created successfully"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "409",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Stat Entry already exists"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "201",
+            content = {@OpenApiContent(from = TrackedStat.class)},
+            description = "Statistic Entry has been created successfully"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "409",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Stat Entry already exists"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/statistics",
@@ -79,8 +78,7 @@ public class StatisticRoutes {
           TrackedStat newStat = GSON.fromJson(ctx.body(), TrackedStat.class);
           if (isValidStat(ctx, newStat)) {
             // Check for duplicates
-            List<TrackedStat> sqlStats = SQLStatistics.get(newStat.server_id,
-                newStat.uuid);
+            List<TrackedStat> sqlStats = SQLStatistics.get(newStat.server_id, newStat.uuid);
             for (TrackedStat stat : sqlStats) {
               if (stat.event_type.equals(newStat.event_type)) {
                 ctx.status(409)
@@ -96,8 +94,7 @@ public class StatisticRoutes {
             ctx.status(201).result(GSON.toJson(stat));
           }
         } catch (JsonParseException e) {
-          ctx.status(422)
-              .result(response("Invalid JSON", "Failed to parse body into Stat Entry"));
+          ctx.status(422).result(response("Invalid JSON", "Failed to parse body into Stat Entry"));
         }
       };
 
@@ -106,42 +103,42 @@ public class StatisticRoutes {
       description = "Completely overwrite an existing entry in the database",
       tags = {"Statistics"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = TrackedStat.class)},
-              description = "Statistic Entry has been updated successfully"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Entry does not exist"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = TrackedStat.class)},
+            description = "Statistic Entry has been updated successfully"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Entry does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/statistics",
@@ -153,12 +150,11 @@ public class StatisticRoutes {
           TrackedStat updateStat = GSON.fromJson(ctx.body(), TrackedStat.class);
           if (isValidStat(ctx, updateStat)) {
             // Check for duplicates
-            List<TrackedStat> sqlStats = SQLStatistics.get(updateStat.server_id,
-                updateStat.uuid);
+            List<TrackedStat> sqlStats = SQLStatistics.get(updateStat.server_id, updateStat.uuid);
             for (TrackedStat stat : sqlStats) {
               if (stat.event_type.equals(updateStat.event_type)) {
                 // Update existing
-                SQLStatistics.update(updateStat, new String[]{"eventData"});
+                SQLStatistics.update(updateStat, new String[] {"eventData"});
                 sqlStats = SQLStatistics.get(updateStat.server_id, updateStat.uuid);
                 for (TrackedStat s : sqlStats) {
                   if (stat.event_type.equals(updateStat.event_type)) {
@@ -171,12 +167,10 @@ public class StatisticRoutes {
             ctx.status(404)
                 .result(
                     response(
-                        "Stat does not exist",
-                        "Stat type does not exist for the provided user"));
+                        "Stat does not exist", "Stat type does not exist for the provided user"));
           }
         } catch (JsonParseException e) {
-          ctx.status(422)
-              .result(response("Invalid JSON", "Failed to parse body into Stat Entry"));
+          ctx.status(422).result(response("Invalid JSON", "Failed to parse body into Stat Entry"));
         }
       };
 
@@ -186,33 +180,33 @@ public class StatisticRoutes {
       description = "Find a specific entry, based on the filters",
       tags = {"Statistics"},
       queryParams = {
-          @OpenApiParam(name = "server-id", description = "ID of the server this stat is tracked on"),
-          @OpenApiParam(name = "uuid", description = "UUID of the user being tracked"),
-          @OpenApiParam(name = "event", description = "Event Type being tracked"),
+        @OpenApiParam(name = "server-id", description = "ID of the server this stat is tracked on"),
+        @OpenApiParam(name = "uuid", description = "UUID of the user being tracked"),
+        @OpenApiParam(name = "event", description = "Event Type being tracked"),
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = TrackedStat[].class)},
-              description = "Statistic Entry that match, based on the provided filters"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs"),
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = TrackedStat[].class)},
+            description = "Statistic Entry that match, based on the provided filters"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs"),
       })
   @Route(path = "api/statistics", method = "GET")
   public static Handler get =
@@ -228,38 +222,38 @@ public class StatisticRoutes {
       description = "Update a specific entry from a transfer entry",
       tags = {"Statistics"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = TrackedStat.class)},
-              description = "Statistic Entry has been updated deleted"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = TrackedStat.class)},
+            description = "Statistic Entry has been updated deleted"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/statistics",
@@ -271,12 +265,10 @@ public class StatisticRoutes {
           TrackedStat deleteStat = GSON.fromJson(ctx.body(), TrackedStat.class);
           if (isValidStat(ctx, deleteStat)) {
             // Check for duplicates
-            List<TrackedStat> sqlStats = SQLStatistics.get(deleteStat.server_id,
-                deleteStat.uuid);
+            List<TrackedStat> sqlStats = SQLStatistics.get(deleteStat.server_id, deleteStat.uuid);
             for (TrackedStat stat : sqlStats) {
               if (stat.event_type.equals(deleteStat.event_type)) {
-                SQLStatistics.delete(deleteStat.server_id, deleteStat.uuid,
-                    deleteStat.event_type);
+                SQLStatistics.delete(deleteStat.server_id, deleteStat.uuid, deleteStat.event_type);
                 ctx.status(200).result(GSON.toJson(stat));
                 return;
               }
@@ -284,12 +276,10 @@ public class StatisticRoutes {
             ctx.status(404)
                 .result(
                     response(
-                        "Stat does not exist",
-                        "Stat type does not exist for the provided user"));
+                        "Stat does not exist", "Stat type does not exist for the provided user"));
           }
         } catch (JsonParseException e) {
-          ctx.status(422)
-              .result(response("Invalid JSON", "Failed to parse body into Stat Entry"));
+          ctx.status(422).result(response("Invalid JSON", "Failed to parse body into Stat Entry"));
         }
       };
 

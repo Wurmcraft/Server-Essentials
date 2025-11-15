@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -31,8 +30,7 @@ public class SQLActions extends SQLDirect {
       insert(ACTIONS_TABLE, ACTIONS_COLUMNS, action, false);
       return action;
     } catch (Exception e) {
-      LOG.debug(
-          "Failed to add action from '" + action.host + "' (" + e.getMessage() + ")");
+      LOG.debug("Failed to add action from '" + action.host + "' (" + e.getMessage() + ")");
       LOG.debug("Action: " + GSON.toJson(action));
     }
     return null;
@@ -50,9 +48,8 @@ public class SQLActions extends SQLDirect {
       update(
           ACTIONS_TABLE,
           columnsToUpdate,
-          new String[]{"related_id", "host", "action", "timestamp"},
-          new String[]{action.related_id, action.host, action.action,
-              action.timestamp + ""},
+          new String[] {"related_id", "host", "action", "timestamp"},
+          new String[] {action.related_id, action.host, action.action, action.timestamp + ""},
           action);
       List<Action> actions = get(action.host, action.action, action.related_id);
       for (Action a : actions) {
@@ -61,9 +58,7 @@ public class SQLActions extends SQLDirect {
         }
       }
     } catch (Exception e) {
-      LOG.debug(
-          "Failed to add update action from '" + action.host + "' (" + e.getMessage()
-              + ")");
+      LOG.debug("Failed to add update action from '" + action.host + "' (" + e.getMessage() + ")");
       LOG.debug("Action: " + GSON.toJson(action));
     }
     return null;
@@ -78,11 +73,9 @@ public class SQLActions extends SQLDirect {
   public static List<Action> get(String relatedID) {
     try {
       return queryArray(
-          "SELECT * from " + ACTIONS_TABLE + " WHERE related_id='" + relatedID + "'",
-          new Action());
+          "SELECT * from " + ACTIONS_TABLE + " WHERE related_id='" + relatedID + "'", new Action());
     } catch (Exception e) {
-      LOG.debug(
-          "Failed to add get action from '" + relatedID + "' (" + e.getMessage() + ")");
+      LOG.debug("Failed to add get action from '" + relatedID + "' (" + e.getMessage() + ")");
     }
     return null;
   }
@@ -106,8 +99,7 @@ public class SQLActions extends SQLDirect {
               + "'",
           new Action());
     } catch (Exception e) {
-      LOG.debug(
-          "Failed to add get action from '" + relatedID + "' (" + e.getMessage() + ")");
+      LOG.debug("Failed to add get action from '" + relatedID + "' (" + e.getMessage() + ")");
     }
     return new ArrayList<>();
   }
@@ -134,8 +126,7 @@ public class SQLActions extends SQLDirect {
               + "';",
           new Action());
     } catch (Exception e) {
-      LOG.debug(
-          "Failed to add get action from '" + relatedID + "' (" + e.getMessage() + ")");
+      LOG.debug("Failed to add get action from '" + relatedID + "' (" + e.getMessage() + ")");
     }
     return new ArrayList<>();
   }
@@ -149,8 +140,7 @@ public class SQLActions extends SQLDirect {
    * @param timestamp unix timestamp of when the action was created / happened
    * @return instance of the deleted action
    */
-  public static Action delete(String host, String action, String relatedID,
-      String timestamp) {
+  public static Action delete(String host, String action, String relatedID, String timestamp) {
     try {
       List<Action> actions =
           queryArray(

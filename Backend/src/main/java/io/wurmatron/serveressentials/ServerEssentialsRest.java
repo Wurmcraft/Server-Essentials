@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -50,7 +49,8 @@ public class ServerEssentialsRest {
       dbConnection = SQLGenerator.create();
     } catch (Exception e) {
       LOG.warn("Failed to connect to SQL Server! (" + e.getLocalizedMessage() + ")");
-      LOG.info("Please check your SQL server and settings for connectivity!");
+      LOG.info("Please check your SQL server settings!");
+      LOG.info(e.getLocalizedMessage());
       System.exit(-2);
     }
     executors = Executors.newScheduledThreadPool(config.general.threads);
@@ -75,9 +75,9 @@ public class ServerEssentialsRest {
                 cfg.registerPlugin(
                     new OpenApiPlugin(
                         new OpenApiOptions(
-                            new Info()
-                                .version(version)
-                                .description("Server Essentials Rest API"))
+                                new Info()
+                                    .version(version)
+                                    .description("Server Essentials Rest API"))
                             .path("api/swagger")
                             .swagger(
                                 new SwaggerOptions("/swagger")
@@ -106,8 +106,7 @@ public class ServerEssentialsRest {
     EndpointSecurity.addSecurityManaging(javalin);
     RouteLoader.registerRoutes(javalin);
     SQLCache.setupScheduledTasks();
-    javalin.start(config.server.host.isEmpty() ? null : config.server.host,
-        config.server.port);
+    javalin.start(config.server.host.isEmpty() ? null : config.server.host, config.server.port);
     if (!config.discord.token.isEmpty()) {
       DiscordBot.start();
     }
@@ -116,8 +115,7 @@ public class ServerEssentialsRest {
 
   public static void displaySystemInfo() {
     LOG.debug("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-    LOG.debug(
-        "OS: " + System.getProperty("os.name") + "-" + System.getProperty("os.arch"));
+    LOG.debug("OS: " + System.getProperty("os.name") + "-" + System.getProperty("os.arch"));
     LOG.debug("CPU: " + Runtime.getRuntime().availableProcessors() + " cores");
     LOG.debug("Java: " + System.getProperty("java.runtime.version"));
     LOG.debug(

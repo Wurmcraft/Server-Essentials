@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -32,47 +31,47 @@ public class RankRoutes {
       description = "Creates a new rank with the provided information",
       tags = {"Rank"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = Account.class)},
-          required = true,
-          description = "Rank information used to create the requested rank"),
+          @OpenApiRequestBody(
+              content = {@OpenApiContent(from = Account.class)},
+              required = true,
+              description = "Rank information used to create the requested rank"),
       responses = {
-          @OpenApiResponse(
-              status = "201",
-              content = {@OpenApiContent(from = Rank.class)},
-              description = "Rank has been created successfully, rankID is also returned"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "409",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Rank already exists"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "201",
+            content = {@OpenApiContent(from = Rank.class)},
+            description = "Rank has been created successfully, rankID is also returned"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "409",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Rank already exists"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/rank",
@@ -89,20 +88,17 @@ public class RankRoutes {
               rank = SQLCacheRank.create(newRank);
               if (rank == null) {
                 ctx.status(500)
-                    .result(response("Rank Failed to Create",
-                        "Rank has failed to be created!"));
+                    .result(response("Rank Failed to Create", "Rank has failed to be created!"));
                 return;
               }
               ctx.status(201).result(GSON.toJson(filterBasedOnPerms(ctx, rank)));
             } else { // Rank exists
               ctx.status(409)
-                  .result(
-                      response("Rank Exists", "Rank '" + rank.name + "' already exists"));
+                  .result(response("Rank Exists", "Rank '" + rank.name + "' already exists"));
             }
           }
         } catch (JsonParseException e) {
-          ctx.status(422)
-              .result(response("Invalid JSON", "Failed to parse the body into an Rank"));
+          ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Rank"));
         }
       };
 
@@ -111,50 +107,50 @@ public class RankRoutes {
       description = "Override a rank with the provided information",
       tags = {"Rank"},
       pathParams = {
-          @OpenApiParam(name = "name", description = "Name of the a given rank", required = true)
+        @OpenApiParam(name = "name", description = "Name of the a given rank", required = true)
       },
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = Rank.class)},
-          required = true,
-          description = "Rank information used to update the requested account"),
-      responses = {
-          @OpenApiResponse(
-              status = "200",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = Rank.class)},
-              description = "Rank has been updated successfully"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Rank does not exist"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Rank information used to update the requested account"),
+      responses = {
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Rank.class)},
+            description = "Rank has been updated successfully"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Rank does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/rank/{name}",
@@ -174,8 +170,7 @@ public class RankRoutes {
                   ctx.status(200).result(GSON.toJson(SQLCacheRank.get(rank.name)));
                 } else {
                   ctx.status(500)
-                      .result(
-                          response("Rank Failed To Update", "Rank Update has failed!"));
+                      .result(response("Rank Failed To Update", "Rank Update has failed!"));
                 }
               }
             } else {
@@ -191,8 +186,7 @@ public class RankRoutes {
             }
           } catch (Exception e) {
             ctx.status(422)
-                .result(
-                    response("Invalid JSON", "Failed to parse the body into an Rank"));
+                .result(response("Invalid JSON", "Failed to parse the body into an Rank"));
           }
         } else {
           ctx.status(400).result(response("Bad Request", "Name is not valid"));
@@ -204,54 +198,54 @@ public class RankRoutes {
       description = "Override a rank with the provided information",
       tags = {"Rank"},
       pathParams = {
-          @OpenApiParam(name = "name", description = "Name of the a given account", required = true),
-          @OpenApiParam(
-              name = "data",
-              description = "Information to be patched / updated",
-              required = true),
+        @OpenApiParam(name = "name", description = "Name of the a given account", required = true),
+        @OpenApiParam(
+            name = "data",
+            description = "Information to be patched / updated",
+            required = true),
       },
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = Rank.class)},
-          required = true,
-          description = "Rank information used to update the requested account"),
-      responses = {
-          @OpenApiResponse(
-              status = "200",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = Rank.class)},
-              description = "Rank has been updated successfully,"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Rank does not exist"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Rank information used to update the requested account"),
+      responses = {
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Rank.class)},
+            description = "Rank has been updated successfully,"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Rank does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/rank/{name}/{data}",
@@ -270,21 +264,19 @@ public class RankRoutes {
                 Field field = rank.getClass().getDeclaredField(fieldName);
                 field.set(rank, field.get(inputData));
                 if (isValidRank(ctx, rank)) {
-                  SQLCacheRank.update(rank, new String[]{fieldName});
+                  SQLCacheRank.update(rank, new String[] {fieldName});
                   ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, rank)));
                 }
               } catch (JsonParseException e) {
                 ctx.status(422)
-                    .result(response("Invalid JSON",
-                        "Failed to parse the body into an Rank"));
+                    .result(response("Invalid JSON", "Failed to parse the body into an Rank"));
               }
             } else {
               ctx.status(400)
                   .result(
                       response(
                           "Bad Request",
-                          ctx.pathParam("data")
-                              + " is not valid entry for the requested Rank"));
+                          ctx.pathParam("data") + " is not valid entry for the requested Rank"));
             }
           } else {
             ctx.status(404)
@@ -300,41 +292,41 @@ public class RankRoutes {
       description = "Gets a ranks information via name",
       tags = {"Rank"},
       pathParams = {
-          @OpenApiParam(name = "name", description = "Name of the a given rank", required = true)
+        @OpenApiParam(name = "name", description = "Name of the a given rank", required = true)
       },
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = Rank.class)},
-              description = "Rank is returned"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Rank does not exist"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Rank.class)},
+            description = "Rank is returned"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Rank does not exist"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/rank/{name}", method = "GET")
   public static Handler getRank =
@@ -347,8 +339,7 @@ public class RankRoutes {
           } else {
             ctx.status(404)
                 .result(
-                    response("Rank Not Found",
-                        "Rank with the name '" + name + "' does not exist"));
+                    response("Rank Not Found", "Rank with the name '" + name + "' does not exist"));
           }
         } else {
           ctx.status(400).result(response("Bad Request", "Name is not valid"));
@@ -360,45 +351,45 @@ public class RankRoutes {
       description = "Get a specific entry for the given rank via name",
       tags = {"Rank"},
       pathParams = {
-          @OpenApiParam(name = "name", description = "Name of the a given rank", required = true),
-          @OpenApiParam(
-              name = "data",
-              description = "Information to be patched / updated",
-              required = true),
+        @OpenApiParam(name = "name", description = "Name of the a given rank", required = true),
+        @OpenApiParam(
+            name = "data",
+            description = "Information to be patched / updated",
+            required = true),
       },
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = Account.class)},
-              description = "Requested Rank information is returned"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Rank does not exist"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Account.class)},
+            description = "Requested Rank information is returned"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Rank does not exist"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/rank/{name}/{data}", method = "GET")
   public static Handler getRankInfo =
@@ -417,8 +408,7 @@ public class RankRoutes {
               ctx.status(404)
                   .result(
                       response(
-                          "Rank Not Found",
-                          "Rank with the name '" + name + "' does not exist"));
+                          "Rank Not Found", "Rank with the name '" + name + "' does not exist"));
             }
           } else {
             ctx.status(400).result(response("Bad Request", "Invalid data field"));
@@ -434,47 +424,47 @@ public class RankRoutes {
           "Get a list of all ranks, query filtering is enabled, Max amount per request is set on auth token permissions",
       tags = {"Rank"},
       queryParams = {
-          @OpenApiParam(name = "name", description = "Filter based on name, full or partial"),
-          @OpenApiParam(
-              name = "permission",
-              description = "Filter based on perms, single or multiple nodes"),
-          @OpenApiParam(name = "inheritance", description = "Filter based on inheritances"),
-          @OpenApiParam(name = "prefix", description = "Filter based on prefix"),
-          @OpenApiParam(name = "prefixPriority", description = "Filter based on prefix priority"),
-          @OpenApiParam(name = "suffix", description = "Filter based on suffix priority"),
-          @OpenApiParam(name = "suffixPriority", description = "Filter based on suffix priority"),
-          @OpenApiParam(name = "color", description = "Filter based on color"),
-          @OpenApiParam(name = "colorPriority", description = "Filter based on color priority"),
+        @OpenApiParam(name = "name", description = "Filter based on name, full or partial"),
+        @OpenApiParam(
+            name = "permission",
+            description = "Filter based on perms, single or multiple nodes"),
+        @OpenApiParam(name = "inheritance", description = "Filter based on inheritances"),
+        @OpenApiParam(name = "prefix", description = "Filter based on prefix"),
+        @OpenApiParam(name = "prefixPriority", description = "Filter based on prefix priority"),
+        @OpenApiParam(name = "suffix", description = "Filter based on suffix priority"),
+        @OpenApiParam(name = "suffixPriority", description = "Filter based on suffix priority"),
+        @OpenApiParam(name = "color", description = "Filter based on color"),
+        @OpenApiParam(name = "colorPriority", description = "Filter based on color priority"),
       },
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = Rank[].class)},
-              description = "Rank has been returned successfully,"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Rank[].class)},
+            description = "Rank has been returned successfully,"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/rank", method = "GET")
   public static Handler getRanks =
@@ -494,41 +484,41 @@ public class RankRoutes {
       description = "Delete a rank via name",
       tags = {"Rank"},
       pathParams = {
-          @OpenApiParam(name = "name", description = "name of the a given Rank", required = true)
+        @OpenApiParam(name = "name", description = "name of the a given Rank", required = true)
       },
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = Rank.class)},
-              description = "Deleted Rank is returned"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Rank does not exist"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Rank.class)},
+            description = "Deleted Rank is returned"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Rank does not exist"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/rank/{name}",
@@ -547,14 +537,12 @@ public class RankRoutes {
               ctx.status(500)
                   .result(
                       response(
-                          "Rank Not Deleted",
-                          "Rank '" + rank.name + "' failed to be deleted!"));
+                          "Rank Not Deleted", "Rank '" + rank.name + "' failed to be deleted!"));
             }
           } else {
             ctx.status(404)
                 .result(
-                    response("Rank Not Found",
-                        "Rank with the name '" + name + "' does not exist"));
+                    response("Rank Not Found", "Rank with the name '" + name + "' does not exist"));
           }
         } else {
           ctx.status(400).result(response("Bad Request", "Name is not valid"));
@@ -576,16 +564,12 @@ public class RankRoutes {
               "Bad Request", "Name must be alpha-numeric with a size of 1 or greater"));
     }
     // Prefix
-    if (!rank.prefix.trim().isEmpty() && !rank.prefix.matches(
-        "[A-Za-z0-9&_()*\\[\\]]+")) {
-      errors.add(new MessageResponse("Bad Request",
-          "Prefix must be alpha-numeric / &_()[] or *"));
+    if (!rank.prefix.trim().isEmpty() && !rank.prefix.matches("[A-Za-z0-9&_()*\\[\\]]+")) {
+      errors.add(new MessageResponse("Bad Request", "Prefix must be alpha-numeric / &_()[] or *"));
     }
     // Suffix
-    if (!rank.suffix.trim().isEmpty() && !rank.suffix.matches(
-        "[A-Za-z0-9&_()*\\[\\]]+")) {
-      errors.add(
-          new MessageResponse("Bad Request", "Suffix must be alpha-numeric / &_() or *"));
+    if (!rank.suffix.trim().isEmpty() && !rank.suffix.matches("[A-Za-z0-9&_()*\\[\\]]+")) {
+      errors.add(new MessageResponse("Bad Request", "Suffix must be alpha-numeric / &_() or *"));
     }
     if (errors.size() > 0) {
       ctx.status(400).result(GSON.toJson(errors));
@@ -610,7 +594,7 @@ public class RankRoutes {
     if (role.equals(Route.RestRoles.USER)) {
       // TODO Based on SystemPerms
     }
-//    clone.name = null;
+    //    clone.name = null;
     return clone;
   }
 
@@ -628,23 +612,21 @@ public class RankRoutes {
         || data.equalsIgnoreCase("perms")
         || data.equalsIgnoreCase("permission")) {
       return "permissions";
-    } else if (data.equalsIgnoreCase("inheritance") || data.equalsIgnoreCase(
-        "inheritances")) {
+    } else if (data.equalsIgnoreCase("inheritance") || data.equalsIgnoreCase("inheritances")) {
       return "inheritance";
     } else if (data.equalsIgnoreCase("prefix")) {
       return "prefix";
-    } else if (data.equalsIgnoreCase("prefix-priority") || data.equalsIgnoreCase(
-        "prefixPriority")) {
+    } else if (data.equalsIgnoreCase("prefix-priority")
+        || data.equalsIgnoreCase("prefixPriority")) {
       return "prefix_priority";
     } else if (data.equalsIgnoreCase("suffix")) {
       return "suffix";
-    } else if (data.equalsIgnoreCase("suffix-priority") || data.equalsIgnoreCase(
-        "suffixPriority")) {
+    } else if (data.equalsIgnoreCase("suffix-priority")
+        || data.equalsIgnoreCase("suffixPriority")) {
       return "suffix_priority";
     } else if (data.equalsIgnoreCase("color")) {
       return "color";
-    } else if (data.equalsIgnoreCase("color-priority") || data.equalsIgnoreCase(
-        "colorPriority")) {
+    } else if (data.equalsIgnoreCase("color-priority") || data.equalsIgnoreCase("colorPriority")) {
       return "color_priority";
     }
     return null;
@@ -658,8 +640,7 @@ public class RankRoutes {
    * @return Rank will all but one field removed, set to null
    * @throws IllegalAccessException This should never happen, unless Rank has been modified
    */
-  private static Rank wipeAllExceptField(Rank rank, Field safe)
-      throws IllegalAccessException {
+  private static Rank wipeAllExceptField(Rank rank, Field safe) throws IllegalAccessException {
     rank = rank.clone();
     for (Field field : rank.getClass().getDeclaredFields()) {
       if (!field.equals(safe)) {
@@ -699,32 +680,27 @@ public class RankRoutes {
     if (prefix != null && !prefix.trim().isEmpty()) {
       whereBuilder.append("prefix LIKE '%").append(prefix).append("%' AND");
     }
-    Validator<Integer> prefixPriority = ctx.queryParamAsClass("prefix-priority",
-        Integer.class);
+    Validator<Integer> prefixPriority = ctx.queryParamAsClass("prefix-priority", Integer.class);
     if (ctx.queryParam("prefix-priority") != null
         && !ctx.queryParam("prefix-priority").trim().isEmpty()
         && prefixPriority.errors().isEmpty()) {
-      whereBuilder.append("prefix_priority='").append(prefixPriority.get())
-          .append("' AND");
+      whereBuilder.append("prefix_priority='").append(prefixPriority.get()).append("' AND");
     }
     String suffix = ctx.queryParam("suffix");
     if (suffix != null && !suffix.trim().isEmpty()) {
       whereBuilder.append("suffix LIKE '%").append(suffix).append("%' AND");
     }
-    Validator<Integer> suffixPriority = ctx.queryParamAsClass("suffix-priority",
-        Integer.class);
+    Validator<Integer> suffixPriority = ctx.queryParamAsClass("suffix-priority", Integer.class);
     if (ctx.queryParam("suffix-priority") != null
         && !ctx.queryParam("suffix-priority").trim().isEmpty()
         && suffixPriority.errors().isEmpty()) {
-      whereBuilder.append("suffix_priority='").append(suffixPriority.get())
-          .append("' AND");
+      whereBuilder.append("suffix_priority='").append(suffixPriority.get()).append("' AND");
     }
     String color = ctx.queryParam("color");
     if (color != null && !color.trim().isEmpty()) {
       whereBuilder.append("color LIKE '%").append(color).append("%' AND");
     }
-    Validator<Integer> colorPriority = ctx.queryParamAsClass("color-priority",
-        Integer.class);
+    Validator<Integer> colorPriority = ctx.queryParamAsClass("color-priority", Integer.class);
     if (ctx.queryParam("color-priority") != null
         && !ctx.queryParam("color-priority").trim().isEmpty()
         && colorPriority.errors().isEmpty()) {

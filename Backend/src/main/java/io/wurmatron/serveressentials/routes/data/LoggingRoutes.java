@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -29,43 +28,43 @@ public class LoggingRoutes {
       description = "Create a new logging event",
       tags = {"Logging"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = LogEntry.class)},
-          required = true,
-          description = "Information about the log event"),
-      responses = {
-          @OpenApiResponse(
-              status = "201",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = LogEntry.class)},
-              description = "Log Entry has been created successfully,"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Information about the log event"),
+      responses = {
+        @OpenApiResponse(
+            status = "201",
+            content = {@OpenApiContent(from = LogEntry.class)},
+            description = "Log Entry has been created successfully,"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/logging",
@@ -80,8 +79,7 @@ public class LoggingRoutes {
             ctx.status(201).result(GSON.toJson(newLogEntry));
           }
         } catch (JsonParseException e) {
-          ctx.status(422)
-              .result(response("Invalid JSON", "Failed to parse body into Log Entry"));
+          ctx.status(422).result(response("Invalid JSON", "Failed to parse body into Log Entry"));
         }
       };
 
@@ -90,63 +88,63 @@ public class LoggingRoutes {
       description = "Filter the log entries based on your query",
       tags = {"Logging"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       queryParams = {
-          @OpenApiParam(
-              name = "server-id",
-              description = "ID of the server where this event took place"),
-          @OpenApiParam(name = "action", description = "Type of action that has taken place"),
-          @OpenApiParam(
-              name = "uuid",
-              description = "UUID of the user / account that caused this event"),
-          @OpenApiParam(
-              name = "x",
-              description = "X Position that this event took place",
-              type = Integer.class),
-          @OpenApiParam(
-              name = "y",
-              description = "Y Position that this event took place",
-              type = Integer.class),
-          @OpenApiParam(
-              name = "z",
-              description = "Z Position that this event took place",
-              type = Integer.class),
-          @OpenApiParam(
-              name = "dim",
-              description = "Dimension that this event took place",
-              type = Integer.class)
+        @OpenApiParam(
+            name = "server-id",
+            description = "ID of the server where this event took place"),
+        @OpenApiParam(name = "action", description = "Type of action that has taken place"),
+        @OpenApiParam(
+            name = "uuid",
+            description = "UUID of the user / account that caused this event"),
+        @OpenApiParam(
+            name = "x",
+            description = "X Position that this event took place",
+            type = Integer.class),
+        @OpenApiParam(
+            name = "y",
+            description = "Y Position that this event took place",
+            type = Integer.class),
+        @OpenApiParam(
+            name = "z",
+            description = "Z Position that this event took place",
+            type = Integer.class),
+        @OpenApiParam(
+            name = "dim",
+            description = "Dimension that this event took place",
+            type = Integer.class)
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = LogEntry[].class)},
-              description = "Log Entry's that fit into your required filters (query)"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = LogEntry[].class)},
+            description = "Log Entry's that fit into your required filters (query)"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/logging", method = "GET")
   public static Handler get =
@@ -162,43 +160,43 @@ public class LoggingRoutes {
       description = "Update an existing log event",
       tags = {"Logging"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = LogEntry.class)},
-          required = true,
-          description = "Information about the log event"),
-      responses = {
-          @OpenApiResponse(
-              status = "200",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = LogEntry.class)},
-              description = "Log Entry has been successfully updated"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Information about the log event"),
+      responses = {
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = LogEntry.class)},
+            description = "Log Entry has been successfully updated"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/logging",
@@ -209,12 +207,10 @@ public class LoggingRoutes {
         try {
           LogEntry updatedLogEntry = GSON.fromJson(ctx.body(), LogEntry.class);
           if (isValidLogEntry(ctx, updatedLogEntry)) {
-            SQLLogging.update(updatedLogEntry,
-                new String[]{"actionData", "x", "y", "z", "dim"});
+            SQLLogging.update(updatedLogEntry, new String[] {"actionData", "x", "y", "z", "dim"});
             List<LogEntry> entrys =
                 SQLLogging.get(
-                    updatedLogEntry.server_id, updatedLogEntry.action_type,
-                    updatedLogEntry.uuid);
+                    updatedLogEntry.server_id, updatedLogEntry.action_type, updatedLogEntry.uuid);
             for (LogEntry e : entrys) {
               if (e.x.equals(updatedLogEntry.x)
                   && e.y.equals(updatedLogEntry.y)
@@ -226,8 +222,7 @@ public class LoggingRoutes {
             }
           }
         } catch (JsonParseException e) {
-          ctx.status(422)
-              .result(response("Invalid JSON", "Failed to parse body into Log Entry"));
+          ctx.status(422).result(response("Invalid JSON", "Failed to parse body into Log Entry"));
         }
       };
 
@@ -236,43 +231,43 @@ public class LoggingRoutes {
       description = "Remove an existing log event",
       tags = {"Logging"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = LogEntry.class)},
-          required = true,
-          description = "The event entry you want to remove"),
-      responses = {
-          @OpenApiResponse(
-              status = "200",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = LogEntry.class)},
-              description = "Log Entry has been successfully deleted"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "The event entry you want to remove"),
+      responses = {
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = LogEntry.class)},
+            description = "Log Entry has been successfully deleted"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/logging",
@@ -304,8 +299,7 @@ public class LoggingRoutes {
             ctx.status(404).result(response("Not Found", "Log Entry not found"));
           }
         } catch (JsonParseException e) {
-          ctx.status(422)
-              .result(response("Invalid JSON", "Failed to parse body into Log Entry"));
+          ctx.status(422).result(response("Invalid JSON", "Failed to parse body into Log Entry"));
         }
       };
 
@@ -320,13 +314,11 @@ public class LoggingRoutes {
     List<MessageResponse> errors = new ArrayList<>();
     // Verify ServerID
     if (entry.server_id == null || entry.server_id.trim().isEmpty()) {
-      errors.add(
-          new MessageResponse("Invalid ServerID", "serverID must be non-null / empty"));
+      errors.add(new MessageResponse("Invalid ServerID", "serverID must be non-null / empty"));
     }
     // Verify actionType
     if (entry.action_type == null || entry.action_type.trim().isEmpty()) {
-      errors.add(new MessageResponse("Invalid ActionType",
-          "actionType must be non-null / empty"));
+      errors.add(new MessageResponse("Invalid ActionType", "actionType must be non-null / empty"));
     }
     // Verify UUID
     if (entry.uuid == null || entry.uuid.trim().isEmpty()) {

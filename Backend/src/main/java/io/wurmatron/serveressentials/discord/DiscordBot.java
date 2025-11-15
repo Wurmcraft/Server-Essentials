@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -36,31 +35,37 @@ public class DiscordBot {
   public static Snowflake verifiedRank;
 
   public static void start() {
-    ServerEssentialsRest.executors.execute(() -> {
-      LOG.info("Discord Bot is starting");
-      client =
-          DiscordClientBuilder.create(ServerEssentialsRest.config.discord.token)
-              .build()
-              .login()
-              .block();
-      addEvents();
-      setupVariables();
-      createChannelMap();
-      ApplicationCommandRequest verifyCommand = ApplicationCommandRequest.builder()
-          .name("verify")
-          .description("Generates a code to verify in-game")
-          .addOption(ApplicationCommandOptionData.builder()
-              .name("username")
-              .description("Your in-Game username")
-              .type(ApplicationCommandOption.Type.STRING.getValue())
-              .required(true)
-              .build()
-          ).build();
-      long applicationId = client.getRestClient().getApplicationId().block();
-      client.getRestClient().getApplicationService()
-          .createGlobalApplicationCommand(applicationId, verifyCommand).subscribe();
-      client.onDisconnect().block();
-    });
+    ServerEssentialsRest.executors.execute(
+        () -> {
+          LOG.info("Discord Bot is starting");
+          client =
+              DiscordClientBuilder.create(ServerEssentialsRest.config.discord.token)
+                  .build()
+                  .login()
+                  .block();
+          addEvents();
+          setupVariables();
+          createChannelMap();
+          ApplicationCommandRequest verifyCommand =
+              ApplicationCommandRequest.builder()
+                  .name("verify")
+                  .description("Generates a code to verify in-game")
+                  .addOption(
+                      ApplicationCommandOptionData.builder()
+                          .name("username")
+                          .description("Your in-Game username")
+                          .type(ApplicationCommandOption.Type.STRING.getValue())
+                          .required(true)
+                          .build())
+                  .build();
+          long applicationId = client.getRestClient().getApplicationId().block();
+          client
+              .getRestClient()
+              .getApplicationService()
+              .createGlobalApplicationCommand(applicationId, verifyCommand)
+              .subscribe();
+          client.onDisconnect().block();
+        });
   }
 
   private static void setupVariables() {
@@ -68,13 +73,15 @@ public class DiscordBot {
       Flux<UserGuildData> guilds = client.getRestClient().getGuilds();
       guildID = Snowflake.of(guilds.blockFirst().id());
       try {
-        RestRole role = client.getRestClient().getRoleById(guildID,
-            Snowflake.of(ServerEssentialsRest.config.discord.verifiedRankID));
+        RestRole role =
+            client
+                .getRestClient()
+                .getRoleById(
+                    guildID, Snowflake.of(ServerEssentialsRest.config.discord.verifiedRankID));
         verifiedRank = role.getId();
       } catch (Exception e) {
         LOG.warn(
-            "Unable to find role '" + ServerEssentialsRest.config.discord.verifiedRankID
-                + "'");
+            "Unable to find role '" + ServerEssentialsRest.config.discord.verifiedRankID + "'");
       }
     } catch (Exception e) {
       LOG.warn("Bot is not connected to any servers!, Shutting Down.");
@@ -92,23 +99,26 @@ public class DiscordBot {
               User self = event.getSelf();
               LOG.info(
                   String.format(
-                      "Bot Logged in as %s#%s", self.getUsername(),
-                      self.getDiscriminator()));
+                      "Bot Logged in as %s#%s", self.getUsername(), self.getDiscriminator()));
             });
-    client.getEventDispatcher().on(ChatInputInteractionEvent.class, event -> {
-      if (event.getCommandName().equals("verify")) {
-        return BotCommands.verify(event);
-      }
-      return null;
-    }).subscribe();
+    client
+        .getEventDispatcher()
+        .on(
+            ChatInputInteractionEvent.class,
+            event -> {
+              if (event.getCommandName().equals("verify")) {
+                return BotCommands.verify(event);
+              }
+              return null;
+            })
+        .subscribe();
   }
 
   private static void createChannelMap() {
     // Create Channel Lookup table
     channelMap = new NonBlockingHashMap<>();
     for (String serverID : ServerEssentialsRest.config.discord.channelMap.keySet()) {
-      String[] split = ServerEssentialsRest.config.discord.channelMap.get(serverID)
-          .split(";");
+      String[] split = ServerEssentialsRest.config.discord.channelMap.get(serverID).split(";");
       NonBlockingHashMap<String, String> serverChannelMap = new NonBlockingHashMap<>();
       for (String s : split) {
         String[] channelData = s.split(":");
@@ -135,17 +145,18 @@ public class DiscordBot {
     if (channelMap.containsKey(message.serverID)
         && channelMap.get(message.serverID).containsKey(message.channel)) {
       String channelID = channelMap.get(message.serverID).get(message.channel);
-      client.rest().getChannelById(Snowflake.of(channelID)).createMessage(message.message)
-          .block();
+      client.rest().getChannelById(Snowflake.of(channelID)).createMessage(message.message).block();
     }
   }
 
   public static void verifyUser(DiscordVerify verify) {
     if (verifiedRank != null) {
-      Member member = client.getMemberById(guildID, Snowflake.of(verify.discordID))
-          .block();
+      Member member = client.getMemberById(guildID, Snowflake.of(verify.discordID)).block();
       member.addRole(verifiedRank).block();
-      member.getPrivateChannel().block().createMessage("You have been verified!")
+      member
+          .getPrivateChannel()
+          .block()
+          .createMessage("You have been verified!")
           .block(); // TODO Lang support
     }
   }

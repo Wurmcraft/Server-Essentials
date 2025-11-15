@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -30,43 +29,43 @@ public class BanRoutes {
       description = "Creates a new user with the provided information",
       tags = {"Ban"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = Ban.class)},
-          required = true,
-          description = "Ban information to be used to create the ban entry"),
-      responses = {
-          @OpenApiResponse(
-              status = "201",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = Ban.class)},
-              description = "Ban entry has been created successfully,"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Ban information to be used to create the ban entry"),
+      responses = {
+        @OpenApiResponse(
+            status = "201",
+            content = {@OpenApiContent(from = Ban.class)},
+            description = "Ban entry has been created successfully,"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/ban",
@@ -80,15 +79,13 @@ public class BanRoutes {
             Ban ban = SQLCacheBan.create(newBan);
             if (ban == null) {
               ctx.status(500)
-                  .result(response("Ban Failed",
-                      "Failed to create ban for '" + newBan.uuid + "'"));
+                  .result(response("Ban Failed", "Failed to create ban for '" + newBan.uuid + "'"));
               return;
             }
             ctx.status(201).result(GSON.toJson(ban));
           }
         } catch (JsonParseException e) {
-          ctx.status(422)
-              .result(response("Invalid JSON", "Failed to parse the body into an Ban"));
+          ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Ban"));
         }
       };
 
@@ -97,43 +94,43 @@ public class BanRoutes {
       description = "Get a list ban entry based on the provided query",
       tags = {"Ban"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       queryParams = {
-          @OpenApiParam(name = "uuid", description = "UUID of the banned account"),
-          @OpenApiParam(name = "discord", description = "ID of the user on discord"),
-          @OpenApiParam(name = "ban-type", description = "Type of the ban entry"),
+        @OpenApiParam(name = "uuid", description = "UUID of the banned account"),
+        @OpenApiParam(name = "discord", description = "ID of the user on discord"),
+        @OpenApiParam(name = "ban-type", description = "Type of the ban entry"),
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = Ban[].class)},
-              description = "Ban entry filtered on the query"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Ban[].class)},
+            description = "Ban entry filtered on the query"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/ban", method = "GET")
   public static Handler get =
@@ -185,38 +182,38 @@ public class BanRoutes {
       description = "Get a ban entry based on its ID",
       tags = {"Ban"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = Ban.class)},
-              description = "Ban entry related to the provided id"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Ban.class)},
+            description = "Ban entry related to the provided id"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/ban/{id}", method = "GET")
   public static Handler getID =
@@ -228,12 +225,10 @@ public class BanRoutes {
             ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, ban)));
           } else {
             ctx.status(404)
-                .result(
-                    response("Invalid Ban", "Ban with the provided ID does not exist"));
+                .result(response("Invalid Ban", "Ban with the provided ID does not exist"));
           }
         } catch (NumberFormatException e) {
-          ctx.status(400)
-              .result(response("Bad Request", "Invalid Path Param, Must be a number"));
+          ctx.status(400).result(response("Bad Request", "Invalid Path Param, Must be a number"));
         }
       };
 
@@ -242,43 +237,43 @@ public class BanRoutes {
       description = "Update an existing ban entry",
       tags = {"Ban"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = Ban.class)},
-          required = true,
-          description = "Ban information to be used to create the ban entry"),
-      responses = {
-          @OpenApiResponse(
-              status = "200",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = Ban.class)},
-              description = "Ban entry has been updated successfully,"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Ban information to be used to create the ban entry"),
+      responses = {
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Ban.class)},
+            description = "Ban entry has been updated successfully,"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/ban/{id}",
@@ -295,23 +290,19 @@ public class BanRoutes {
                 SQLCacheBan.update(banUpdate, SQLCacheBan.getColumns());
                 ctx.status(200).result(GSON.toJson(SQLCacheBan.get(banID)));
               } else {
-                ctx.status(400)
-                    .result(response("ID Mismatch", "Path and body ID don't match"));
+                ctx.status(400).result(response("ID Mismatch", "Path and body ID don't match"));
               }
             } else {
               ctx.status(400)
                   .result(
-                      response("Bad Path Param",
-                          "ID must be a number, equal or greater than 0"));
+                      response("Bad Path Param", "ID must be a number, equal or greater than 0"));
             }
           } catch (NumberFormatException e) {
             ctx.status(400)
-                .result(response("Bad Path Param",
-                    "ID must be a number, equal or greater than 0"));
+                .result(response("Bad Path Param", "ID must be a number, equal or greater than 0"));
           }
         } catch (JsonParseException e) {
-          ctx.status(422)
-              .result(response("Invalid JSON", "Failed to parse the body into an Ban"));
+          ctx.status(422).result(response("Invalid JSON", "Failed to parse the body into an Ban"));
         }
       };
 
@@ -320,38 +311,38 @@ public class BanRoutes {
       description = "Delete an existing ban entry",
       tags = {"Ban"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = Ban.class)},
-              description = "Ban entry has been deleted successfully,"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Ban.class)},
+            description = "Ban entry has been deleted successfully,"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/ban/{id}",
@@ -367,12 +358,10 @@ public class BanRoutes {
             ctx.status(200).result(GSON.toJson(ban));
           } else {
             ctx.status(404)
-                .result(
-                    response("Invalid Ban", "Ban with the provided ID does not exist"));
+                .result(response("Invalid Ban", "Ban with the provided ID does not exist"));
           }
         } catch (NumberFormatException e) {
-          ctx.status(400)
-              .result(response("Bad Request", "Invalid Path Param, Must be a number"));
+          ctx.status(400).result(response("Bad Request", "Invalid Path Param, Must be a number"));
         }
       };
 
@@ -394,14 +383,12 @@ public class BanRoutes {
     // Check bannedBY
     if (ban.banned_by == null || ban.banned_by.trim().isEmpty()) {
       errors.add(
-          new MessageResponse("Missing Banned-By",
-              "A player must be banned by someone or thing"));
+          new MessageResponse("Missing Banned-By", "A player must be banned by someone or thing"));
     }
     // Check banned by Type
     if (ban.banned_by_type == null || ban.banned_by_type.trim().isEmpty()) {
       errors.add(
-          new MessageResponse("Invalid Banned-By Type",
-              "A ban must be created by something"));
+          new MessageResponse("Invalid Banned-By Type", "A ban must be created by something"));
     }
     if (ban.ban_type == null || ban.ban_type.trim().isEmpty()) {
       errors.add(new MessageResponse("No Ban Type", "You must specify the type of ban"));

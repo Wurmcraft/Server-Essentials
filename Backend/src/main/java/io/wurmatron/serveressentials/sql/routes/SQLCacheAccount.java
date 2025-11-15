@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -18,17 +17,14 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
 
-/**
- * Interact with the Account's part of the database, with caching
- */
+/** Interact with the Account's part of the database, with caching */
 public class SQLCacheAccount extends SQLCache {
 
   public static final String USERS_TABLE = "users";
 
   /**
-   * Gets the user's data from the cache, if not requests from database Note: If the data
-   * accuracy is important, consider invalidating the uuid before calling this, this will
-   * force an update
+   * Gets the user's data from the cache, if not requests from database Note: If the data accuracy
+   * is important, consider invalidating the uuid before calling this, this will force an update
    *
    * @param uuid uuid of the account to lookup
    * @return instance of the account, based on the uuid
@@ -53,8 +49,7 @@ public class SQLCacheAccount extends SQLCache {
         return account.clone();
       }
     } catch (Exception e) {
-      LOG.debug(
-          "Failed to find account with uuid '" + uuid + "' (" + e.getMessage() + ")");
+      LOG.debug("Failed to find account with uuid '" + uuid + "' (" + e.getMessage() + ")");
     }
     // User does not exist
     return null;
@@ -73,9 +68,7 @@ public class SQLCacheAccount extends SQLCache {
       accountCache.put(account.uuid, new CacheAccount(account));
       return account;
     } catch (Exception e) {
-      LOG.debug(
-          "Failed to add account with uuid '" + account.uuid + "' (" + e.getMessage()
-              + ")");
+      LOG.debug("Failed to add account with uuid '" + account.uuid + "' (" + e.getMessage() + ")");
       LOG.debug("Account: " + GSON.toJson(account));
     }
     return null;
@@ -94,8 +87,8 @@ public class SQLCacheAccount extends SQLCache {
       if (accountCache.containsKey(account.uuid)) { // Exists in cache, updating
         try {
           CacheAccount cache = accountCache.get(account.uuid);
-          cache.account = updateInfoLocal(columnsToUpdate, account,
-              accountCache.get(account.uuid).account);
+          cache.account =
+              updateInfoLocal(columnsToUpdate, account, accountCache.get(account.uuid).account);
           cache.lastSync = System.currentTimeMillis();
           accountCache.put(account.uuid, cache);
         } catch (Exception e) {
@@ -106,8 +99,7 @@ public class SQLCacheAccount extends SQLCache {
       return true;
     } catch (Exception e) {
       LOG.debug(
-          "Failed to update account with uuid '" + account.uuid + "' (" + e.getMessage()
-              + ")");
+          "Failed to update account with uuid '" + account.uuid + "' (" + e.getMessage() + ")");
       LOG.debug("Account: " + GSON.toJson(account));
     }
     return false;
@@ -126,15 +118,14 @@ public class SQLCacheAccount extends SQLCache {
       invalidate(uuid);
       return true;
     } catch (Exception e) {
-      LOG.debug(
-          "Failed to delete account with uuid '" + uuid + "' (" + e.getMessage() + ")");
+      LOG.debug("Failed to delete account with uuid '" + uuid + "' (" + e.getMessage() + ")");
     }
     return false;
   }
 
   /**
-   * Removes a entry from the cache, causing an update upon next request Note: Does not
-   * delete anything from the database
+   * Removes a entry from the cache, causing an update upon next request Note: Does not delete
+   * anything from the database
    *
    * @param uuid id used for the account to remove from cache
    */
@@ -143,9 +134,7 @@ public class SQLCacheAccount extends SQLCache {
     LOG.debug("Account '" + uuid + " has been invalidated, will update on next request!");
   }
 
-  /**
-   * Cleanup the stored cache and look for expired entries
-   */
+  /** Cleanup the stored cache and look for expired entries */
   public static void cleanupCache() {
     LOG.debug("Account Cache cleanup has begun!");
     // ID Cache
@@ -164,11 +153,8 @@ public class SQLCacheAccount extends SQLCache {
     LOG.debug("Account Cache has been cleaned, " + count + " entries have been removed!");
   }
 
-  /**
-   * This should do nothing, its here to prevent an possible reflection issue
-   */
-  public static void cleanupDB() {
-  }
+  /** This should do nothing, its here to prevent an possible reflection issue */
+  public static void cleanupDB() {}
 
   /**
    * List all the table columns besides the key, in this case 'uuid'

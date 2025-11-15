@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -17,90 +16,85 @@ import java.util.List;
 import joptsimple.internal.Strings;
 import org.postgresql.util.PGobject;
 
-/**
- * Direct access to the SQL database / connection Used to interact wit the database
- */
+/** Direct access to the SQL database / connection Used to interact wit the database */
 public class SQLGenerator {
 
   // Columns
   protected static final String[] ACTIONS_COLUMNS =
-      new String[]{"related_id", "host", "action", "action_data", "timestamp"};
+      new String[] {"related_id", "host", "action", "action_data", "timestamp"};
   protected static final String[] AUTORANKS_COLUMNS =
-      new String[]{
-          "rank", "next_rank", "play_time", "currency_name", "currency_amount",
-          "special_events"
+      new String[] {
+        "rank", "next_rank", "play_time", "currency_name", "currency_amount", "special_events"
       };
   protected static final String[] BANS_COLUMNS =
-      new String[]{
-          "ban_id",
-          "uuid",
-          "ip",
-          "discord_id",
-          "banned_by",
-          "banned_by_type",
-          "ban_reason",
-          "timestamp",
-          "ban_type",
-          "ban_data",
-          "ban_status"
+      new String[] {
+        "ban_id",
+        "uuid",
+        "ip",
+        "discord_id",
+        "banned_by",
+        "banned_by_type",
+        "ban_reason",
+        "timestamp",
+        "ban_type",
+        "ban_data",
+        "ban_status"
       };
   protected static final String[] CURRENCYS_COLUMNS =
-      new String[]{"currency_id", "display_name", "global_worth", "sell_worth", "tax"};
+      new String[] {"currency_id", "display_name", "global_worth", "sell_worth", "tax"};
   protected static final String[] DONATOR_COLUMNS =
-      new String[]{"store", "transaction_id", "amount", "uuid", "timestamp", "type",
-          "type_data"};
+      new String[] {"store", "transaction_id", "amount", "uuid", "timestamp", "type", "type_data"};
   protected static final String[] LOGGING_COLUMNS =
-      new String[]{
-          "server_id", "timestamp", "action_type", "action_data", "uuid", "x", "y", "z",
-          "dim"
+      new String[] {
+        "server_id", "timestamp", "action_type", "action_data", "uuid", "x", "y", "z", "dim"
       };
   protected static final String[] MARKETS_COLUMNS =
-      new String[]{
-          "server_id",
-          "seller_uuid",
-          "item",
-          "currency_name",
-          "currency_amount",
-          "timestamp",
-          "market_type",
-          "market_data",
-          "transfer_id"
+      new String[] {
+        "server_id",
+        "seller_uuid",
+        "item",
+        "currency_name",
+        "currency_amount",
+        "timestamp",
+        "market_type",
+        "market_data",
+        "transfer_id"
       };
   protected static final String[] RANKS_COLUMNS =
-      new String[]{
-          "rank_id",
-          "name",
-          "permissions",
-          "inheritance",
-          "prefix",
-          "prefix_priority",
-          "suffix",
-          "suffix_priority",
-          "color",
-          "color_priority"
+      new String[] {
+        "rank_id",
+        "name",
+        "permissions",
+        "inheritance",
+        "prefix",
+        "prefix_priority",
+        "suffix",
+        "suffix_priority",
+        "color",
+        "color_priority"
       };
   protected static final String[] STATISTICS_COLUMNS =
-      new String[]{"server_id", "uuid", "timestamp", "event_type", "event_data"};
+      new String[] {"server_id", "uuid", "timestamp", "event_type", "event_data"};
   protected static final String[] TRANSFERS_COLUMNS =
-      new String[]{"transfer_id", "uuid", "start_time", "items", "server_id"};
+      new String[] {"transfer_id", "uuid", "start_time", "items", "server_id"};
   protected static final String[] USERS_COLUMNS =
-      new String[]{
-          "uuid",
-          "username",
-          "rank",
-          "perms",
-          "perks",
-          "lang",
-          "muted",
-          "mute_time",
-          "display_name",
-          "discord_id",
-          "tracked_time",
-          "wallet",
-          "reward_points",
-          "password_hash",
-          "password_salt",
-          "system_perms"
+      new String[] {
+        "uuid",
+        "username",
+        "rank",
+        "perms",
+        "perks",
+        "lang",
+        "muted",
+        "mute_time",
+        "display_name",
+        "discord_id",
+        "tracked_time",
+        "wallet",
+        "reward_points",
+        "password_hash",
+        "password_salt",
+        "system_perms"
       };
 
   protected static DatabaseConnection connection;
@@ -119,13 +113,10 @@ public class SQLGenerator {
    * @param dataType instance of the data, to be created out of
    * @return instance of the data, with the request data from the db filled in
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object
-   * instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object
-   * instance
+   * @throws IllegalAccessException Issue with reflection to add data to the object instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
    */
-  protected static <T> T get(String columns, String table, String key, String data,
-      T dataType)
+  protected static <T> T get(String columns, String table, String key, String data, T dataType)
       throws SQLException, IllegalAccessException, IllegalArgumentException {
     String sql = "";
     if (connection.databaseType.equalsIgnoreCase("mysql")) {
@@ -153,12 +144,10 @@ public class SQLGenerator {
    * @param dataType instance of the data, to be created out of
    * @return instance of the data, with the request data from the db filled in
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object
-   * instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object
-   * instance
-   * @throws InstantiationException Issues with reflection, trying to copy requested
-   * object instance to fill in data
+   * @throws IllegalAccessException Issue with reflection to add data to the object instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
+   * @throws InstantiationException Issues with reflection, trying to copy requested object instance
+   *     to fill in data
    */
   protected static <T> List<T> getArray(
       String columns, String table, String key, String data, T dataType)
@@ -190,18 +179,15 @@ public class SQLGenerator {
    * @param dataType instance of the data, to be created out of
    * @return instance of the data, with the request data from the db filled in
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object
-   * instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object
-   * instance
-   * @throws InstantiationException Issues with reflection, trying to copy requested
-   * object instance to fill in data
+   * @throws IllegalAccessException Issue with reflection to add data to the object instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
+   * @throws InstantiationException Issues with reflection, trying to copy requested object instance
+   *     to fill in data
    */
   protected static <T> List<T> getArray(
       String columns, String table, String[] key, String[] data, T dataType)
       throws SQLException, IllegalAccessException, InstantiationException {
-    StringBuilder sql = new StringBuilder(
-        "SELECT " + columns + " FROM " + table + " WHERE ");
+    StringBuilder sql = new StringBuilder("SELECT " + columns + " FROM " + table + " WHERE ");
     for (int x = 0; x < key.length; x++) {
       sql.append(key[x]).append("=? ").append("AND ");
     }
@@ -215,11 +201,9 @@ public class SQLGenerator {
   }
 
   protected static <T> List<T> getArray(
-      String columns, String table, String[] key, String[] data, T dataType,
-      Class<?>[] types)
+      String columns, String table, String[] key, String[] data, T dataType, Class<?>[] types)
       throws SQLException, IllegalAccessException, InstantiationException {
-    StringBuilder sql = new StringBuilder(
-        "SELECT " + columns + " FROM " + table + " WHERE ");
+    StringBuilder sql = new StringBuilder("SELECT " + columns + " FROM " + table + " WHERE ");
     for (int x = 0; x < key.length; x++) {
       sql.append(key[x]).append("=? ").append("AND ");
     }
@@ -244,15 +228,13 @@ public class SQLGenerator {
    * @param dataType instance of the data, to be created out of
    * @return instance of the data, with the request data from the db filled in
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object
-   * instance
-   * @throws InstantiationException Issues with reflection, trying to copy requested
-   * object instance to fill in data
+   * @throws IllegalAccessException Issue with reflection to add data to the object instance
+   * @throws InstantiationException Issues with reflection, trying to copy requested object instance
+   *     to fill in data
    */
   protected static <T> List<T> getAll(String columns, String table, T dataType)
       throws SQLException, IllegalAccessException, InstantiationException {
-    PreparedStatement statement = connection.createPrepared(
-        "SELECT " + columns + " FROM " + table);
+    PreparedStatement statement = connection.createPrepared("SELECT " + columns + " FROM " + table);
     LOG.trace("GET ALL: " + statement);
     return toArray(statement.executeQuery(), dataType);
   }
@@ -263,20 +245,16 @@ public class SQLGenerator {
    * @param table table to insert this data into
    * @param columns columns you want to insert the data into
    * @param data instance of the data to send to the database
-   * @param generatedKey Should return the auto incremented value generated for this sql
-   * entry
+   * @param generatedKey Should return the auto incremented value generated for this sql entry
    * @return see SQL.execute() for more info
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object
-   * instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object
-   * instance
-   * @throws NoSuchFieldException Issue with collecting the data from the object instance,
-   * via reflection
+   * @throws IllegalAccessException Issue with reflection to add data to the object instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
+   * @throws NoSuchFieldException Issue with collecting the data from the object instance, via
+   *     reflection
    * @see PreparedStatement#execute()
    */
-  protected static <T> int insert(String table, String[] columns, T data,
-      boolean generatedKey)
+  protected static <T> int insert(String table, String[] columns, T data, boolean generatedKey)
       throws SQLException, IllegalAccessException, IllegalArgumentException, NoSuchFieldException {
     String sql = "";
     if (connection.databaseType.equalsIgnoreCase("mysql")) {
@@ -299,8 +277,7 @@ public class SQLGenerator {
               + ")";
     }
     PreparedStatement statement =
-        connection.createPrepared(sql,
-            generatedKey ? Statement.RETURN_GENERATED_KEYS : 0);
+        connection.createPrepared(sql, generatedKey ? Statement.RETURN_GENERATED_KEYS : 0);
     statement = addArguments(statement, columns, data);
     LOG.info("INSERT: " + statement);
     statement.executeUpdate();
@@ -323,12 +300,10 @@ public class SQLGenerator {
    * @param data instance of the data to be updated in the database
    * @return see SQL.execute() for more info
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object
-   * instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object
-   * instance
-   * @throws NoSuchFieldException Issue with collecting the data from the object instance,
-   * via reflection
+   * @throws IllegalAccessException Issue with reflection to add data to the object instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
+   * @throws NoSuchFieldException Issue with collecting the data from the object instance, via
+   *     reflection
    * @see PreparedStatement#execute()
    */
   protected static <T> boolean update(
@@ -375,12 +350,10 @@ public class SQLGenerator {
    * @param data instance of the data to be updated in the database
    * @return see SQL.execute() for more info
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object
-   * instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object
-   * instance
-   * @throws NoSuchFieldException Issue with collecting the data from the object instance,
-   * via reflection
+   * @throws IllegalAccessException Issue with reflection to add data to the object instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
+   * @throws NoSuchFieldException Issue with collecting the data from the object instance, via
+   *     reflection
    * @see PreparedStatement#execute()
    */
   protected static <T> boolean update(
@@ -474,8 +447,7 @@ public class SQLGenerator {
    * @throws SQLException A SQL Error has occurred while running the request
    * @see PreparedStatement#execute()
    */
-  protected static boolean delete(String table, String key, String value)
-      throws SQLException {
+  protected static boolean delete(String table, String key, String value) throws SQLException {
     PreparedStatement statement =
         connection.createPrepared("DELETE FROM " + table + " WHERE " + key + "=?;");
     if (table.equals("bans") || table.equalsIgnoreCase("transfers")) {
@@ -497,8 +469,7 @@ public class SQLGenerator {
    * @throws SQLException A SQL Error has occurred while running the request
    * @see PreparedStatement#execute()
    */
-  protected static boolean delete(String table, String[] key, String[] value)
-      throws SQLException {
+  protected static boolean delete(String table, String[] key, String[] value) throws SQLException {
     StringBuilder sql = new StringBuilder("DELETE FROM " + table + " WHERE ");
     for (int x = 0; x < key.length; x++) {
       sql.append(key[x]).append("=? ").append("AND ");
@@ -519,10 +490,8 @@ public class SQLGenerator {
    * @param dataType data instance to collect the data for
    * @return instance of the provided instance with the data from the database
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object
-   * instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object
-   * instance
+   * @throws IllegalAccessException Issue with reflection to add data to the object instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
    */
   protected static <T> T to(ResultSet result, T dataType, boolean next)
       throws SQLException, IllegalAccessException, IllegalArgumentException {
@@ -540,14 +509,11 @@ public class SQLGenerator {
               data[index] = data[index].trim();
             }
             field.set(dataType, data);
-          } else if (str && fieldType.equals(long.class) || str && fieldType.equals(
-              Long.class)) {
+          } else if (str && fieldType.equals(long.class) || str && fieldType.equals(Long.class)) {
             field.set(dataType, Long.parseLong((String) obj));
-          } else if (str && fieldType.equals(int.class) || str && fieldType.equals(
-              Integer.class)) {
+          } else if (str && fieldType.equals(int.class) || str && fieldType.equals(Integer.class)) {
             field.set(dataType, Integer.parseInt((String) obj));
-          } else if (str && fieldType.equals(float.class) || str && fieldType.equals(
-              Float.class)) {
+          } else if (str && fieldType.equals(float.class) || str && fieldType.equals(Float.class)) {
             field.set(dataType, Float.parseFloat((String) obj));
           } else if (str && fieldType.equals(double.class)
               || str && fieldType.equals(Double.class)
@@ -586,8 +552,7 @@ public class SQLGenerator {
             field.set(dataType, obj);
           }
         } catch (Exception e) {
-          LOG.warn(
-              "Failed to convert! (" + e.getMessage() + ") '" + field.getName() + "'");
+          LOG.warn("Failed to convert! (" + e.getMessage() + ") '" + field.getName() + "'");
         }
       }
       return dataType;
@@ -617,16 +582,13 @@ public class SQLGenerator {
    * @param dataType data instance to collect the data for
    * @return instance of the provided instance with the data from the database
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws IllegalAccessException Issue with reflection to add data to the object
-   * instance
-   * @throws IllegalArgumentException Issue with reflection to add data to the object
-   * instance
-   * @throws InstantiationException Issue with reflection trying to create a new object
-   * instance
+   * @throws IllegalAccessException Issue with reflection to add data to the object instance
+   * @throws IllegalArgumentException Issue with reflection to add data to the object instance
+   * @throws InstantiationException Issue with reflection trying to create a new object instance
    */
   protected static <T> List<T> toArray(ResultSet result, T dataType)
       throws SQLException, IllegalAccessException, IllegalArgumentException,
-      InstantiationException {
+          InstantiationException {
     List<T> dataArr = new ArrayList<>();
     while (result.next()) {
       // Attempt to create new instance and set values
@@ -640,8 +602,8 @@ public class SQLGenerator {
   }
 
   /**
-   * Generates the string for use with SQLGenerator params, based on the amount needed and
-   * its columns
+   * Generates the string for use with SQLGenerator params, based on the amount needed and its
+   * columns
    *
    * @param count amount of arguments to generate
    * @param format format of the arguments to generate
@@ -678,10 +640,8 @@ public class SQLGenerator {
    * @param columns columns of the data for the SQL request
    * @param data data to collect the data to be used for the params
    * @throws SQLException A SQL Error has occurred while running the request
-   * @throws NoSuchFieldException Issue with reflection to get data from the object
-   * instance
-   * @throws IllegalAccessException Issue with reflection to get data from the object
-   * instance
+   * @throws NoSuchFieldException Issue with reflection to get data from the object instance
+   * @throws IllegalAccessException Issue with reflection to get data from the object instance
    */
   private static <T> PreparedStatement addArguments(
       PreparedStatement pStatement, String[] columns, T data)
@@ -697,8 +657,7 @@ public class SQLGenerator {
       if (fieldData instanceof String[]) {
         pStatement.setObject(
             index + 1,
-            ((String[]) fieldData).length > 0 ? Strings.join(((String[]) fieldData), ", ")
-                : " ");
+            ((String[]) fieldData).length > 0 ? Strings.join(((String[]) fieldData), ", ") : " ");
         continue;
       }
       if (fieldData instanceof SQLJson[] || fieldData instanceof SQLJson) {
@@ -720,20 +679,17 @@ public class SQLGenerator {
   }
 
   /**
-   * Mimics how a database update is completed, without the need to request the update
-   * from the database
+   * Mimics how a database update is completed, without the need to request the update from the
+   * database
    *
    * @param columnsToUpdate columns in the database that have been updated
    * @param updateData data that was used to update the database
    * @param localInfo data from the database, before the update
    * @return Updated version of the data, (should be in-sync with the database)
-   * @throws NoSuchFieldException Issue with reflection to collect data from the object
-   * instance
-   * @throws IllegalAccessException Issue with reflection to collect data from the object
-   * instance
+   * @throws NoSuchFieldException Issue with reflection to collect data from the object instance
+   * @throws IllegalAccessException Issue with reflection to collect data from the object instance
    */
-  protected static <T> T updateInfoLocal(String[] columnsToUpdate, T updateData,
-      T localInfo)
+  protected static <T> T updateInfoLocal(String[] columnsToUpdate, T updateData, T localInfo)
       throws NoSuchFieldException, IllegalAccessException {
     for (String column : columnsToUpdate) {
       Field field = updateData.getClass().getDeclaredField(column);

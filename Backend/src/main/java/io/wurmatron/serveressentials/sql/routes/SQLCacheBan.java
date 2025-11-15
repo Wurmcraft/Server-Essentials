@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -156,8 +155,7 @@ public class SQLCacheBan extends SQLCache {
       bansCache.put(ban.ban_id, new CacheBan(ban));
       return ban;
     } catch (Exception e) {
-      LOG.debug("Failed to create new ban for uuid '" + ban.uuid + "' (" + e.getMessage()
-          + ")");
+      LOG.debug("Failed to create new ban for uuid '" + ban.uuid + "' (" + e.getMessage() + ")");
       LOG.debug("Ban: " + GSON.toJson(ban));
     }
     return null;
@@ -177,8 +175,7 @@ public class SQLCacheBan extends SQLCache {
       invalidate(ban.ban_id);
       return true;
     } catch (Exception e) {
-      LOG.debug(
-          "Failed to update ban for uuid '" + ban.uuid + "' (" + e.getMessage() + ")");
+      LOG.debug("Failed to update ban for uuid '" + ban.uuid + "' (" + e.getMessage() + ")");
       LOG.debug("BAN: " + GSON.toJson(ban));
     }
     return false;
@@ -218,8 +215,7 @@ public class SQLCacheBan extends SQLCache {
    */
   public static void invalidate(String uuid) {
     uuidCache.remove(uuid);
-    LOG.debug(
-        "Ban's for '" + uuid + "' has been invalidated, will update on next request");
+    LOG.debug("Ban's for '" + uuid + "' has been invalidated, will update on next request");
   }
 
   /** Run periodically to cleanup the cache and remove expired / invalid entries */

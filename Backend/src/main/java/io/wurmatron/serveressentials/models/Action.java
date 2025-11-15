@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -23,8 +22,7 @@ public class Action {
    * @param actionData Json data related to the given action
    * @param timestamp Unix Timestamp for when the action occurred
    */
-  public Action(String relatedID, String host, String action, String actionData,
-      String timestamp) {
+  public Action(String relatedID, String host, String action, String actionData, String timestamp) {
     this.related_id = relatedID;
     this.host = host;
     this.action = action;
@@ -32,8 +30,7 @@ public class Action {
     this.timestamp = timestamp;
   }
 
-  public Action() {
-  }
+  public Action() {}
 
   @Override
   public String toString() {

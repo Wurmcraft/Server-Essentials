@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -55,8 +54,7 @@ public class SQLCacheUsername extends SQLCache {
       }
     } catch (Exception e) {
       LOG.debug(
-          "Failed to find account username with uuid '" + uuid + "' (" + e.getMessage()
-              + ")");
+          "Failed to find account username with uuid '" + uuid + "' (" + e.getMessage() + ")");
     }
     // uuid does not exist
     return null;
@@ -91,9 +89,7 @@ public class SQLCacheUsername extends SQLCache {
         return account.uuid;
       }
     } catch (Exception e) {
-      LOG.debug(
-          "Failed to find account with username '" + username + "' (" + e.getMessage()
-              + ")");
+      LOG.debug("Failed to find account with username '" + username + "' (" + e.getMessage() + ")");
     }
     // Username does not exist
     return null;
@@ -113,8 +109,7 @@ public class SQLCacheUsername extends SQLCache {
         uuidCache.remove(username);
       }
     }
-    LOG.debug("Username Entry '" + uuid
-        + " has been invalidated, will update on next request!");
+    LOG.debug("Username Entry '" + uuid + " has been invalidated, will update on next request!");
   }
 
   /** Cleanup the stored cache and look for expired entries */
@@ -132,11 +127,9 @@ public class SQLCacheUsername extends SQLCache {
       SQLCacheAccount.invalidate(uuid);
     }
     count++;
-    LOG.debug(
-        "Username Cache has been cleaned, " + count + " entries have been removed!");
+    LOG.debug("Username Cache has been cleaned, " + count + " entries have been removed!");
   }
 
   /** Removes the expired entries from the database */
-  public static void cleanupDB() {
-  }
+  public static void cleanupDB() {}
 }

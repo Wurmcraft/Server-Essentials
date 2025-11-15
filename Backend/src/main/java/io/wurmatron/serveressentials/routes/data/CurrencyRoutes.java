@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -29,43 +28,43 @@ public class CurrencyRoutes {
       description = "Create a new currency entry",
       tags = {"Currency"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = Currency.class)},
-          required = true,
-          description = "Information about the new currency"),
-      responses = {
-          @OpenApiResponse(
-              status = "201",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = Currency.class)},
-              description = "Currency was created successfully"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Information about the new currency"),
+      responses = {
+        @OpenApiResponse(
+            status = "201",
+            content = {@OpenApiContent(from = Currency.class)},
+            description = "Currency was created successfully"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/currency",
@@ -80,8 +79,7 @@ public class CurrencyRoutes {
             ctx.status(201).result(GSON.toJson(currency));
           }
         } catch (JsonParseException e) {
-          ctx.status(422)
-              .result(response("Invalid JSON", "Cannot parse body into Currency"));
+          ctx.status(422).result(response("Invalid JSON", "Cannot parse body into Currency"));
         }
       };
 
@@ -90,49 +88,49 @@ public class CurrencyRoutes {
       description = "Get an existing currency",
       tags = {"Currency"},
       queryParams = {
-          @OpenApiParam(
-              name = "display-name",
-              description = "Filter based on its partial or full display name"),
-          @OpenApiParam(
-              name = "global-worth",
-              description = "Filter based on the currency's global worth",
-              type = Double.class),
-          @OpenApiParam(
-              name = "global-sell-worth",
-              description = "Filter based on the currency's global sell worth",
-              type = Double.class),
-          @OpenApiParam(
-              name = "tax",
-              description = "Filter based on the currency's tax",
-              type = Double.class),
+        @OpenApiParam(
+            name = "display-name",
+            description = "Filter based on its partial or full display name"),
+        @OpenApiParam(
+            name = "global-worth",
+            description = "Filter based on the currency's global worth",
+            type = Double.class),
+        @OpenApiParam(
+            name = "global-sell-worth",
+            description = "Filter based on the currency's global sell worth",
+            type = Double.class),
+        @OpenApiParam(
+            name = "tax",
+            description = "Filter based on the currency's tax",
+            type = Double.class),
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = Currency[].class)},
-              description = "List of all the currencies that match the query filters"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Currency[].class)},
+            description = "List of all the currencies that match the query filters"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/currency", method = "GET")
   public static Handler get =
@@ -148,32 +146,32 @@ public class CurrencyRoutes {
       description = "Get an existing currency",
       tags = {"Currency"},
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = Currency.class)},
-              description = "Get the currency based on its id"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Currency.class)},
+            description = "Get the currency based on its id"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(path = "api/currency/{name}", method = "GET")
   public static Handler getName =
@@ -185,13 +183,11 @@ public class CurrencyRoutes {
             ctx.status(200).result(GSON.toJson(filterBasedOnPerms(ctx, currency)));
           } else {
             ctx.status(404)
-                .result(response("Not Found",
-                    "Currency with the provided ID does not exist"));
+                .result(response("Not Found", "Currency with the provided ID does not exist"));
           }
         } catch (NumberFormatException e) {
           ctx.status(400)
-              .result(
-                  response("Bad Request", "ID must be a number, greater or equal to 0"));
+              .result(response("Bad Request", "ID must be a number, greater or equal to 0"));
         }
       };
 
@@ -200,47 +196,47 @@ public class CurrencyRoutes {
       description = "Update an existing currency",
       tags = {"Currency"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = Currency.class)},
-          required = true,
-          description = "Information about the new currency"),
-      responses = {
-          @OpenApiResponse(
-              status = "200",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = Currency.class)},
-              description = "Currency was updated successfully"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Currency does not exist"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Information about the new currency"),
+      responses = {
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Currency.class)},
+            description = "Currency was updated successfully"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Currency does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/currency/{name}",
@@ -252,18 +248,15 @@ public class CurrencyRoutes {
         String name = ctx.pathParam("name");
         Currency currency = SQLCacheCurrency.get(name);
         if (!name.equals(currencyUpdate.display_name)) {
-          ctx.status(400)
-              .result(response("Name Mismatch", "Path and Body Name's dont match!"));
+          ctx.status(400).result(response("Name Mismatch", "Path and Body Name's dont match!"));
           return;
         }
         if (currency != null) {
           SQLCacheCurrency.update(currencyUpdate, SQLCacheCurrency.getColumns());
-          ctx.status(200)
-              .result(GSON.toJson(SQLCacheCurrency.get(currencyUpdate.display_name)));
+          ctx.status(200).result(GSON.toJson(SQLCacheCurrency.get(currencyUpdate.display_name)));
         } else {
           ctx.status(404)
-              .result(response("Not Found",
-                  "Currency with the provided Name does not exist"));
+              .result(response("Not Found", "Currency with the provided Name does not exist"));
         }
       };
 
@@ -272,47 +265,47 @@ public class CurrencyRoutes {
       description = "Delete an existing currency",
       tags = {"Currency"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = Currency.class)},
-          required = true,
-          description = "Information about the currency to be deleted"),
-      responses = {
-          @OpenApiResponse(
-              status = "200",
+          @OpenApiRequestBody(
               content = {@OpenApiContent(from = Currency.class)},
-              description = "Currency was deleted successfully"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse[].class)},
-              description = "One or more of the provided values, has failed to validate!"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "You are missing an authorization token"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Forbidden, Your provided auth token does not have permission to do this"),
-          @OpenApiResponse(
-              status = "404",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Currency does not exist"),
-          @OpenApiResponse(
-              status = "422",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Unable to process, due to invalid format / json"),
-          @OpenApiResponse(
-              status = "500",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "The server has encountered an error, please contact the server's admin to check the logs")
+              required = true,
+              description = "Information about the currency to be deleted"),
+      responses = {
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = Currency.class)},
+            description = "Currency was deleted successfully"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse[].class)},
+            description = "One or more of the provided values, has failed to validate!"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "You are missing an authorization token"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Forbidden, Your provided auth token does not have permission to do this"),
+        @OpenApiResponse(
+            status = "404",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Currency does not exist"),
+        @OpenApiResponse(
+            status = "422",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Unable to process, due to invalid format / json"),
+        @OpenApiResponse(
+            status = "500",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "The server has encountered an error, please contact the server's admin to check the logs")
       })
   @Route(
       path = "api/currency/{name}",
@@ -327,8 +320,7 @@ public class CurrencyRoutes {
           ctx.status(200).result(GSON.toJson(currency));
         } else {
           ctx.status(404)
-              .result(response("Not Found",
-                  "Currency with the provided Name does not exist"));
+              .result(response("Not Found", "Currency with the provided Name does not exist"));
         }
       };
 
@@ -343,16 +335,13 @@ public class CurrencyRoutes {
     List<MessageResponse> errors = new ArrayList<>();
     // Check DisplayName
     if (currency.display_name == null || currency.display_name.trim().isEmpty()) {
-      errors.add(
-          new MessageResponse("Bad Name", "Display Name must not be empty / null"));
+      errors.add(new MessageResponse("Bad Name", "Display Name must not be empty / null"));
     }
     if (currency.global_worth <= 0) {
-      errors.add(
-          new MessageResponse("Invalid Worth", "Global Worth must be greater than 0.00"));
+      errors.add(new MessageResponse("Invalid Worth", "Global Worth must be greater than 0.00"));
     }
     if (currency.sell_worth <= 0) {
-      errors.add(
-          new MessageResponse("Invalid Sell", "Global Sell must be greater than 0.00"));
+      errors.add(new MessageResponse("Invalid Sell", "Global Sell must be greater than 0.00"));
     }
     if (currency.tax < 0) {
       errors.add(new MessageResponse("Invalid Tax", "Tax must not be negative"));

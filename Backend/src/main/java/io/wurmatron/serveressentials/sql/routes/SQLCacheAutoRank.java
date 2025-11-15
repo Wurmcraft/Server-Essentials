@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -49,8 +48,7 @@ public class SQLCacheAutoRank extends SQLCache {
       }
     } catch (Exception e) {
       LOG.debug(
-          "Failed to find autorank with name '" + currentRank + "' + ('" + e.getMessage()
-              + "')");
+          "Failed to find autorank with name '" + currentRank + "' + ('" + e.getMessage() + "')");
     }
     // Auto Rank does not exist
     return null;
@@ -71,8 +69,7 @@ public class SQLCacheAutoRank extends SQLCache {
       return autoRank;
     } catch (Exception e) {
       LOG.debug(
-          "Failed to add autorank with name '" + autoRank.rank + "' (" + e.getMessage()
-              + ")");
+          "Failed to add autorank with name '" + autoRank.rank + "' (" + e.getMessage() + ")");
       LOG.debug("AutoRank: " + GSON.toJson(autoRank));
     }
     return null;
@@ -96,8 +93,7 @@ public class SQLCacheAutoRank extends SQLCache {
                   columnsToUpdate,
                   autoRank,
                   autoRankCache.get(autoRank.rank.toUpperCase()).autoRank);
-          autoRankCache.get(
-              autoRank.rank.toUpperCase()).lastSync = System.currentTimeMillis();
+          autoRankCache.get(autoRank.rank.toUpperCase()).lastSync = System.currentTimeMillis();
           return true;
         } catch (Exception e) {
           LOG.debug(
@@ -114,8 +110,7 @@ public class SQLCacheAutoRank extends SQLCache {
       }
     } catch (Exception e) {
       LOG.debug(
-          "Failed to update autorank with name '" + autoRank.rank + "' (" + e.getMessage()
-              + ")");
+          "Failed to update autorank with name '" + autoRank.rank + "' (" + e.getMessage() + ")");
       LOG.debug("AutoRank: " + GSON.toJson(autoRank));
     }
     return false;
@@ -162,8 +157,7 @@ public class SQLCacheAutoRank extends SQLCache {
    */
   public static void invalidate(String rank) {
     autoRankCache.remove(rank);
-    LOG.debug(
-        "Auto-Rank '" + rank + " has been invalidated, will update on next request!");
+    LOG.debug("Auto-Rank '" + rank + " has been invalidated, will update on next request!");
   }
 
   /**
@@ -174,8 +168,7 @@ public class SQLCacheAutoRank extends SQLCache {
    */
   public static void invalidate(long autorankID) {
     autoRankCache.remove(autorankID);
-    LOG.debug("AutoRank '" + autorankID
-        + "' has been invalidated, will update on next request!");
+    LOG.debug("AutoRank '" + autorankID + "' has been invalidated, will update on next request!");
   }
 
   /** Cleanup the stored cache and look for expired entries */
@@ -198,8 +191,7 @@ public class SQLCacheAutoRank extends SQLCache {
   }
 
   /** This should do nothing, its here to prevent an possible reflection issue */
-  public static void cleanupDB() {
-  }
+  public static void cleanupDB() {}
 
   /** Get the table columns beside the ID */
   public static String[] getColumns() {

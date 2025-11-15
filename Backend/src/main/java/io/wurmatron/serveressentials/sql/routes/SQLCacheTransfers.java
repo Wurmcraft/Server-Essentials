@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -52,8 +51,7 @@ public class SQLCacheTransfers extends SQLCache {
         return entry;
       }
     } catch (Exception e) {
-      LOG.debug("Failed to find transfer with id '" + transferID + "' (" + e.getMessage()
-          + ")");
+      LOG.debug("Failed to find transfer with id '" + transferID + "' (" + e.getMessage() + ")");
     }
     // Transfer Entry, does not exist
     return null;
@@ -86,13 +84,11 @@ public class SQLCacheTransfers extends SQLCache {
           cacheForUUID.add(entry.transfer_id + "");
           transferCache.put(entry.transfer_id, new CacheTransfer(entry));
         }
-        uuidTransferCache.put(uuid,
-            new CacheTransferUUID(cacheForUUID.toArray(new String[0])));
+        uuidTransferCache.put(uuid, new CacheTransferUUID(cacheForUUID.toArray(new String[0])));
         return entries;
       }
     } catch (Exception e) {
-      LOG.debug("Failed to find transfer id's for uuid '" + uuid + "' (" + e.getMessage()
-          + ")");
+      LOG.debug("Failed to find transfer id's for uuid '" + uuid + "' (" + e.getMessage() + ")");
     }
     return new ArrayList<>();
   }
@@ -149,8 +145,7 @@ public class SQLCacheTransfers extends SQLCache {
       return entry;
     } catch (Exception e) {
       LOG.debug(
-          "Failed to add transfer id with id '" + entry.transfer_id + "' ("
-              + e.getMessage() + ")");
+          "Failed to add transfer id with id '" + entry.transfer_id + "' (" + e.getMessage() + ")");
       LOG.debug("TransferEntry: " + GSON.toJson(entry));
     }
     return null;
@@ -166,13 +161,11 @@ public class SQLCacheTransfers extends SQLCache {
    */
   public static boolean update(TransferEntry entry, String[] columnsToUpdate) {
     try {
-      update(TRANSFERS_TABLE, columnsToUpdate, "transfer_id", entry.transfer_id + "",
-          entry);
+      update(TRANSFERS_TABLE, columnsToUpdate, "transfer_id", entry.transfer_id + "", entry);
       if (transferCache.containsKey(entry.transfer_id)) { // Exists in cache, updating
         transferCache.get(entry.transfer_id).transferEntry =
             updateInfoLocal(
-                columnsToUpdate, entry,
-                transferCache.get(entry.transfer_id).transferEntry);
+                columnsToUpdate, entry, transferCache.get(entry.transfer_id).transferEntry);
         transferCache.get(entry.transfer_id).lastSync = System.currentTimeMillis();
       } else { // Missing from cache
         transferCache.put(entry.transfer_id, new CacheTransfer(entry));
@@ -204,8 +197,7 @@ public class SQLCacheTransfers extends SQLCache {
       return true;
     } catch (Exception e) {
       LOG.debug(
-          "Failed to delete transferEntry with id '" + transferID + "' (" + e.getMessage()
-              + ")");
+          "Failed to delete transferEntry with id '" + transferID + "' (" + e.getMessage() + ")");
     }
     return false;
   }
@@ -219,8 +211,7 @@ public class SQLCacheTransfers extends SQLCache {
   public static void invalidate(long transferID) {
     transferCache.remove(transferID);
     LOG.debug(
-        "TransferEntry '" + transferID
-            + " has been invalidated, will update on next request!");
+        "TransferEntry '" + transferID + " has been invalidated, will update on next request!");
   }
 
   /**
@@ -235,7 +226,7 @@ public class SQLCacheTransfers extends SQLCache {
             + uuid
             + "' have been invalidated, will update on next request!");
     CacheTransferUUID uuidCache =
-        uuidTransferCache.getOrDefault(uuid, new CacheTransferUUID(new String[]{}));
+        uuidTransferCache.getOrDefault(uuid, new CacheTransferUUID(new String[] {}));
     for (String id : uuidCache.transferCacheEntrys) {
       invalidate(id);
     }
@@ -270,8 +261,7 @@ public class SQLCacheTransfers extends SQLCache {
       count += uuidTransferCache.get(uuid).transferCacheEntrys.length;
       invalidate(uuid);
     }
-    LOG.debug(
-        "Transfer Cache has been cleaned, " + count + " entries have been removed!");
+    LOG.debug("Transfer Cache has been cleaned, " + count + " entries have been removed!");
   }
 
   /** Removes the expired entries from the database */
@@ -290,8 +280,7 @@ public class SQLCacheTransfers extends SQLCache {
       LOG.debug("Transfer DB has been cleaned, " + count + " entries have been removed!");
       return;
     } catch (Exception e) {
-      LOG.debug("Failed to collect transfer entries from the database '(" + e.getMessage()
-          + ")");
+      LOG.debug("Failed to collect transfer entries from the database '(" + e.getMessage() + ")");
     }
     LOG.warn("Failed to cleanup DB table '" + TRANSFERS_TABLE + "'");
   }

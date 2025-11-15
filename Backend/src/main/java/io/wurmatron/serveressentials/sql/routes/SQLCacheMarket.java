@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -91,8 +90,7 @@ public class SQLCacheMarket extends SQLCache {
       return sqlEntries;
     } catch (Exception e) {
       LOG.debug(
-          "Failed to get Market Entries for serverID '" + serverID + "' ("
-              + e.getMessage() + ")");
+          "Failed to get Market Entries for serverID '" + serverID + "' (" + e.getMessage() + ")");
     }
     return null;
   }
@@ -159,9 +157,9 @@ public class SQLCacheMarket extends SQLCache {
       update(
           MARKET_TABLE,
           columnsToUpdate,
-          new String[]{"seller_uuid", "server_id", "timestamp", "market_type"},
-          new String[]{
-              entry.seller_uuid, entry.server_id, "" + entry.timestamp, entry.market_type
+          new String[] {"seller_uuid", "server_id", "timestamp", "market_type"},
+          new String[] {
+            entry.seller_uuid, entry.server_id, "" + entry.timestamp, entry.market_type
           },
           entry);
       // Update Cache
@@ -203,8 +201,8 @@ public class SQLCacheMarket extends SQLCache {
     try {
       delete(
           MARKET_TABLE,
-          new String[]{"server_id", "seller_uuid", "timestamp"},
-          new String[]{serverID, uuid, "" + timestamp});
+          new String[] {"server_id", "seller_uuid", "timestamp"},
+          new String[] {serverID, uuid, "" + timestamp});
       invalidate(serverID);
       return true;
     } catch (Exception e) {
@@ -256,6 +254,5 @@ public class SQLCacheMarket extends SQLCache {
 
   /** Run periodically to cleanup the db and remove expired / invalid entries */
   // TODO Implement Market Entry Timeout
-  public static void cleanupDB() {
-  }
+  public static void cleanupDB() {}
 }

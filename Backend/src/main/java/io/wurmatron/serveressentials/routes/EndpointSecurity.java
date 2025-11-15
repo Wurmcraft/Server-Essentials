@@ -1,6 +1,5 @@
 /**
- * This file is part of Server Essentials, licensed under the GNU General Public License
- * v3.0.
+ * This file is part of Server Essentials, licensed under the GNU General Public License v3.0.
  *
  * <p>Copyright (c) 2022 Wurmcraft
  */
@@ -46,8 +45,7 @@ public class EndpointSecurity {
   // Perm Cache
   public static NonBlockingHashMap<String, String> permCache = new NonBlockingHashMap<>();
   // Tokens / Security / Internal Managing
-  public static final File INTERNAL_DIR = new File(
-      SAVE_DIR + File.separator + "internal");
+  public static final File INTERNAL_DIR = new File(SAVE_DIR + File.separator + "internal");
   public static NonBlockingHashMap<String, ServerAuth> serverAuth = new NonBlockingHashMap<>();
 
   /**
@@ -73,9 +71,7 @@ public class EndpointSecurity {
     return Route.RestRoles.ANONYMOUS;
   }
 
-  /**
-   * Loads the server tokens, or create the empty file if it does not exist
-   */
+  /** Loads the server tokens, or create the empty file if it does not exist */
   private static void loadServerTokens() {
     File serverTokens = new File(INTERNAL_DIR + File.separator + "servers.txt");
     if (serverTokens.exists()) {
@@ -111,7 +107,9 @@ public class EndpointSecurity {
     File serverTokens = new File(INTERNAL_DIR + File.separator + "servers.txt");
     try {
       java.nio.file.Files.write(
-          serverTokens.toPath(), line.getBytes(), StandardOpenOption.WRITE,
+          serverTokens.toPath(),
+          line.getBytes(),
+          StandardOpenOption.WRITE,
           StandardOpenOption.APPEND);
       loadServerTokens();
     } catch (IOException e) {
@@ -119,9 +117,7 @@ public class EndpointSecurity {
     }
   }
 
-  /**
-   * Loads the pepper value for use within the DB and other encryption uses
-   */
+  /** Loads the pepper value for use within the DB and other encryption uses */
   private static void loadPepper() {
     try {
       File pepper = new File(INTERNAL_DIR + File.separator + "pepper.txt");
@@ -137,8 +133,7 @@ public class EndpointSecurity {
   }
 
   /**
-   * Used by javalin to verify that a request has the permission to access the specific
-   * route
+   * Used by javalin to verify that a request has the permission to access the specific route
    *
    * @param app instance of the routes handler
    */
@@ -162,30 +157,30 @@ public class EndpointSecurity {
           "Validates credentials and returns a valid token to be used for authentication throughout the api",
       tags = {"Security"},
       requestBody =
-      @OpenApiRequestBody(
-          content = {@OpenApiContent(from = LoginEntry.class)},
-          required = true,
-          description =
-              "Information required for login, slightly different requirements per type"),
+          @OpenApiRequestBody(
+              content = {@OpenApiContent(from = LoginEntry.class)},
+              required = true,
+              description =
+                  "Information required for login, slightly different requirements per type"),
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = AuthUser.class)},
-              description =
-                  "User you logged in as, along with its permissions, expiration and more information"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Invalid Json / Request"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Invalid Credentials"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Invalid Credentials, Same as 401 however its details are more precise, such as lock account or already logged in"),
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = AuthUser.class)},
+            description =
+                "User you logged in as, along with its permissions, expiration and more information"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Invalid Json / Request"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Invalid Credentials"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Invalid Credentials, Same as 401 however its details are more precise, such as lock account or already logged in"),
       })
   @Route(
       path = "api/login",
@@ -212,12 +207,10 @@ public class EndpointSecurity {
                   ctx.status(200).result(GSON.toJson(authUser));
                 } else {
                   ctx.status(401)
-                      .result(response("Bad Credentials",
-                          "Invalid User / Password Combination"));
+                      .result(response("Bad Credentials", "Invalid User / Password Combination"));
                 }
               } else {
-                ctx.status(401)
-                    .result(response("Bad Credentials", "Authentication Failed"));
+                ctx.status(401).result(response("Bad Credentials", "Authentication Failed"));
               }
             } else if (authUser.type.equalsIgnoreCase("SERVER")) {
               if (authUser.token != null
@@ -235,26 +228,23 @@ public class EndpointSecurity {
                   authUser.token = serverToken;
                   authUser.key = "";
                   authUser.type = "SERVER";
-                  authUser.perms = new String[]{"*"};
+                  authUser.perms = new String[] {"*"};
                   authUser.expiration = Instant.now().toEpochMilli() + SERVER_TIMEOUT;
                   authTokens.put(serverToken, authUser); // TODO Delete Expired Tokens
                   ctx.status(200).result(GSON.toJson(authUser));
                 } else {
                   ctx.status(403)
-                      .result(response("Bad Credentials",
-                          "Invalid ID / Key / Token Combination"));
+                      .result(response("Bad Credentials", "Invalid ID / Key / Token Combination"));
                 }
               } else {
                 ctx.status(403)
-                    .result(response("Bad Credentials",
-                        "Invalid ID / Key / Token Combination"));
+                    .result(response("Bad Credentials", "Invalid ID / Key / Token Combination"));
               }
             }
           }
         } catch (JsonParseException e) {
           ctx.status(400)
-              .result(
-                  response("Bad Request", "Cannot convert body to Authentication Login"));
+              .result(response("Bad Request", "Cannot convert body to Authentication Login"));
         }
       };
 
@@ -264,74 +254,72 @@ public class EndpointSecurity {
           "Removes a auth token from the cache, allowing the account to be logged in again",
       tags = {"Security"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = AuthUser.class)},
-              description =
-                  "User you logged out, along with its permissions, expiration and more information"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Invalid Json / Request"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Invalid Credentials"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Invalid Credentials, Same as 401 however its details are more precise, such as lock account or already logged in"),
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = AuthUser.class)},
+            description =
+                "User you logged out, along with its permissions, expiration and more information"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Invalid Json / Request"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Invalid Credentials"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Invalid Credentials, Same as 401 however its details are more precise, such as lock account or already logged in"),
       })
   // TODO Implement
   @Route(
       path = "api/logout",
       method = "PUT",
       roles = {Route.RestRoles.USER, Route.RestRoles.SERVER})
-  public static Handler logout = ctx -> {
-  };
+  public static Handler logout = ctx -> {};
 
   @OpenApi(
       summary = "Extends permissions / timeout for token",
       description = "Extends permissions / timeout for token",
       tags = {"Security"},
       headers = {
-          @OpenApiParam(
-              name = "Authorization",
-              description = "Authorization Token to used for authentication within the rest API",
-              required = true)
+        @OpenApiParam(
+            name = "Authorization",
+            description = "Authorization Token to used for authentication within the rest API",
+            required = true)
       },
       responses = {
-          @OpenApiResponse(
-              status = "200",
-              content = {@OpenApiContent(from = AuthUser.class)},
-              description = "Updated Token / Account Information"),
-          @OpenApiResponse(
-              status = "400",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Invalid Json / Request"),
-          @OpenApiResponse(
-              status = "401",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description = "Invalid Credentials"),
-          @OpenApiResponse(
-              status = "403",
-              content = {@OpenApiContent(from = MessageResponse.class)},
-              description =
-                  "Invalid Credentials, Same as 401 however its details are more precise, such as lock account or already logged in"),
+        @OpenApiResponse(
+            status = "200",
+            content = {@OpenApiContent(from = AuthUser.class)},
+            description = "Updated Token / Account Information"),
+        @OpenApiResponse(
+            status = "400",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Invalid Json / Request"),
+        @OpenApiResponse(
+            status = "401",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description = "Invalid Credentials"),
+        @OpenApiResponse(
+            status = "403",
+            content = {@OpenApiContent(from = MessageResponse.class)},
+            description =
+                "Invalid Credentials, Same as 401 however its details are more precise, such as lock account or already logged in"),
       })
   @Route(
       path = "api/reauth",
       method = "POST",
       roles = {Route.RestRoles.USER, Route.RestRoles.SERVER})
-  public static Handler reauth = ctx -> {
-  };
+  public static Handler reauth = ctx -> {};
 
   /**
    * Checks if the request is a possible valid login request, before checking for login
@@ -360,20 +348,16 @@ public class EndpointSecurity {
     // Validate key (for SERVER only)
     if (user.type.equalsIgnoreCase("SERVER") && user.key.trim().isEmpty()) {
       ctx.status(400)
-          .result(response("Bad Request",
-              "Server's must provide there key upon login request"));
+          .result(response("Bad Request", "Server's must provide there key upon login request"));
     }
     return true;
   }
 
   public static final String[] POSSIBLE_VALUES = {
-      "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q",
-      "r", "s",
-      "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "J", "K",
-      "L", "M",
-      "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5",
-      "6", "7",
-      "8", "9"
+    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
+    "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M",
+    "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7",
+    "8", "9"
   };
 
   /**
