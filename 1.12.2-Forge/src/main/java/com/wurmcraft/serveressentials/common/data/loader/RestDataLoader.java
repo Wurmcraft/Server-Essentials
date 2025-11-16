@@ -181,26 +181,23 @@ public class RestDataLoader extends FileDataLoader {
   private void handleResponseError(RequestGenerator.HttpResponse response) {
     // Client Error
     if (response.status >= 400 && response.status <= 499) {
+      if(response.status == 404) { // 404 is empty, no message
+        return;
+      }
       try {
         MessageResponse[] errors = GSON.fromJson(response.response, MessageResponse[].class);
-        LOG.debug("Error Status: " + response.status);
+          LOG.debug("Error Status: {}", response.status);
         for (MessageResponse error : errors) {
-          LOG.debug("Error: " + error.title + " (" + error.message + ")");
+            LOG.debug("Error: {} ({})", error.title, error.message);
         }
       } catch (Exception e) {
         // Check for non-array (rarer api response)
         try {
             MessageResponse error = GSON.fromJson(response.response, MessageResponse.class);
-            LOG.debug("Error (" + response.status + ") : "  + error.title + " (" + error.message + ")");
+            LOG.debug("Error ({}) : {} ({})", response.status, error.title, error.message);
         } catch (Exception f) {
-        f.printStackTrace();
-        LOG.warn(
-            "Failed to parse an error from an endpoint  '"
-                + response.status
-                + "' ("
-                + f.getMessage()
-                + ")");
-        LOG.warn("Response: " + response.response);
+            LOG.warn("Failed to parse an error from an endpoint  '{}' ({})", response.status, f.getMessage());
+            LOG.warn("Response: {}", response.response);
       }
         }
     }

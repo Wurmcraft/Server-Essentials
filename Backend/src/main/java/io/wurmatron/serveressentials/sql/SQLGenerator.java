@@ -8,6 +8,7 @@ package io.wurmatron.serveressentials.sql;
 import static io.wurmatron.serveressentials.ServerEssentialsRest.GSON;
 import static io.wurmatron.serveressentials.ServerEssentialsRest.LOG;
 
+import io.wurmatron.serveressentials.ServerEssentialsRest;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -130,7 +131,7 @@ public class SQLGenerator {
     } else {
       statement.setString(1, data);
     }
-    LOG.trace("GET: " + statement);
+    log(statement);
     return to(statement.executeQuery(), dataType, true);
   }
 
@@ -156,7 +157,7 @@ public class SQLGenerator {
     if (connection.databaseType.equalsIgnoreCase("mysql")) {
       sql = "SELECT " + columns + " FROM '" + table + "'";
     } else if (connection.databaseType.equalsIgnoreCase("postgress")) {
-      sql = "SELECT " + columns + " FROM " + table + "";
+      sql = "SELECT " + columns + " FROM " + table;
     }
     if (!key.isEmpty() && !data.isEmpty()) {
       sql = sql + " WHERE " + key + "=?;";
@@ -165,7 +166,7 @@ public class SQLGenerator {
     if (sql.contains("?")) {
       statement.setString(1, data);
     }
-    LOG.trace("GET ARR: " + statement);
+    log(statement);
     return toArray(statement.executeQuery(), dataType);
   }
 
@@ -196,7 +197,7 @@ public class SQLGenerator {
     for (int x = 1; x < key.length + 1; x++) {
       statement.setString(x, data[x - 1]);
     }
-    LOG.trace("GET ARR: " + statement);
+    log(statement);
     return toArray(statement.executeQuery(), dataType);
   }
 
@@ -204,9 +205,7 @@ public class SQLGenerator {
       String columns, String table, String[] key, String[] data, T dataType, Class<?>[] types)
       throws SQLException, IllegalAccessException, InstantiationException {
     StringBuilder sql = new StringBuilder("SELECT " + columns + " FROM " + table + " WHERE ");
-    for (int x = 0; x < key.length; x++) {
-      sql.append(key[x]).append("=? ").append("AND ");
-    }
+    for (String s : key) sql.append(s).append("=? ").append("AND ");
     String slq = sql.substring(0, sql.length() - 4);
     PreparedStatement statement = connection.createPrepared(slq + ";");
     for (int x = 1; x < key.length + 1; x++) {
@@ -216,7 +215,7 @@ public class SQLGenerator {
         statement.setInt(x, Integer.parseInt(data[x - 1]));
       }
     }
-    LOG.trace("GET ARR: " + statement);
+    log((statement));
     return toArray(statement.executeQuery(), dataType);
   }
 
@@ -235,7 +234,7 @@ public class SQLGenerator {
   protected static <T> List<T> getAll(String columns, String table, T dataType)
       throws SQLException, IllegalAccessException, InstantiationException {
     PreparedStatement statement = connection.createPrepared("SELECT " + columns + " FROM " + table);
-    LOG.trace("GET ALL: " + statement);
+    log(statement);
     return toArray(statement.executeQuery(), dataType);
   }
 
@@ -279,7 +278,7 @@ public class SQLGenerator {
     PreparedStatement statement =
         connection.createPrepared(sql, generatedKey ? Statement.RETURN_GENERATED_KEYS : 0);
     statement = addArguments(statement, columns, data);
-    LOG.info("INSERT: " + statement);
+    log(statement);
     statement.executeUpdate();
     if (generatedKey) {
       ResultSet set = statement.getGeneratedKeys();
@@ -336,7 +335,7 @@ public class SQLGenerator {
     } else {
       statement.setString(columnsToUpdate.length + 1, value);
     }
-    LOG.trace("UPDATE: " + statement);
+    log(statement);
     return statement.execute();
   }
 
@@ -376,16 +375,14 @@ public class SQLGenerator {
               + " WHERE ";
     }
     StringBuilder sqlBuilder = new StringBuilder(sql);
-    for (int x = 0; x < key.length; x++) {
-      sqlBuilder.append(key[x]).append("=? ").append("AND ");
-    }
+    for (String s : key) sqlBuilder.append(s).append("=? ").append("AND ");
     String slq = sqlBuilder.substring(0, sqlBuilder.length() - 4);
     PreparedStatement statement = connection.createPrepared(slq + ";");
     addArguments(statement, columnsToUpdate, data);
     for (int x = 1; x < key.length + 1; x++) {
       statement.setString(columnsToUpdate.length + x, value[x - 1]);
     }
-    LOG.trace("UPDATE: " + statement);
+    log(statement);
     statement.execute();
     return true;
   }
@@ -415,9 +412,7 @@ public class SQLGenerator {
               + " WHERE ";
     }
     StringBuilder sqlBuilder = new StringBuilder(sql);
-    for (int x = 0; x < key.length; x++) {
-      sqlBuilder.append(key[x]).append("=? ").append("AND ");
-    }
+    for (String s : key) sqlBuilder.append(s).append("=? ").append("AND ");
     String slq = sqlBuilder.substring(0, sqlBuilder.length() - 4);
     PreparedStatement statement = connection.createPrepared(slq + ";");
     addArguments(statement, columnsToUpdate, data);
@@ -429,7 +424,7 @@ public class SQLGenerator {
         statement.setInt(columnsToUpdate.length + x, Integer.parseInt(value[x - 1]));
       }
     }
-    LOG.trace("UPDATE: " + statement);
+    log(statement);
     statement.execute();
     return true;
   }
@@ -455,7 +450,7 @@ public class SQLGenerator {
     } else {
       statement.setString(1, value);
     }
-    LOG.trace("DELETE: " + statement);
+    log(statement);
     return statement.execute();
   }
 
@@ -479,7 +474,7 @@ public class SQLGenerator {
     for (int x = 1; x < key.length + 1; x++) {
       statement.setString(x, value[x - 1]);
     }
-    LOG.trace("DELETE: " + statement);
+    log(statement);
     return statement.execute();
   }
 
@@ -552,7 +547,7 @@ public class SQLGenerator {
             field.set(dataType, obj);
           }
         } catch (Exception e) {
-          LOG.warn("Failed to convert! (" + e.getMessage() + ") '" + field.getName() + "'");
+          LOG.warn("Failed to convert! ({}) '{}'", e.getMessage(), field.getName());
         }
       }
       return dataType;
@@ -570,7 +565,7 @@ public class SQLGenerator {
     try {
       fieldType.asSubclass(SQLJson.class);
       return true;
-    } catch (Exception e) {
+    } catch (Exception e) { // Will return false, no point printing error, as it don't matter
     }
     return false;
   }
@@ -696,5 +691,10 @@ public class SQLGenerator {
       field.set(localInfo, field.get(updateData));
     }
     return localInfo;
+  }
+
+  private static void log(PreparedStatement statement) {
+    if (ServerEssentialsRest.config.general.testing) LOG.debug("SQL: {}", statement);
+    else LOG.trace("SQL: {}", statement);
   }
 }
