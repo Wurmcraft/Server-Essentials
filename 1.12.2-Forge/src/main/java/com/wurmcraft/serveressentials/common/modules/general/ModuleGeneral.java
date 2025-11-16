@@ -83,15 +83,24 @@ public class ModuleGeneral {
           && ((ConfigSecurity) SECore.moduleConfigs.get("SECURITY")).lockdownEnabled) {
         status = "Lockdown";
       }
+      return new ServerStatus(
+              ServerEssentials.config.general.serverID,
+              computeDelay(),
+              Instant.now().getEpochSecond(),
+              playersData[0],
+              playersData[1],
+              status,
+              "{}");
+    } else {
+      return new ServerStatus(
+              ServerEssentials.config.general.serverID,
+              -1L,
+              Instant.now().getEpochSecond(),
+              playersData[0],
+              playersData[1],
+              status,
+              "{}");
     }
-    return new ServerStatus(
-        ServerEssentials.config.general.serverID,
-        computeDelay(),
-        Instant.now().getEpochSecond(),
-        playersData[0],
-        playersData[1],
-        status,
-        "{}");
   }
 
   private static long computeDelay() {
