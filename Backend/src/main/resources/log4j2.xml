@@ -15,7 +15,15 @@
                 <OnStartupTriggeringPolicy/>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
-            <DefaultRolloverStrategy max="20"/>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${baseDir}" maxDepth="2">
+                    <IfAny>
+                        <IfAccumulatedFileCount exceeds="50" />
+                        <IfLastModified age="P21D" />
+                        <IfAccumulatedFileSize  exceeds="100MB" />
+                    </IfAny>
+                </Delete>
+            </DefaultRolloverStrategy>
         </RollingFile>
     </Appenders>
 
