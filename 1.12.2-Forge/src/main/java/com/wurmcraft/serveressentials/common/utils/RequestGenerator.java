@@ -100,9 +100,7 @@ public class RequestGenerator {
           new BufferedReader(new InputStreamReader(http.getInputStream()))
               .lines()
               .collect(Collectors.joining("\n"));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    } catch (Exception ignored) {} // Handled via response codes, sometimes there isn't any data, like with 404's
     return new HttpResponse(http.getResponseCode(), http.getHeaderFields(), httpBody);
   }
 

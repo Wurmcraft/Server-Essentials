@@ -156,8 +156,15 @@ public class PlayerChatEvent {
   }
 
   private boolean isMuted(Account account) {
-    if (account == null || account.mute_time == null) {
+    if (account == null) {
       LOG.warn("Player tried to talk but was unable to, Unable to correct!");
+      // TODO Try to pull updated user data
+      return false;
+    }
+    if(account.mute_time == null) {
+      account.mute_time = 0L;
+      SECore.dataLoader.update(DataType.ACCOUNT, account.uuid, account);
+      LOG.debug("User '{}' ({})'s mute-time was set to null, defaulting to 0", account.username, account.uuid);
       return false;
     }
     if (account.mute_time < Instant.EPOCH.getEpochSecond()) {

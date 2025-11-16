@@ -83,7 +83,25 @@ public class Account {
     this.system_perms = systemPerms;
   }
 
-  public Account() {}
+  // Empty values are required due to GSON treating empty values as null
+  public Account() {
+    this.uuid = "invalid";
+    this.username = "invalid";
+    this.rank = new String[0];
+    this.perms = new String[0];
+    this.perks = new String[0];
+    this.lang = "";
+    this.muted = false;
+    this.mute_time = 0L;
+    this.display_name = "";
+    this.discord_id = "";
+    this.tracked_time = new ServerTime[0];
+    this.wallet = new BankAccount[0];
+    this.reward_points = 0;
+    this.password_hash = "";
+    this.password_salt = "";
+    this.system_perms = new String[0];
+  }
 
   @Override
   public Account clone() {
