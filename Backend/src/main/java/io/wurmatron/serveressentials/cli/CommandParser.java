@@ -49,9 +49,9 @@ public class CommandParser {
 
   public static void handle(String line) {
     line = line.toLowerCase();
-    if (line.startsWith("stop")) {
+    if (line.startsWith("stop") || line.startsWith("quit")) {
       stop(line.split(" "));
-    } else if (line.startsWith("help")) {
+    } else if (line.startsWith("help") || line.startsWith("?")) {
       help();
     } else if (line.startsWith("add server") || line.startsWith("addserver")) {
       addServer();
