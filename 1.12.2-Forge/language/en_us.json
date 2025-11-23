@@ -259,5 +259,11 @@
   "COMMAND_ECO_ADD": "&bYour balance has been given {@AMOUNT@} for {@CURRENCY@}",
   "COMMAND_ECO_ADD_OTHER": "&b{@PLAYER@}'s balance has been given {@AMOUNT@} for {@CURRENCY@}",
   "COMMAND_ECO_CONSUME": "&bYour balance has lost {@AMOUNT@} for {@CURRENCY@}",
-  "COMMAND_ECO_CONSUME_OTHER": "&b{@PLAYER@}'s balance has lost {@AMOUNT@} for {@CURRENCY@}"
+  "COMMAND_ECO_CONSUME_OTHER": "&b{@PLAYER@}'s balance has lost {@AMOUNT@} for {@CURRENCY@}",
+  "MARKET_SELLER": "&bSeller: {@SELLER@}",
+  "MARKET_COST": "&bCost: {@COST@}",
+  "MARKET_SERVER": "&bServer: {@SERVER_ID@}",
+  "MARKET_BALANCE": "&bBalance: {@Amount@}",
+  "MARKET_PAGE": "&bPage {@PAGE@}",
+  "MARKET_LISTINGS": "&b-=- Listings -=-"
 }

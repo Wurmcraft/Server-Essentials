@@ -1,7 +1,9 @@
 package com.wurmcraft.serveressentials.common.modules.general.utils.inventory;
 
+import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.MarketEntry;
 import com.wurmcraft.serveressentials.common.modules.economy.MarketHelper;
+import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryBasic;
@@ -10,6 +12,7 @@ import net.minecraft.item.ItemStack;
 public class ListingsInventory extends InventoryBasic {
 
   public EntityPlayer player;
+  public Language lang;
   public List<MarketEntry> playerListings = null;
 
   public ListingsInventory(EntityPlayer player) {
@@ -17,6 +20,7 @@ public class ListingsInventory extends InventoryBasic {
     this.player = player;
     playerListings =
         MarketHelper.getPlayerListings(player.getGameProfile().getId().toString(), false);
+    lang = PlayerUtils.getLang(player);
   }
 
   public ListingsInventory(EntityPlayer player, List<MarketEntry> listings) {
@@ -29,7 +33,7 @@ public class ListingsInventory extends InventoryBasic {
   public ItemStack getStackInSlot(int index) {
     if (playerListings.size() > index) {
       return MarketHelper.getShopDisplayItem(
-          playerListings.get(index), false); // TODO Global Listings
+          playerListings.get(index), lang, false); // TODO Global Listings
     }
     return ItemStack.EMPTY;
   }

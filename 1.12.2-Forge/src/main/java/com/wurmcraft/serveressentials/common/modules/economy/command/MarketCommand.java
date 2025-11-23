@@ -6,7 +6,6 @@ import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.common.modules.general.utils.inventory.ShopInventory;
 
-// TODO Implement
 @ModuleCommand(
     module = "Economy",
     name = "Market",

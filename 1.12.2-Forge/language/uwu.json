@@ -259,5 +259,11 @@
   "COMMAND_ECO_ADD": "&bYour bawance  has been given {@AMOUNT@} for {@CURRENCY@}",
   "COMMAND_ECO_ADD_OTHER": "&b{@PLAYER@}'s bawance has been given {@AMOUNT@} for {@CURRENCY@}",
   "COMMAND_ECO_CONSUME": "&bYour bawance  has wost {@AMOUNT@} for {@CURRENCY@}",
-  "COMMAND_ECO_CONSUME_OTHER": "&b{@PLAYER@}'s bawance  has wost {@AMOUNT@} for {@CURRENCY@}"
+  "COMMAND_ECO_CONSUME_OTHER": "&b{@PLAYER@}'s bawance  has wost {@AMOUNT@} for {@CURRENCY@}",
+  "MARKET_SELLER": "&bSellru: {@SELLER@}",
+  "MARKET_COST": "&bCosu: {@COST@}",
+  "MARKET_SERVER": "&bSevru: {@SERVER_ID@}",
+  "MARKET_BALANCE": "&bBulnceu: {@Amount@}",
+  "MARKET_PAGE": "&bPueu {@PAGE@}",
+  "MARKET_LISTINGS": "&b-=- Lisuru -=-"
 }

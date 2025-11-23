@@ -5,6 +5,7 @@ import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.Account;
+import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.api.models.account.ServerTime;
 import com.wurmcraft.serveressentials.api.models.local.Home;
@@ -14,6 +15,7 @@ import com.wurmcraft.serveressentials.common.command.RankUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
+import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
 import com.wurmcraft.serveressentials.common.modules.general.ConfigGeneral;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -242,5 +244,21 @@ public class PlayerUtils {
       }
     }
     return playtime;
+  }
+
+  public static Language getLang(EntityPlayer player) {
+    try {
+      return SECore.dataLoader.get(
+          DataType.LANGUAGE,
+          SECore.dataLoader.get(
+                  DataType.ACCOUNT, player.getGameProfile().getId().toString(), new Account())
+              .lang,
+          new Language());
+    } catch (Exception ignored) {
+    }
+    return SECore.dataLoader.get(
+        DataType.LANGUAGE,
+        ((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang,
+        new Language());
   }
 }

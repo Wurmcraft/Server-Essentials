@@ -282,4 +282,12 @@ public class Language {
   public String PROTECT_PLACE;
   public String PROTECT_CLAIM_ENTRY;
   public String PROTECT_CLAIM_EXIT;
+
+  // Market
+  public String MARKET_SELLER;
+  public String MARKET_COST;
+  public String MARKET_SERVER;
+  public String MARKET_BALANCE;
+  public String MARKET_PAGE;
+  public String MARKET_LISTINGS;
 }

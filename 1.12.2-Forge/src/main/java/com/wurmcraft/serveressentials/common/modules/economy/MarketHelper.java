@@ -1,6 +1,7 @@
 package com.wurmcraft.serveressentials.common.modules.economy;
 
 import com.wurmcraft.serveressentials.ServerEssentials;
+import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.MarketEntry;
 import com.wurmcraft.serveressentials.common.data.ConfigLoader;
 import java.io.File;
@@ -56,19 +57,20 @@ public class MarketHelper {
     return stack;
   }
 
-  // TODO Lang
-  public static ItemStack getShopDisplayItem(MarketEntry entry, boolean global) {
+  public static ItemStack getShopDisplayItem(MarketEntry entry, Language lang, boolean global) {
     ItemStack item = getStackForMarketEntry(entry);
-    addTooltip(item, "Cost: " + entry.currency_amount);
+    addTooltip(item, lang.MARKET_COST.replace("\\{@COST@}", "" + entry.currency_amount));
     try {
       addTooltip(
           item,
-          "Seller: " + UsernameCache.getLastKnownUsername(UUID.fromString(entry.seller_uuid)));
+          lang.MARKET_SELLER.replace(
+              "\\{@SELLER@}",
+              UsernameCache.getLastKnownUsername(UUID.fromString(entry.seller_uuid))));
     } catch (Exception e) {
-      item = addTooltip(item, "Seller: <Error>");
+      addTooltip(item, lang.MARKET_SELLER.replace("\\{@SELLER@}", "<Error>"));
     }
     if (global) {
-      addTooltip(item, "Server: " + entry.server_id);
+      addTooltip(item, lang.MARKET_SERVER.replace("\\{@SERVER@}", entry.server_id));
     }
     return item;
   }

@@ -15,7 +15,6 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 
-// TODO Implement
 public class ShopInventory extends InventoryBasic {
 
   public EntityPlayer player;
@@ -105,7 +104,7 @@ public class ShopInventory extends InventoryBasic {
     }
     // TODO Multi Page Support
     if ((index - 9) < entries.size()) {
-      return MarketHelper.getShopDisplayItem(entries.get(index - 9), global);
+      return MarketHelper.getShopDisplayItem(entries.get(index - 9), lang, global);
     }
     return ItemStack.EMPTY;
   }
@@ -125,21 +124,19 @@ public class ShopInventory extends InventoryBasic {
     items[2] = EMPTY;
     ItemStack balance = new ItemStack(Items.DIAMOND, 1, 0);
     balance.setStackDisplayName(
-        "Balance: %BAL%"
-            .replace(
-                "%BAL%",
-                String.format(
-                    "%.2f",
-                    EcoUtils.balance(
-                        PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString()),
-                        ((ConfigEconomy) SECore.moduleConfigs.get("ECONOMY"))
-                            .serverCurrency)))); // TODO Lang
+        lang.MARKET_BALANCE.replace(
+            "\\{@Amount@}",
+            String.format(
+                "%.2f",
+                EcoUtils.balance(
+                    PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString()),
+                    ((ConfigEconomy) SECore.moduleConfigs.get("ECONOMY")).serverCurrency))));
     items[3] = balance;
     ItemStack pageNum = new ItemStack(Items.PAPER, 1, 0);
-    pageNum.setStackDisplayName("Page: " + page); // TODO Lang
+    pageNum.setStackDisplayName(lang.MARKET_PAGE.replace("\\{@PAGE@}", "" + page));
     items[4] = pageNum;
     ItemStack idk = new ItemStack(Items.GOLDEN_APPLE, 1, 1);
-    idk.setStackDisplayName("Listings"); // TODO Lang
+    idk.setStackDisplayName(lang.MARKET_LISTINGS);
     items[5] = idk;
     items[6] = EMPTY;
     ItemStack next = new ItemStack(Blocks.STAINED_GLASS_PANE, 1, 2);
