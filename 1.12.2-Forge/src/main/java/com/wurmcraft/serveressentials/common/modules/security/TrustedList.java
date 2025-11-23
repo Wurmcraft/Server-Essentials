@@ -13,17 +13,13 @@ public class TrustedList {
   public static void load() {
     try {
       String url = URLUtils.get(SecurityEvents.config.trustedList);
-      for (String line : url.split("\n")) {
-        trustedUsers.add(line.trim());
-      }
+      for (String line : url.split("\n")) trustedUsers.add(line.trim());
     } catch (Exception e) {
       ServerEssentials.LOG.warn(
-          "Unable to load trusted users from '"
-              + SecurityEvents.config.trustedList
-              + "' verify the url exists and is in the correct format.");
+          "Unable to load trusted users from '{}' verify the url exists and is in the correct format. ({})",
+          SecurityEvents.config.trustedList,
+          e.getMessage());
     }
-    if (trustedUsers.size() == 0) {
-      ServerEssentials.LOG.warn("Trusted User's list is empty");
-    }
+    if (trustedUsers.isEmpty()) ServerEssentials.LOG.warn("Trusted User's list is empty");
   }
 }

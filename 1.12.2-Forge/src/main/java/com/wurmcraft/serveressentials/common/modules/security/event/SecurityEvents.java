@@ -171,7 +171,7 @@ public class SecurityEvents {
                 new TextComponentString(
                     lang.SECURITY_BLACKLIST.replaceAll("%MOD%", blacklist.toUpperCase())));
             ServerEssentials.LOG.warn(
-                player.getName() + "tried to connect with the mod '" + blacklist + "'");
+                "{}tried to connect with the mod '{}'", player.getName(), blacklist);
           }
         }
       }

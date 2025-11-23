@@ -1,5 +1,6 @@
 package com.wurmcraft.serveressentials.common.modules.autorank;
 
+import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.loading.Module;
 import com.wurmcraft.serveressentials.api.models.AutoRank;
@@ -14,12 +15,11 @@ public class ModuleAutorank {
   public void setup() {
     try {
       if (SECore.dataLoader.getFromKey(DataType.AUTORANK, new AutoRank()) == null
-          || (SECore.dataLoader.getFromKey(DataLoader.DataType.AUTORANK, new AutoRank()).size()
-              <= 0)) {
+          || (SECore.dataLoader.getFromKey(DataType.AUTORANK, new AutoRank()).isEmpty())) {
         setupDefaultRankups();
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      ServerEssentials.LOG.warn("Failed to create default ranks! ({})", e.getMessage());
     }
     MinecraftForge.EVENT_BUS.register(new RankupEvents());
   }

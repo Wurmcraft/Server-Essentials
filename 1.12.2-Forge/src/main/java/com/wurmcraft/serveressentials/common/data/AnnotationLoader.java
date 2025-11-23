@@ -27,17 +27,14 @@ public class AnnotationLoader {
           Object instance = clazz.newInstance();
           loadedModules.add(instance);
         } catch (Exception e) {
-          e.printStackTrace();
           ServerEssentials.LOG.error(
-              "Failed to create an instance of module ' "
-                  + clazz.getDeclaredAnnotation(Module.class).name()
-                  + "'");
+              "Failed to create an instance of module ' {}' ({})",
+              clazz.getDeclaredAnnotation(Module.class).name(),
+              e.getMessage());
         }
       } else {
         ServerEssentials.LOG.info(
-            "Module '"
-                + clazz.getDeclaredAnnotation(Module.class).name()
-                + "' has not been loaded!");
+            "Module '{}' has not been loaded!", clazz.getDeclaredAnnotation(Module.class).name());
       }
     }
     return loadedModules;
@@ -75,11 +72,10 @@ public class AnnotationLoader {
         try {
           return clazz.newInstance();
         } catch (Exception e) {
-          e.printStackTrace();
           ServerEssentials.LOG.error(
-              "Failed to initialize config for module '"
-                  + clazz.getDeclaredAnnotation(ModuleConfig.class).module()
-                  + "'");
+              "Failed to initialize config for module '{}' ({})",
+              clazz.getDeclaredAnnotation(ModuleConfig.class).module(),
+              e.getMessage());
         }
       }
     }
@@ -170,12 +166,10 @@ public class AnnotationLoader {
     for (Method method : clazz.getDeclaredMethods()) {
       if (method.isAnnotationPresent(Command.class)) {
         hasMethod = true;
+        break;
       }
     }
-    if (!hasMethod) {
-      return false;
-    }
-    return true;
+    return hasMethod;
   }
 
   public static List<Class<?>> loadCommands() {
@@ -187,11 +181,9 @@ public class AnnotationLoader {
         loadedCommands.add(clazz);
       } else {
         ServerEssentials.LOG.debug(
-            "Command '"
-                + clazz.getDeclaredAnnotation(ModuleCommand.class).name()
-                + "' has not been loaded! requires, '"
-                + clazz.getDeclaredAnnotation(ModuleCommand.class).module()
-                + "'");
+            "Command '{}' has not been loaded! requires, '{}'",
+            clazz.getDeclaredAnnotation(ModuleCommand.class).name(),
+            clazz.getDeclaredAnnotation(ModuleCommand.class).module());
       }
     }
     return loadedCommands;

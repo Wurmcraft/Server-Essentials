@@ -49,15 +49,14 @@ public class ModuleEconomy {
 
   private static void savePerk(File save, PerkCost perk) {
     if (!save.getParentFile().exists()) {
-      save.getParentFile().mkdirs();
+      if (save.getParentFile().mkdirs()) ServerEssentials.LOG.debug("Creating perk directory");
     }
     try {
       Files.write(
           save.toPath(), ServerEssentials.GSON.toJson(perk).getBytes(), StandardOpenOption.WRITE);
     } catch (Exception e) {
-      ServerEssentials.LOG.warn(
-          "Failed to save new perk '" + perk.perkNode + "' (" + e.getMessage() + ")");
-      ServerEssentials.LOG.warn(ServerEssentials.GSON.toJson(perk));
+      ServerEssentials.LOG.warn("Failed to save new perk '{}' ({})", perk.perkNode, e.getMessage());
+      ServerEssentials.LOG.warn("JSON: {}", ServerEssentials.GSON.toJson(perk));
     }
   }
 }

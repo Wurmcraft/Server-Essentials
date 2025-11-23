@@ -44,8 +44,8 @@ public class PlayerUtils {
       if (username != null) {
         return uuid.toString();
       }
-    } catch (Exception e) {
-    }
+    } catch (Exception ignore) {
+    } // May happen upon first join, but dont matter, will be default anyways
     // Username Check
     if (UsernameCache.getMap().containsValue(input)) {
       for (UUID uuid : UsernameCache.getMap().keySet()) {
@@ -69,8 +69,8 @@ public class PlayerUtils {
           return uuid.toString();
         }
       }
-    } catch (Exception e) {
-    }
+    } catch (Exception ignored) {
+    } // Don't care, null is fine
     // Username Check
     try {
       RequestGenerator.HttpResponse response = RequestGenerator.get("api/lookup/uuid/" + input);
@@ -81,8 +81,8 @@ public class PlayerUtils {
           return uuid;
         }
       }
-    } catch (Exception e) {
-    }
+    } catch (Exception ignored) {
+    } // Don't care, null is fine
     return null;
   }
 
@@ -100,8 +100,8 @@ public class PlayerUtils {
   private static String validateUsername(String uuid) {
     try {
       return UsernameCache.getLastKnownUsername(UUID.fromString(uuid));
-    } catch (Exception e) {
-    }
+    } catch (Exception ignored) {
+    } // Means a new player
     return null;
   }
 
@@ -112,8 +112,8 @@ public class PlayerUtils {
         Account account = GSON.fromJson(response.response, Account.class);
         return account.username;
       }
-    } catch (Exception e) {
-    }
+    } catch (Exception ignore) {
+    } // New player & new to network
     return null;
   }
 
@@ -125,8 +125,8 @@ public class PlayerUtils {
       if (username == null && SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
         return validateUsernameRemote(uuid.toString());
       }
-    } catch (Exception e) {
-    }
+    } catch (Exception ignored) {
+    } // Null is fine
     // Validate Username
     String username = validateUsername(input);
     if (username != null) {
@@ -143,9 +143,8 @@ public class PlayerUtils {
           .getMinecraftServerInstance()
           .getPlayerList()
           .getPlayerByUUID(UUID.fromString(uuid));
-    } catch (Exception e) {
-
-    }
+    } catch (Exception ignored) {
+    } // Invalid uuid, server does not exist.
     return null;
   }
 
@@ -218,8 +217,7 @@ public class PlayerUtils {
             RequestGenerator.get(DataLoader.DataType.ACCOUNT.path + "/" + uuid, new HashMap<>());
         return GSON.fromJson(response.response, Account.class);
       } catch (Exception e) {
-        LOG.warn("Failed to get updated account for '" + uuid + "'");
-        e.printStackTrace();
+        LOG.warn("Failed to get updated account for '{}' ({})", uuid, e.getMessage());
         return null;
       }
     } else {
@@ -238,7 +236,7 @@ public class PlayerUtils {
 
   public static long getTotalPlaytime(Account account) {
     long playtime = 0;
-    if (account != null && account.tracked_time != null && account.tracked_time.length > 0) {
+    if (account != null && account.tracked_time != null) {
       for (ServerTime time : account.tracked_time) {
         playtime += time.totalTime;
       }

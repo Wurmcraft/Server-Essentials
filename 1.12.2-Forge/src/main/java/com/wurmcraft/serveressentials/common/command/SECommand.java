@@ -87,32 +87,32 @@ public class SECommand extends CommandBase {
     // Create Usage
     List<String> usageArr = new ArrayList<>();
     for (CommandArgument[] arg : arguments.keySet()) {
-      String temp = "/" + getName();
+      StringBuilder temp = new StringBuilder("/" + getName());
       for (int index = 0; index < arg.length; index++) {
         CommandArgument a = arg[index];
         Command command = arguments.get(arg).getDeclaredAnnotation(Command.class);
         if (a.equals(CommandArgument.STRING) && command.usage().length > index) {
-          temp = temp + " <" + command.usage()[index] + ">";
+          temp.append(" <").append(command.usage()[index]).append(">");
         } else {
-          temp = temp + " <" + a.name().toLowerCase() + ">";
+          temp.append(" <").append(a.name().toLowerCase()).append(">");
         }
       }
-      usageArr.add(temp);
+      usageArr.add(temp.toString());
     }
     // Sub Command Usage
     for (String sub : subCommandArguments.keySet()) {
-      String temp = "/" + getName() + " " + sub;
+      StringBuilder temp = new StringBuilder("/" + getName() + " " + sub);
       Method method = subCommandArguments.get(sub);
       Command command = method.getDeclaredAnnotation(Command.class);
       for (int index = 0; index < command.args().length; index++) {
         if (command.args()[index].equals(CommandArgument.STRING)
             && command.usage().length > index) {
-          temp = temp + " <" + command.usage()[index] + ">";
+          temp.append(" <").append(command.usage()[index]).append(">");
         } else {
-          temp = temp + " <" + command.args()[index].name().toLowerCase() + ">";
+          temp.append(" <").append(command.args()[index].name().toLowerCase()).append(">");
         }
       }
-      usageArr.add(temp);
+      usageArr.add(temp.toString());
     }
     usage = usageArr.toArray(new String[0]);
   }
@@ -170,11 +170,9 @@ public class SECommand extends CommandBase {
       if (config.secure && !TrustedList.trustedUsers.contains(uuid)) {
         ChatHelper.send(sender, new TextComponentTranslation("commands.generic.permission"));
         LOG.debug(
-            "User '"
-                + ((EntityPlayer) sender).getDisplayNameString()
-                + "' tried to run '"
-                + config.name
-                + "' however its a secure command, preventing");
+            "User '{}' tried to run '{}' however its a secure command, preventing",
+            ((EntityPlayer) sender).getDisplayNameString(),
+            config.name);
       }
     } else {
       userData = new ServerPlayer(sender);
@@ -278,9 +276,8 @@ public class SECommand extends CommandBase {
           return true;
         }
       } catch (Exception e) {
-        LOG.info("Command: /" + getName() + " " + String.join(" ", args));
-        e.printStackTrace();
-        LOG.warn("Failed to execute command");
+        LOG.info("Command: /{} {}", getName(), String.join(" ", args));
+        LOG.warn("Failed to execute command ({})", e.getMessage());
         ChatHelper.send(player.sender, player.lang.COMMAND_ERROR);
         return false;
       }
@@ -299,7 +296,7 @@ public class SECommand extends CommandBase {
       return null;
     }
     // Sub Command Search
-    if (subCommandArguments.size() > 0 && args.length > 0) {
+    if (!subCommandArguments.isEmpty()) {
       for (String arg : subCommandArguments.keySet()) {
         if (arg.equalsIgnoreCase(args[0])
             && (args.length - 1)
@@ -355,7 +352,7 @@ public class SECommand extends CommandBase {
         }
         return converted;
       }
-    } catch (Exception e) {
+    } catch (Exception ignored) { // Null is received as an error and handled by the command
     }
     return null;
   }

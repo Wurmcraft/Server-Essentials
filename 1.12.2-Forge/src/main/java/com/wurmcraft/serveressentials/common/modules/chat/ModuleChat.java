@@ -33,13 +33,16 @@ public class ModuleChat {
                 true,
                 new String[0]);
         if (!SECore.dataLoader.register(DataLoader.DataType.CHANNEL, defaultChannelName, channel)) {
-          LOG.warn("Failed to create default channel '" + defaultChannelName + "'");
+          LOG.warn("Failed to create default channel '{}'", defaultChannelName);
         }
       }
       // Load remaining channel's into memory
       SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel());
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.warn(
+          "Failed to create default channel '{}' ({})",
+          ((ConfigChat) SECore.moduleConfigs.get("CHAT")).defaultChannel,
+          e.getMessage());
     }
     MinecraftForge.EVENT_BUS.register(new NewChatPlayer());
     MinecraftForge.EVENT_BUS.register(new PlayerChatEvent());

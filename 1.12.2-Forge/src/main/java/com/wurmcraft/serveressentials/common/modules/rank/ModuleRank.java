@@ -1,5 +1,6 @@
 package com.wurmcraft.serveressentials.common.modules.rank;
 
+import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.loading.Module;
 import com.wurmcraft.serveressentials.api.models.Rank;
@@ -17,7 +18,7 @@ public class ModuleRank {
         setupDefaultRanks();
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      ServerEssentials.LOG.warn("Failed to load rank module! ({})", e.getMessage());
     }
   }
 

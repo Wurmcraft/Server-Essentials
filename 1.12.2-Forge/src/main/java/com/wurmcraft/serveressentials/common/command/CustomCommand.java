@@ -127,7 +127,7 @@ public class CustomCommand extends CommandBase {
                 CustomCommandJson.class));
       } catch (Exception e) {
         ServerEssentials.LOG.warn(
-            "Failed to load custom command '" + command.getName() + "' (" + e.getMessage() + ")");
+            "Failed to load custom command '{}' ({})", command.getName(), e.getMessage());
       }
     }
     return customCommands;
@@ -160,7 +160,7 @@ public class CustomCommand extends CommandBase {
           StandardOpenOption.WRITE,
           StandardOpenOption.CREATE_NEW);
     } catch (Exception e) {
-      ServerEssentials.LOG.warn("Failed to save custom command 'website' (" + e.getMessage() + ")");
+      ServerEssentials.LOG.warn("Failed to save custom command 'website' ({})", e.getMessage());
     }
   }
 }

@@ -113,9 +113,10 @@ public class PlayerDataTrackerEvent {
         }
       }
     } catch (Exception f) {
-      f.printStackTrace();
       LOG.warn(
-          "Error while attempting to load user '{}'", e.player.getGameProfile().getId().toString());
+          "Error while attempting to load user '{}' ({})",
+          e.player.getGameProfile().getId().toString(),
+          f.getMessage());
     }
   }
 

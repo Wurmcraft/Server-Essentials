@@ -25,8 +25,8 @@ public class ConfigLoader {
         ConfigGlobal config =
             GSON.fromJson(
                 Strings.join(Files.readAllLines(GLOBAL_CONFIG.toPath()), '\n'), ConfigGlobal.class);
-        LOG.info("Storage Type: '" + config.storage.storageType + "'");
-        LOG.info("Debug Mode: " + config.general.debug);
+        LOG.info("Storage Type: '{}'", config.storage.storageType);
+        LOG.info("Debug Mode: {}", config.general.debug);
         ConfigGlobal defaultConfig = new ConfigGlobal();
         if (defaultConfig.configVersion.equals(config.configVersion)) {
           return config;
@@ -37,8 +37,7 @@ public class ConfigLoader {
           return config;
         }
       } catch (IOException e) {
-        e.printStackTrace();
-        LOG.error("Failed to read '" + GLOBAL_CONFIG.getAbsolutePath() + "'");
+        LOG.error("Failed to read '{}' ({})", GLOBAL_CONFIG.getAbsolutePath(), e.getMessage());
       }
     } else {
       ConfigGlobal global = new ConfigGlobal();
@@ -52,7 +51,9 @@ public class ConfigLoader {
   public static void save(File file, Object config) {
     try {
       if (!file.getParentFile().exists()) {
-        file.getParentFile().mkdirs();
+        if (file.getParentFile().mkdirs()) {
+          LOG.debug("Saving file '{}'", file.getAbsolutePath());
+        }
       }
       Files.write(
           file.toPath(),
@@ -60,8 +61,7 @@ public class ConfigLoader {
           StandardOpenOption.CREATE,
           StandardOpenOption.TRUNCATE_EXISTING);
     } catch (IOException e) {
-      e.printStackTrace();
-      LOG.error("Failed to save '" + file.getAbsolutePath() + "'");
+      LOG.error("Failed to save '{}' ({})", file.getAbsolutePath(), e.getMessage());
     }
   }
 
@@ -75,7 +75,7 @@ public class ConfigLoader {
         instances.put(moduleName.toUpperCase(), loadModuleConfig(moduleName, configInstance));
       }
     }
-    LOG.info(moduleConfigs.size() + " module config(s) have been loaded");
+    LOG.info("{} module config(s) have been loaded", moduleConfigs.size());
     return instances;
   }
 
@@ -94,41 +94,34 @@ public class ConfigLoader {
         return GSON.fromJson(
             String.join("\n", json.toArray(new String[0])), configInstance.getClass());
       } catch (IOException e) {
-        e.printStackTrace();
         LOG.warn(
-            "Failed to load module config '"
-                + moduleName
-                + "' ("
-                + configFile.getAbsolutePath()
-                + ")");
+            "Failed to load module config '{}' ({}) ({})",
+            moduleName,
+            configFile.getAbsolutePath(),
+            e.getMessage());
       }
     } else {
       if (!configFile.getParentFile().exists()) {
         if (!configFile.getParentFile().mkdirs()) {
           LOG.warn(
-              "Failed to create directory for module config's ("
-                  + configFile.getParentFile().getAbsolutePath()
-                  + ")");
+              "Failed to create directory for module config's ({})",
+              configFile.getParentFile().getAbsolutePath());
         }
       }
       try {
         if (configFile.createNewFile()) {
           Files.write(configFile.toPath(), Collections.singleton(GSON.toJson(configInstance)));
           LOG.debug(
-              "Creating default config file for module '"
-                  + moduleName
-                  + "' ("
-                  + configFile.getAbsolutePath()
-                  + ")");
+              "Creating default config file for module '{}' ({})",
+              moduleName,
+              configFile.getAbsolutePath());
         }
       } catch (IOException e) {
-        e.printStackTrace();
         LOG.warn(
-            "Failed to create module '"
-                + moduleName
-                + "' config ("
-                + configFile.getAbsolutePath()
-                + ")");
+            "Failed to create module '{}' config ({}) ({})",
+            moduleName,
+            configFile.getAbsolutePath(),
+            e.getMessage());
       }
     }
     return configInstance;

@@ -38,9 +38,8 @@ public class ItemStackConverter implements IDataConverter<ItemStack> {
             data.substring(
                 data.indexOf(META) + 1, data.contains(NBT) ? data.indexOf(NBT) : data.indexOf(">"));
         return Integer.parseInt(metaNum);
-      } catch (NumberFormatException e) {
-        e.printStackTrace();
-      }
+      } catch (NumberFormatException ignored) {
+      } // Verified elsewhere
     }
     return 0;
   }
@@ -51,9 +50,8 @@ public class ItemStackConverter implements IDataConverter<ItemStack> {
       try {
         String sizeNum = data.substring(1, data.indexOf("x"));
         return Integer.parseInt(sizeNum);
-      } catch (NumberFormatException e) {
-        e.printStackTrace();
-      }
+      } catch (NumberFormatException ignored) {
+      } // Verified elsewhere
     }
     return 1;
   }

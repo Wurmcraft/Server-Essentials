@@ -94,11 +94,9 @@ public class ServerEssentials {
         Method method = instance.getClass().getDeclaredMethod(m.setupMethod());
         method.invoke(instance);
       } catch (NoSuchMethodException f) {
-        f.printStackTrace();
-        LOG.warn("Failed to load module '" + module + "'");
+        LOG.warn("Failed to load module '{}' ({})", module, f.getMessage());
       } catch (InvocationTargetException | IllegalAccessException g) {
-        g.printStackTrace();
-        LOG.warn("Failed to initialize module '" + module + "'");
+        LOG.warn("Failed to initialize module '{}' ({})", module, g.getMessage());
       }
     }
   }
@@ -122,7 +120,7 @@ public class ServerEssentials {
       if (config != null) {
         commandClasses.put(command, config);
       } else {
-        LOG.warn("Failed to load config for command '" + instance.name() + "'");
+        LOG.warn("Failed to load config for command '{}'", instance.name());
       }
     }
     return commandClasses;
@@ -135,11 +133,10 @@ public class ServerEssentials {
       try {
         e.registerServerCommand(new SECommand(commandClasses.get(command), command));
       } catch (Exception f) {
-        f.printStackTrace();
         LOG.warn(
-            "Failed to register command '"
-                + command.getDeclaredAnnotation(ModuleCommand.class).name()
-                + "'");
+            "Failed to register command '{}' ({})",
+            command.getDeclaredAnnotation(ModuleCommand.class).name(),
+            f.getMessage());
       }
     }
     // Load Custom Command
@@ -182,12 +179,12 @@ public class ServerEssentials {
     if (!moduleNames.isEmpty()) {
       moduleNames = moduleNames.substring(0, moduleNames.length() - 1); // Remove trailing ,
     }
-    LOG.info("Modules: [" + moduleNames + "]");
+    LOG.info("Modules: [{}]", moduleNames);
     return loadedModules;
   }
 
   public static IDataLoader getDataLoader() {
-    LOG.info("Storage Type: '" + config.storage.storageType + "'");
+    LOG.info("Storage Type: '{}'", config.storage.storageType);
     if (config.storage.storageType.equalsIgnoreCase("File")) {
       return new FileDataLoader();
     }

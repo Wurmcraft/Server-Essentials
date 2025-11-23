@@ -55,9 +55,11 @@ public class CommandUtils {
         String lines = Strings.join(Files.readAllLines(command.toPath()), '\n');
         return GSON.fromJson(lines, CommandConfig.class);
       } catch (IOException e) {
-        e.printStackTrace();
         LOG.warn(
-            "Failed to load command config for '" + name + "' (" + command.getAbsolutePath() + ")");
+            "Failed to load command config for '{}' ({}) ({})",
+            name,
+            command.getAbsolutePath(),
+            e.getMessage());
       }
     } else {
       // Compute Cooldown Defaults
@@ -69,13 +71,14 @@ public class CommandUtils {
             cooldown.put(split[0], Long.parseLong(split[1]));
           } else {
             LOG.warn(
-                "Invalid Cooldown Format for command '"
-                    + moduleCommand.name()
-                    + "' Must be in the following format: <rank>;<time>");
+                "Invalid Cooldown Format for command '{}' Must be in the following format: <rank>;<time>",
+                moduleCommand.name());
           }
         } catch (Exception e) {
-          e.printStackTrace();
-          LOG.warn("Failed to read cooldown for command '" + moduleCommand.name() + "'");
+          LOG.warn(
+              "Failed to read cooldown for command '{}' ({})",
+              moduleCommand.name(),
+              e.getMessage());
         }
       }
       // Compute Delay Defaults
@@ -87,13 +90,12 @@ public class CommandUtils {
             delay.put(split[0], Long.parseLong(split[1]));
           } else {
             LOG.warn(
-                "Invalid Delay Format for command '"
-                    + moduleCommand.name()
-                    + "' Must be in the following format: <rank>;<time>");
+                "Invalid Delay Format for command '{}' Must be in the following format: <rank>;<time>",
+                moduleCommand.name());
           }
         } catch (Exception e) {
-          e.printStackTrace();
-          LOG.warn("Failed to read delay for command '" + moduleCommand.name() + "'");
+          LOG.warn(
+              "Failed to read delay for command '{}' ({})", moduleCommand.name(), e.getMessage());
         }
       }
       // Compute Cost Defaults
@@ -105,13 +107,12 @@ public class CommandUtils {
             cost.put(split[0], Double.parseDouble(split[1]));
           } else {
             LOG.warn(
-                "Invalid Cost Format for command '"
-                    + moduleCommand.name()
-                    + "' Must be in the following format: <currency>;<cost>");
+                "Invalid Cost Format for command '{}' Must be in the following format: <currency>;<cost>",
+                moduleCommand.name());
           }
         } catch (Exception e) {
-          e.printStackTrace();
-          LOG.warn("Failed to read cost for command '" + moduleCommand.name() + "'");
+          LOG.warn(
+              "Failed to read cost for command '{}' ({})", moduleCommand.name(), e.getMessage());
         }
       }
       CommandConfig config =
@@ -129,21 +130,21 @@ public class CommandUtils {
         Files.write(command.toPath(), GSON.toJson(config).getBytes());
         return config;
       } catch (IOException e) {
-        e.printStackTrace();
         LOG.warn(
-            "Failed to save command config for '" + name + "' (" + command.getAbsolutePath() + ")");
+            "Failed to save command config for '{}' ({}) ({})",
+            name,
+            command.getAbsolutePath(),
+            e.getMessage());
       }
     }
     return null;
   }
 
   public static List<String> predict(String current, List<String> possible) {
-    if (current.isEmpty()) {
-      return possible;
-    } else {
+    if (!current.isEmpty()) {
       possible.removeIf(p -> !current.toLowerCase().startsWith(current.toLowerCase()));
-      return possible;
     }
+    return possible;
   }
 
   public static List<String> generatePossibleAutoFill(
@@ -239,47 +240,51 @@ public class CommandUtils {
     time = time.trim().toLowerCase();
     // Days
     if (time.endsWith("d")) {
-      return Long.parseLong(time.substring(0, time.length() - 1)) * 86400;
+      return parse(time, 1) * 86400;
     }
     if (time.endsWith("day")) {
-      return Long.parseLong(time.substring(0, time.length() - 4)) * 86400;
+      return parse(time, 4) * 86400;
     }
     if (time.endsWith("days")) {
-      return Long.parseLong(time.substring(0, time.length() - 5)) * 86400;
+      return parse(time, 5) * 86400;
     }
     // Hours
     if (time.endsWith("h")) {
-      return Long.parseLong(time.substring(0, time.length() - 1)) * 3600;
+      return parse(time, 1) * 3600;
     }
     if (time.endsWith("hour")) {
-      return Long.parseLong(time.substring(0, time.length() - 5)) * 3600;
+      return parse(time, 5) * 3600;
     }
     if (time.endsWith("hours")) {
-      return Long.parseLong(time.substring(0, time.length() - 6)) * 3600;
+      return parse(time, 6) * 3600;
     }
     // Minutes
     if (time.endsWith("m")) {
-      return Long.parseLong(time.substring(0, time.length() - 1)) * 60;
+      return parse(time, 1) * 60;
     }
     if (time.endsWith("min")) {
-      return Long.parseLong(time.substring(0, time.length() - 4)) * 60;
+      return parse(time, 4) * 60;
     }
     if (time.endsWith("minute")) {
-      return Long.parseLong(time.substring(0, time.length() - 7)) * 60;
+      return parse(time, 7) * 60;
     }
     if (time.endsWith("mins")) {
-      return Long.parseLong(time.substring(0, time.length() - 5)) * 60;
+      return parse(time, 5) * 60;
     }
     if (time.endsWith("minutes")) {
-      return Long.parseLong(time.substring(0, time.length() - 8));
+      return parse(time, 8);
     }
     if (time.endsWith("s")) {
-      return Long.parseLong(time.substring(0, time.length() - 1));
+      return parse(time, 1);
     }
     if (time.endsWith("sec")) {
-      return Long.parseLong(time.substring(0, time.length() - 4));
+      return parse(time, 4);
     }
     return 0L;
+  }
+
+  private static long parse(String str, int x) {
+    return Long.parseLong(str.substring(0, str.length() - x));
   }
 
   public static String displayTime(long muteTime) {
@@ -334,7 +339,7 @@ public class CommandUtils {
     try {
       UUID.fromString(str);
       return true;
-    } catch (Exception e) {
+    } catch (Exception ignored) { // Is False
     }
     return false;
   }
@@ -394,6 +399,7 @@ public class CommandUtils {
           long time = Long.parseLong(timeStr);
           timings.put(rank, time);
         } catch (NumberFormatException e) {
+          LOG.warn("Rank Time is invalid '{}' ({})", val, e.getMessage());
         }
       }
     }
@@ -410,7 +416,7 @@ public class CommandUtils {
     try {
       Double.parseDouble(num);
       return true;
-    } catch (NumberFormatException e) {
+    } catch (NumberFormatException ignored) {
     }
     return false;
   }
@@ -418,7 +424,7 @@ public class CommandUtils {
   public static double number(String num) {
     try {
       return Double.parseDouble(num);
-    } catch (NumberFormatException e) {
+    } catch (NumberFormatException ignored) {
 
     }
     return -1.0;

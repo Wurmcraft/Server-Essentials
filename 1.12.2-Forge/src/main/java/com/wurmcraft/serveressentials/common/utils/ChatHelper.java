@@ -70,7 +70,7 @@ public class ChatHelper {
         FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
       sendTo(player, msg);
     }
-    LOG.info("[Broadcast]: " + msg);
+    LOG.info("[Broadcast]: {}", msg);
   }
 
   public static void sendFrom(EntityPlayerMP sender, Channel ch, TextComponentString message) {
@@ -85,7 +85,7 @@ public class ChatHelper {
         send(player, message);
       }
     }
-    LOG.info("[Chat]: " + message.getFormattedText());
+    LOG.info("[Chat]: {}", message.getFormattedText());
     if (SECore.dataLoader instanceof RestDataLoader
         && ServerEssentials.config.performance.useWebsocket) {
       // TODO Config / non-web socket support? possibly via matterbridge?
@@ -109,8 +109,7 @@ public class ChatHelper {
                             message.getText(),
                             ch.name)))));
       } catch (Exception e) {
-        LOG.warn("Failed to send message via webSocket!");
-        e.printStackTrace();
+        LOG.warn("Failed to send message via webSocket! ({})", e.getMessage());
       }
     }
   }
@@ -171,7 +170,7 @@ public class ChatHelper {
     send(sender, sentMessage);
     lastMessageCache.put(
         receiver.getGameProfile().getId().toString(), sender.getGameProfile().getId().toString());
-    if (socialSpy.size() > 0) {
+    if (!socialSpy.isEmpty()) {
       for (EntityPlayer spy : ChatHelper.socialSpy) {
         if (spy.getGameProfile()
                 .getId()
@@ -217,12 +216,12 @@ public class ChatHelper {
       }
     }
     LOG.info(
-        "[SocialSpy]: "
-            + ChatHelper.replaceColor(sender.getDisplayNameString() + " " + sentMessage));
+        "[SocialSpy]: {}",
+        ChatHelper.replaceColor(sender.getDisplayNameString() + " " + sentMessage));
   }
 
   public static boolean isIgnored(LocalAccount current, String senderUUID) {
-    if (current.ignoredUsers == null || current.ignoredUsers.length == 0) {
+    if (current.ignoredUsers == null) {
       return false;
     }
     for (String uuid : current.ignoredUsers) {

@@ -27,11 +27,9 @@ public class RestPlayerTrackerEvent {
           ServerEssentials.scheduledService.scheduleAtFixedRate(
               () -> {
                 LOG.debug(
-                    "Syncing User '"
-                        + e.player.getDisplayNameString()
-                        + "' ("
-                        + e.player.getGameProfile().getId().toString()
-                        + ")");
+                    "Syncing User '{}' ({})",
+                    e.player.getDisplayNameString(),
+                    e.player.getGameProfile().getId().toString());
                 if (SECore.dataLoader.delete(
                     DataLoader.DataType.ACCOUNT,
                     e.player.getGameProfile().getId().toString(),
@@ -51,11 +49,9 @@ public class RestPlayerTrackerEvent {
     if (!ServerEssentials.config.performance.useWebsocket && userSync.containsKey(e.account.uuid)) {
       if (userSync.get(e.account.uuid).cancel(true)) {
         LOG.debug(
-            "Removing Sync for User '"
-                + UsernameCache.getLastKnownUsername(UUID.fromString(e.account.uuid))
-                + "' ("
-                + e.account.uuid
-                + ")");
+            "Removing Sync for User '{}' ({})",
+            UsernameCache.getLastKnownUsername(UUID.fromString(e.account.uuid)),
+            e.account.uuid);
       }
     }
   }

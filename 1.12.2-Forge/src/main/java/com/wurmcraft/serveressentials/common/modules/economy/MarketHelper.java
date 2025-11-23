@@ -47,7 +47,10 @@ public class MarketHelper {
       try {
         stack.setTagCompound(JsonToNBT.getTagFromJson(entry.item.nbt));
       } catch (Exception e) {
-
+        ServerEssentials.LOG.warn(
+            "Failed to set ItemStack nbt for market entry! ({}) ({})",
+            ServerEssentials.GSON.toJson(entry),
+            e.getMessage());
       }
     }
     return stack;
@@ -88,8 +91,7 @@ public class MarketHelper {
         MarketEntry[] entries = ServerEssentials.GSON.fromJson(file, MarketEntry[].class);
         return new ArrayList<>(Arrays.asList(entries));
       } catch (Exception e) {
-        ServerEssentials.LOG.error("Failed to read market.json!");
-        e.printStackTrace();
+        ServerEssentials.LOG.error("Failed to read market.json! ({})", e.getMessage());
       }
     } else {
       try {
@@ -99,8 +101,7 @@ public class MarketHelper {
             StandardOpenOption.WRITE,
             StandardOpenOption.CREATE_NEW);
       } catch (Exception e) {
-        ServerEssentials.LOG.error("Failed to create market.json!");
-        e.printStackTrace();
+        ServerEssentials.LOG.error("Failed to create market.json! ({})", e.getMessage());
       }
     }
     return new ArrayList<>();
@@ -115,8 +116,7 @@ public class MarketHelper {
           StandardOpenOption.WRITE,
           StandardOpenOption.CREATE);
     } catch (Exception e) {
-      ServerEssentials.LOG.warn("Failed to save market.json!");
-      e.printStackTrace();
+      ServerEssentials.LOG.error("Failed to create market.json! ({})", e.getMessage());
     }
   }
 

@@ -46,8 +46,7 @@ public class RankUtils {
     Rank user = SECore.dataLoader.get(DataLoader.DataType.RANK, rank, new Rank());
     if (test == null || user == null) {
       if (test == null) {
-        ServerEssentials.LOG.warn(
-            "Failed to get rank '" + ((test == null) ? testRank : rank) + "'");
+        ServerEssentials.LOG.warn("Failed to get rank '{}'", testRank);
       }
       return false;
     }
@@ -160,7 +159,7 @@ public class RankUtils {
         Collections.addAll(rankPermList, permList(rk));
       }
     } else {
-      ServerEssentials.LOG.warn("Invalid rank '" + rank + "'");
+      ServerEssentials.LOG.warn("Invalid rank '{}'", rank);
     }
     return rankPermList.toArray(new String[0]);
   }
@@ -180,8 +179,8 @@ public class RankUtils {
         return (Rank) rank;
       }
     } catch (Exception e) {
+      ServerEssentials.LOG.debug("Tried to load invalid rank '{}'", name);
     }
-    ;
     return null;
   }
 

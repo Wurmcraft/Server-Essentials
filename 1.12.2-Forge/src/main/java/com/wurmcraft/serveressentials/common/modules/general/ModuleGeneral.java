@@ -62,15 +62,13 @@ public class ModuleGeneral {
                 WSWrapper.Type.MESSAGE,
                 new DataWrapper("Status", GSON.toJson(generateStatus(status)))));
       } catch (Exception e) {
-        LOG.warn("Failed to send updated status to Rest via WebSocket");
-        e.printStackTrace();
+        LOG.warn("Failed to send updated status to Rest via WebSocket ({})", e.getMessage());
       }
     } else {
       try {
         RequestGenerator.post("api/information/status", generateStatus(status));
       } catch (Exception e) {
-        LOG.warn("Failed to send updated status to Rest via HTTP Post");
-        e.printStackTrace();
+        LOG.warn("Failed to send updated status to Rest via HTTP Post ({})", e.getMessage());
       }
     }
   }
@@ -119,14 +117,14 @@ public class ModuleGeneral {
   }
 
   private static double getSum(long[] times) {
+    if (times == null) {
+      return 0;
+    }
     long timesum = 0L;
     for (long time : times) {
       timesum += time;
     }
-    if (times == null) {
-      return 0;
-    }
-    return timesum / times.length;
+    return (double) timesum / times.length;
   }
 
   public static String[][] getPlayerInfo() {

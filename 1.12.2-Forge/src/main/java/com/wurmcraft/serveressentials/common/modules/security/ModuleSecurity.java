@@ -11,9 +11,9 @@ public class ModuleSecurity {
 
   public void setup() {
     MinecraftForge.EVENT_BUS.register(new SecurityEvents());
-    if (TrustedList.trustedUsers.size() == 0) {
+    if (TrustedList.trustedUsers.isEmpty()) {
       ServerEssentials.LOG.info(
-          "Loading Trusted Users list from '" + SecurityEvents.config.trustedList + "'");
+          "Loading Trusted Users list from '{}'", SecurityEvents.config.trustedList);
       TrustedList.load();
     }
   }

@@ -40,9 +40,9 @@ public class SocketController {
         if (RequestGenerator.token == null || RequestGenerator.token.isEmpty()) {
           if (((RestDataLoader) SECore.dataLoader).login()) {
             ServerEssentials.LOG.info(
-                "Logged into Rest API as '" + ServerEssentials.config.general.serverID + "'");
+                "Logged into Rest API as '{}'", ServerEssentials.config.general.serverID);
           } else {
-            ServerEssentials.LOG.fatal("Failed to login to Rest API");
+            ServerEssentials.LOG.fatal("Failed to login to Rest API, invalid token or connection!");
           }
         }
         // Setup Web socket
@@ -61,7 +61,7 @@ public class SocketController {
       } catch (IOException e) {
         throw new RuntimeException(e);
       } catch (WebSocketException e) {
-        ServerEssentials.LOG.error("Failed to connect to rest api (" + e.getMessage() + ")");
+        ServerEssentials.LOG.error("Failed to connect to rest api ({})", e.getMessage());
         throw new RuntimeException(e);
       }
     }
@@ -75,7 +75,7 @@ public class SocketController {
   }
 
   public void handleTextMessage(WSWrapper wrapper) {
-    ServerEssentials.LOG.debug("WS Message: " + wrapper.type + " " + wrapper.data);
+    ServerEssentials.LOG.debug("WS Message: {} {}", wrapper.type, wrapper.data);
     if (wrapper.data.type.equals("broadcast")) {
       ChatMessage broadcast = ServerEssentials.GSON.fromJson(wrapper.data.data, ChatMessage.class);
       ChatHelper.sendToAll(
@@ -140,7 +140,7 @@ public class SocketController {
   private static void shutdown(ShutdownMessage message) {
     if (message.id.equals("API")) {
       ChatHelper.sendToAll(message.message);
-      ServerEssentials.LOG.info("Shutdown message received from API: " + message.message);
+      ServerEssentials.LOG.info("Shutdown message received from API: {}", message.message);
       FMLCommonHandler.instance().getMinecraftServerInstance().saveAllWorlds(false);
       FMLCommonHandler.instance().getMinecraftServerInstance().initiateShutdown();
     } else {

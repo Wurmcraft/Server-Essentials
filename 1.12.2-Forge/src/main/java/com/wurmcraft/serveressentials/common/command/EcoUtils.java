@@ -32,7 +32,7 @@ public class EcoUtils {
   }
 
   public static double balance(Account account, String currency) {
-    if (account.wallet != null && account.wallet.length > 0) {
+    if (account.wallet != null) {
       for (BankAccount bank : account.wallet) {
         if (bank.currencyName.equalsIgnoreCase(currency)) {
           return bank.amount;

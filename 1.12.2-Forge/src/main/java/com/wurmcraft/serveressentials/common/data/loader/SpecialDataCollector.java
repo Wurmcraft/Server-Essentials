@@ -26,7 +26,7 @@ public class SpecialDataCollector {
                     + "/"
                     + e.key
                     + ".json");
-        if (langJson.length() > 0) {
+        if (!langJson.isEmpty()) {
           e.data = GSON.fromJson(langJson, Language.class);
           // Override null entries with error warning
           for (Field field : e.data.getClass().getDeclaredFields()) {
@@ -36,11 +36,10 @@ public class SpecialDataCollector {
           }
         }
       } catch (Exception f) {
-        f.printStackTrace();
         LOG.warn(
-            "Language '"
-                + e.key
-                + "' has been requested, but the server was unable to access / it does not exist!");
+            "Language '{}' has been requested, but the server was unable to access / it does not exist! ({})",
+            e.key,
+            f.getMessage());
       }
     }
   }
