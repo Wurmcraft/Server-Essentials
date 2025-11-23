@@ -52,12 +52,12 @@ public class DataLoader implements IDataLoader {
     KIT(null, null, "name", Kit.class, Kit[].class, true),
     CLAIM(null, null, "regionID", RegionClaim.class, RegionClaim[].class, true);
 
-    public String path;
-    String pathType;
-    Class<?> instanceType;
+    public final String path;
+    final String pathType;
+    final Class<?> instanceType;
     Class<?> instanceTypeArr;
-    boolean fileCache;
-    String key;
+    final boolean fileCache;
+    final String key;
 
     DataType(String path, String pathType, String key, Class<?> instanceType, boolean fileCache) {
       this.path = path;
@@ -150,14 +150,7 @@ public class DataLoader implements IDataLoader {
     try {
       return (T) get(type, key);
     } catch (Exception e) {
-      LOG.error(
-          "Failed to get (cast) data '"
-              + type.name()
-              + "' @ '"
-              + key
-              + "' ("
-              + e.getMessage()
-              + ")");
+      LOG.error("Failed to get (cast) data '{}' @ '{}' ({})", type.name(), key, e.getMessage());
     }
     return null;
   }
@@ -174,22 +167,17 @@ public class DataLoader implements IDataLoader {
     if (storage.containsKey(type)) {
       if (!storage.get(type).containsKey(key)) {
         storage.get(type).put(key, new Object[] {System.currentTimeMillis(), data});
-        LOG.trace("Entry on '" + type + "' has been cached with key '" + key + "'");
+        LOG.trace("Entry on '{}' has been cached with key '{}'", type, key);
         return true;
       } else {
-        LOG.warn(
-            "Tried to register a entry that already exists on '"
-                + type
-                + "' for key '"
-                + key
-                + "'");
+        LOG.trace("Tried to register a entry that already exists on '{}' for key '{}'", type, key);
         return false;
       }
     } else {
       NonBlockingHashMap<String, Object[]> newDataStorage = new NonBlockingHashMap<>();
       newDataStorage.put(key, new Object[] {System.currentTimeMillis() + getTimeout(type), data});
       storage.put(type, newDataStorage);
-      LOG.debug("Creating new cached storage for '" + type.name() + "' with key '" + key + "'");
+      LOG.debug("Creating new cached storage for '{}' with key '{}'", type.name(), key);
       return true;
     }
   }
@@ -208,11 +196,10 @@ public class DataLoader implements IDataLoader {
         storage
             .get(type)
             .put(key, new Object[] {System.currentTimeMillis() + +getTimeout(type), data});
-        LOG.trace("Entry on '" + type + "' has been cached (update) with key ' " + key + "'");
+        LOG.trace("Entry on '{}' has been cached (update) with key ' {}'", type, key);
         return true;
       } else {
-        LOG.warn(
-            "Tried to update a entry that does not exist on '" + type + "' with key '" + key + "'");
+        LOG.debug("Tried to update a entry that does not exist on '{}' with key '{}'", type, key);
         return false;
       }
     }
@@ -230,7 +217,7 @@ public class DataLoader implements IDataLoader {
   public boolean delete(DataType type, String key, boolean cacheOnly) {
     if (storage.containsKey(type) && storage.get(type).containsKey(key)) {
       storage.get(type).remove(key);
-      LOG.trace("Entry on '" + type + "' has been removed with key '" + key + "'");
+      LOG.trace("Entry on '{}' has been removed with key '{}'", type, key);
       return true;
     }
     return false;

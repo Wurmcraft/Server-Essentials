@@ -95,7 +95,10 @@ public class PlayerDataTrackerEvent {
         }
         handleNewAccount(e.player, userAccount, localAccount, user, local);
       } else {
-          LOG.info("Loading user '{}' ({}) [Existing]", e.player.getDisplayNameString(), e.player.getGameProfile().getId().toString());
+        LOG.info(
+            "Loading user '{}' ({}) [Existing]",
+            e.player.getDisplayNameString(),
+            e.player.getGameProfile().getId().toString());
         MinecraftForge.EVENT_BUS.post(
             new PlayerLoadEvent(e.player, userAccount, localAccount, false));
         PlayerChatEvent.correctInvalidRanks(userAccount);
@@ -103,12 +106,16 @@ public class PlayerDataTrackerEvent {
       // Cancel Cache cleanup if the user has logged back in (relog)
       if (playerCacheTimeout.containsKey(e.player.getGameProfile().getId().toString())) {
         if (playerCacheTimeout.get(e.player.getGameProfile().getId().toString()).cancel(false)) {
-            LOG.debug("Canceling Cache cleanup for user '{}' ({})", e.player.getDisplayNameString(), e.player.getGameProfile().getId().toString());
+          LOG.debug(
+              "Canceling Cache cleanup for user '{}' ({})",
+              e.player.getDisplayNameString(),
+              e.player.getGameProfile().getId().toString());
         }
       }
     } catch (Exception f) {
       f.printStackTrace();
-        LOG.warn("Error while attempting to load user '{}'", e.player.getGameProfile().getId().toString());
+      LOG.warn(
+          "Error while attempting to load user '{}'", e.player.getGameProfile().getId().toString());
     }
   }
 
@@ -128,16 +135,34 @@ public class PlayerDataTrackerEvent {
       boolean user,
       boolean local) {
     if (user && local) {
-        LOG.info("Loading user '{}' ({}) [New]", player.getDisplayNameString(), player.getGameProfile().getId().toString());
-        LOG.info("Created New User ('{}') \"{}\"", player.getGameProfile().getId().toString(), player.getDisplayNameString());
+      LOG.info(
+          "Loading user '{}' ({}) [New]",
+          player.getDisplayNameString(),
+          player.getGameProfile().getId().toString());
+      LOG.info(
+          "Created New User ('{}') \"{}\"",
+          player.getGameProfile().getId().toString(),
+          player.getDisplayNameString());
       MinecraftForge.EVENT_BUS.post(new PlayerLoadEvent(player, userAccount, localAccount, true));
     } else if (local) {
-        LOG.info("Loading user '{}' ({}) [New To Server]", player.getDisplayNameString(), player.getGameProfile().getId().toString());
-        LOG.info("Created New Local User ('{}') \"{}\"", player.getGameProfile().getId().toString(), player.getDisplayNameString());
+      LOG.info(
+          "Loading user '{}' ({}) [New To Server]",
+          player.getDisplayNameString(),
+          player.getGameProfile().getId().toString());
+      LOG.info(
+          "Created New Local User ('{}') \"{}\"",
+          player.getGameProfile().getId().toString(),
+          player.getDisplayNameString());
       MinecraftForge.EVENT_BUS.post(new PlayerLoadEvent(player, userAccount, localAccount, false));
     } else if (user) {
-        LOG.info("Loading user '{}' ({}) [New To Network]", player.getDisplayNameString(), player.getGameProfile().getId().toString());
-        LOG.info("Created New Global User ('{}') \"{}\"", player.getGameProfile().getId().toString(), player.getDisplayNameString());
+      LOG.info(
+          "Loading user '{}' ({}) [New To Network]",
+          player.getDisplayNameString(),
+          player.getGameProfile().getId().toString());
+      LOG.info(
+          "Created New Global User ('{}') \"{}\"",
+          player.getGameProfile().getId().toString(),
+          player.getDisplayNameString());
       MinecraftForge.EVENT_BUS.post(new PlayerLoadEvent(player, userAccount, localAccount, false));
     } else {
       LOG.warn("Failed to create new user");
@@ -146,7 +171,11 @@ public class PlayerDataTrackerEvent {
 
   @SubscribeEvent(priority = EventPriority.LOWEST)
   public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent e) {
-      LOG.info("Scheduling unloading for user '{}' ({}) in {}s", e.player.getDisplayNameString(), e.player.getGameProfile().getId().toString(), ServerEssentials.config.performance.playerCacheTimeout);
+    LOG.info(
+        "Scheduling unloading for user '{}' ({}) in {}s",
+        e.player.getDisplayNameString(),
+        e.player.getGameProfile().getId().toString(),
+        ServerEssentials.config.performance.playerCacheTimeout);
     Runnable scheduledTask =
         () -> {
           String uuid = e.player.getGameProfile().getId().toString();
@@ -157,7 +186,10 @@ public class PlayerDataTrackerEvent {
               && SECore.dataLoader.delete(DataLoader.DataType.ACCOUNT, uuid, true)
               && SECore.dataLoader.delete(DataLoader.DataType.LOCAL_ACCOUNT, uuid, true)) {
             MinecraftForge.EVENT_BUS.post(new PlayerUnloadEvent(account, local));
-              LOG.info("Unloading user '{}' ({})", UsernameCache.getLastKnownUsername(UUID.fromString(uuid)), uuid);
+            LOG.info(
+                "Unloading user '{}' ({})",
+                UsernameCache.getLastKnownUsername(UUID.fromString(uuid)),
+                uuid);
           }
         };
     ScheduledFuture<?> future =

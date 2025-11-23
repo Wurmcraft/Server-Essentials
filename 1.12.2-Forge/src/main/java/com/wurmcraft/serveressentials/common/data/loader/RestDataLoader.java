@@ -3,7 +3,6 @@ package com.wurmcraft.serveressentials.common.data.loader;
 import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
 import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
-import com.google.gson.JsonParseException;
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.models.AuthUser;
 import com.wurmcraft.serveressentials.api.models.MessageResponse;
@@ -90,8 +89,7 @@ public class RestDataLoader extends FileDataLoader {
         handleResponseError(response);
       }
     } catch (IOException e) {
-      e.printStackTrace();
-      LOG.fatal("Failed to login to Rest API");
+      LOG.fatal("Failed to login to Rest API ({})", e.getMessage());
     }
     return false;
   }
@@ -133,8 +131,8 @@ public class RestDataLoader extends FileDataLoader {
                 cache(key, dataKey, d);
                 return super.getFromKey(key, type);
               } else {
-                LOG.debug("Json: " + GSON.toJson(d));
-                LOG.debug("Failed to find key for '" + key + "'");
+                LOG.debug("Json: {}", GSON.toJson(d));
+                LOG.debug("Failed to find key for '{}'", key);
               }
             }
           }
@@ -142,9 +140,11 @@ public class RestDataLoader extends FileDataLoader {
           handleResponseError(response);
         }
       } catch (Exception e) {
-        e.printStackTrace();
         LOG.error(
-            "Failed to read from endpoint '" + key.path + "' with type '" + key.pathType + "'");
+            "Failed to read from endpoint '{}' with type '{}' ({})",
+            key.path,
+            key.pathType,
+            e.getMessage());
       }
       return new NonBlockingHashMap<>();
     }
@@ -168,8 +168,7 @@ public class RestDataLoader extends FileDataLoader {
         return Integer.toString((int) instance);
       }
     } catch (Exception e) {
-      e.printStackTrace();
-      LOG.warn("Failed to find key for '" + type.name() + "'");
+      LOG.warn("Failed to find key for '{}' ({})", type.name(), e.getMessage());
     }
     return null;
   }
@@ -181,31 +180,34 @@ public class RestDataLoader extends FileDataLoader {
   private void handleResponseError(RequestGenerator.HttpResponse response) {
     // Client Error
     if (response.status >= 400 && response.status <= 499) {
-      if(response.status == 404) { // 404 is empty, no message
+      if (response.status == 404) { // 404 is empty, no message
         return;
       }
       try {
         MessageResponse[] errors = GSON.fromJson(response.response, MessageResponse[].class);
-          LOG.debug("Error Status: {}", response.status);
+        LOG.debug("Error Status: {}", response.status);
         for (MessageResponse error : errors) {
-            LOG.debug("Error: {} ({})", error.title, error.message);
+          LOG.debug("Error: {} ({})", error.title, error.message);
         }
       } catch (Exception e) {
         // Check for non-array (rarer api response)
         try {
-            MessageResponse error = GSON.fromJson(response.response, MessageResponse.class);
-            LOG.debug("Error ({}) : {} ({})", response.status, error.title, error.message);
+          MessageResponse error = GSON.fromJson(response.response, MessageResponse.class);
+          LOG.debug("Error ({}) : {} ({})", response.status, error.title, error.message);
         } catch (Exception f) {
-            LOG.warn("Failed to parse an error from an endpoint  '{}' ({})", response.status, f.getMessage());
-            LOG.warn("Response: {}", response.response);
-      }
+          LOG.warn(
+              "Failed to parse an error from an endpoint  '{}' ({})",
+              response.status,
+              f.getMessage());
+          LOG.warn("Response: {}", response.response);
         }
+      }
     }
     // Server Error
     if (response.status >= 500 && response.status <= 599) {
       MessageResponse error = GSON.fromJson(response.response, MessageResponse.class);
-      LOG.debug("Error Status: " + response.status);
-      LOG.debug("Error: " + error.title + " (" + error.message + ")");
+      LOG.debug("Error Status: {}", response.status);
+      LOG.debug("Error: {} ({})", error.title, error.message);
     }
   }
 
@@ -249,14 +251,21 @@ public class RestDataLoader extends FileDataLoader {
       RequestGenerator.HttpResponse response = findAndExecutePath(type, key);
       if (isValidResponse(response)) {
         Object data = GSON.fromJson(response.response, type.instanceType);
-        cache(type, key, data);
+        if (type.fileCache) {
+          if (storage.containsKey(type) && storage.get(type).containsKey(key))
+            super.update(type, key, data);
+          else {
+            super.register(type, key, data);
+          }
+        } else {
+          cache(type, key, data);
+        }
         return data;
       } else {
         handleResponseError(response);
       }
     } catch (IOException e) {
-      e.printStackTrace();
-      LOG.warn("Failed to get from API '" + findPath(type, key));
+      LOG.warn("Failed to get from API '{}' ({})", findPath(type, key), e.getMessage());
     }
     return null;
   }
@@ -269,26 +278,24 @@ public class RestDataLoader extends FileDataLoader {
             Field field = data.getClass().getDeclaredField(type.key);
             return (String) field.get(data);
           } catch (Exception e) {
-            e.printStackTrace();
-            LOG.debug("Failed to get key for '" + data.getClass().getSimpleName() + "'");
+            LOG.debug(
+                "Failed to get key for '{}' ({})", data.getClass().getSimpleName(), e.getMessage());
           }
         } else { // Combo Key, generated via pathType
           StringBuilder builder = new StringBuilder();
           String[] queryParams = type.pathType.split(";");
-          for (int index = 0; index < queryParams.length; index++) {
+          for (String queryParam : queryParams) {
             try {
-              Field field = data.getClass().getDeclaredField(queryParams[index]);
+              Field field = data.getClass().getDeclaredField(queryParam);
               builder.append(field.get(data)).append(";");
               String generatedKey = builder.toString();
               return generatedKey.substring(0, generatedKey.length() - 1);
             } catch (Exception e) {
-              e.printStackTrace();
               LOG.debug(
-                  "Failed to get key for '"
-                      + data.getClass().getSimpleName()
-                      + "' ("
-                      + queryParams[index]
-                      + ")");
+                  "Failed to get key for '{}' ({}) ({})",
+                  data.getClass().getSimpleName(),
+                  queryParam,
+                  e.getMessage());
             }
           }
         }
@@ -353,9 +360,8 @@ public class RestDataLoader extends FileDataLoader {
         handleResponseError(response);
       }
     } catch (IOException e) {
-      e.printStackTrace();
-      LOG.debug("Failed to post '" + type.path + "' for '" + key + "'");
-      LOG.debug("JSON: " + GSON.toJson(data));
+      LOG.debug("Failed to post '{}' for '{}' ({})", type.path, key, e.getMessage());
+      LOG.debug("JSON: {}", GSON.toJson(data));
     }
     return false;
   }
@@ -385,12 +391,11 @@ public class RestDataLoader extends FileDataLoader {
         }
         return true;
       } else {
-        LOG.warn("Failed to update '" + type.key + "' (" + response.response + ")");
+        LOG.warn("Failed to update '{}' ({})", type.key, response.response);
       }
     } catch (IOException e) {
-      e.printStackTrace();
-      LOG.debug("Failed to put '" + type.path + "' for '" + key + "'");
-      LOG.debug("JSON: " + GSON.toJson(data));
+      LOG.debug("Failed to put '{}' for '{}' ({})", type.path, key, e.getMessage());
+      LOG.debug("JSON: {}", GSON.toJson(data));
     }
     return false;
   }
@@ -423,7 +428,7 @@ public class RestDataLoader extends FileDataLoader {
         handleResponseError(response);
       }
     } catch (IOException e) {
-      LOG.debug("Failed to delete '" + type.path + "' for '" + key + "'");
+      LOG.debug("Failed to delete '{}' for '{}'", type.path, key);
     }
     return false;
   }

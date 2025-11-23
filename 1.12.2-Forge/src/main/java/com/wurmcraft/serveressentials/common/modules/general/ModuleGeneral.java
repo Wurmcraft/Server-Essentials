@@ -84,22 +84,22 @@ public class ModuleGeneral {
         status = "Lockdown";
       }
       return new ServerStatus(
-              ServerEssentials.config.general.serverID,
-              computeDelay(),
-              Instant.now().getEpochSecond(),
-              playersData[0],
-              playersData[1],
-              status,
-              "{}");
+          ServerEssentials.config.general.serverID,
+          computeDelay(),
+          Instant.now().getEpochSecond(),
+          playersData[0],
+          playersData[1],
+          status,
+          "{}");
     } else {
       return new ServerStatus(
-              ServerEssentials.config.general.serverID,
-              -1L,
-              Instant.now().getEpochSecond(),
-              playersData[0],
-              playersData[1],
-              status,
-              "{}");
+          ServerEssentials.config.general.serverID,
+          -1L,
+          Instant.now().getEpochSecond(),
+          playersData[0],
+          playersData[1],
+          status,
+          "{}");
     }
   }
 

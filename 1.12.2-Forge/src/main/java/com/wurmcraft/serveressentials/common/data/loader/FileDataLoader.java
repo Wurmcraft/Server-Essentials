@@ -22,7 +22,7 @@ public class FileDataLoader extends DataLoader {
   }
 
   /**
-   * Loads the requested folder if its not in cache
+   * Loads the requested folder if it's not in cache
    *
    * @param key type of data you are looking for
    * @param type cast the data to this type
@@ -48,7 +48,7 @@ public class FileDataLoader extends DataLoader {
           if (fileInstance != null) {
             cache(key, file.getName().replaceAll(".json", ""), fileInstance);
           } else {
-            LOG.debug("Failed to load / cache '" + file.getName().replaceAll(".json", "") + "'");
+            LOG.debug("Failed to load / cache '{}'", file.getName().replaceAll(".json", ""));
           }
         } catch (IOException e) {
           LOG.error("Failed to read '" + file.getAbsolutePath() + "'!");
@@ -71,8 +71,7 @@ public class FileDataLoader extends DataLoader {
     try {
       return GSON.fromJson(json, type);
     } catch (JsonParseException e) {
-      e.printStackTrace();
-      LOG.debug("Failed to parse '" + file.getAbsolutePath() + "'");
+      LOG.debug("Failed to parse '{} ({})'", file.getAbsolutePath(), e.getMessage());
     }
     return null;
   }
@@ -137,7 +136,7 @@ public class FileDataLoader extends DataLoader {
           return instance;
         }
       } catch (IOException e) {
-        LOG.error("Failed to read '" + file.getAbsolutePath() + "'!");
+        LOG.debug("Failed to parse '{} ({})'", file.getAbsolutePath(), e.getMessage());
       }
     } else {
       DataRequestEvent event = new DataRequestEvent(type, key);
@@ -183,25 +182,19 @@ public class FileDataLoader extends DataLoader {
             return true;
           }
         } catch (IOException e) {
-          e.printStackTrace();
           LOG.warn(
-              "Failed to write '"
-                  + file.getAbsolutePath()
-                  + "' for type '"
-                  + type.name()
-                  + "' key '"
-                  + key
-                  + "'");
+              "Failed to write '{}' for type '{}' key '{}' ({})",
+              file.getAbsolutePath(),
+              type.name(),
+              key,
+              e.getMessage());
         }
       } else {
         LOG.debug(
-            "Failed to register '"
-                + file.getAbsolutePath()
-                + "' for type '"
-                + type.name()
-                + "' key '"
-                + key
-                + "'");
+            "Failed to register '{}' for type '{}' key '{}'",
+            file.getAbsolutePath(),
+            type.name(),
+            key);
       }
     }
     return false;
@@ -224,25 +217,19 @@ public class FileDataLoader extends DataLoader {
           FileUtils.writeByteArrayToFile(file, GSON.toJson(data).getBytes());
           return true;
         } catch (IOException e) {
-          e.printStackTrace();
-          LOG.warn(
-              "Failed to write '"
-                  + file.getAbsolutePath()
-                  + "' for type '"
-                  + type.name()
-                  + "' key '"
-                  + key
-                  + "'");
+          LOG.debug(
+              "Failed to register '{}' for type '{}' key '{}' ({})",
+              file.getAbsolutePath(),
+              type.name(),
+              key,
+              e.getMessage());
         }
       } else {
         LOG.debug(
-            "Failed to update '"
-                + file.getAbsolutePath()
-                + "' for type '"
-                + type.name()
-                + "' key '"
-                + key
-                + "'");
+            "Failed to update '{}' for type '{}' key '{}'",
+            file.getAbsolutePath(),
+            type.name(),
+            key);
       }
     }
     return false;
@@ -262,8 +249,7 @@ public class FileDataLoader extends DataLoader {
     }
     File file = getFile(type, key);
     if (file.exists() && file.delete()) {
-      LOG.debug(
-          "Deleted file '" + file.getAbsolutePath() + "' type '" + type + "' key '" + key + "'");
+      LOG.debug("Deleted file '{}' type '{}' key '{}'", file.getAbsolutePath(), type, key);
       return true;
     }
     return false;
