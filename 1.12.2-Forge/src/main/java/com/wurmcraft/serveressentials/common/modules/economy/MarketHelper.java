@@ -127,6 +127,9 @@ public class MarketHelper {
       return new ArrayList<>(); // TOOD Implement
     } else {
       List<MarketEntry> listings = new ArrayList<>();
+      if(entries == null) {
+        entries = new ArrayList<>();
+      }
       for (MarketEntry entry : entries) {
         if (entry.seller_uuid.equals(sellerUUID)) {
           listings.add(entry);

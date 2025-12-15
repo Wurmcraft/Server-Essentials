@@ -58,13 +58,13 @@ public class TpPosCommand {
     }
   }
 
-  @Command(
-      args = {CommandArgument.PLAYER, CommandArgument.INTEGER, CommandArgument.INTEGER},
-      usage = {"player", "x", "z"},
-      canConsoleUse = true)
-  public void teleportOtherPos(ServerPlayer player, EntityPlayer otherPlayer, int x, int z) {
-    teleportOtherPos(player, otherPlayer, x, WorldUtils.findTop(otherPlayer.world, x, z), z);
-  }
+  //  @Command(
+  //      args = {CommandArgument.PLAYER, CommandArgument.INTEGER, CommandArgument.INTEGER},
+  //      usage = {"player", "x", "z"},
+  //      canConsoleUse = true)
+  //  public void teleportOtherPos(ServerPlayer player, EntityPlayer otherPlayer, int x, int z) {
+  //    teleportOtherPos(player, otherPlayer, x, WorldUtils.findTop(otherPlayer.world, x, z), z);
+  //  }
 
   @Command(
       args = {

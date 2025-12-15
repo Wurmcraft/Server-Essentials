@@ -15,6 +15,7 @@ import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import java.io.File;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 @ModuleCommand(module = "Security", name = "Lockdown")
 public class LockdownCommand {
@@ -27,7 +28,7 @@ public class LockdownCommand {
     ConfigSecurity securityLock = (ConfigSecurity) SECore.moduleConfigs.get("SECURITY");
     if (securityLock.lockdownEnabled) {
       securityLock.lockdownEnabled = false;
-      for (EntityPlayer p : FMLClientHandler.instance().getServer().getPlayerList().getPlayers()) {
+      for (EntityPlayer p : FMLCommonHandler.instance().getMinecraftServerInstance().getServer().getPlayerList().getPlayers()) {
         Language lang =
             SECore.dataLoader.get(
                 DataType.LANGUAGE,

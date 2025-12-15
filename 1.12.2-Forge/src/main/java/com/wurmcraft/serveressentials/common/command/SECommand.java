@@ -276,6 +276,7 @@ public class SECommand extends CommandBase {
           return true;
         }
       } catch (Exception e) {
+        e.printStackTrace();
         LOG.info("Command: /{} {}", getName(), String.join(" ", args));
         LOG.warn("Failed to execute command ({})", e.getMessage());
         ChatHelper.send(player.sender, player.lang.COMMAND_ERROR);
