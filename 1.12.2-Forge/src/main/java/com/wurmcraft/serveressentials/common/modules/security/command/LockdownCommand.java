@@ -28,7 +28,12 @@ public class LockdownCommand {
     ConfigSecurity securityLock = (ConfigSecurity) SECore.moduleConfigs.get("SECURITY");
     if (securityLock.lockdownEnabled) {
       securityLock.lockdownEnabled = false;
-      for (EntityPlayer p : FMLCommonHandler.instance().getMinecraftServerInstance().getServer().getPlayerList().getPlayers()) {
+      for (EntityPlayer p :
+          FMLCommonHandler.instance()
+              .getMinecraftServerInstance()
+              .getServer()
+              .getPlayerList()
+              .getPlayers()) {
         Language lang =
             SECore.dataLoader.get(
                 DataType.LANGUAGE,
