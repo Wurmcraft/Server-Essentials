@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
@@ -59,18 +61,18 @@ public class MarketHelper {
 
   public static ItemStack getShopDisplayItem(MarketEntry entry, Language lang, boolean global) {
     ItemStack item = getStackForMarketEntry(entry);
-    addTooltip(item, lang.MARKET_COST.replace("\\{@COST@}", "" + entry.currency_amount));
+    addTooltip(item, ChatHelper.replaceColor(lang.MARKET_COST.replaceAll("\\{@COST@}", "" + entry.currency_amount)));
     try {
       addTooltip(
           item,
-          lang.MARKET_SELLER.replace(
+          lang.MARKET_SELLER.replaceAll(
               "\\{@SELLER@}",
               UsernameCache.getLastKnownUsername(UUID.fromString(entry.seller_uuid))));
     } catch (Exception e) {
-      addTooltip(item, lang.MARKET_SELLER.replace("\\{@SELLER@}", "<Error>"));
+      addTooltip(item, ChatHelper.replaceColor(lang.MARKET_SELLER.replaceAll("\\{@SELLER@}", "<Error>")));
     }
     if (global) {
-      addTooltip(item, lang.MARKET_SERVER.replace("\\{@SERVER@}", entry.server_id));
+      addTooltip(item, ChatHelper.replaceColor(lang.MARKET_SERVER.replaceAll("\\{@SERVER@}", entry.server_id)));
     }
     return item;
   }
