@@ -9,7 +9,9 @@ import com.wurmcraft.serveressentials.common.modules.economy.MarketHelper;
 import com.wurmcraft.serveressentials.common.modules.general.command.perk.VaultCommand;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
+
 import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -18,187 +20,165 @@ import net.minecraft.item.ItemStack;
 
 public class ShopInventory extends InventoryBasic {
 
-  public EntityPlayer player;
-  public Language lang;
-  public int page;
-  public String filter;
-  public boolean global;
+    public EntityPlayer player;
+    public Language lang;
+    public int page;
+    public String filter;
+    public boolean global;
 
-  ItemStack[] menu;
-  List<MarketEntry> entries;
+    ItemStack[] menu;
+    List<MarketEntry> entries;
 
-  public ShopInventory(EntityPlayer player, Language lang, int page) {
-    super("", true, 54);
-    this.player = player;
-    this.lang = lang;
-    this.page = page;
-    this.filter = "*";
-    this.global = false;
-    menu = buildMenu();
-    entries = MarketHelper.getEntries(global, filter);
-  }
-
-  public ShopInventory(EntityPlayer player, Language lang, int page, String filter) {
-    super("", true, 54);
-    this.player = player;
-    this.lang = lang;
-    this.page = page;
-    this.filter = filter;
-    this.global = false;
-    menu = buildMenu();
-    entries = MarketHelper.getEntries(global, filter);
-  }
-
-  public ShopInventory(EntityPlayer player, Language lang, int page, boolean global) {
-    super("", true, 54);
-    this.player = player;
-    this.lang = lang;
-    this.page = page;
-    this.filter = "*";
-    this.global = global;
-    menu = buildMenu();
-    entries = MarketHelper.getEntries(global, filter);
-  }
-
-  public ShopInventory(
-      EntityPlayer player, Language lang, int page, boolean global, String filter) {
-    super("", true, 54);
-    this.player = player;
-    this.lang = lang;
-    this.page = page;
-    this.filter = filter;
-    this.global = global;
-    menu = buildMenu();
-    entries = MarketHelper.getEntries(global, filter);
-  }
-
-  private void handleAction(int index) {
-    int maxPages = (entries.size()/  54) - 9;
-    if(maxPages < 0)
-      maxPages = 1;
-    if (index == 1) { // Previous Page
-      page = page - 1;
-      if (page < 0) {
-        page = maxPages - 1;
-      }
+    public ShopInventory(EntityPlayer player, Language lang, int page) {
+        super("", true, 54);
+        this.player = player;
+        this.lang = lang;
+        this.page = page;
+        this.filter = "*";
+        this.global = false;
+        menu = buildMenu();
+        entries = MarketHelper.getEntries(global, filter);
     }
-    if (index == 7) { // Next Page
-      page = page + 1;
-      if (page >= maxPages) {
-        page = 0;
-      }
-    }
-    if (index == 5) { // Listings Menu
-      closeInventory(player);
-      player.closeScreen();
-      // TODO Listings Menu
-      player.displayGUIChest(new ListingsInventory(player));
-      return;
-    }
-    if (index > 8 && index < 55) {
-      MarketEntry entry = entries.get(index - 9); // Remove Top Row, as that's the menu
-      if (tryToBuy(entry)) buyItem(entry);
-    }
-    closeInventory(player);
-    player.closeScreen();
-    player.displayGUIChest(new ShopInventory(player, lang, page, global, filter));
-  }
 
-  @Override
-  public ItemStack getStackInSlot(int index) {
-    if (index >= 0 && index < 9) {
-      return menu[index];
+    public ShopInventory(EntityPlayer player, Language lang, int page, String filter) {
+        super("", true, 54);
+        this.player = player;
+        this.lang = lang;
+        this.page = page;
+        this.filter = filter;
+        this.global = false;
+        menu = buildMenu();
+        entries = MarketHelper.getEntries(global, filter);
     }
-    // TODO Multi Page Support
-    if ((index - 9) < entries.size()) {
-      return MarketHelper.getShopDisplayItem(entries.get(index - 9), lang, global);
+
+    public ShopInventory(EntityPlayer player, Language lang, int page, boolean global) {
+        super("", true, 54);
+        this.player = player;
+        this.lang = lang;
+        this.page = page;
+        this.filter = "*";
+        this.global = global;
+        menu = buildMenu();
+        entries = MarketHelper.getEntries(global, filter);
     }
-    return ItemStack.EMPTY;
-  }
 
-  private ItemStack[] buildMenu() {
-    ItemStack[] items = new ItemStack[9];
-    ItemStack EMPTY = new ItemStack(Blocks.STAINED_GLASS_PANE, 1, 15);
-    EMPTY.setStackDisplayName("");
-    items[0] = EMPTY;
-    ItemStack prev = new ItemStack(Blocks.STAINED_GLASS_PANE, 1, 2);
-    prev.setStackDisplayName(ChatHelper.replaceColor(lang.ITEM_PREV));
-    if (page > 0) {
-      items[1] = prev;
-    } else {
-      items[1] = EMPTY;
+    public ShopInventory(EntityPlayer player, Language lang, int page, boolean global, String filter) {
+        super("", true, 54);
+        this.player = player;
+        this.lang = lang;
+        this.page = page;
+        this.filter = filter;
+        this.global = global;
+        menu = buildMenu();
+        entries = MarketHelper.getEntries(global, filter);
     }
-    items[2] = EMPTY;
-    ItemStack balance = new ItemStack(Items.DIAMOND, 1, 0);
-    balance.setStackDisplayName(
-        ChatHelper.replaceColor(
-            lang.MARKET_BALANCE.replaceAll(
-                "\\{@Amount@}",
-                String.format(
-                    "%.2f",
-                    EcoUtils.balance(
-                        PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString()),
-                        ((ConfigEconomy) SECore.moduleConfigs.get("ECONOMY")).serverCurrency)))));
-    items[3] = balance;
-    ItemStack pageNum = new ItemStack(Items.PAPER, 1, 0);
-    pageNum.setStackDisplayName(
-        ChatHelper.replaceColor(lang.MARKET_PAGE.replaceAll("\\{@PAGE@}", "" + page)));
-    items[4] = pageNum;
-    ItemStack idk = new ItemStack(Items.GOLDEN_APPLE, 1, 1);
-    idk.setStackDisplayName(ChatHelper.replaceColor(lang.MARKET_LISTINGS));
-    items[5] = idk;
-    items[6] = EMPTY;
-    ItemStack next = new ItemStack(Blocks.STAINED_GLASS_PANE, 1, 2);
-    next.setStackDisplayName(ChatHelper.replaceColor(lang.ITEM_NEXT));
-    if (entries != null && !entries.isEmpty() && page < (entries.size()/  54) - 9) {
-      items[7] = next;
-    } else {
-      items[7] = EMPTY;
+
+    private void handleAction(int index) {
+        int maxPages = 3; // TODO Max Pages
+        if (index == 1) { // Previous Page
+            page = page - 1;
+            if (page < 0) {
+                page = maxPages - 1;
+            }
+        }
+        if (index == 7) { // Next Page
+            page = page + 1;
+            if (page >= maxPages) {
+                page = 0;
+            }
+        }
+        if (index == 5) { // Listings Menu
+            closeInventory(player);
+            player.closeScreen();
+            // TODO Listings Menu
+            player.displayGUIChest(new ListingsInventory(player));
+            return;
+        }
+        if (index > 8 && index < 56) {
+            MarketEntry entry = entries.get(index - 9); // Remove Top Row, as that's the menu
+            if (tryToBuy(entry)) buyItem(entry);
+        }
+        closeInventory(player);
+        player.closeScreen();
+        player.displayGUIChest(new ShopInventory(player, lang, page, global, filter));
     }
-    items[8] = EMPTY;
-    return items;
-  }
 
-  @Override
-  public void closeInventory(EntityPlayer player) {
-    super.closeInventory(player);
-    markDirty();
-  }
-
-  @Override
-  public ItemStack removeStackFromSlot(int index) {
-    handleAction(index);
-    return ItemStack.EMPTY;
-  }
-
-  @Override
-  public ItemStack decrStackSize(int index, int count) {
-    handleAction(index);
-    return ItemStack.EMPTY;
-  }
-
-  private boolean tryToBuy(MarketEntry entry) {
-    if (EcoUtils.canBuy(
-        entry.currency_name,
-        entry.currency_amount,
-        PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString()))) {
-      return true;
-    } else {
-      ChatHelper.send(player, lang.NO_MONEY);
+    @Override
+    public ItemStack getStackInSlot(int index) {
+        if (index >= 0 && index < 9) {
+            return menu[index];
+        }
+        // TODO Multi Page Support
+        if ((index - 9) < entries.size()) {
+            return MarketHelper.getShopDisplayItem(entries.get(index - 9), lang, global);
+        }
+        return ItemStack.EMPTY;
     }
-    return false;
-  }
 
-  private void buyItem(MarketEntry entry) {
-    EcoUtils.buy(
-        PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString()),
-        entry.currency_name,
-        entry.currency_amount);
-    if (!player.inventory.addItemStackToInventory(MarketHelper.getStackForMarketEntry(entry))) {
-      VaultCommand.addToMailbox(player, MarketHelper.getStackForMarketEntry(entry));
-      // TODO Add Send to mail notification
+    private ItemStack[] buildMenu() {
+        ItemStack[] items = new ItemStack[9];
+        ItemStack EMPTY = new ItemStack(Blocks.STAINED_GLASS_PANE, 1, 15);
+        EMPTY.setStackDisplayName("");
+        items[0] = EMPTY;
+        ItemStack prev = new ItemStack(Blocks.STAINED_GLASS_PANE, 1, 2);
+        prev.setStackDisplayName(ChatHelper.replaceColor(lang.ITEM_PREV));
+        if (page > 0) {
+            items[1] = prev;
+        } else {
+            items[1] = EMPTY;
+        }
+        items[2] = EMPTY;
+        ItemStack balance = new ItemStack(Items.DIAMOND, 1, 0);
+        balance.setStackDisplayName(ChatHelper.replaceColor(lang.MARKET_BALANCE.replaceAll("\\{@Amount@}", String.format("%.2f", EcoUtils.balance(PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString()), ((ConfigEconomy) SECore.moduleConfigs.get("ECONOMY")).serverCurrency)))));
+        items[3] = balance;
+        ItemStack pageNum = new ItemStack(Items.PAPER, 1, 0);
+        pageNum.setStackDisplayName(ChatHelper.replaceColor(lang.MARKET_PAGE.replaceAll("\\{@PAGE@}", "" + page)));
+        items[4] = pageNum;
+        ItemStack idk = new ItemStack(Items.GOLDEN_APPLE, 1, 1);
+        idk.setStackDisplayName(ChatHelper.replaceColor(lang.MARKET_LISTINGS));
+        items[5] = idk;
+        items[6] = EMPTY;
+        ItemStack next = new ItemStack(Blocks.STAINED_GLASS_PANE, 1, 2);
+        next.setStackDisplayName(ChatHelper.replaceColor(lang.ITEM_NEXT));
+        items[7] = next;
+        items[8] = EMPTY;
+        return items;
     }
-    MarketHelper.entries.remove(entry);
-    MarketHelper.saveLocal();
-  }
+
+    @Override
+    public void closeInventory(EntityPlayer player) {
+        super.closeInventory(player);
+        markDirty();
+    }
+
+    @Override
+    public ItemStack removeStackFromSlot(int index) {
+        handleAction(index);
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public ItemStack decrStackSize(int index, int count) {
+        handleAction(index);
+        return ItemStack.EMPTY;
+    }
+
+    private boolean tryToBuy(MarketEntry entry) {
+        if (EcoUtils.canBuy(entry.currency_name, entry.currency_amount, PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString()))) {
+            return true;
+        } else {
+            ChatHelper.send(player, lang.NO_MONEY);
+        }
+        return false;
+    }
+
+    private void buyItem(MarketEntry entry) {
+        EcoUtils.buy(PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString()), entry.currency_name, entry.currency_amount);
+        if (!player.inventory.addItemStackToInventory(MarketHelper.getStackForMarketEntry(entry))) {
+            VaultCommand.addToMailbox(player, MarketHelper.getStackForMarketEntry(entry));
+            // TODO Add Send to mail notification
+        }
+        MarketHelper.entries.remove(entry);
+        MarketHelper.saveLocal();
+    }
 }

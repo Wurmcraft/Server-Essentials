@@ -4,7 +4,6 @@ import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.MarketEntry;
 import com.wurmcraft.serveressentials.common.data.ConfigLoader;
-import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -13,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
@@ -60,10 +61,7 @@ public class MarketHelper {
 
   public static ItemStack getShopDisplayItem(MarketEntry entry, Language lang, boolean global) {
     ItemStack item = getStackForMarketEntry(entry);
-    addTooltip(
-        item,
-        ChatHelper.replaceColor(
-            lang.MARKET_COST.replaceAll("\\{@COST@}", "" + entry.currency_amount)));
+    addTooltip(item, ChatHelper.replaceColor(lang.MARKET_COST.replaceAll("\\{@COST@}", "" + entry.currency_amount)));
     try {
       addTooltip(
           item,
@@ -71,13 +69,10 @@ public class MarketHelper {
               "\\{@SELLER@}",
               UsernameCache.getLastKnownUsername(UUID.fromString(entry.seller_uuid))));
     } catch (Exception e) {
-      addTooltip(
-          item, ChatHelper.replaceColor(lang.MARKET_SELLER.replaceAll("\\{@SELLER@}", "<Error>")));
+      addTooltip(item, ChatHelper.replaceColor(lang.MARKET_SELLER.replaceAll("\\{@SELLER@}", "<Error>")));
     }
     if (global) {
-      addTooltip(
-          item,
-          ChatHelper.replaceColor(lang.MARKET_SERVER.replaceAll("\\{@SERVER@}", entry.server_id)));
+      addTooltip(item, ChatHelper.replaceColor(lang.MARKET_SERVER.replaceAll("\\{@SERVER@}", entry.server_id)));
     }
     return item;
   }
