@@ -15,11 +15,12 @@ on:
 
 jobs:
   build:
-
+  
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: 1.12.2-Forge
+        shell: bash
+        working-directory: ./1.12.2-Forge
     permissions:
       contents: read
     steps:
@@ -33,8 +34,9 @@ jobs:
     # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-      
+      uses: gradle/actions/setup-gradle@v5
+      with:
+         gradle-version: '4.9'
     - name: Build with Gradle Wrapper
       run: ./gradlew spotlessApply build
 
