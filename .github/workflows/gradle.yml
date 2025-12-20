@@ -33,4 +33,4 @@ jobs:
         with:
           name: Artifacts
           path: build/libs/
-        working-directory: ./1.12.2-Forge
+          working-directory: ./1.12.2-Forge
