@@ -17,14 +17,11 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
     defaults:
       run:
-        working-directory: ./1.12.2-Forge
-        
+        working-directory: 1.12.2-Forge
     permissions:
       contents: read
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 8
@@ -37,7 +34,7 @@ jobs:
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-
+      
     - name: Build with Gradle Wrapper
       run: ./gradlew spotlessApply build
 
@@ -55,12 +52,11 @@ jobs:
   dependency-submission:
 
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      
     defaults:
       run:
-        working-directory: ./1.12.2-Forge
+        working-directory: 1.12.2-Forge
+    permissions:
+      contents: write
 
     steps:
     - uses: actions/checkout@v4
