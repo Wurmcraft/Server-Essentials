@@ -7,13 +7,14 @@ public class ConfigCore {
 
   public String defaultLang;
   public String langStorageURL;
+  public String shutdownMessage;
 
   public boolean iUseAModThatMessesWithNamesPleaseFix;
 
-  public ConfigCore(
-      String defaultLang, String langStorageURL, boolean iUseAModThatMessesWithNamesPleaseFix) {
+  public ConfigCore(String defaultLang, String langStorageURL, String shutdownMessage, boolean iUseAModThatMessesWithNamesPleaseFix) {
     this.defaultLang = defaultLang;
     this.langStorageURL = langStorageURL;
+    this.shutdownMessage = shutdownMessage;
     this.iUseAModThatMessesWithNamesPleaseFix = iUseAModThatMessesWithNamesPleaseFix;
   }
 
@@ -21,6 +22,7 @@ public class ConfigCore {
     this.defaultLang = "en_us";
     this.langStorageURL =
         "https://raw.githubusercontent.com/Wurmcraft/Server-Essentials/dev/1.12.2-Forge/language";
+    this.shutdownMessage = "&cServer Shutdown!";
     iUseAModThatMessesWithNamesPleaseFix = false;
   }
 }

@@ -18,7 +18,9 @@ import com.wurmcraft.serveressentials.common.data.loader.FileDataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.IDataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import com.wurmcraft.serveressentials.common.data.ws.SocketController;
+import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
 import com.wurmcraft.serveressentials.common.modules.general.ModuleGeneral;
+import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.ItemStackConverter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,11 +28,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
@@ -158,6 +161,18 @@ public class ServerEssentials {
       if (SECore.moduleConfigs.get("GENERAL") != null) {
         ModuleGeneral.sendStatusUpdate(true, "Online");
       }
+    }
+  }
+
+  @Mod.EventHandler
+  public void serverStopping(FMLServerStoppingEvent e) {
+    if (SECore.dataLoader.getClass().equals(RestDataLoader.class)) {
+      if (SECore.moduleConfigs.get("GENERAL") != null) {
+        ModuleGeneral.sendStatusUpdate(true, "Offline");
+      }
+    }
+    for(EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+      player.connection.disconnect(new TextComponentString(ChatHelper.replaceColor(((ConfigCore) SECore.moduleConfigs.get("CORE")).shutdownMessage)));
     }
   }
 
