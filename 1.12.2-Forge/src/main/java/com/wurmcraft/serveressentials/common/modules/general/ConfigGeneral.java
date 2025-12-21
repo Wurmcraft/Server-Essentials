@@ -20,6 +20,7 @@ public class ConfigGeneral {
   public String playTimeSync;
   public long statusSync;
   public boolean spawnAtHome;
+  public String globalMOTD;
 
   public ConfigGeneral(
       String defaultHomeName,
@@ -34,7 +35,8 @@ public class ConfigGeneral {
       String afkTimer,
       String playTimeSync,
       long statusSync,
-      boolean spawnAtHome) {
+      boolean spawnAtHome,
+      String globalMOTD) {
     this.defaultHomeName = defaultHomeName;
     this.minHomes = minHomes;
     this.maxHomes = maxHomes;
@@ -48,6 +50,7 @@ public class ConfigGeneral {
     this.playTimeSync = playTimeSync;
     this.statusSync = statusSync;
     this.spawnAtHome = spawnAtHome;
+    this.globalMOTD = globalMOTD;
   }
 
   public ConfigGeneral() {
@@ -64,5 +67,6 @@ public class ConfigGeneral {
     this.playTimeSync = "5m";
     this.statusSync = 90;
     this.spawnAtHome = true;
+    this.globalMOTD = "&cA Minecraft Server \n&b({TIME})";
   }
 }

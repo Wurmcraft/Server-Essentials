@@ -31,6 +31,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -397,5 +398,27 @@ public class GeneralEvents {
       ServerEssentials.LOG.error("Failed to load to freeze.txt");
       ServerEssentials.LOG.error(e.getMessage());
     }
+  }
+
+  @SubscribeEvent
+  public void onServerTick(TickEvent.ServerTickEvent e) {
+    if (!((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).globalMOTD.isEmpty()) {
+      FMLCommonHandler.instance()
+          .getMinecraftServerInstance()
+          .getServer()
+          .getServerStatusResponse()
+          .setServerDescription(
+              new TextComponentString(
+                  formatTitle(((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).globalMOTD)));
+    }
+  }
+
+  private static String formatTitle(String toBeFormatted) {
+    return ChatHelper.replaceColor(
+        toBeFormatted.replaceAll(
+            "\\{TIME}",
+            String.valueOf(
+                FMLCommonHandler.instance().getMinecraftServerInstance().worlds[0].getWorldTime()
+                    / 3600)));
   }
 }
