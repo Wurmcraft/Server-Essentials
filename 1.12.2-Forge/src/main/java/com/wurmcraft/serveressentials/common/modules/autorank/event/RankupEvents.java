@@ -113,10 +113,15 @@ public class RankupEvents {
     }
     if (condition.type.equalsIgnoreCase("ScoreBoard")) {
       try {
-        if (player.getWorldScoreboard().entityHasObjective(player.getGameProfile().getName(), player.getWorldScoreboard().getObjective(condition.value))) {
-            return true;
+        if (player
+            .getWorldScoreboard()
+            .entityHasObjective(
+                player.getGameProfile().getName(),
+                player.getWorldScoreboard().getObjective(condition.value))) {
+          return true;
         }
-      } catch (Exception ignored) {}
+      } catch (Exception ignored) {
+      }
     }
     return false;
   }

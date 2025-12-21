@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -171,8 +170,12 @@ public class ServerEssentials {
         ModuleGeneral.sendStatusUpdate(true, "Offline");
       }
     }
-    for(EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
-      player.connection.disconnect(new TextComponentString(ChatHelper.replaceColor(((ConfigCore) SECore.moduleConfigs.get("CORE")).shutdownMessage)));
+    for (EntityPlayerMP player :
+        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+      player.connection.disconnect(
+          new TextComponentString(
+              ChatHelper.replaceColor(
+                  ((ConfigCore) SECore.moduleConfigs.get("CORE")).shutdownMessage)));
     }
   }
 

@@ -58,6 +58,7 @@ public class ChatHelper {
   }
 
   public static String replaceColor(String message) {
+    if (message == null) return "Error";
     return message.replaceAll("[&]([0-9A-Fa-fK-ORk-or])", "\u00a7$1");
   }
 

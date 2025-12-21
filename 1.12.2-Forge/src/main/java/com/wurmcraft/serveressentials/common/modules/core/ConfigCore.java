@@ -11,7 +11,11 @@ public class ConfigCore {
 
   public boolean iUseAModThatMessesWithNamesPleaseFix;
 
-  public ConfigCore(String defaultLang, String langStorageURL, String shutdownMessage, boolean iUseAModThatMessesWithNamesPleaseFix) {
+  public ConfigCore(
+      String defaultLang,
+      String langStorageURL,
+      String shutdownMessage,
+      boolean iUseAModThatMessesWithNamesPleaseFix) {
     this.defaultLang = defaultLang;
     this.langStorageURL = langStorageURL;
     this.shutdownMessage = shutdownMessage;

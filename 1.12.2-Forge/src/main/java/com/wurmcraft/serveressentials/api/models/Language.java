@@ -269,13 +269,20 @@ public class Language {
   public String COMMAND_TAG_ADD;
   public String COMMAND_TAG_REM;
   public String COMMAND_TAG_LIST;
-
   public String COMMAND_ECO_SET;
   public String COMMAND_ECO_SET_OTHER;
   public String COMMAND_ECO_ADD;
   public String COMMAND_ECO_ADD_OTHER;
   public String COMMAND_ECO_CONSUME;
   public String COMMAND_ECO_CONSUME_OTHER;
+  public String COMMAND_REWARD_NO_POINTS;
+  public String COMMAND_REWARD_GIVEN;
+  public String COMMAND_REWARD_GIVEN_VAULT;
+  public String COMMAND_REWARD_CREATED;
+  public String COMMAND_REWARD_INVALID;
+  public String COMMAND_REWARD_REMOVED;
+  public String COMMAND_REWARD_REMOVED_NONE;
+  public String COMMAND_REWARD_POINTS_SET;
 
   // Protect
   public String PROTECT_BREAK;

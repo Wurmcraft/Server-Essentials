@@ -19,7 +19,6 @@ import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -30,22 +29,22 @@ import net.minecraft.entity.player.EntityPlayer;
 public class ARCommand {
 
   @Command(
-          args = {},
-          usage = {},
-          isSubCommand = false,
-          subCommandAliases = {},
-          canConsoleUse = false)
+      args = {},
+      usage = {},
+      isSubCommand = false,
+      subCommandAliases = {},
+      canConsoleUse = false)
   public void base(ServerPlayer player) {
     displayAutoRankRequirements(player.global, player.sender);
     RankupEvents.checkAndHandleUpdate(player.player, player.global);
   }
 
   @Command(
-          args = {},
-          usage = {},
-          isSubCommand = true,
-          subCommandAliases = {"Check", "chk"},
-          canConsoleUse = false)
+      args = {},
+      usage = {},
+      isSubCommand = true,
+      subCommandAliases = {"Check", "chk"},
+      canConsoleUse = false)
   public void check(ServerPlayer player) {
     displayAutoRankRequirements(player.global, player.sender);
     RankupEvents.checkAndHandleUpdate(player.player, player.global);
@@ -68,11 +67,12 @@ public class ARCommand {
       }
     } else {
       UUID localUUID = PlayerUtils.getUUIDFromLocalUsername(other);
-      if(localUUID != null) {
+      if (localUUID != null) {
         Account account = PlayerUtils.getLatestAccount(String.valueOf(localUUID));
         displayAutoRankRequirements(account, player.sender);
       } else {
-        ChatHelper.send(player.sender, player.lang.PLAYER_NOT_FOUND.replace("\\{}@PLAYER@}", other));
+        ChatHelper.send(
+            player.sender, player.lang.PLAYER_NOT_FOUND.replace("\\{}@PLAYER@}", other));
       }
     }
   }

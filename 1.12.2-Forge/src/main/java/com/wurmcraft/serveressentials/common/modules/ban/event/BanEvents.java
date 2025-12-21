@@ -27,7 +27,10 @@ public class BanEvents {
         Ban[] userBans = ServerEssentials.GSON.fromJson(response.response, Ban[].class);
         for (Ban userBan : userBans) {
           if (userBan.ban_status) {
-              ServerEssentials.LOG.warn("User with ban has joined, ({}, '{}', Kicking", uuid, e.player.getDisplayNameString());
+            ServerEssentials.LOG.warn(
+                "User with ban has joined, ({}, '{}', Kicking",
+                uuid,
+                e.player.getDisplayNameString());
             Language userLang = CommandUtils.getPlayerLang(e.player);
             try {
               ((EntityPlayerMP) e.player)
@@ -48,9 +51,12 @@ public class BanEvents {
                               + "')")); // TODO Implement Temp ban
             }
           } else {
-              ServerEssentials.LOG.warn("User with expired ban has joined, ({}, '{}'", uuid, e.player.getDisplayNameString());
-              ServerEssentials.LOG.warn("Reason: {}", userBan.ban_reason);
-              ServerEssentials.LOG.warn("Type: {}", userBan.ban_type);
+            ServerEssentials.LOG.warn(
+                "User with expired ban has joined, ({}, '{}'",
+                uuid,
+                e.player.getDisplayNameString());
+            ServerEssentials.LOG.warn("Reason: {}", userBan.ban_reason);
+            ServerEssentials.LOG.warn("Type: {}", userBan.ban_type);
           }
         }
       }

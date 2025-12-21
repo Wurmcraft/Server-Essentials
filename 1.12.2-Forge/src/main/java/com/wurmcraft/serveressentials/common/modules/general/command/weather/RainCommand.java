@@ -47,7 +47,9 @@ public class RainCommand {
       world.getWorldInfo().setThundering(false);
       ChatHelper.send(player.sender, player.lang.COMMAND_WEATHER_RAIN);
     } catch (Exception e) {
-      ChatHelper.send(player.sender, player.lang.INVALID_DIMENSION.replaceAll("\\{@DIM@}", String.valueOf(dim)));
+      ChatHelper.send(
+          player.sender,
+          player.lang.INVALID_DIMENSION.replaceAll("\\{@DIM@}", String.valueOf(dim)));
     }
   }
 }

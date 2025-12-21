@@ -263,9 +263,8 @@ public class PlayerUtils {
   }
 
   public static UUID getUUIDFromLocalUsername(String username) {
-    for(UUID uuid : UsernameCache.getMap().keySet())
-      if(UsernameCache.getLastKnownUsername(uuid).equalsIgnoreCase(username))
-        return uuid;
+    for (UUID uuid : UsernameCache.getMap().keySet())
+      if (UsernameCache.getLastKnownUsername(uuid).equalsIgnoreCase(username)) return uuid;
     return null;
   }
 }
