@@ -34,7 +34,7 @@ public class BulletinCommand {
           player
               .lang
               .COMMAND_BULLETIN
-              .replaceAll("\\{@TITLE@}", title)
+              .replaceAll("\\{@TITLE@}", title.replaceAll("_", " "))
               .replaceAll(
                   "\\{@TIME@}",
                   CommandUtils.displayTime(

@@ -98,7 +98,7 @@ public class ChannelCommand {
         ChatHelper.send(
             player.sender, player.lang.COMMAND_CHANNEL_DELETED.replaceAll("\\{@NAME@}", ch.name));
       } else {
-        LOG.warn("Failed to delete Channel '" + ch.name + "'");
+          LOG.warn("Failed to delete Channel '{}'", ch.name);
       }
     } else {
       ChatHelper.send(player.sender, new TextComponentTranslation("commands.generic.permission"));

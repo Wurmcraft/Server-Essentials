@@ -261,4 +261,11 @@ public class PlayerUtils {
         ((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang,
         new Language());
   }
+
+  public static UUID getUUIDFromLocalUsername(String username) {
+    for(UUID uuid : UsernameCache.getMap().keySet())
+      if(UsernameCache.getLastKnownUsername(uuid).equalsIgnoreCase(username))
+        return uuid;
+    return null;
+  }
 }

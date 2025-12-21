@@ -15,7 +15,6 @@ import java.time.Instant;
 import java.util.HashMap;
 import net.minecraft.entity.player.EntityPlayer;
 
-// TODO Disable user market entries, etc...
 @ModuleCommand(
     module = "Ban",
     name = "ban",

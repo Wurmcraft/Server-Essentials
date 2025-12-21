@@ -87,7 +87,7 @@ public class RankupEvents {
           ServerEssentials.LOG.warn("Failed to load rankup conditions for '" + rank.rank + "'");
         }
       }
-      if (conditions != null && conditions.length > 0) {
+      if (conditions != null) {
         for (RankupCondition condition : conditions) {
           if (!checkRankupCondition(PlayerUtils.getFromUUID(account.uuid), account, condition))
             return false;
@@ -111,9 +111,13 @@ public class RankupEvents {
         }
       }
     }
-    // TODO More Conditions
-    if (condition.type.equalsIgnoreCase("ScoreBoard")) {}
-
+    if (condition.type.equalsIgnoreCase("ScoreBoard")) {
+      try {
+        if (player.getWorldScoreboard().entityHasObjective(player.getGameProfile().getName(), player.getWorldScoreboard().getObjective(condition.value))) {
+            return true;
+        }
+      } catch (Exception ignored) {}
+    }
     return false;
   }
 
@@ -163,6 +167,7 @@ public class RankupEvents {
                 .replaceAll("\\{@NAME@}", ChatHelper.getName(player, account)));
       }
     }
+    // if(((ConfigAutorank) SECore.moduleConfigs.get("AUTORANK")).announceRackup) {}
     // TODO Rankup notification on bridge (depending on configuration)
   }
 }
