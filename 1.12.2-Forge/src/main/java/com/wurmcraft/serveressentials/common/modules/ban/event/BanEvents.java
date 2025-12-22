@@ -3,6 +3,7 @@ package com.wurmcraft.serveressentials.common.modules.ban.event;
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.event.PlayerLoadEvent;
 import com.wurmcraft.serveressentials.api.models.Ban;
+import com.wurmcraft.serveressentials.api.models.BanData;
 import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.common.command.CommandUtils;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
@@ -33,6 +34,11 @@ public class BanEvents {
                 e.player.getDisplayNameString());
             Language userLang = CommandUtils.getPlayerLang(e.player);
             try {
+              String timeLeft = "PERM";
+              if(userBan.ban_type.equalsIgnoreCase("TEMP")) {
+                BanData data = ServerEssentials.GSON.fromJson(userBan.ban_data, BanData.class);
+                timeLeft = CommandUtils.displayTime(System.currentTimeMillis() - data.time);
+              }
               ((EntityPlayerMP) e.player)
                   .connection.disconnect(
                       new TextComponentString(
@@ -40,15 +46,20 @@ public class BanEvents {
                                   userLang.BANNED.replaceAll("\\{@REASON@}", userBan.ban_reason))
                               .replaceAll(
                                   "\\{@TIME@}",
-                                  CommandUtils.displayTime(0)))); // TODO Implement Temp ban
+                                      timeLeft)));
             } catch (Exception f) {
               f.printStackTrace();
+              String timeLeft = "PERM";
+              if(userBan.ban_type.equalsIgnoreCase("TEMP")) {
+                BanData data = ServerEssentials.GSON.fromJson(userBan.ban_data, BanData.class);
+                timeLeft = CommandUtils.displayTime(System.currentTimeMillis() - data.time);
+              }
               ((EntityPlayerMP) e.player)
                   .connection.disconnect(
                       new TextComponentString(
                           "You are banned! (Unable to retrieve language '"
                               + e.account.lang
-                              + "')")); // TODO Implement Temp ban
+                              + "') for " + timeLeft));
             }
           } else {
             ServerEssentials.LOG.warn(
