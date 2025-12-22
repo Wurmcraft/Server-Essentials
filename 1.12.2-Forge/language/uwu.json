@@ -17,6 +17,8 @@
   "COMMAND_ERROR": "&cCommand *whispers to self* faiwed *sweats* t-to wun?!?1",
   "SOCIAL_SPY_TAG": "&5[Social Spy]",
   "HOME_OVER": "&b{@X@}, {@Y@}, {@Z@}, {@DIM@}",
+  "SENT_TO_MAILBOX": "&bItemus havu beau seut to youur mauwuboxu",
+  "MAILBOX_HAS_ITEMS": "&bYour MailruBururu has itumus to clumuru",
   "DISPLAY_VAULT": "&6Vauwt: {@NAME@}",
   "ITEM_PREV": "&6<- Pwevious ",
   "ITEM_NEXT": "&6Nyext ->",

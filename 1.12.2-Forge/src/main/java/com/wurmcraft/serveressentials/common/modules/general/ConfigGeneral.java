@@ -21,6 +21,7 @@ public class ConfigGeneral {
   public long statusSync;
   public boolean spawnAtHome;
   public String globalMOTD;
+  public boolean notifyMailboxItems;
 
   public ConfigGeneral(
       String defaultHomeName,
@@ -36,7 +37,7 @@ public class ConfigGeneral {
       String playTimeSync,
       long statusSync,
       boolean spawnAtHome,
-      String globalMOTD) {
+      String globalMOTD, boolean notifyMailboxItems) {
     this.defaultHomeName = defaultHomeName;
     this.minHomes = minHomes;
     this.maxHomes = maxHomes;
@@ -51,6 +52,7 @@ public class ConfigGeneral {
     this.statusSync = statusSync;
     this.spawnAtHome = spawnAtHome;
     this.globalMOTD = globalMOTD;
+    this.notifyMailboxItems = notifyMailboxItems;
   }
 
   public ConfigGeneral() {
@@ -68,5 +70,6 @@ public class ConfigGeneral {
     this.statusSync = 90;
     this.spawnAtHome = true;
     this.globalMOTD = "&cA Minecraft Server \n&b({TIME})";
+    this.notifyMailboxItems = true;
   }
 }

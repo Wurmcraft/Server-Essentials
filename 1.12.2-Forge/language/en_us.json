@@ -17,6 +17,8 @@
   "COMMAND_ERROR": "&cCommand failed to run!",
   "SOCIAL_SPY_TAG": "&5&l[&dSocial Spy&5]",
   "HOME_OVER": "&4{@X@}, &a{@Y@}, &3{@Z@}, &d{@DIM@}",
+  "SENT_TO_MAILBOX": "&bItems have been sent to your mailbox",
+  "MAILBOX_HAS_ITEMS": "&bYour Mailbox has items to claim",
   "DISPLAY_VAULT": "&6Vault: &e{@NAME@}",
   "ITEM_PREV": "&e<-&6 Previous",
   "ITEM_NEXT": "&6Next &e->",

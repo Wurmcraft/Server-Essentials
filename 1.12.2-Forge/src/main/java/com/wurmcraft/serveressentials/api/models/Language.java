@@ -20,6 +20,8 @@ public class Language {
   public String COMMAND_DELAY;
   public String COMMAND_DELAY_MOVE;
   public String COMMAND_COOLDOWN;
+  public String SENT_TO_MAILBOX;
+  public String MAILBOX_HAS_ITEMS;
 
   // Chat
   public String SPACER;

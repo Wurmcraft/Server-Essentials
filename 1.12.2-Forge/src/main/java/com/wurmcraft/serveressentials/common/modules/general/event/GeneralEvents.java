@@ -6,6 +6,7 @@ import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.Account;
 import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.LastPos;
+import com.wurmcraft.serveressentials.api.models.Vault;
 import com.wurmcraft.serveressentials.api.models.account.ServerTime;
 import com.wurmcraft.serveressentials.api.models.local.LocalAccount;
 import com.wurmcraft.serveressentials.api.models.local.Location;
@@ -16,6 +17,7 @@ import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.core.ConfigCore;
 import com.wurmcraft.serveressentials.common.modules.general.ConfigGeneral;
+import com.wurmcraft.serveressentials.common.modules.general.command.perk.VaultCommand;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
 import com.wurmcraft.serveressentials.common.utils.TeleportUtils;
@@ -73,6 +75,12 @@ public class GeneralEvents {
             TimeUnit.SECONDS);
     playtimeSync.put(e.player.getGameProfile().getId().toString(), future);
     if (frozenPlayers == null || frozenPlayers.isEmpty()) loadFreezeFile();
+    if(((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).notifyMailboxItems) {
+      Vault mailbox = VaultCommand.getVault(e.player.getGameProfile().getId().toString(), "mailbox");
+      if ((mailbox != null && mailbox.items != null && mailbox.items.length > 0)) {
+        ChatHelper.send(e.player, PlayerUtils.getLang(e.player).MAILBOX_HAS_ITEMS);
+      }
+    }
   }
 
   @SubscribeEvent(priority = EventPriority.HIGH)
