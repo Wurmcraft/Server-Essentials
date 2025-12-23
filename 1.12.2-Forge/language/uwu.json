@@ -270,6 +270,8 @@
   "COMMAND_REWARD_REMOVED": "&bRewaruwu Destroytaru!",
   "COMMAND_REWARD_REMOVED_NONE": "&bRewarda Dontau Existu",
   "COMMAND_REWARD_POINTS_SET": "&bRewaruu pointz adderu, User has a totu of {@AMOUNT@}",
+  "COMMAND_CLAIM_CLAIMED": "&bChunukiu is arwudu uwuwed",
+  "COMMAND_CLAIM_NEW": "&bYouru Duumuinu is Aluwuwuwu",
   "MARKET_SELLER": "&bSellru: {@SELLER@}",
   "MARKET_COST": "&bCosu: {@COST@}",
   "MARKET_SERVER": "&bSevru: {@SERVER_ID@}",

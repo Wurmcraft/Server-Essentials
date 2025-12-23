@@ -53,7 +53,8 @@ public class BanCommand {
                 .replaceAll("\\{@USER@}", uuid)
                 .replaceAll(
                     "\\{@TIME@}", CommandUtils.displayTime(CommandUtils.convertToTime(time))));
-          ServerEssentials.LOG.info("User '{}' has been banned by {} for '{}'", uuid, ban.banned_by, ban.ban_reason);
+        ServerEssentials.LOG.info(
+            "User '{}' has been banned by {} for '{}'", uuid, ban.banned_by, ban.ban_reason);
       } else {
         ServerEssentials.LOG.warn("Failed to ban user '" + uuid + "' (" + response.status + ")");
         ServerEssentials.LOG.warn(response.response);

@@ -35,7 +35,7 @@ public class BanEvents {
             Language userLang = CommandUtils.getPlayerLang(e.player);
             try {
               String timeLeft = "PERM";
-              if(userBan.ban_type.equalsIgnoreCase("TEMP")) {
+              if (userBan.ban_type.equalsIgnoreCase("TEMP")) {
                 BanData data = ServerEssentials.GSON.fromJson(userBan.ban_data, BanData.class);
                 timeLeft = CommandUtils.displayTime(System.currentTimeMillis() - data.time);
               }
@@ -44,13 +44,11 @@ public class BanEvents {
                       new TextComponentString(
                           ChatHelper.replaceColor(
                                   userLang.BANNED.replaceAll("\\{@REASON@}", userBan.ban_reason))
-                              .replaceAll(
-                                  "\\{@TIME@}",
-                                      timeLeft)));
+                              .replaceAll("\\{@TIME@}", timeLeft)));
             } catch (Exception f) {
               f.printStackTrace();
               String timeLeft = "PERM";
-              if(userBan.ban_type.equalsIgnoreCase("TEMP")) {
+              if (userBan.ban_type.equalsIgnoreCase("TEMP")) {
                 BanData data = ServerEssentials.GSON.fromJson(userBan.ban_data, BanData.class);
                 timeLeft = CommandUtils.displayTime(System.currentTimeMillis() - data.time);
               }
@@ -59,7 +57,8 @@ public class BanEvents {
                       new TextComponentString(
                           "You are banned! (Unable to retrieve language '"
                               + e.account.lang
-                              + "') for " + timeLeft));
+                              + "') for "
+                              + timeLeft));
             }
           } else {
             ServerEssentials.LOG.warn(

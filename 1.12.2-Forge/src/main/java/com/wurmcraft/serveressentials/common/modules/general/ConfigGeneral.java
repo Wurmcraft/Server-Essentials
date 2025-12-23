@@ -37,7 +37,8 @@ public class ConfigGeneral {
       String playTimeSync,
       long statusSync,
       boolean spawnAtHome,
-      String globalMOTD, boolean notifyMailboxItems) {
+      String globalMOTD,
+      boolean notifyMailboxItems) {
     this.defaultHomeName = defaultHomeName;
     this.minHomes = minHomes;
     this.maxHomes = maxHomes;

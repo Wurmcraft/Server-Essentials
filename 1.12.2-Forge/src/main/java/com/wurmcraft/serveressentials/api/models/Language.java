@@ -285,6 +285,8 @@ public class Language {
   public String COMMAND_REWARD_REMOVED;
   public String COMMAND_REWARD_REMOVED_NONE;
   public String COMMAND_REWARD_POINTS_SET;
+  public String COMMAND_CLAIM_CLAIMED;
+  public String COMMAND_CLAIM_NEW;
 
   // Protect
   public String PROTECT_BREAK;

@@ -270,6 +270,8 @@
   "COMMAND_REWARD_REMOVED": "&bReward Removed!",
   "COMMAND_REWARD_REMOVED_NONE": "&bNo Reward Exists",
   "COMMAND_REWARD_POINTS_SET": "&bReward points added, User has a total of {@AMOUNT@}",
+  "COMMAND_CLAIM_CLAIMED": "&bChunk is already claimed",
+  "COMMAND_CLAIM_NEW": "&bClaim has been created",
   "MARKET_SELLER": "&bSeller: {@SELLER@}",
   "MARKET_COST": "&bCost: {@COST@}",
   "MARKET_SERVER": "&bServer: {@SERVER_ID@}",

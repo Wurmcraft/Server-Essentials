@@ -75,8 +75,9 @@ public class GeneralEvents {
             TimeUnit.SECONDS);
     playtimeSync.put(e.player.getGameProfile().getId().toString(), future);
     if (frozenPlayers == null || frozenPlayers.isEmpty()) loadFreezeFile();
-    if(((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).notifyMailboxItems) {
-      Vault mailbox = VaultCommand.getVault(e.player.getGameProfile().getId().toString(), "mailbox");
+    if (((ConfigGeneral) SECore.moduleConfigs.get("GENERAL")).notifyMailboxItems) {
+      Vault mailbox =
+          VaultCommand.getVault(e.player.getGameProfile().getId().toString(), "mailbox");
       if ((mailbox != null && mailbox.items != null && mailbox.items.length > 0)) {
         ChatHelper.send(e.player, PlayerUtils.getLang(e.player).MAILBOX_HAS_ITEMS);
       }

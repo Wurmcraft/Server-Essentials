@@ -1,5 +1,7 @@
 package com.wurmcraft.serveressentials.common.modules.autorank.event;
 
+import static com.wurmcraft.serveressentials.ServerEssentials.config;
+
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.*;
@@ -11,18 +13,15 @@ import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import com.wurmcraft.serveressentials.common.modules.autorank.ConfigAutorank;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
-import static com.wurmcraft.serveressentials.ServerEssentials.config;
 
 public class RankupEvents {
 
@@ -176,13 +175,29 @@ public class RankupEvents {
                 .replaceAll("\\{@RANK@}", autoRank.next_rank)
                 .replaceAll("\\{@NAME@}", ChatHelper.getName(player, account)));
       }
-      if(SECore.dataLoader instanceof RestDataLoader && config.performance.useWebsocket)
+      if (SECore.dataLoader instanceof RestDataLoader && config.performance.useWebsocket)
         try {
-            ServerEssentials.socketController.send(new WSWrapper(201, WSWrapper.Type.MESSAGE, new DataWrapper("Chat", ServerEssentials.GSON.toJson(new ChatMessage("Minecraft", config.general.serverID, config.general.serverID, player.getDisplayNameString(), "has ranked up! (" + autoRank.rank + " -> " + autoRank.next_rank + ")")))));
+          ServerEssentials.socketController.send(
+              new WSWrapper(
+                  201,
+                  WSWrapper.Type.MESSAGE,
+                  new DataWrapper(
+                      "Chat",
+                      ServerEssentials.GSON.toJson(
+                          new ChatMessage(
+                              "Minecraft",
+                              config.general.serverID,
+                              config.general.serverID,
+                              player.getDisplayNameString(),
+                              "has ranked up! ("
+                                  + autoRank.rank
+                                  + " -> "
+                                  + autoRank.next_rank
+                                  + ")")))));
         } catch (Exception e) {
-            ServerEssentials.LOG.warn("Failed to send rankup message for user {}", player.getDisplayNameString());
+          ServerEssentials.LOG.warn(
+              "Failed to send rankup message for user {}", player.getDisplayNameString());
         }
-
     }
   }
 }
