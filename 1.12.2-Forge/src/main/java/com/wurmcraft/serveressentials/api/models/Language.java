@@ -287,6 +287,9 @@ public class Language {
   public String COMMAND_REWARD_POINTS_SET;
   public String COMMAND_CLAIM_CLAIMED;
   public String COMMAND_CLAIM_NEW;
+  public String COMMAND_TRUST_NONE;
+  public String COMMAND_TRUST_DONT_OWN;
+  public String COMMAND_TRUST_ADDED;
 
   // Protect
   public String PROTECT_BREAK;

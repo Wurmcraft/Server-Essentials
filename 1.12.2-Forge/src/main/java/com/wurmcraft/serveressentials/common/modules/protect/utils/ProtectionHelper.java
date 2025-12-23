@@ -51,6 +51,25 @@ public class ProtectionHelper {
     }
   }
 
+  public static void update(Claim claim, int dim) {
+    BlockPos center =
+        new BlockPos(
+            claim.min.x + (claim.max.x - claim.min.x) / 2,
+            claim.min.y + (claim.max.y - claim.min.y) / 2,
+            claim.min.z + (claim.max.z - claim.min.z) / 2);
+    RegionPos region = RegionHelper.getRegionPos(center, dim);
+    RegionClaim regionData =
+        SECore.dataLoader.get(DataType.CLAIM, RegionHelper.convert(region), new RegionClaim());
+    for (int index = 0; index < regionData.claims.length; index++) {
+      Claim c = regionData.claims[index];
+      if (c.owner.equals(claim.owner) && c.min.equals(claim.min) && c.max.equals(claim.max)) {
+        regionData.claims[index] = claim;
+        SECore.dataLoader.update(DataType.CLAIM, RegionHelper.convert(region), regionData);
+        return;
+      }
+    }
+  }
+
   public static boolean isAllowed(Claim claim, EntityPlayer player, Action action) {
     return false;
   }

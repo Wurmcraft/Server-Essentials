@@ -11,4 +11,13 @@ public class Position {
     this.y = y;
     this.z = z;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof Position) {
+      Position p = (Position) obj;
+      return (x == p.x) && (y == p.y) && (z == p.z);
+    }
+    return false;
+  }
 }
