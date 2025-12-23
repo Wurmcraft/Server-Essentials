@@ -89,7 +89,6 @@ public class ChatHelper {
     LOG.info("[Chat]: {}", message.getFormattedText());
     if (SECore.dataLoader instanceof RestDataLoader
         && ServerEssentials.config.performance.useWebsocket) {
-      // TODO Config / non-web socket support? possibly via matterbridge?
       try {
         ServerEssentials.socketController.send(
             new WSWrapper(
