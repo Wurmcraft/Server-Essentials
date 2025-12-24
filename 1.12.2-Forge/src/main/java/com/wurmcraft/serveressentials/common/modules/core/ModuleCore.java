@@ -10,16 +10,16 @@ import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import com.wurmcraft.serveressentials.common.modules.core.event.PlayerDataTrackerEvent;
 import com.wurmcraft.serveressentials.common.modules.core.event.RestPlayerTrackerEvent;
+import com.wurmcraft.serveressentials.common.utils.RestTransferUtils;
 import java.io.File;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 @Module(name = "Core", forceAlwaysLoaded = true)
 public class ModuleCore {
 
   public void setup() {
     if (SECore.dataLoader instanceof RestDataLoader) {
-      if (hasFileDate()) {
+      if (hasFileData()) {
         ServerEssentials.LOG.warn(
             "File based storage detected, attempting to move over the file to the database!");
         updateToDatabase();
@@ -31,17 +31,14 @@ public class ModuleCore {
     ModuleCore.reloadLanguageFile(((ConfigCore) SECore.moduleConfigs.get("CORE")).defaultLang);
   }
 
-  private boolean hasFileDate() {
+  private boolean hasFileData() {
     return new File(SAVE_DIR + File.separator + "Storage" + File.separator + "account").exists();
   }
 
   public void reload() {}
 
   private static void updateToDatabase() {
-    FMLCommonHandler.instance().getMinecraftServerInstance().saveAllWorlds(true);
-    FMLCommonHandler.instance().exitJava(69420, false);
-    ServerEssentials.LOG.warn("Not Implemented!");
-    // TODO Implement
+    RestTransferUtils.transferToRest();
   }
 
   public static void reloadLanguageFile(String key) {

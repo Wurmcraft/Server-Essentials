@@ -180,7 +180,7 @@ public class RestDataLoader extends FileDataLoader {
   private void handleResponseError(RequestGenerator.HttpResponse response) {
     // Client Error
     if (response.status >= 400 && response.status <= 499) {
-      if (response.status == 404) { // 404 is empty, no message
+      if (response.status == 404 || response.status == 409) { // 404,409 is empty, no message
         return;
       }
       try {
@@ -195,11 +195,11 @@ public class RestDataLoader extends FileDataLoader {
           MessageResponse error = GSON.fromJson(response.response, MessageResponse.class);
           LOG.debug("Error ({}) : {} ({})", response.status, error.title, error.message);
         } catch (Exception f) {
+          LOG.warn("Response: {}", response.response);
           LOG.warn(
               "Failed to parse an error from an endpoint  '{}' ({})",
               response.status,
               f.getMessage());
-          LOG.warn("Response: {}", response.response);
         }
       }
     }
