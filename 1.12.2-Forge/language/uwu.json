@@ -280,5 +280,7 @@
   "MARKET_SERVER": "&bSevru: {@SERVER_ID@}",
   "MARKET_BALANCE": "&bBulnceu: {@Amount@}",
   "MARKET_PAGE": "&bPueu {@PAGE@}",
-  "MARKET_LISTINGS": "&b-=- Lisuru -=-"
+  "MARKET_LISTINGS": "&b-=- Lisuru -=-",
+  "COMMAND_VAULT_UPGRADED": "&bVauwu Max Pagegu Upgruaguru",
+  "DISPLAY_VAULT_ADDPAGE": "&bAuwu Pugu"
 }

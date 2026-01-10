@@ -290,6 +290,8 @@ public class Language {
   public String COMMAND_TRUST_NONE;
   public String COMMAND_TRUST_DONT_OWN;
   public String COMMAND_TRUST_ADDED;
+  public String COMMAND_VAULT_UPGRADED;
+  public String DISPLAY_VAULT_ADDPAGE;
 
   // Protect
   public String PROTECT_BREAK;

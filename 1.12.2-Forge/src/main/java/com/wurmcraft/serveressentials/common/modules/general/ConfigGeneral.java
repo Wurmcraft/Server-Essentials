@@ -22,6 +22,8 @@ public class ConfigGeneral {
   public boolean spawnAtHome;
   public String globalMOTD;
   public boolean notifyMailboxItems;
+  public double vaultPageCostMultiplier;
+  public double vaultPageBaseCost;
 
   public ConfigGeneral(
       String defaultHomeName,
@@ -38,7 +40,9 @@ public class ConfigGeneral {
       long statusSync,
       boolean spawnAtHome,
       String globalMOTD,
-      boolean notifyMailboxItems) {
+      boolean notifyMailboxItems,
+      double vaultPageCostMultiplier,
+      double vaultPageBaseCost) {
     this.defaultHomeName = defaultHomeName;
     this.minHomes = minHomes;
     this.maxHomes = maxHomes;
@@ -54,6 +58,8 @@ public class ConfigGeneral {
     this.spawnAtHome = spawnAtHome;
     this.globalMOTD = globalMOTD;
     this.notifyMailboxItems = notifyMailboxItems;
+    this.vaultPageCostMultiplier = vaultPageCostMultiplier;
+    this.vaultPageBaseCost = vaultPageBaseCost;
   }
 
   public ConfigGeneral() {
@@ -72,5 +78,7 @@ public class ConfigGeneral {
     this.spawnAtHome = true;
     this.globalMOTD = "&cA Minecraft Server \n&b({TIME})";
     this.notifyMailboxItems = true;
+    this.vaultPageCostMultiplier = 1.5;
+    this.vaultPageBaseCost = 1000;
   }
 }

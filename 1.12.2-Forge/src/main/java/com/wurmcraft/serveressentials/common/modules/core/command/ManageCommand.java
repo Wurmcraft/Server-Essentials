@@ -11,7 +11,6 @@ import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 @ModuleCommand(module = "Core", name = "Manage", defaultSecure = true)
 public class ManageCommand {
 
-  // TODO Add Force Load
   @Command(
       args = {CommandArgument.DATA_TYPE, CommandArgument.STRING},
       usage = {"type", "key"},

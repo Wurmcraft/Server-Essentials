@@ -280,5 +280,7 @@
   "MARKET_SERVER": "&bServer: {@SERVER_ID@}",
   "MARKET_BALANCE": "&bBalance: {@Amount@}",
   "MARKET_PAGE": "&bPage {@PAGE@}",
-  "MARKET_LISTINGS": "&b-=- Listings -=-"
+  "MARKET_LISTINGS": "&b-=- Listings -=-",
+  "COMMAND_VAULT_UPGRADED": "&bVault Max Pages Upgraded",
+  "DISPLAY_VAULT_ADDPAGE": "&bAdd Page"
 }

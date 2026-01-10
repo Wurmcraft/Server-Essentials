@@ -86,7 +86,10 @@ public class VaultInventory extends InventoryBasic {
   public ItemStack getStackInSlot(int index) {
     if (index > 8 && index < vault.maxPages * 45) {
       int x = (index - 9) + (45 * page);
-      return ServerEssentials.stackConverter.getData(vault.items[x]);
+      if(x < vault.items.length)
+        return ServerEssentials.stackConverter.getData(vault.items[x]);
+      else
+          return ItemStack.EMPTY;
     }
     if (index < 9) {
       return menu[index];
@@ -148,11 +151,11 @@ public class VaultInventory extends InventoryBasic {
   @Override
   public void setInventorySlotContents(int index, ItemStack stack) {
     if (index > 8 && index < (45 * vault.maxPages) + 9) {
-      if (vault.items.length > index) { // place into existing vault
+      if (vault.items.length > (index - 9 + (page * 45))) { // place into existing vault
         vault.items[index - 9 + (page * 45)] = ServerEssentials.stackConverter.toString(stack);
         markDirty();
       } else { // Expand Vault to fit new items
-        vault.items = Arrays.copyOf(vault.items, 45 * (index / 45));
+        vault.items = Arrays.copyOf(vault.items, vault.maxPages * (54 - 9));
         vault.items[index - 9 + +(page * 45)] = ServerEssentials.stackConverter.toString(stack);
         markDirty();
       }
@@ -236,11 +239,10 @@ public class VaultInventory extends InventoryBasic {
       return;
     }
     if (index == 5) { // Upgrade Menu
-      // TODO Add Upgrade Menu
       closeInventory(player);
       player.closeScreen();
       player.displayGUIChest(
-          new VaultInventory(player, lang, loadVault(vault.ownerUUID, vault.name), page));
+          new VaultUpgradeInventory(player, lang, loadVault(vault.ownerUUID, vault.name)));
       return;
     }
     closeInventory(player);
@@ -249,7 +251,7 @@ public class VaultInventory extends InventoryBasic {
         new VaultInventory(player, lang, loadVault(vault.ownerUUID, vault.name), page));
   }
 
-  private Vault loadVault(String ownerUUID, String name) {
+  public static Vault loadVault(String ownerUUID, String name) {
     File save =
         new File(
             ConfigLoader.SAVE_DIR
@@ -266,7 +268,7 @@ public class VaultInventory extends InventoryBasic {
       try {
         return GSON.fromJson(String.join("\n", Files.readAllLines(save.toPath())), Vault.class);
       } catch (Exception e) {
-        LOG.warn("Failed to load vault 'default' for '" + ownerUUID + "'");
+          LOG.warn("Failed to load vault 'default' for '{}'", ownerUUID);
         e.printStackTrace();
       }
     }
