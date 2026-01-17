@@ -37,7 +37,7 @@ public class DatabasePopulator {
   public static void setupDB(Connection c) {
     for (String table : tables) {
       if (!checkIfExists(c, table)) {
-          LOG.info("SQL Table '{}' does not exist!, Creating... ", table);
+        LOG.info("SQL Table '{}' does not exist!, Creating... ", table);
         createTable(c, table);
       }
     }
@@ -71,7 +71,7 @@ public class DatabasePopulator {
         return false;
       }
     } catch (Exception e) {
-        LOG.debug("Failed to check if table exists ' {}' ({})", tableName, e.getLocalizedMessage());
+      LOG.debug("Failed to check if table exists ' {}' ({})", tableName, e.getLocalizedMessage());
     }
     return true;
   }
@@ -92,9 +92,9 @@ public class DatabasePopulator {
                 + ".sql");
     try {
       c.createStatement().execute(tableSQL);
-        LOG.info("Table '{}' Created!", tableName);
+      LOG.info("Table '{}' Created!", tableName);
     } catch (Exception e) {
-        LOG.warn("Failed to create table '{}' ({})", tableName, e.getLocalizedMessage());
+      LOG.warn("Failed to create table '{}' ({})", tableName, e.getLocalizedMessage());
     }
   }
 
