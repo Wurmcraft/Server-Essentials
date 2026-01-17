@@ -16,6 +16,7 @@ public class TransferEntry {
   public Long start_time;
   public ItemWrapper[] items;
   public String server_id;
+  public boolean is_currently_open;
 
   /**
    * @param transferID id of the given transfer (Don't change as this is used internally to track)
@@ -23,14 +24,16 @@ public class TransferEntry {
    * @param startTime time the transfer was started, (in case of timeouts)
    * @param items list of items to be transferred (in json format)
    * @param serverID id of the server that the transfer was started on
+   * @param is_currently_open User has opened it (prevents opening on multiple servers at once)
    */
   public TransferEntry(
-      long transferID, String uuid, long startTime, ItemWrapper[] items, String serverID) {
+          long transferID, String uuid, long startTime, ItemWrapper[] items, String serverID, boolean is_currently_open) {
     this.transfer_id = transferID;
     this.uuid = uuid;
     this.start_time = startTime;
     this.items = items;
     this.server_id = serverID;
+    this.is_currently_open = is_currently_open;
   }
 
   public TransferEntry() {}
@@ -48,7 +51,7 @@ public class TransferEntry {
         && start_time.equals(that.start_time)
         && uuid.equals(that.uuid)
         && Arrays.equals(that.items, items)
-        && server_id.equals(that.server_id);
+        && server_id.equals(that.server_id) && is_currently_open == that.is_currently_open;
   }
 
   @Override

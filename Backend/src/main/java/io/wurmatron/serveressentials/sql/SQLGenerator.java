@@ -77,7 +77,7 @@ public class SQLGenerator {
   protected static final String[] STATISTICS_COLUMNS =
       new String[] {"server_id", "uuid", "timestamp", "event_type", "event_data"};
   protected static final String[] TRANSFERS_COLUMNS =
-      new String[] {"transfer_id", "uuid", "start_time", "items", "server_id"};
+      new String[] {"transfer_id", "uuid", "start_time", "items", "server_id", "is_currently_open"};
   protected static final String[] USERS_COLUMNS =
       new String[] {
         "uuid",
