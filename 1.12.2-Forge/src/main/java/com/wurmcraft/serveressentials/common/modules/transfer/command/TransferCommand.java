@@ -6,10 +6,10 @@ import com.wurmcraft.serveressentials.api.command.CommandArgument;
 import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.api.models.TransferEntry;
-import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.modules.general.utils.inventory.TransferInventory;
 import com.wurmcraft.serveressentials.common.modules.transfer.ConfigTransfer;
 import com.wurmcraft.serveressentials.common.modules.transfer.utils.TransferUtils;
+
 
 @ModuleCommand(module = "Transfer", name = "Transfer", defaultAliases = {"tsfr", "tfr", "tf"})
 public class TransferCommand {
@@ -28,13 +28,18 @@ public class TransferCommand {
 
     @Command(args = {CommandArgument.INTEGER}, usage = {"page"}, isSubCommand = true, subCommandAliases = {"g"})
     public static void get(ServerPlayer sender, int page) {
-        TransferEntry[] entry = TransferUtils.get(TRANSFER_ID, sender.player.getGameProfile().getId().toString());
-        if (entry != null && entry.length == 1) {
-            if(!entry[0].is_currently_open) {
-//    TODO            sender.player.displayGUIChest(new TransferInventory(sender.player, sender.lang, entry[0], page));
+        try {
+            TransferEntry[] entry = TransferUtils.get(TRANSFER_ID, sender.player.getGameProfile().getId().toString());
+            if (entry != null && entry.length == 1) {
+                if (!entry[0].is_currently_open) {
+                    sender.player.displayGUIChest(new TransferInventory(sender.player, sender.lang, entry[0], page));
+                }
+            } else {
+                // TODO No Entry or corrupted
+//            ChatHelper.send();
             }
-        } else {
-            // TODO No Entry or corrupted
+        } catch (Exception e) {
+            // TODO does not exist
 //            ChatHelper.send();
         }
     }
