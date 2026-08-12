@@ -86,10 +86,8 @@ public class VaultInventory extends InventoryBasic {
   public ItemStack getStackInSlot(int index) {
     if (index > 8 && index < vault.maxPages * 45) {
       int x = (index - 9) + (45 * page);
-      if(x < vault.items.length)
-        return ServerEssentials.stackConverter.getData(vault.items[x]);
-      else
-          return ItemStack.EMPTY;
+      if (x < vault.items.length) return ServerEssentials.stackConverter.getData(vault.items[x]);
+      else return ItemStack.EMPTY;
     }
     if (index < 9) {
       return menu[index];
@@ -268,7 +266,7 @@ public class VaultInventory extends InventoryBasic {
       try {
         return GSON.fromJson(String.join("\n", Files.readAllLines(save.toPath())), Vault.class);
       } catch (Exception e) {
-          LOG.warn("Failed to load vault 'default' for '{}'", ownerUUID);
+        LOG.warn("Failed to load vault 'default' for '{}'", ownerUUID);
         e.printStackTrace();
       }
     }

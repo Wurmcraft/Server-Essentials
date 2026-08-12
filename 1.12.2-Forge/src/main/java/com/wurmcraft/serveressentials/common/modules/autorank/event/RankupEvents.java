@@ -7,16 +7,15 @@ import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.*;
 import com.wurmcraft.serveressentials.api.models.data_wrapper.ChatMessage;
 import com.wurmcraft.serveressentials.common.command.EcoUtils;
+import com.wurmcraft.serveressentials.common.command.RankUtils;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import com.wurmcraft.serveressentials.common.modules.autorank.ConfigAutorank;
+import com.wurmcraft.serveressentials.common.modules.autorank.ModuleAutorank;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.PlayerUtils;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -61,6 +60,19 @@ public class RankupEvents {
 
   public static boolean canRankup(Account account, Rank currentRank, AutoRank rank) {
     if (currentRank == null || rank == null || !rank.rank.equals(currentRank.name)) {
+      return false;
+    }
+    // Check for overlaying ranks and correct
+    if (RankUtils.hasExactRank(rank.next_rank, account.rank)) {
+      List<String> ranks = Arrays.asList(account.rank);
+      ranks.remove(currentRank.name);
+      account.rank = ranks.toArray(new String[0]);
+      SECore.dataLoader.update(DataType.ACCOUNT, account.uuid, account);
+      ServerEssentials.LOG.warn(
+          "User tried to rankup but they already have the rank ("
+              + currentRank.name
+              + " -> "
+              + rank.next_rank);
       return false;
     }
     // Playtime check
@@ -131,21 +143,25 @@ public class RankupEvents {
   }
 
   public static void rankup(EntityPlayer player, AutoRank autoRank) {
-    Account account = PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString());
-    if (account != null) {
-      List<String> userRanks = new ArrayList<>();
-      Collections.addAll(userRanks, account.rank);
-      userRanks.remove(autoRank.rank);
-      userRanks.add(autoRank.next_rank);
-      account.rank = userRanks.toArray(new String[0]);
-      SECore.dataLoader.update(
-          DataType.ACCOUNT, player.getGameProfile().getId().toString(), account);
-      notifyRankup(player, autoRank);
+    if (ModuleAutorank.isValidAutoRank(autoRank)) {
+      Account account = PlayerUtils.getLatestAccount(player.getGameProfile().getId().toString());
+      if (account != null && RankUtils.hasExactRank(autoRank.rank, account.rank)) {
+        List<String> userRanks = new ArrayList<>();
+        Collections.addAll(userRanks, account.rank);
+        userRanks.remove(autoRank.rank);
+        userRanks.add(autoRank.next_rank);
+        account.rank = userRanks.toArray(new String[0]);
+        SECore.dataLoader.update(
+            DataType.ACCOUNT, player.getGameProfile().getId().toString(), account);
+        notifyRankup(player, autoRank);
+      } else {
+        ServerEssentials.LOG.warn(
+            "Failed to rankup user '"
+                + player.getGameProfile().getId().toString()
+                + "' Unable to pull updated data from api");
+      }
     } else {
-      ServerEssentials.LOG.warn(
-          "Failed to rankup user '"
-              + player.getGameProfile().getId().toString()
-              + "' Unable to pull updated data from api");
+      ModuleAutorank.validateAutoRanks();
     }
   }
 

@@ -4,11 +4,8 @@ import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.TransferEntry;
-import com.wurmcraft.serveressentials.api.models.Vault;
 import com.wurmcraft.serveressentials.api.models.transfer.ItemWrapper;
-import com.wurmcraft.serveressentials.common.data.ConfigLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
-import com.wurmcraft.serveressentials.common.data.loader.FileDataLoader;
 import com.wurmcraft.serveressentials.common.utils.ChatHelper;
 import com.wurmcraft.serveressentials.common.utils.ItemStackConverter;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,14 +14,6 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
-
-import static com.wurmcraft.serveressentials.ServerEssentials.GSON;
-import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 
 public class TransferInventory extends InventoryBasic {
 
@@ -47,7 +36,7 @@ public class TransferInventory extends InventoryBasic {
     this.entry = entry;
     this.page = page;
     this.lang = lang;
-    this.maxPages = entry.items.length /  - (54-9);
+    this.maxPages = entry.items.length / -(54 - 9);
     menu = buildMenu();
   }
 
@@ -89,10 +78,9 @@ public class TransferInventory extends InventoryBasic {
   public ItemStack getStackInSlot(int index) {
     if (index > 8 && index < maxPages * 45) {
       int x = (index - 9) + (45 * page);
-      if(x < entry.items.length) {
+      if (x < entry.items.length) {
         return convert(entry.items[x]);
-      } else
-          return ItemStack.EMPTY;
+      } else return ItemStack.EMPTY;
     }
     if (index < 9) {
       return menu[index];
@@ -102,9 +90,8 @@ public class TransferInventory extends InventoryBasic {
 
   public ItemStack convert(ItemWrapper wrapper) {
     String item = wrapper.count + ItemStackConverter.COUNT + wrapper.item;
-    if(wrapper.meta != 0)
-      item = item + ItemStackConverter.META + wrapper.meta;
-    if(wrapper.nbt != null && !wrapper.nbt.isEmpty())
+    if (wrapper.meta != 0) item = item + ItemStackConverter.META + wrapper.meta;
+    if (wrapper.nbt != null && !wrapper.nbt.isEmpty())
       item = item + ItemStackConverter.NBT + wrapper.nbt;
     return ServerEssentials.stackConverter.getData(item);
   }
@@ -168,7 +155,8 @@ public class TransferInventory extends InventoryBasic {
   @Override
   public void markDirty() {
     super.markDirty();
-    SECore.dataLoader.update(DataLoader.DataType.TRANSFER, String.valueOf(entry.transfer_id), entry);
+    SECore.dataLoader.update(
+        DataLoader.DataType.TRANSFER, String.valueOf(entry.transfer_id), entry);
   }
 
   @Override
@@ -182,13 +170,14 @@ public class TransferInventory extends InventoryBasic {
     return true;
   }
 
- @Override
+  @Override
   public void openInventory(EntityPlayer player) {
     for (int index = 0; index < getSizeInventory(); index++) {
       setInventorySlotContents(index, getStackInSlot(index));
     }
     entry.is_currently_open = true;
-    SECore.dataLoader.update(DataLoader.DataType.TRANSFER, String.valueOf(entry.transfer_id), entry);
+    SECore.dataLoader.update(
+        DataLoader.DataType.TRANSFER, String.valueOf(entry.transfer_id), entry);
   }
 
   @Override
@@ -196,7 +185,8 @@ public class TransferInventory extends InventoryBasic {
     super.closeInventory(player);
     markDirty();
     entry.is_currently_open = false;
-    SECore.dataLoader.update(DataLoader.DataType.TRANSFER, String.valueOf(entry.transfer_id), entry);
+    SECore.dataLoader.update(
+        DataLoader.DataType.TRANSFER, String.valueOf(entry.transfer_id), entry);
   }
 
   private void handleAction(int index) {

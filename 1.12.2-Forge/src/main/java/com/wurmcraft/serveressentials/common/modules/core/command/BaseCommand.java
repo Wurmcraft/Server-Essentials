@@ -101,6 +101,7 @@ public class BaseCommand {
         player.lang.COMMAND_BASE_RELOAD_FAIL.replaceAll("\\{@MODULE@}", module.toUpperCase()));
   }
 
+  // TODO Implement
   private static void displayModuleInfo(ServerPlayer player, String name) {
     ChatHelper.send(player.sender, player.lang.SPACER);
     ChatHelper.send(player.sender, player.lang.SPACER);

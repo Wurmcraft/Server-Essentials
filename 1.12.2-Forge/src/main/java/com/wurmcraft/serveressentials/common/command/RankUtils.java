@@ -190,4 +190,9 @@ public class RankUtils {
     }
     return false;
   }
+
+  public static boolean hasExactRank(String name, String[] playerRanks) {
+    for (String r : playerRanks) if (r.equalsIgnoreCase(name)) return true;
+    return false;
+  }
 }

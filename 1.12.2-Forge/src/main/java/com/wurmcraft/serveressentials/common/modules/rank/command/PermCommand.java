@@ -55,7 +55,8 @@ public class PermCommand {
           || type.equalsIgnoreCase("delete")
           || type.equalsIgnoreCase("del")
           || type.equalsIgnoreCase("d")) {
-        List<String> ranks = Arrays.asList(oPlayer.rank);
+        ArrayList<String> ranks = new ArrayList<>();
+        ranks.addAll(Arrays.asList(oPlayer.rank));
         ranks.remove(rank.name);
         oPlayer.rank = ranks.toArray(new String[0]);
         SECore.dataLoader.update(DataType.ACCOUNT, oPlayer.uuid, oPlayer);

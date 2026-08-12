@@ -368,7 +368,13 @@ public class SECommand extends CommandBase {
     } else if (type == CommandArgument.STRING || type == CommandArgument.MODULE) {
       return arg;
     } else if (type == CommandArgument.RANK) {
-      return SECore.dataLoader.get(DataLoader.DataType.RANK, arg, new Rank());
+      Set<String> ranks =
+          SECore.dataLoader.getFromKey(DataLoader.DataType.RANK, new Rank[0]).keySet();
+      if (!ranks.isEmpty()) {
+        return SECore.dataLoader.get(DataLoader.DataType.RANK, arg.toLowerCase(), new Rank());
+      } else {
+        // TODO Panic Something is wrong, correct it
+      }
     } else if (type == CommandArgument.HOME) {
       return getHome(player, arg);
     } else if (type == CommandArgument.WARP) {

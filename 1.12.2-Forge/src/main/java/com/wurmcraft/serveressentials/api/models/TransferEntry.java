@@ -27,7 +27,12 @@ public class TransferEntry {
    * @param is_currently_open User has opened it (prevents opening on multiple servers at once)
    */
   public TransferEntry(
-          long transferID, String uuid, long startTime, ItemWrapper[] items, String serverID, boolean is_currently_open) {
+      long transferID,
+      String uuid,
+      long startTime,
+      ItemWrapper[] items,
+      String serverID,
+      boolean is_currently_open) {
     this.transfer_id = transferID;
     this.uuid = uuid;
     this.start_time = startTime;
