@@ -200,4 +200,8 @@ public class PlayerDataTrackerEvent {
             TimeUnit.SECONDS);
     playerCacheTimeout.put(e.player.getGameProfile().getId().toString(), future);
   }
+
+  public static int getPlayerCacheTimeout() {
+    return playerCacheTimeout.size();
+  }
 }

@@ -25,7 +25,7 @@ public class ClaimNotifyEvents {
   public static HashMap<UUID, BlockPos> locationCache = new HashMap<>();
   public static HashMap<UUID, Claim> lastClaim = new HashMap<>();
 
-  static int counter = 0;
+  public static int counter = 0;
 
   @SubscribeEvent
   public void onPlayerTick(PlayerTickEvent e) {

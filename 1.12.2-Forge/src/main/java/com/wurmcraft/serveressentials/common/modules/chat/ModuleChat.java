@@ -5,10 +5,19 @@ import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.loading.Module;
 import com.wurmcraft.serveressentials.api.models.Channel;
+import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
+import com.wurmcraft.serveressentials.common.modules.ban.ConfigBan;
 import com.wurmcraft.serveressentials.common.modules.chat.event.NewChatPlayer;
 import com.wurmcraft.serveressentials.common.modules.chat.event.PlayerChatEvent;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import com.wurmcraft.serveressentials.common.utils.ChatHelper;
+import joptsimple.internal.Strings;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
@@ -56,5 +65,25 @@ public class ModuleChat {
     }
     // Load channels
     SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL, new Channel());
+  }
+
+  public String[] generateModuleInfo(Language lang) {
+    List<String> info = new ArrayList<>();
+    ConfigChat cfg = (ConfigChat) SECore.moduleConfigs.get("CHAT");
+    info.add("defaultChannel: " + cfg.defaultChannel);
+    info.add("defaultChatFormat: " + cfg.defaultChatFormat);
+    info.add("defaultMuteDuration: " + cfg.defaultMuteDuration);
+    info.add("messageFormat: " + cfg.messageFormat);
+    info.add("nickFormat: " + cfg.nickFormat);
+    info.add("displayUUIDOnHover: " + cfg.displayUUIDOnHover);
+    List<String> spyPlayers = new ArrayList<>();
+    for(EntityPlayer player: ChatHelper.socialSpy)
+      spyPlayers.add(player.getName());
+    info.add("Social Spy: ("  + spyPlayers.size() + ")" + Strings.join(spyPlayers, ","));
+    List<String> channels = new ArrayList<>();
+    for(Channel ch : SECore.dataLoader.getFromKey(DataLoader.DataType.CHANNEL,new Channel()).values())
+     channels.add( "<" + ch.name + "@" +  ch.enabled + ">");
+    info.add("Channels: (" + channels.size() + ") " + Strings.join(channels, ","));
+    return info.toArray(new String[0]);
   }
 }

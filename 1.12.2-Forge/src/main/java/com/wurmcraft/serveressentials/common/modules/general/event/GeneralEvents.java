@@ -58,7 +58,7 @@ public class GeneralEvents {
           / ((ConfigGeneral) (SECore.moduleConfigs.get("GENERAL"))).afkCheckTimer;
 
   private static List<EntityPlayer> deadPlayers = new ArrayList<>();
-  private static HashMap<String, Location> frozenPlayers = new HashMap<>();
+  public static HashMap<String, Location> frozenPlayers = new HashMap<>();
 
   @SubscribeEvent(priority = EventPriority.HIGH)
   public void playerLoginEvent(PlayerEvent.PlayerLoggedInEvent e) {

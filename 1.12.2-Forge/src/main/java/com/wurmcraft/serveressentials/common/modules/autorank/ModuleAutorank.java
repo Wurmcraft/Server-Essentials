@@ -4,11 +4,18 @@ import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.loading.Module;
 import com.wurmcraft.serveressentials.api.models.AutoRank;
+import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader.DataType;
 import com.wurmcraft.serveressentials.common.modules.autorank.event.RankupEvents;
+import joptsimple.internal.Strings;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Module(name = "Autorank", dependencies = "Rank")
 public class ModuleAutorank {
@@ -32,6 +39,16 @@ public class ModuleAutorank {
       SECore.dataLoader.delete(DataLoader.DataType.AUTORANK, autoRank, true);
     }
     validateAutoRanks();
+  }
+
+  public String[] generateModuleInfo(Language lang) {
+    List<String> info = new ArrayList<>();
+    ConfigAutorank cfg = (ConfigAutorank) SECore.moduleConfigs.get("AUTORANK");
+    info.add("announceRackup: " + cfg.announceRackup);
+    AutoRank[] autoranks = SECore.dataLoader.getFromKey(DataType.AUTORANK, new AutoRank()).values().toArray(new AutoRank[0]);
+    List<String> autoRanks = Arrays.stream(autoranks).map(ar -> ar.rank).collect(Collectors.toList());
+    info.add("AutoRanks: " + autoranks.length+ " (" + Strings.join(autoRanks, ", ") + ")");
+    return info.toArray(new String[0]);
   }
 
   public static void setupDefaultRankups() {

@@ -6,13 +6,11 @@ import static com.wurmcraft.serveressentials.ServerEssentials.LOG;
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.loading.Module;
-import com.wurmcraft.serveressentials.api.models.Account;
-import com.wurmcraft.serveressentials.api.models.DataWrapper;
-import com.wurmcraft.serveressentials.api.models.ServerStatus;
-import com.wurmcraft.serveressentials.api.models.WSWrapper;
+import com.wurmcraft.serveressentials.api.models.*;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
 import com.wurmcraft.serveressentials.common.modules.chat.event.PlayerChatEvent;
+import com.wurmcraft.serveressentials.common.modules.economy.ConfigEconomy;
 import com.wurmcraft.serveressentials.common.modules.general.event.GeneralEvents;
 import com.wurmcraft.serveressentials.common.modules.general.event.HomeSpawnEvent;
 import com.wurmcraft.serveressentials.common.modules.general.event.InventoryTrackingEvents;
@@ -21,9 +19,12 @@ import com.wurmcraft.serveressentials.common.modules.security.ConfigSecurity;
 import com.wurmcraft.serveressentials.common.utils.RequestGenerator;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import joptsimple.internal.Strings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -150,5 +151,31 @@ public class ModuleGeneral {
       }
     }
     return new String[][] {onlinePlayers.toArray(new String[0]), playerInfo.toArray(new String[0])};
+  }
+
+  public String[] generateModuleInfo(Language lang) {
+    List<String> info = new ArrayList<>();
+    ConfigGeneral cfg = (ConfigGeneral) SECore.moduleConfigs.get("GENERAL");
+    info.add("defaultHomeName: " + cfg.defaultHomeName);
+    info.add("afkTimer: " + cfg.afkTimer);
+    info.add("defaultVaultName: " + cfg.defaultVaultName);
+    info.add("globalMOTD: " + cfg.globalMOTD);
+    info.add("playTimeSync: " + cfg.playTimeSync);
+    info.add("afkCheckTimer: " + cfg.afkCheckTimer);
+    info.add("maxHomes: " + cfg.maxHomes);
+    info.add("minHomes: " + cfg.minHomes);
+    info.add("notifyMailboxItems: " + cfg.notifyMailboxItems);
+    info.add("rtpBiomeBlacklist: " + Strings.join(cfg.rtpBiomeBlacklist, ", "));
+    info.add("rtpDimensionWhitelist: " + Arrays.toString(cfg.rtpDimensionWhitelist));
+    info.add("rtpRadius: " + cfg.rtpRadius);
+    info.add("spawnAtHome: " + cfg.spawnAtHome);
+    info.add("statusSync: " + cfg.statusSync);
+    info.add("vaultPageBaseCost: " + cfg.vaultPageBaseCost);
+    info.add("vaultPageCostMultiplier: " + cfg.vaultPageCostMultiplier);
+    info.add("Vanished: " + VanishEvent.vanishedPlayers.size());
+    info.add("Menu Inventory Open: " + InventoryTrackingEvents.openPlayerInventory.size());
+    info.add("AFK Players: " + GeneralEvents.afkPlayers.size());
+    info.add("Frozen Players: " + GeneralEvents.frozenPlayers.size());
+    return info.toArray(new String[0]);
   }
 }

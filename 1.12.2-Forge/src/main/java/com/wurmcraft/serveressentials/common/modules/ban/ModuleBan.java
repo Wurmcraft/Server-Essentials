@@ -3,9 +3,19 @@ package com.wurmcraft.serveressentials.common.modules.ban;
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.loading.Module;
+import com.wurmcraft.serveressentials.api.models.AutoRank;
+import com.wurmcraft.serveressentials.api.models.Language;
+import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
 import com.wurmcraft.serveressentials.common.data.loader.RestDataLoader;
+import com.wurmcraft.serveressentials.common.modules.autorank.ConfigAutorank;
 import com.wurmcraft.serveressentials.common.modules.ban.event.BanEvents;
+import joptsimple.internal.Strings;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Module(name = "Ban")
 public class ModuleBan {
@@ -24,4 +34,11 @@ public class ModuleBan {
   }
 
   public void reload() {}
+
+  public String[] generateModuleInfo(Language lang) {
+    List<String> info = new ArrayList<>();
+    ConfigBan cfg = (ConfigBan) SECore.moduleConfigs.get("BAN");
+    info.add("followRestBans: " + cfg.followRestBans);
+    return info.toArray(new String[0]);
+  }
 }

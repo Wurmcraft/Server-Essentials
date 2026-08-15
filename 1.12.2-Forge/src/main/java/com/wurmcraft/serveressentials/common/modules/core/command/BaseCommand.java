@@ -8,6 +8,7 @@ import com.wurmcraft.serveressentials.api.command.Command;
 import com.wurmcraft.serveressentials.api.command.CommandArgument;
 import com.wurmcraft.serveressentials.api.command.ModuleCommand;
 import com.wurmcraft.serveressentials.api.loading.Module;
+import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.ServerPlayer;
 import com.wurmcraft.serveressentials.common.data.AnnotationLoader;
 import com.wurmcraft.serveressentials.common.data.ConfigLoader;
@@ -62,10 +63,12 @@ public class BaseCommand {
       }
     } else if (arg.equalsIgnoreCase("info")) {
       for (String m : SECore.modules.keySet()) {
-        if (m.equalsIgnoreCase(module)) {
-          displayModuleInfo(player, m);
-          return;
-        }
+        for(String en : ServerEssentials.config.enabledModules)
+          if(m.equalsIgnoreCase(en))
+             if (m.equalsIgnoreCase(module)) {
+              displayModuleInfo(player, m);
+              return;
+          }
       }
     }
   }
@@ -94,16 +97,26 @@ public class BaseCommand {
       return;
     } catch (Exception e) {
       e.printStackTrace();
-      LOG.warn("Failed to reload module '" + module + "'");
+        LOG.warn("Failed to reload module '{}'", module);
     }
     ChatHelper.send(
         player.sender,
         player.lang.COMMAND_BASE_RELOAD_FAIL.replaceAll("\\{@MODULE@}", module.toUpperCase()));
   }
 
-  // TODO Implement
   private static void displayModuleInfo(ServerPlayer player, String name) {
-    ChatHelper.send(player.sender, player.lang.SPACER);
-    ChatHelper.send(player.sender, player.lang.SPACER);
+    try {
+      Object module = SECore.modules.get(name.toUpperCase());
+      Class clazz = module.getClass();
+      Method m = clazz.getMethod(module.getClass().getDeclaredAnnotation(Module.class).generateModuleInfoMethod(), Language.class);
+      Object t = m.invoke(module, player.lang);
+      ChatHelper.send(player.sender, player.lang.SPACER);
+      for(String text : (String[]) t)
+        ChatHelper.send(player.sender, text);
+      ChatHelper.send(player.sender, player.lang.SPACER);
+    } catch (Exception e) {
+      e.printStackTrace();
+        // This error should be impossible as command pre-checks module exists
+    }
   }
 }

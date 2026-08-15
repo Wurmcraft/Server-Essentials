@@ -3,8 +3,14 @@ package com.wurmcraft.serveressentials.common.modules.rank;
 import com.wurmcraft.serveressentials.ServerEssentials;
 import com.wurmcraft.serveressentials.api.SECore;
 import com.wurmcraft.serveressentials.api.loading.Module;
+import com.wurmcraft.serveressentials.api.models.Language;
 import com.wurmcraft.serveressentials.api.models.Rank;
 import com.wurmcraft.serveressentials.common.data.loader.DataLoader;
+import com.wurmcraft.serveressentials.common.modules.protect.ConfigProtect;
+import com.wurmcraft.serveressentials.common.modules.protect.event.ClaimNotifyEvents;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Module(
     name = "Rank",
@@ -81,5 +87,16 @@ public class ModuleRank {
     if (SECore.dataLoader.get(DataLoader.DataType.RANK, admin.name) == null) {
       SECore.dataLoader.register(DataLoader.DataType.RANK, admin.name, admin);
     }
+  }
+
+  public String[] generateModuleInfo(Language lang) {
+    List<String> info = new ArrayList<>();
+    ConfigRank cfg = (ConfigRank) SECore.moduleConfigs.get("RANK");
+    info.add("defaultRank: " + cfg.defaultRank);
+    List<String> ranks = new ArrayList<>();
+    for(Rank rank : SECore.dataLoader.getFromKey(DataLoader.DataType.RANK, new Rank()).values())
+      ranks.add(rank.name);
+    info.add("Ranks: (" + ranks.size() + ") " + String.join(", ", ranks));
+    return info.toArray(new String[0]);
   }
 }

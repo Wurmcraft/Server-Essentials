@@ -24,4 +24,7 @@ public @interface Module {
 
   /** Method to find via reflection to reload the module */
   String reloadMethod() default "reload";
+
+  /** Gives info about a module to displayed to player*/
+  String generateModuleInfoMethod() default "generateModuleInfo";
 }
