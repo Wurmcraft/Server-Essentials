@@ -33,6 +33,14 @@ public class ConfigLoader {
       config = readConfigFromTOML(toml);
       if (config != null) {
         LOG.info("Loaded Config file '{}'", configFile.getAbsolutePath());
+        if(!System.getProperty("DB_PASSWORD").isEmpty()) {
+          config.database.password = System.getProperty("DB_PASSWORD");
+          LOG.info("Loaded database password from Env Variable (Config is ignored)");
+        }
+        if(!System.getProperty("BOT_TOKEN").isEmpty()) {
+          config.database.password = System.getProperty("BOT_TOKEN");
+          LOG.info("Loaded discord bot token from Env Variable (Config is ignored)");
+        }
         return config;
       } else {
         if (configFile.delete()) {
@@ -69,7 +77,7 @@ public class ConfigLoader {
 
   private static Config askForConfiguration(Config config) {
     System.out.println(
-        "New installation detected, if not, copy the config.toml and /internal from your previous installation.");
+            "New installation detected, if not, copy the config.toml and /internal from your previous installation.");
     System.out.println();
     System.out.println("- General Setup");
     config.server.host = askQuestion("IP used to host the API from", "localhost");
@@ -87,19 +95,19 @@ public class ConfigLoader {
     System.out.println("- Database Setup");
     config.database.connector = askQuestion("What type of database 'postgresql', 'mysql'", "mysql");
     config.database.host =
-        askQuestion(
-            "IP / domain to connect to the {NAME} database"
-                .replaceAll(
-                    "\\{NAME}", config.database.connector.equals("mysql") ? "mysql" : "postgres"),
-            "localhost");
+            askQuestion(
+                    "IP / domain to connect to the {NAME} database"
+                            .replaceAll(
+                                    "\\{NAME}", config.database.connector.equals("mysql") ? "mysql" : "postgres"),
+                    "localhost");
     set = false;
     while (!set) {
       try {
         config.database.port =
-            Integer.parseInt(
-                askQuestion(
-                    "Port to connect to the database",
-                    config.database.host.equals("mysql") ? "3306" : "5432"));
+                Integer.parseInt(
+                        askQuestion(
+                                "Port to connect to the database",
+                                config.database.connector.equalsIgnoreCase("mysql") ? "3306" : "5432"));
         set = true;
       } catch (NumberFormatException e) {
         System.out.println("Invalid Port, Must be a number!");
@@ -107,14 +115,26 @@ public class ConfigLoader {
     }
     config.database.database = askQuestion("Name of the database to use", "server-essentials");
     config.database.username =
-        askQuestion("Username to connect to the database", "serveressentials");
+            askQuestion("Username to connect to the database", "serveressentials");
+    if (System.getProperty("DB_PASSWORD").isEmpty()) {
     config.database.password =
-        askQuestion(
-            "Password for {USER} on the database".replaceAll("\\{USER}", config.database.username),
-            "");
+            askQuestion(
+                    "Password for {USER} on the database".replaceAll("\\{USER}", config.database.username),
+                    "");
+    System.out.println("Setting password as an env variable is suggested. (\"DB_PASSWORD\")");
+    } else  {
+      config.database.password = "**********";
+      System.out.println("Loaded password from Env Variable");
+    }
     System.out.println();
     System.out.println("- Discord Bot Setup");
-    config.discord.token = askQuestion("Token used by the bot to connect to discord", "");
+    if (System.getProperty("BOT_TOKEN").isEmpty()) {
+      config.discord.token = askQuestion("Token used by the bot to connect to discord", "");
+      System.out.println("Setting token as an env variable is suggested. (\"DB_PASSWORD\")");
+    } else  {
+      config.discord.token = "**********";
+      System.out.println("Loaded token from Env Variable");
+    }
     config.discord.verifiedRankID =
         askQuestion("ID of the rank to give to users upon verification", "");
     return config;
