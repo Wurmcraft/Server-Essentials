@@ -42,7 +42,7 @@ public class ServerEssentialsRest {
   public static DatabaseConnection dbConnection;
   public static ScheduledExecutorService executors;
 
-  public static void main(String[] args) throws SQLException, IOException {
+  public static void main(String[] args) throws IOException {
     displaySystemInfo();
     config = ConfigLoader.setupAndHandleConfig();
     try {
@@ -58,7 +58,11 @@ public class ServerEssentialsRest {
         Javalin.create(
             (cfg) -> {
               // Config
-              //            cfg.precompressStaticFiles = true;
+                cfg.addStaticFiles(files -> {
+                    files.directory = "";
+                    files.hostedPath = "/";
+                    files.precompress = true;
+                });
               cfg.defaultContentType = "application/json";
               cfg.autogenerateEtags = true;
               cfg.showJavalinBanner = false;
@@ -106,7 +110,7 @@ public class ServerEssentialsRest {
 
   public static void displaySystemInfo() {
     LOG.debug("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-    LOG.debug("OS: {}-{}", System.getProperty("os.name"), System.getProperty("os.arch"));
+    LOG.debug("OS: {}-{}-{}", System.getProperty("os.name"), System.getProperty("os.arch"), System.getProperty("os.version"));
     LOG.debug("CPU: {} cores", Runtime.getRuntime().availableProcessors());
     LOG.debug("Java: {}", System.getProperty("java.runtime.version"));
     LOG.debug(

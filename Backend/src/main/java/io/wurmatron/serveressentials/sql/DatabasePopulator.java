@@ -14,7 +14,11 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DatabasePopulator {
@@ -41,7 +45,55 @@ public class DatabasePopulator {
         createTable(c, table);
       }
     }
-    // TODO Check for outdated schema, and correct
+    for (String tableName : tables)
+      checkAndUpdateTable(c, tableName);
+  }
+
+  private static void checkAndUpdateTable(Connection c, String tableName) {
+    try {
+      DatabaseMetaData metaData = c.getMetaData();
+      ResultSet columns = metaData.getColumns(null, null, tableName, null);
+      Map<String, String> existingCollums = new LinkedHashMap<>();
+      while (columns.next())
+        existingCollums.put(columns.getString("COLUMN_NAME"), columns.getString("TYPE_NAME"));
+
+      // Get Columns that the table should have
+      String expCollums = readSQLSetupFile(tableName + ".sql");
+      Map<String, String> expectedColumnMap = parseSQLColumns(expCollums);
+
+      for (Map.Entry<String, String> entry : expectedColumnMap.entrySet()) {
+        if (!existingCollums.containsKey(entry.getKey())) {
+          executeSql(c, "ALTER TABLE " + tableName + " ADD COLUMN " + entry.getKey() + " " + entry.getValue());
+          LOG.info("Added new column '{}' to table '{}'", entry.getKey(), tableName);
+        }
+      }
+    } catch (Exception e) {
+      LOG.error("Failed to check and update schema for table '{}'", tableName, e);
+    }
+  }
+
+  private static Map<String, String> parseSQLColumns(String sql) {
+    Map<String, String> columns = new LinkedHashMap<>();
+    String[] lines = sql.split("\n");
+    for (String line : lines) {
+      if (line.trim().startsWith("CREATE TABLE"))
+        continue;
+      if (line.trim().startsWith(")") || line.trim().isEmpty())
+        continue;
+      String[] parts = line.split(" ");
+      if (parts.length == 2)
+        columns.put(parts[0], parts[1]);
+    }
+    return columns;
+  }
+
+  private static void executeSql(Connection c, String sql) {
+    try {
+      PreparedStatement statement = c.prepareStatement(sql);
+      statement.executeUpdate();
+    } catch (Exception e) {
+      LOG.error("Failed to execute SQL statement: {}", sql, e);
+    }
   }
 
   /**
@@ -54,20 +106,14 @@ public class DatabasePopulator {
     try {
       String sqlStatment = "";
       if (config.database.connector.equalsIgnoreCase("mysql")) {
-        sqlStatment =
-            "SELECT * FROM information_schema.tables where table_name='"
-                + tableName
-                + "' AND table_schema='"
-                + ServerEssentialsRest.config.database.database
-                + "'";
+        sqlStatment = "SELECT * FROM information_schema.tables WHERE table_name=? AND table_schema=? LIMIT 1";
       } else if (config.database.connector.equalsIgnoreCase("postgresql")) {
-        sqlStatment =
-            "SELECT * FROM information_schema.tables where table_name='"
-                + tableName
-                + "' AND table_schema='public'";
+        sqlStatment = "SELECT * FROM information_schema.tables WHERE table_name=? AND table_schema='public' LIMIT 1";
       }
-      ResultSet set = c.createStatement().executeQuery(sqlStatment);
-      if (!set.next()) {
+      PreparedStatement sql = c.prepareStatement(sqlStatment);
+      sql.setString(1, tableName);
+      sql.setString(2, ServerEssentialsRest.config.database.database);
+      if (!sql.executeQuery().next()) {
         return false;
       }
     } catch (Exception e) {
